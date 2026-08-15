@@ -1,0 +1,59 @@
+name: Repository foundation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - master
+
+permissions:
+  contents: read
+
+concurrency:
+  group: repository-foundation-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v5
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: npm
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install pinned Python workspace tool
+        run: python -m pip install "uv==0.11.32"
+
+      - name: Install locked Python workspace
+        run: uv sync --locked --all-packages
+
+      - name: Install root workspace
+        run: npm ci --ignore-scripts --no-audit --no-fund
+
+      - name: Validate M0 repository foundation
+        run: npm run check:repo
+
+      - name: Lint and format-check Python
+        run: npm run check:python
+
+      - name: Type-check Python
+        run: npm run typecheck
+
+      - name: Test M0 walking skeleton
+        run: npm test
+
+      - name: Compile Python sources
+        run: python -m compileall -q packages services workers scripts

@@ -1,0 +1,26 @@
+{
+  "name": "opportunity-intelligence-platform",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Greenfield monorepo foundations for the opportunity intelligence platform.",
+  "engines": {
+    "node": ">=24 <25",
+    "npm": ">=11 <12"
+  },
+  "workspaces": [
+    "apps/*",
+    "services/*",
+    "workers/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "check": "npm run check:repo",
+    "check:repo": "python scripts/check_repository.py",
+    "check:python": "uv run --locked ruff check packages services workers tests scripts && uv run --locked ruff format --check packages services workers tests scripts",
+    "format:python": "uv run --locked ruff check --fix packages services workers tests scripts && uv run --locked ruff format packages services workers tests scripts",
+    "test": "uv run --locked pytest",
+    "typecheck": "uv run --locked mypy packages/m0-core/src packages/m0-local/src services/api/src workers/core/src",
+    "bootstrap:local": "python scripts/bootstrap_local.py",
+    "serve:web": "python -m http.server 3000 --bind 127.0.0.1 --directory apps/web"
+  }
+}

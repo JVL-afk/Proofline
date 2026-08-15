@@ -1,0 +1,20 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "opintel-m0-local"
+version = "0.1.0"
+description = "Local-only persistence, authentication, and fixture adapters for M0"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+  "opintel-m0-core",
+  "pydantic-settings>=2.10,<3",
+  "sqlalchemy>=2.0.51,<2.1",
+]
+
+[tool.uv.sources]
+opintel-m0-core = { workspace = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/opintel_m0_local"]

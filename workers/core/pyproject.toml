@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "opintel-worker"
+version = "0.1.0"
+description = "M0 durable fixture workflow worker"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+  "opintel-m0-core",
+  "opintel-m0-local",
+]
+
+[project.scripts]
+opintel-worker = "opintel_worker.main:run"
+
+[tool.uv.sources]
+opintel-m0-core = { workspace = true }
+opintel-m0-local = { workspace = true }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/opintel_worker"]

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; connect-src http://127.0.0.1:8000 http://localhost:8000; img-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
+    >
+    <title>M0 Walking Skeleton</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <main class="shell">
+      <header>
+        <p class="eyebrow">Opportunity Intelligence Platform</p>
+        <h1>M0 walking skeleton</h1>
+        <p>Controlled fixtures only. No public web, search, AI, demos, audits, or outreach.</p>
+      </header>
+
+      <section class="card" aria-labelledby="auth-heading">
+        <h2 id="auth-heading">1. Authenticate</h2>
+        <label for="token">Local token from <code>.env</code></label>
+        <input id="token" type="password" autocomplete="off" spellcheck="false">
+        <button id="authenticate" type="button">Authenticate</button>
+        <output id="identity" aria-live="polite"></output>
+      </section>
+
+      <section class="card" aria-labelledby="campaign-heading">
+        <h2 id="campaign-heading">2. Create fixture campaign</h2>
+        <label for="campaign-name">Campaign name</label>
+        <input id="campaign-name" value="M0 controlled fixture">
+        <label for="fixture-uri">Fixture scenario</label>
+        <select id="fixture-uri">
+          <option value="fixture://public/acme-success.html">Success</option>
+          <option value="fixture://public/transient-once.html">Transient failure, then retry</option>
+          <option value="fixture://public/missing.html">Permanent fixture failure</option>
+        </select>
+        <button id="create-campaign" type="button">Create campaign</button>
+        <output id="campaign" aria-live="polite"></output>
+      </section>
+
+      <section class="card" aria-labelledby="operation-heading">
+        <h2 id="operation-heading">3. Execute and inspect</h2>
+        <button id="start-operation" type="button" disabled>Start durable operation</button>
+        <button id="refresh-operation" type="button" disabled>Refresh</button>
+        <pre id="operation" aria-live="polite">No operation yet.</pre>
+        <h3>Evidence</h3>
+        <pre id="evidence">No evidence yet.</pre>
+      </section>
+
+      <p id="error" class="error" role="alert"></p>
+    </main>
+  </body>
+</html>

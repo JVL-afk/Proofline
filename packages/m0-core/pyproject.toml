@@ -1,0 +1,15 @@
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[project]
+name = "opintel-m0-core"
+version = "0.1.0"
+description = "M0 domain, application, ports, and typed contracts"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+  "pydantic>=2.11,<3",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/opintel_m0"]

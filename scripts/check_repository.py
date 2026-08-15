@@ -1,0 +1,197 @@
+"""Validate the dependency-free M0 repository foundation.
+
+This script intentionally uses only the Python standard library so a clean
+checkout can validate governance and structure before application dependencies
+exist.
+"""
+
+from __future__ import annotations
+
+import json
+import re
+import sys
+import tomllib
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+
+REQUIRED_FILES = (
+    ".editorconfig",
+    ".env.example",
+    ".gitattributes",
+    ".gitignore",
+    ".nvmrc",
+    ".python-version",
+    "AGENTS.md",
+    "CONTRIBUTING.md",
+    "GREENFIELD_ARCHITECTURE.md",
+    "README.md",
+    "SECURITY.md",
+    "package-lock.json",
+    "package.json",
+    "pyproject.toml",
+    "uv.lock",
+    "apps/README.md",
+    "services/README.md",
+    "workers/README.md",
+    "packages/README.md",
+    "infra/README.md",
+    "infra/local/README.md",
+    "infra/terraform/README.md",
+    "docs/adr/0000-template.md",
+    "docs/adr/0001-modular-monolith-monorepo.md",
+    "docs/adr/0002-runtime-and-workspace-baseline.md",
+    "docs/adr/0003-python-workspace-and-locking.md",
+    "docs/adr/0004-m0-local-walking-skeleton-adapters.md",
+    "docs/adr/README.md",
+    "docs/decisions/README.md",
+    "docs/engineering/dependencies.md",
+    "docs/engineering/module-boundaries.md",
+    "docs/engineering/standards.md",
+    "docs/milestones/M0.md",
+    "docs/policies/environment-and-data.md",
+    "docs/policies/secrets.md",
+    "packages/m0-core/README.md",
+    "packages/m0-core/pyproject.toml",
+    "packages/m0-local/README.md",
+    "packages/m0-local/pyproject.toml",
+    "services/api/README.md",
+    "services/api/pyproject.toml",
+    "workers/core/README.md",
+    "workers/core/pyproject.toml",
+    "apps/web/README.md",
+    "fixtures/public-web/acme-success.html",
+    "fixtures/public-web/transient-once.html",
+)
+
+ADR_HEADINGS = (
+    "## Context",
+    "## Decision drivers",
+    "## Considered options",
+    "## Decision",
+    "## Consequences",
+    "## Validation",
+    "## Revisit triggers",
+)
+
+SENSITIVE_ENV_NAMES = re.compile(
+    r"(?:SECRET|TOKEN|PASSWORD|PRIVATE_KEY|CLIENT_SECRET|DATABASE_URL)$"
+)
+
+
+def load_text(relative_path: str) -> str:
+    return (ROOT / relative_path).read_text(encoding="utf-8")
+
+
+def validate_required_files(errors: list[str]) -> None:
+    for relative_path in REQUIRED_FILES:
+        path = ROOT / relative_path
+        if not path.is_file():
+            errors.append(f"missing required file: {relative_path}")
+
+
+def validate_workspace(errors: list[str]) -> None:
+    package = json.loads(load_text("package.json"))
+    expected_workspaces = ["apps/*", "services/*", "workers/*", "packages/*"]
+    if package.get("private") is not True:
+        errors.append("package.json must set private=true")
+    if package.get("workspaces") != expected_workspaces:
+        errors.append("package.json workspaces do not match the accepted monorepo boundaries")
+    if package.get("engines", {}).get("node") != ">=24 <25":
+        errors.append("package.json must enforce the ADR-0002 Node.js 24 baseline")
+    if package.get("engines", {}).get("npm") != ">=11 <12":
+        errors.append("package.json must enforce the ADR-0002 npm 11 baseline")
+
+    lock = json.loads(load_text("package-lock.json"))
+    if lock.get("name") != package.get("name") or lock.get("version") != package.get("version"):
+        errors.append("package-lock.json identity must match package.json")
+    if lock.get("lockfileVersion") != 3:
+        errors.append("package-lock.json must use lockfileVersion 3")
+
+    pyproject = tomllib.loads(load_text("pyproject.toml"))
+    if pyproject.get("project", {}).get("requires-python") != ">=3.13,<3.14":
+        errors.append("pyproject.toml must enforce the ADR-0002 Python 3.13 baseline")
+    if load_text(".nvmrc").strip() != "24":
+        errors.append(".nvmrc must select Node.js 24")
+    if load_text(".python-version").strip() != "3.13":
+        errors.append(".python-version must select Python 3.13")
+    members = pyproject.get("tool", {}).get("uv", {}).get("workspace", {}).get("members")
+    expected_members = [
+        "packages/m0-core",
+        "packages/m0-local",
+        "services/api",
+        "workers/core",
+    ]
+    if members != expected_members:
+        errors.append("Python workspace members do not match the accepted M0 boundaries")
+
+
+def validate_decision_register(errors: list[str]) -> None:
+    register = load_text("docs/decisions/README.md")
+    found = re.findall(r"^\| (A-\d{2}) \|", register, flags=re.MULTILINE)
+    expected = [f"A-{number:02d}" for number in range(1, 21)]
+    if found != expected:
+        errors.append(
+            f"decision register rows must contain A-01 through A-20 in order; found {found}"
+        )
+
+
+def validate_adrs(errors: list[str]) -> None:
+    adr_dir = ROOT / "docs" / "adr"
+    for path in sorted(adr_dir.glob("[0-9][0-9][0-9][0-9]-*.md")):
+        if path.name == "0000-template.md":
+            continue
+        text = path.read_text(encoding="utf-8")
+        if "- **Status:** Accepted" not in text:
+            errors.append(f"{path.relative_to(ROOT)} must have an explicit accepted status")
+        for heading in ADR_HEADINGS:
+            if heading not in text:
+                errors.append(f"{path.relative_to(ROOT)} is missing heading: {heading}")
+
+
+def validate_example_environment(errors: list[str]) -> None:
+    for number, line in enumerate(load_text(".env.example").splitlines(), start=1):
+        stripped = line.strip()
+        if not stripped or stripped.startswith("#") or "=" not in stripped:
+            continue
+        name, value = stripped.split("=", maxsplit=1)
+        if SENSITIVE_ENV_NAMES.search(name) and value:
+            errors.append(
+                f".env.example:{number} must not contain a value for sensitive field {name}"
+            )
+
+
+def validate_markdown_fences(errors: list[str]) -> None:
+    ignored_parts = {".git", "node_modules"}
+    for path in ROOT.rglob("*.md"):
+        if ignored_parts.intersection(path.parts):
+            continue
+        fence_count = sum(
+            1 for line in path.read_text(encoding="utf-8").splitlines() if line.startswith("```")
+        )
+        if fence_count % 2:
+            errors.append(f"{path.relative_to(ROOT)} has an unbalanced fenced code block")
+
+
+def main() -> int:
+    errors: list[str] = []
+    validate_required_files(errors)
+    if not errors:
+        validate_workspace(errors)
+        validate_decision_register(errors)
+        validate_adrs(errors)
+        validate_example_environment(errors)
+        validate_markdown_fences(errors)
+
+    if errors:
+        print("Repository foundation validation failed:", file=sys.stderr)
+        for error in errors:
+            print(f"- {error}", file=sys.stderr)
+        return 1
+
+    print("Repository foundation validation passed.")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
