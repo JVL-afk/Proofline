@@ -28,5 +28,10 @@ ADRs capture decisions that constrain implementation or are expensive to reverse
 | [ADR-0003](0003-python-workspace-and-locking.md) | Accepted | uv workspace and universal lockfile for Python packages |
 | [ADR-0004](0004-m0-local-walking-skeleton-adapters.md) | Accepted | Local-only auth, SQLite workflow, fixture fetch, and diagnostic UI adapters for M0 |
 | [ADR-0005](0005-m1-bounded-local-research.md) | Accepted | Bounded local M1 research adapters without closing production source/retention decisions |
+| [ADR-0006](0006-m2-semantic-lineage-and-review.md) | Accepted | Separate semantic lineage with mandatory hypothesis review |
+| [ADR-0007](0007-commercial-hvac-lead-response-definition.md) | Accepted | Texas Commercial HVAC inbound lead-response definition |
+| [ADR-0008](0008-m2-deterministic-economics-and-hypotheticals.md) | Accepted | Deterministic potential-incremental-revenue scenarios |
+| [ADR-0009](0009-m2-uncalibrated-factor-bands.md) | Accepted | Heuristic factor bands until calibration exists |
+| [ADR-0010](0010-m2-rule-based-reasoning.md) | Accepted | Rule-based M2 reasoning and temporary local adapters |
 
 The product/compliance decisions A-01 through A-20 are tracked separately in `docs/decisions/README.md` until they become ADRs.

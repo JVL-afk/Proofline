@@ -1,4 +1,4 @@
-# M1 Application API
+# M2 Application API
 
 ## Ownership
 
@@ -8,14 +8,14 @@ Application/API team.
 
 - FastAPI transport and OpenAPI contract.
 - Local authentication dependency and server-side role checks.
-- M0 route compatibility plus business/research commands and provenance retrieval.
-- Composition of application services with M0/M1 local adapters.
+- M0/M1 route compatibility plus M2 opportunity commands, lineage, economics, factors, and review.
+- Composition of application services with M0/M1/M2 local adapters.
 - Static health/readiness endpoints and safe structured logging.
 
 ## Forbidden responsibilities
 
 - Executing fixture or public-web activities in API request threads.
-- Direct external web, AI, search, demo, audit, ROI, opportunity, or outreach behavior.
+- Direct external web, live AI/search, audit, demo, proposal, outreach, integration, or M3 behavior.
 - Production identity assumptions.
 
 ## Public interface
@@ -24,8 +24,9 @@ HTTP `/api/v1` and `/healthz` endpoints documented by FastAPI OpenAPI.
 
 ## Data access
 
-Through the `M0Repository` and `ResearchRepository` ports implemented by local adapters.
+Through the `M0Repository`, `ResearchRepository`, and `OpportunityRepository` ports implemented by
+local adapters.
 
 ## Dependencies
 
-FastAPI, Uvicorn, Pydantic Settings, and the M0/M1 core/local packages at composition boundaries.
+FastAPI, Uvicorn, Pydantic Settings, and the M0/M1/M2 core/local packages at composition boundaries.

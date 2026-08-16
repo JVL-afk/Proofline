@@ -1,0 +1,19 @@
+[project]
+name = "opintel-opportunity-core"
+version = "0.1.0"
+description = "M2 opportunity intelligence and deterministic economics contracts"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+  "opintel-m0-core",
+  "pydantic>=2.12,<3",
+]
+
+[tool.uv.sources]
+opintel-m0-core = { workspace = true }
+
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/opintel_opportunity"]

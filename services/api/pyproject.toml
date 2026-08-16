@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "opintel-api"
-version = "0.2.0"
-description = "Authenticated M0/M1 application and research API"
+version = "0.3.0"
+description = "Authenticated M0/M1/M2 research and deterministic opportunity API"
 requires-python = ">=3.13,<3.14"
 dependencies = [
   "fastapi>=0.139,<0.140",
@@ -13,6 +13,8 @@ dependencies = [
   "opintel-m0-local",
   "opintel-research-core",
   "opintel-research-local",
+  "opintel-opportunity-core",
+  "opintel-opportunity-local",
   "pydantic-settings>=2.10,<3",
   "uvicorn>=0.51,<0.52",
 ]
@@ -25,6 +27,8 @@ opintel-m0-core = { workspace = true }
 opintel-m0-local = { workspace = true }
 opintel-research-core = { workspace = true }
 opintel-research-local = { workspace = true }
+opintel-opportunity-core = { workspace = true }
+opintel-opportunity-local = { workspace = true }
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/opintel_api"]

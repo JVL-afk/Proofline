@@ -9,7 +9,9 @@ from uuid import UUID
 
 
 class Role(StrEnum):
+    ADMIN = "admin"
     OPERATOR = "operator"
+    REVIEWER = "reviewer"
     VIEWER = "viewer"
 
 
@@ -39,7 +41,10 @@ class Principal:
     roles: frozenset[Role]
 
     def can_operate(self) -> bool:
-        return Role.OPERATOR in self.roles
+        return Role.OPERATOR in self.roles or Role.ADMIN in self.roles
+
+    def can_review(self) -> bool:
+        return Role.REVIEWER in self.roles or Role.ADMIN in self.roles
 
 
 @dataclass(frozen=True, slots=True)

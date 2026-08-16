@@ -26,6 +26,18 @@ from opintel_m0_local import (
     UuidFactory,
 )
 from opintel_m0_local.settings import get_local_settings
+from opintel_opportunity.application import OpportunityApplicationService
+from opintel_opportunity.contracts import (
+    AnalysisRunView,
+    InferenceRejectRequest,
+    OpportunityBundleView,
+    OpportunityRunCreate,
+    RecalculateRequest,
+    ReviewRequest,
+)
+from opintel_opportunity.domain import OpportunityError, OpportunityNotFoundError
+from opintel_opportunity.ports import OpportunityRepository
+from opintel_opportunity_local import SqlAlchemyOpportunityRepository
 from opintel_research.application import ResearchApplicationService
 from opintel_research.contracts import (
     BusinessCreate,
@@ -51,6 +63,7 @@ def create_app(
     clock: Clock | None = None,
     identifiers: IdentifierFactory | None = None,
     research_repository: ResearchRepository | None = None,
+    opportunity_repository: OpportunityRepository | None = None,
 ) -> FastAPI:
     active_settings = settings or get_local_settings()
     active_repository = repository or SqlAlchemyM0Repository(active_settings.database_url)
@@ -59,10 +72,15 @@ def create_app(
         active_settings.database_url
     )
     active_research_repository.initialize()
+    active_opportunity_repository = opportunity_repository or SqlAlchemyOpportunityRepository(
+        active_settings.database_url
+    )
+    active_opportunity_repository.initialize()
     authenticator = LocalTokenAuthenticator(
         active_settings.auth_token.get_secret_value(),
         active_settings.auth_subject,
         active_settings.workspace_id,
+        active_settings.local_roles,
     )
     service = M0ApplicationService(
         active_repository,
@@ -74,12 +92,18 @@ def create_app(
         clock or SystemClock(),
         identifiers or UuidFactory(),
     )
+    opportunity_service = OpportunityApplicationService(
+        active_opportunity_repository,
+        clock or SystemClock(),
+        identifiers or UuidFactory(),
+    )
 
     app = FastAPI(
-        title="Opportunity Intelligence M1 API",
-        version="0.2.0",
+        title="Opportunity Intelligence M2 API",
+        version="0.3.0",
         description=(
-            "Bounded local research API. It has no opportunity, ROI, AI, demo, or outreach logic."
+            "Bounded local research and deterministic opportunity API. Live AI and M3 behavior "
+            "are disabled."
         ),
     )
     app.add_middleware(
@@ -94,6 +118,8 @@ def create_app(
     app.state.authenticator = authenticator
     app.state.research_repository = active_research_repository
     app.state.research_service = research_service
+    app.state.opportunity_repository = active_opportunity_repository
+    app.state.opportunity_service = opportunity_service
 
     def current_principal(
         credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer)],
@@ -136,9 +162,24 @@ def create_app(
             content={"detail": error.safe_message, "code": error.code},
         )
 
+    @app.exception_handler(OpportunityNotFoundError)
+    def opportunity_not_found_handler(
+        request: Request, error: OpportunityNotFoundError
+    ) -> JSONResponse:
+        del request, error
+        return JSONResponse(status_code=404, content={"detail": "opportunity resource not found"})
+
+    @app.exception_handler(OpportunityError)
+    def opportunity_error_handler(request: Request, error: OpportunityError) -> JSONResponse:
+        del request
+        return JSONResponse(
+            status_code=403 if error.code == "forbidden" else 400,
+            content={"detail": error.safe_message, "code": error.code},
+        )
+
     @app.get("/healthz", tags=["system"])
     def health() -> dict[str, str]:
-        return {"status": "ok", "mode": "m1-local"}
+        return {"status": "ok", "mode": "m2-local"}
 
     @app.get("/api/v1/session", response_model=PrincipalView, tags=["identity"])
     def session(principal: Annotated[Principal, Depends(current_principal)]) -> PrincipalView:
@@ -371,6 +412,131 @@ def create_app(
     ) -> ResearchEvidenceView:
         return ResearchEvidenceView.from_domain(
             research_service.get_evidence(principal, evidence_id)
+        )
+
+    @app.post(
+        "/api/v1/businesses/{business_id}/opportunity-analysis-runs",
+        response_model=AnalysisRunView,
+        status_code=status.HTTP_202_ACCEPTED,
+        tags=["opportunities"],
+    )
+    def start_opportunity_analysis(
+        business_id: UUID,
+        command: OpportunityRunCreate,
+        response: Response,
+        principal: Annotated[Principal, Depends(current_principal)],
+        idempotency_key: Annotated[
+            str,
+            Header(
+                alias="Idempotency-Key",
+                min_length=8,
+                max_length=128,
+                pattern=r"^[A-Za-z0-9._:-]+$",
+            ),
+        ],
+    ) -> AnalysisRunView:
+        research_run = research_service.get_run(principal, command.research_run_id)
+        if research_run.business_id != business_id:
+            raise OpportunityNotFoundError()
+        run, created = opportunity_service.start_run(
+            principal, business_id, command.research_run_id, idempotency_key
+        )
+        if not created:
+            response.status_code = status.HTTP_200_OK
+        return AnalysisRunView.from_domain(run)
+
+    @app.get(
+        "/api/v1/opportunity-analysis-runs/{run_id}",
+        response_model=AnalysisRunView,
+        tags=["opportunities"],
+    )
+    def get_opportunity_analysis(
+        run_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> AnalysisRunView:
+        return AnalysisRunView.from_domain(opportunity_service.get_run(principal, run_id))
+
+    @app.get(
+        "/api/v1/opportunity-analysis-runs/{run_id}/result",
+        response_model=OpportunityBundleView,
+        tags=["opportunities"],
+    )
+    def get_opportunity_result(
+        run_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> OpportunityBundleView:
+        return OpportunityBundleView.from_domain(
+            opportunity_service.get_bundle_by_run(principal, run_id)
+        )
+
+    @app.get(
+        "/api/v1/opportunities/{hypothesis_id}",
+        response_model=OpportunityBundleView,
+        tags=["opportunities"],
+    )
+    def get_opportunity(
+        hypothesis_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> OpportunityBundleView:
+        return OpportunityBundleView.from_domain(
+            opportunity_service.get_bundle_by_hypothesis(principal, hypothesis_id)
+        )
+
+    @app.post(
+        "/api/v1/opportunities/{hypothesis_id}/recalculate",
+        response_model=OpportunityBundleView,
+        tags=["opportunities"],
+    )
+    def recalculate_opportunity(
+        hypothesis_id: UUID,
+        command: RecalculateRequest,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> OpportunityBundleView:
+        inputs = tuple(item.model_dump() for item in command.assumptions)
+        return OpportunityBundleView.from_domain(
+            opportunity_service.recalculate(
+                principal, hypothesis_id, command.expected_hypothesis_revision_id, inputs
+            )
+        )
+
+    @app.post(
+        "/api/v1/opportunities/{hypothesis_id}/review-decisions",
+        response_model=OpportunityBundleView,
+        tags=["opportunities"],
+    )
+    def review_opportunity(
+        hypothesis_id: UUID,
+        command: ReviewRequest,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> OpportunityBundleView:
+        return OpportunityBundleView.from_domain(
+            opportunity_service.review(
+                principal,
+                hypothesis_id,
+                command.expected_hypothesis_revision_id,
+                command.decision,
+                command.reason,
+            )
+        )
+
+    @app.post(
+        "/api/v1/inferences/{inference_id}/rejections",
+        response_model=OpportunityBundleView,
+        tags=["opportunities"],
+    )
+    def reject_inference(
+        inference_id: UUID,
+        command: InferenceRejectRequest,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> OpportunityBundleView:
+        return OpportunityBundleView.from_domain(
+            opportunity_service.reject_hypothesis_inference(
+                principal,
+                command.hypothesis_id,
+                inference_id,
+                command.expected_hypothesis_revision_id,
+                command.reason,
+            )
         )
 
     return app

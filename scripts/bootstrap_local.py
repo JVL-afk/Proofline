@@ -24,12 +24,13 @@ def main() -> int:
     workspace_id = uuid4()
     content = "\n".join(
         (
-            "# Generated local M1 settings. Never commit this file.",
+            "# Generated local M2 settings. Never commit this file.",
             "OPINTEL_APP_ENV=development",
             "OPINTEL_DATABASE_URL=sqlite:///./local-data/m0.db",
             "OPINTEL_FIXTURE_ROOT=fixtures/public-web",
             f"OPINTEL_AUTH_TOKEN={token}",
             "OPINTEL_AUTH_SUBJECT=local-operator",
+            "OPINTEL_AUTH_ROLES=admin,operator,reviewer,viewer",
             f"OPINTEL_WORKSPACE_ID={workspace_id}",
             "OPINTEL_ALLOWED_ORIGINS=http://127.0.0.1:3000,http://localhost:3000",
             "OPINTEL_API_HOST=127.0.0.1",

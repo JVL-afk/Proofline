@@ -1,4 +1,4 @@
-"""Validate the dependency-free M1 repository foundation.
+"""Validate the dependency-free repository foundation through M2.
 
 This script intentionally uses only the Python standard library so a clean
 checkout can validate governance and structure before application dependencies
@@ -44,6 +44,11 @@ REQUIRED_FILES = (
     "docs/adr/0003-python-workspace-and-locking.md",
     "docs/adr/0004-m0-local-walking-skeleton-adapters.md",
     "docs/adr/0005-m1-bounded-local-research.md",
+    "docs/adr/0006-m2-semantic-lineage-and-review.md",
+    "docs/adr/0007-commercial-hvac-lead-response-definition.md",
+    "docs/adr/0008-m2-deterministic-economics-and-hypotheticals.md",
+    "docs/adr/0009-m2-uncalibrated-factor-bands.md",
+    "docs/adr/0010-m2-rule-based-reasoning.md",
     "docs/adr/README.md",
     "docs/decisions/README.md",
     "docs/engineering/dependencies.md",
@@ -51,6 +56,7 @@ REQUIRED_FILES = (
     "docs/engineering/standards.md",
     "docs/milestones/M0.md",
     "docs/milestones/M1.md",
+    "docs/milestones/M2.md",
     "docs/policies/environment-and-data.md",
     "docs/policies/secrets.md",
     "packages/m0-core/README.md",
@@ -61,6 +67,10 @@ REQUIRED_FILES = (
     "packages/research-core/pyproject.toml",
     "packages/research-local/README.md",
     "packages/research-local/pyproject.toml",
+    "packages/opportunity-core/README.md",
+    "packages/opportunity-core/pyproject.toml",
+    "packages/opportunity-local/README.md",
+    "packages/opportunity-local/pyproject.toml",
     "services/api/README.md",
     "services/api/pyproject.toml",
     "workers/core/README.md",
@@ -69,6 +79,8 @@ REQUIRED_FILES = (
     "workers/research/pyproject.toml",
     "workers/browser/README.md",
     "workers/browser/pyproject.toml",
+    "workers/intelligence/README.md",
+    "workers/intelligence/pyproject.toml",
     "apps/web/README.md",
     "fixtures/public-web/acme-success.html",
     "fixtures/public-web/transient-once.html",
@@ -131,13 +143,16 @@ def validate_workspace(errors: list[str]) -> None:
         "packages/m0-local",
         "packages/research-core",
         "packages/research-local",
+        "packages/opportunity-core",
+        "packages/opportunity-local",
         "services/api",
         "workers/core",
         "workers/research",
         "workers/browser",
+        "workers/intelligence",
     ]
     if members != expected_members:
-        errors.append("Python workspace members do not match the accepted M1 boundaries")
+        errors.append("Python workspace members do not match the accepted M2 boundaries")
 
 
 def validate_decision_register(errors: list[str]) -> None:

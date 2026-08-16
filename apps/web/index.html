@@ -7,7 +7,7 @@
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; connect-src http://127.0.0.1:8000 http://localhost:8000; img-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
     >
-    <title>M1 Research Engine</title>
+    <title>M2 Opportunity Engine</title>
     <link rel="stylesheet" href="styles.css">
     <script src="app.js" defer></script>
   </head>
@@ -15,8 +15,8 @@
     <main class="shell">
       <header>
         <p class="eyebrow">Opportunity Intelligence Platform</p>
-        <h1>M1 research engine</h1>
-        <p>Bounded public-page evidence only. No opportunity inference, AI, forms, demos, or outreach.</p>
+        <h1>M2 opportunity engine</h1>
+        <p>Evidence-backed Commercial HVAC hypotheses, deterministic economics, and mandatory review. Live AI and M3 behavior are disabled.</p>
       </header>
 
       <section class="card" aria-labelledby="auth-heading">
@@ -48,6 +48,28 @@
         <pre id="pages">No pages yet.</pre>
         <h3>Provenance-linked evidence</h3>
         <pre id="research-evidence">No evidence yet.</pre>
+      </section>
+
+      <section class="card" aria-labelledby="opportunity-heading">
+        <h2 id="opportunity-heading">4. Analyze one Commercial HVAC lead-response hypothesis</h2>
+        <p class="notice">Start only after the M1 research worker has completed the selected run. The separate intelligence worker performs deterministic analysis.</p>
+        <button id="start-opportunity" type="button" disabled>Start M2 analysis</button>
+        <button id="refresh-opportunity" type="button" disabled>Refresh opportunity</button>
+        <h3>Semantic lineage, information gaps, economics, and factors</h3>
+        <pre id="opportunity">No opportunity analysis yet.</pre>
+        <h3>Explicitly proposed hypothetical inputs</h3>
+        <p>These values are examples only and remain labelled <strong>PROPOSED</strong>.</p>
+        <label for="monthly-leads">Monthly inbound leads</label>
+        <input id="monthly-leads" inputmode="decimal" value="100">
+        <label for="affected-share">Affected share (0–1)</label>
+        <input id="affected-share" inputmode="decimal" value="0.20">
+        <label for="conversion-lift">Conversion lift (0–1)</label>
+        <input id="conversion-lift" inputmode="decimal" value="0.10">
+        <label for="customer-value">Average customer value (USD)</label>
+        <input id="customer-value" inputmode="decimal" value="5000">
+        <button id="recalculate" type="button" disabled>Calculate hypothetical scenario</button>
+        <button id="accept-opportunity" type="button" disabled>Accept reviewed revision</button>
+        <button id="reject-opportunity" type="button" disabled>Reject reviewed revision</button>
       </section>
 
       <p id="error" class="error" role="alert"></p>

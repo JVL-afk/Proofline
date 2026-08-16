@@ -17,6 +17,7 @@ from opintel_m0_local import (
     SqlAlchemyM0Repository,
     UuidFactory,
 )
+from opintel_opportunity_local import SqlAlchemyOpportunityRepository
 from opintel_research_local import SqlAlchemyResearchRepository
 from pydantic import SecretStr
 
@@ -69,14 +70,29 @@ def research_repository(settings: LocalSettings) -> SqlAlchemyResearchRepository
 
 
 @pytest.fixture
+def opportunity_repository(settings: LocalSettings) -> SqlAlchemyOpportunityRepository:
+    value = SqlAlchemyOpportunityRepository(settings.database_url)
+    value.initialize()
+    return value
+
+
+@pytest.fixture
 def client(
     settings: LocalSettings,
     repository: SqlAlchemyM0Repository,
     research_repository: SqlAlchemyResearchRepository,
+    opportunity_repository: SqlAlchemyOpportunityRepository,
     clock: FakeClock,
 ) -> Iterator[TestClient]:
     with TestClient(
-        create_app(settings, repository, clock, UuidFactory(), research_repository)
+        create_app(
+            settings,
+            repository,
+            clock,
+            UuidFactory(),
+            research_repository,
+            opportunity_repository,
+        )
     ) as value:
         yield value
 

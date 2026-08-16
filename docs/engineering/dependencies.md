@@ -35,3 +35,8 @@ separate local actions. Production use remains blocked until network/container i
 The package is maintained by Microsoft, declares Apache-2.0, supports the Python baseline, and its
 network/process behavior is confined to the browser-worker boundary. Adversarial tests cover the
 credential-free job contract; removal is owned by the research/browser boundary owner.
+
+M2 adds no third-party runtime dependency. `opportunity-core`, `opportunity-local`, and the
+intelligence worker reuse Pydantic, SQLAlchemy, and the locked workspace tools. Deterministic rules,
+Decimal economics, hashing, and mock reasoning use the Python standard library. Live AI SDKs and
+providers are prohibited by ADR-0010.

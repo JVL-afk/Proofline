@@ -24,6 +24,7 @@ class LocalSettings(BaseSettings):
     fixture_root: Path = Path("fixtures/public-web")
     auth_token: SecretStr
     auth_subject: str = "local-operator"
+    auth_roles: str = "admin,operator,reviewer,viewer"
     workspace_id: UUID
     allowed_origins: str = "http://127.0.0.1:3000,http://localhost:3000"
     api_host: str = "127.0.0.1"
@@ -51,6 +52,12 @@ class LocalSettings(BaseSettings):
     @property
     def cors_origins(self) -> list[str]:
         return [item.strip() for item in self.allowed_origins.split(",") if item.strip()]
+
+    @property
+    def local_roles(self) -> frozenset[str]:
+        return frozenset(
+            item.strip().lower() for item in self.auth_roles.split(",") if item.strip()
+        )
 
 
 @lru_cache(maxsize=1)

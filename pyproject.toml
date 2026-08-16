@@ -23,10 +23,13 @@ members = [
   "packages/m0-local",
   "packages/research-core",
   "packages/research-local",
+  "packages/opportunity-core",
+  "packages/opportunity-local",
   "services/api",
   "workers/core",
   "workers/research",
   "workers/browser",
+  "workers/intelligence",
 ]
 
 [tool.ruff]

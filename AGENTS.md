@@ -2,17 +2,15 @@
 
 ## Active milestone
 
-Milestone M1 Research Engine only. Read `GREENFIELD_ARCHITECTURE.md`,
-`docs/milestones/M1.md`, and the relevant accepted ADRs before changing the repository.
+Milestone M2 Opportunity Engine only. Read `GREENFIELD_ARCHITECTURE.md`,
+`docs/milestones/M2.md`, and accepted ADR-0006 through ADR-0010 before changing the repository.
 
-M1 includes bounded, explicitly permitted public-URL research, immutable page snapshots,
-observational extraction, provenance-linked evidence, and API/UI traceability. Local M1
-adapters remain constrained by ADR-0005 and do not approve production source, retention,
-cloud, workflow-hosting, or legal decisions.
+M2 includes the single Texas Commercial HVAC inbound lead-response definition, explicit semantic
+lineage, deterministic potential-incremental-revenue scenarios, heuristic factor bands, and
+mandatory human hypothesis review. Live AI is disabled and local adapters remain non-production.
 
-Do not implement M2 or later behavior: opportunity detection, ROI, scoring, product audits,
-demos, outreach, autonomous agents, mass discovery, authenticated scraping, or live AI/search
-providers.
+Do not implement M3 or later behavior: audits, demos, proposals, outreach, CRM/channel
+integrations, mass discovery, autonomous agents, external publication, or generated code.
 
 ## Required behavior
 
@@ -22,7 +20,7 @@ providers.
 - Do not add executable infrastructure until its cloud/region/IaC/data decisions are accepted.
 - Do not commit secrets, personal data, live provider payloads, generated credentials, or local service data.
 - Use exact/locked dependencies and justify new direct dependencies under `docs/engineering/dependencies.md`.
-- Keep all behavior outside the exact M1 research path out of the repository unless the user explicitly advances the milestone.
+- Keep all behavior outside the exact M2 opportunity path out of the repository unless the user explicitly advances the milestone.
 
 ## Validation
 
