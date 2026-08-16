@@ -1,0 +1,22 @@
+[project]
+name = "opintel-browser-worker"
+version = "0.1.0"
+description = "Isolated M1 browser fallback protocol boundary"
+requires-python = ">=3.13,<3.14"
+dependencies = [
+  "opintel-research-core",
+  "playwright>=1.62,<1.63",
+]
+
+[project.scripts]
+opintel-browser-worker = "opintel_browser_worker.main:run"
+
+[tool.uv.sources]
+opintel-research-core = { workspace = true }
+
+[build-system]
+requires = ["hatchling>=1.27,<2"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/opintel_browser_worker"]

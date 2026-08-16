@@ -24,7 +24,7 @@ def main() -> int:
     workspace_id = uuid4()
     content = "\n".join(
         (
-            "# Generated local M0 settings. Never commit this file.",
+            "# Generated local M1 settings. Never commit this file.",
             "OPINTEL_APP_ENV=development",
             "OPINTEL_DATABASE_URL=sqlite:///./local-data/m0.db",
             "OPINTEL_FIXTURE_ROOT=fixtures/public-web",
@@ -36,6 +36,8 @@ def main() -> int:
             "OPINTEL_API_PORT=8000",
             "OPINTEL_WORKER_POLL_SECONDS=0.25",
             "OPINTEL_WORKER_LEASE_SECONDS=30",
+            "OPINTEL_RESEARCH_LIVE_ENABLED=false",
+            "OPINTEL_RESEARCH_BROWSER_ENABLED=false",
             "",
         )
     )

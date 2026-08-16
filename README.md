@@ -4,18 +4,21 @@ Greenfield repository for the evidence-first business opportunity detection and 
 
 ## Current status
 
-The repository implements the **Milestone M0 walking skeleton** only. It proves local authentication, a campaign command, durable fixture workflow execution, persisted evidence provenance, and API/UI traceability. All external systems are local adapters or controlled fixtures.
+The repository implements the **Milestone M1 bounded research engine**. It retains M0 authentication
+and traceability while adding known-business permits, safe HTTP research, immutable snapshots,
+observational extraction, provenance-linked evidence, and API/UI retrieval.
 
-Do not start M1 or production integration work until the unresolved decision gates in [docs/milestones/M0.md](docs/milestones/M0.md) are satisfied.
+M1 local adapters are constrained by [ADR-0005](docs/adr/0005-m1-bounded-local-research.md).
+Open production source, retention, legal, workflow, and infrastructure decisions remain unresolved.
 
 ## Repository map
 
 | Path | Purpose |
 |---|---|
-| `apps/` | Separate M0 diagnostic web UI |
-| `services/` | Authenticated M0 API composition root |
-| `workers/` | Separate durable M0 worker process |
-| `packages/` | M0 domain/application ports and local adapters |
+| `apps/` | Separate M1 diagnostic web UI |
+| `services/` | Authenticated API composition root |
+| `workers/` | Separate core, HTTP research, and browser processes |
+| `packages/` | M0/M1 domain/application ports and local adapters |
 | `infra/` | Infrastructure-as-code and local-platform boundaries |
 | `docs/adr/` | Durable architectural decisions |
 | `docs/decisions/` | Human-approval decision register from the accepted architecture |
@@ -31,9 +34,9 @@ Do not start M1 or production integration work until the unresolved decision gat
 - uv 0.11.32–0.11.x
 - Git
 
-Docker, PostgreSQL, Temporal, Redis, cloud services, search, and AI providers are not required for M0.
+Docker, PostgreSQL, Temporal, Redis, cloud services, search, and AI providers are not required for M1.
 
-## Run the M0 walking skeleton
+## Run the M1 research engine
 
 From a fresh checkout:
 
@@ -50,14 +53,21 @@ uv run --locked opintel-api
 ```
 
 ```powershell
-uv run --locked opintel-worker
+$env:OPINTEL_RESEARCH_LIVE_ENABLED="true"
+uv run --locked opintel-research-worker
 ```
 
 ```powershell
 python -m http.server 3000 --bind 127.0.0.1 --directory apps/web
 ```
 
-Open `http://127.0.0.1:3000`. Copy `OPINTEL_AUTH_TOKEN` from the ignored local `.env`, authenticate, create one of the controlled campaigns, start the operation, and refresh until it succeeds or fails. The transient fixture deliberately retries once. The missing fixture deliberately fails safely.
+Open `http://127.0.0.1:3000`. Copy `OPINTEL_AUTH_TOKEN` from ignored `.env`, authenticate,
+name one known business, enter one explicitly permitted public URL, start the bounded run, and
+refresh its pages and evidence. Keep live research disabled unless the URL is authorized.
+
+Browser fallback is off by default. For an approved local browser test, run
+`uv run playwright install chromium`, then set `OPINTEL_RESEARCH_BROWSER_ENABLED=true` only on the
+research worker. A local process is not accepted production containment.
 
 The API schema is available at `http://127.0.0.1:8000/docs`. All non-health API endpoints require the bearer token.
 
@@ -73,16 +83,17 @@ npm test
 
 The repository validator uses only the Python standard library. Python lint, types, and tests run from the committed uv lockfile.
 
-## Local M0 data and reset
+## Local data and reset
 
 SQLite state is stored at `local-data/m0.db` and is ignored by Git. Stop the API/worker and remove that single local file to reset the walking skeleton. The repository never performs this deletion automatically.
 
-The local token adapter, SQLite workflow, static UI, and fixture fetcher are prohibited from production use by [ADR-0004](docs/adr/0004-m0-local-walking-skeleton-adapters.md).
+The local token, SQLite, static UI, HTTP, and browser-process adapters are prohibited from
+production use by ADR-0004 and ADR-0005.
 
 ## Authoritative documents
 
 1. [Accepted greenfield architecture](GREENFIELD_ARCHITECTURE.md)
-2. [M0 scope and exit criteria](docs/milestones/M0.md)
+2. [M1 scope and exit criteria](docs/milestones/M1.md)
 3. [Human decision register](docs/decisions/README.md)
 4. Accepted ADRs in [docs/adr/](docs/adr/)
 

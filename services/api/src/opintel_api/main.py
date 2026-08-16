@@ -1,4 +1,4 @@
-"""CLI entry point for the M0 API."""
+"""CLI entry point for the local M0/M1 API."""
 
 import uvicorn
 from opintel_m0_local.settings import get_local_settings

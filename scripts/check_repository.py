@@ -1,4 +1,4 @@
-"""Validate the dependency-free M0 repository foundation.
+"""Validate the dependency-free M1 repository foundation.
 
 This script intentionally uses only the Python standard library so a clean
 checkout can validate governance and structure before application dependencies
@@ -43,22 +43,32 @@ REQUIRED_FILES = (
     "docs/adr/0002-runtime-and-workspace-baseline.md",
     "docs/adr/0003-python-workspace-and-locking.md",
     "docs/adr/0004-m0-local-walking-skeleton-adapters.md",
+    "docs/adr/0005-m1-bounded-local-research.md",
     "docs/adr/README.md",
     "docs/decisions/README.md",
     "docs/engineering/dependencies.md",
     "docs/engineering/module-boundaries.md",
     "docs/engineering/standards.md",
     "docs/milestones/M0.md",
+    "docs/milestones/M1.md",
     "docs/policies/environment-and-data.md",
     "docs/policies/secrets.md",
     "packages/m0-core/README.md",
     "packages/m0-core/pyproject.toml",
     "packages/m0-local/README.md",
     "packages/m0-local/pyproject.toml",
+    "packages/research-core/README.md",
+    "packages/research-core/pyproject.toml",
+    "packages/research-local/README.md",
+    "packages/research-local/pyproject.toml",
     "services/api/README.md",
     "services/api/pyproject.toml",
     "workers/core/README.md",
     "workers/core/pyproject.toml",
+    "workers/research/README.md",
+    "workers/research/pyproject.toml",
+    "workers/browser/README.md",
+    "workers/browser/pyproject.toml",
     "apps/web/README.md",
     "fixtures/public-web/acme-success.html",
     "fixtures/public-web/transient-once.html",
@@ -119,11 +129,15 @@ def validate_workspace(errors: list[str]) -> None:
     expected_members = [
         "packages/m0-core",
         "packages/m0-local",
+        "packages/research-core",
+        "packages/research-local",
         "services/api",
         "workers/core",
+        "workers/research",
+        "workers/browser",
     ]
     if members != expected_members:
-        errors.append("Python workspace members do not match the accepted M0 boundaries")
+        errors.append("Python workspace members do not match the accepted M1 boundaries")
 
 
 def validate_decision_register(errors: list[str]) -> None:

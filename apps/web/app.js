@@ -1,13 +1,13 @@
 "use strict";
 
 const apiBase = "http://127.0.0.1:8000";
-let campaignId = null;
-let operationId = null;
+let businessId = null;
+let researchRunId = null;
 
 const byId = (id) => document.getElementById(id);
 
 function token() {
-  return sessionStorage.getItem("m0-token") || "";
+  return sessionStorage.getItem("local-token") || "";
 }
 
 async function request(path, options = {}) {
@@ -30,56 +30,61 @@ function showError(error) {
 
 byId("authenticate").addEventListener("click", async () => {
   byId("error").textContent = "";
-  sessionStorage.setItem("m0-token", byId("token").value);
+  sessionStorage.setItem("local-token", byId("token").value);
   try {
     const identity = await request("/api/v1/session");
     byId("identity").textContent = `${identity.subject} — workspace ${identity.workspace_id}`;
   } catch (error) {
-    sessionStorage.removeItem("m0-token");
+    sessionStorage.removeItem("local-token");
     showError(error);
   }
 });
 
-byId("create-campaign").addEventListener("click", async () => {
+byId("create-business").addEventListener("click", async () => {
   byId("error").textContent = "";
   try {
-    const campaign = await request("/api/v1/campaigns", {
+    const business = await request("/api/v1/businesses", {
       method: "POST",
       body: JSON.stringify({
-        name: byId("campaign-name").value,
-        fixture_uri: byId("fixture-uri").value,
+        name: byId("business-name").value,
+        public_url: byId("public-url").value,
       }),
     });
-    campaignId = campaign.id;
-    byId("campaign").textContent = `${campaign.name} — ${campaign.id}`;
-    byId("start-operation").disabled = false;
+    businessId = business.id;
+    byId("business").textContent = `${business.name} — ${business.canonical_url}`;
+    byId("start-research").disabled = false;
   } catch (error) {
     showError(error);
   }
 });
 
-byId("start-operation").addEventListener("click", async () => {
+byId("start-research").addEventListener("click", async () => {
   byId("error").textContent = "";
   try {
-    const operation = await request(`/api/v1/campaigns/${campaignId}/operations`, {
+    const run = await request(`/api/v1/businesses/${businessId}/research-runs`, {
       method: "POST",
       headers: { "Idempotency-Key": crypto.randomUUID() },
+      body: JSON.stringify({
+        policy: { max_pages: 5, max_depth: 1, per_domain_delay_seconds: 0.25 },
+      }),
     });
-    operationId = operation.id;
-    byId("refresh-operation").disabled = false;
-    byId("operation").textContent = JSON.stringify(operation, null, 2);
+    researchRunId = run.id;
+    byId("refresh-research").disabled = false;
+    byId("research-run").textContent = JSON.stringify(run, null, 2);
   } catch (error) {
     showError(error);
   }
 });
 
-byId("refresh-operation").addEventListener("click", async () => {
+byId("refresh-research").addEventListener("click", async () => {
   byId("error").textContent = "";
   try {
-    const operation = await request(`/api/v1/operations/${operationId}`);
-    byId("operation").textContent = JSON.stringify(operation, null, 2);
-    const evidence = await request(`/api/v1/operations/${operationId}/evidence`);
-    byId("evidence").textContent = JSON.stringify(evidence, null, 2);
+    const run = await request(`/api/v1/research-runs/${researchRunId}`);
+    byId("research-run").textContent = JSON.stringify(run, null, 2);
+    const pages = await request(`/api/v1/research-runs/${researchRunId}/pages`);
+    byId("pages").textContent = JSON.stringify(pages, null, 2);
+    const evidence = await request(`/api/v1/research-runs/${researchRunId}/evidence`);
+    byId("research-evidence").textContent = JSON.stringify(evidence, null, 2);
   } catch (error) {
     showError(error);
   }

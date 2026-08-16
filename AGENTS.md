@@ -2,11 +2,17 @@
 
 ## Active milestone
 
-Milestone M0 only. Read `GREENFIELD_ARCHITECTURE.md`, `docs/milestones/M0.md`, and the relevant accepted ADRs before changing the repository.
+Milestone M1 Research Engine only. Read `GREENFIELD_ARCHITECTURE.md`,
+`docs/milestones/M1.md`, and the relevant accepted ADRs before changing the repository.
 
-The M0 walking skeleton includes only local authentication, one fixture campaign command, a durable local operation, one controlled fixture fetch, one evidence record, and API/UI traceability.
+M1 includes bounded, explicitly permitted public-URL research, immutable page snapshots,
+observational extraction, provenance-linked evidence, and API/UI traceability. Local M1
+adapters remain constrained by ADR-0005 and do not approve production source, retention,
+cloud, workflow-hosting, or legal decisions.
 
-Do not implement M1 or later behavior: production discovery/crawling, public-web fetch, opportunities, ROI, scoring, audits, demos, outreach, autonomous agents, or live AI/search providers.
+Do not implement M2 or later behavior: opportunity detection, ROI, scoring, product audits,
+demos, outreach, autonomous agents, mass discovery, authenticated scraping, or live AI/search
+providers.
 
 ## Required behavior
 
@@ -16,7 +22,7 @@ Do not implement M1 or later behavior: production discovery/crawling, public-web
 - Do not add executable infrastructure until its cloud/region/IaC/data decisions are accepted.
 - Do not commit secrets, personal data, live provider payloads, generated credentials, or local service data.
 - Use exact/locked dependencies and justify new direct dependencies under `docs/engineering/dependencies.md`.
-- Keep all behavior outside the exact M0 walking-skeleton path out of the repository unless the user explicitly advances the milestone.
+- Keep all behavior outside the exact M1 research path out of the repository unless the user explicitly advances the milestone.
 
 ## Validation
 

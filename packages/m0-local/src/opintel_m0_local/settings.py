@@ -1,4 +1,4 @@
-"""Environment-only settings for local M0 adapters."""
+"""Environment-only settings shared by local M0/M1 composition roots."""
 
 from __future__ import annotations
 
@@ -30,12 +30,14 @@ class LocalSettings(BaseSettings):
     api_port: int = Field(default=8000, ge=1024, le=65535)
     worker_poll_seconds: float = Field(default=0.25, ge=0.05, le=10)
     worker_lease_seconds: int = Field(default=30, ge=5, le=300)
+    research_live_enabled: bool = False
+    research_browser_enabled: bool = False
 
     @field_validator("database_url")
     @classmethod
     def local_sqlite_only(cls, value: str) -> str:
         if not value.startswith("sqlite:///"):
-            raise ValueError("M0 local adapter accepts only sqlite:/// database URLs")
+            raise ValueError("local adapters accept only sqlite:/// database URLs")
         return value
 
     @field_validator("auth_subject")

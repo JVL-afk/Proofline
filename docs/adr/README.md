@@ -27,5 +27,6 @@ ADRs capture decisions that constrain implementation or are expensive to reverse
 | [ADR-0002](0002-runtime-and-workspace-baseline.md) | Accepted | Node.js 24 LTS, npm workspaces, and Python 3.13 baseline for M0 |
 | [ADR-0003](0003-python-workspace-and-locking.md) | Accepted | uv workspace and universal lockfile for Python packages |
 | [ADR-0004](0004-m0-local-walking-skeleton-adapters.md) | Accepted | Local-only auth, SQLite workflow, fixture fetch, and diagnostic UI adapters for M0 |
+| [ADR-0005](0005-m1-bounded-local-research.md) | Accepted | Bounded local M1 research adapters without closing production source/retention decisions |
 
 The product/compliance decisions A-01 through A-20 are tracked separately in `docs/decisions/README.md` until they become ADRs.
