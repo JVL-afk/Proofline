@@ -1,5 +1,6 @@
-"""FastAPI transport and M0 composition root."""
+"""FastAPI transport and local M0-M3 composition root."""
 
+from dataclasses import asdict
 from typing import Annotated
 from uuid import UUID
 
@@ -7,6 +8,16 @@ from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response, 
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from opintel_audit.application import AuditApplicationService
+from opintel_audit.contracts import (
+    AuditBundleView,
+    AuditCreate,
+    AuditOperationView,
+    AuditReviewRequest,
+)
+from opintel_audit.domain import AuditError, AuditNotFoundError
+from opintel_audit.ports import AuditRepository
+from opintel_audit_local import CanonicalAuditSourceCatalog, SqlAlchemyAuditRepository
 from opintel_m0.application import M0ApplicationService
 from opintel_m0.contracts import (
     CampaignCreate,
@@ -64,6 +75,7 @@ def create_app(
     identifiers: IdentifierFactory | None = None,
     research_repository: ResearchRepository | None = None,
     opportunity_repository: OpportunityRepository | None = None,
+    audit_repository: AuditRepository | None = None,
 ) -> FastAPI:
     active_settings = settings or get_local_settings()
     active_repository = repository or SqlAlchemyM0Repository(active_settings.database_url)
@@ -76,6 +88,10 @@ def create_app(
         active_settings.database_url
     )
     active_opportunity_repository.initialize()
+    active_audit_repository = audit_repository or SqlAlchemyAuditRepository(
+        active_settings.database_url
+    )
+    active_audit_repository.initialize()
     authenticator = LocalTokenAuthenticator(
         active_settings.auth_token.get_secret_value(),
         active_settings.auth_subject,
@@ -97,13 +113,22 @@ def create_app(
         clock or SystemClock(),
         identifiers or UuidFactory(),
     )
+    audit_source = CanonicalAuditSourceCatalog(
+        active_opportunity_repository, active_research_repository
+    )
+    audit_service = AuditApplicationService(
+        active_audit_repository,
+        audit_source,
+        clock or SystemClock(),
+        identifiers or UuidFactory(),
+    )
 
     app = FastAPI(
-        title="Opportunity Intelligence M2 API",
-        version="0.3.0",
+        title="Opportunity Intelligence M3 API",
+        version="0.4.0",
         description=(
-            "Bounded local research and deterministic opportunity API. Live AI and M3 behavior "
-            "are disabled."
+            "Bounded local research, deterministic opportunities, and evidence-linked audits. "
+            "Live AI and publication are disabled."
         ),
     )
     app.add_middleware(
@@ -120,6 +145,9 @@ def create_app(
     app.state.research_service = research_service
     app.state.opportunity_repository = active_opportunity_repository
     app.state.opportunity_service = opportunity_service
+    app.state.audit_repository = active_audit_repository
+    app.state.audit_source = audit_source
+    app.state.audit_service = audit_service
 
     def current_principal(
         credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer)],
@@ -177,9 +205,22 @@ def create_app(
             content={"detail": error.safe_message, "code": error.code},
         )
 
+    @app.exception_handler(AuditNotFoundError)
+    def audit_not_found_handler(request: Request, error: AuditNotFoundError) -> JSONResponse:
+        del request, error
+        return JSONResponse(status_code=404, content={"detail": "audit resource not found"})
+
+    @app.exception_handler(AuditError)
+    def audit_error_handler(request: Request, error: AuditError) -> JSONResponse:
+        del request
+        return JSONResponse(
+            status_code=403 if error.code == "forbidden" else 400,
+            content={"detail": error.safe_message, "code": error.code},
+        )
+
     @app.get("/healthz", tags=["system"])
     def health() -> dict[str, str]:
-        return {"status": "ok", "mode": "m2-local"}
+        return {"status": "ok", "mode": "m3-local"}
 
     @app.get("/api/v1/session", response_model=PrincipalView, tags=["identity"])
     def session(principal: Annotated[Principal, Depends(current_principal)]) -> PrincipalView:
@@ -536,6 +577,120 @@ def create_app(
                 inference_id,
                 command.expected_hypothesis_revision_id,
                 command.reason,
+            )
+        )
+
+    @app.post(
+        "/api/v1/opportunities/{hypothesis_id}/audit-revisions",
+        response_model=AuditOperationView,
+        status_code=status.HTTP_202_ACCEPTED,
+        tags=["audits"],
+    )
+    def create_audit_revision(
+        hypothesis_id: UUID,
+        command: AuditCreate,
+        response: Response,
+        principal: Annotated[Principal, Depends(current_principal)],
+        idempotency_key: Annotated[
+            str,
+            Header(
+                alias="Idempotency-Key",
+                min_length=8,
+                max_length=128,
+                pattern=r"^[A-Za-z0-9._:-]+$",
+            ),
+        ],
+    ) -> AuditOperationView:
+        operation, created = audit_service.start_generation(
+            principal,
+            hypothesis_id,
+            command.expected_hypothesis_revision_id,
+            idempotency_key,
+            command.parent_revision_id,
+        )
+        if not created:
+            response.status_code = status.HTTP_200_OK
+        return AuditOperationView.from_domain(operation)
+
+    @app.get(
+        "/api/v1/audit-operations/{operation_id}",
+        response_model=AuditOperationView,
+        tags=["audits"],
+    )
+    def get_audit_operation(
+        operation_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> AuditOperationView:
+        return AuditOperationView.from_domain(audit_service.get_operation(principal, operation_id))
+
+    @app.get(
+        "/api/v1/audit-revisions/{revision_id}",
+        response_model=AuditBundleView,
+        tags=["audits"],
+    )
+    def get_audit_revision(
+        revision_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> AuditBundleView:
+        return AuditBundleView.from_domain(audit_service.get_revision(principal, revision_id))
+
+    @app.get(
+        "/api/v1/audit-revisions/{revision_id}/claims/{claim_id}/lineage",
+        response_model=dict[str, object],
+        tags=["audits"],
+    )
+    def get_audit_claim_lineage(
+        revision_id: UUID,
+        claim_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> dict[str, object]:
+        bundle = audit_service.get_revision(principal, revision_id)
+        claim = next((item for item in bundle.revision.claims if item.id == claim_id), None)
+        if claim is None:
+            raise AuditNotFoundError()
+        return {
+            "claim": asdict(claim),
+            "manifest_hash": bundle.revision.manifest.checksum,
+            "evidence_links": [f"/api/v1/research-evidence/{item}" for item in claim.evidence_ids],
+            "economic_run_id": claim.economic_run_id,
+            "assumption_revision_ids": list(claim.assumption_revision_ids),
+            "inference_revision_ids": list(claim.inference_revision_ids),
+            "dependency_claim_ids": list(claim.dependency_claim_ids),
+        }
+
+    @app.get(
+        "/api/v1/audits/{audit_id}/revisions",
+        response_model=list[AuditBundleView],
+        tags=["audits"],
+    )
+    def list_audit_revisions(
+        audit_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> list[AuditBundleView]:
+        return [
+            AuditBundleView.from_domain(item)
+            for item in audit_service.list_revisions(principal, audit_id)
+        ]
+
+    @app.post(
+        "/api/v1/audit-revisions/{revision_id}/review-decisions",
+        response_model=AuditBundleView,
+        tags=["audits"],
+    )
+    def review_audit_revision(
+        revision_id: UUID,
+        command: AuditReviewRequest,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> AuditBundleView:
+        return AuditBundleView.from_domain(
+            audit_service.review(
+                principal,
+                revision_id,
+                command.expected_revision_hash,
+                command.expected_manifest_hash,
+                command.decision,
+                command.reason,
+                tuple(command.acknowledged_qc_codes),
             )
         )
 

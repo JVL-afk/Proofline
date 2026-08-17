@@ -6,6 +6,8 @@ let researchRunId = null;
 let opportunityRunId = null;
 let hypothesisId = null;
 let hypothesisRevisionId = null;
+let auditOperationId = null;
+let auditRevision = null;
 
 const byId = (id) => document.getElementById(id);
 
@@ -123,6 +125,9 @@ byId("refresh-opportunity").addEventListener("click", async () => {
       byId("recalculate").disabled = false;
       byId("accept-opportunity").disabled = result.hypothesis.status !== "ready_for_review";
       byId("reject-opportunity").disabled = false;
+      byId("start-audit").disabled = !["ready_for_review", "accepted"].includes(
+        result.hypothesis.status,
+      );
     }
   } catch (error) {
     showError(error);
@@ -152,6 +157,10 @@ byId("recalculate").addEventListener("click", async () => {
     });
     byId("opportunity").textContent = JSON.stringify(result, null, 2);
     hypothesisRevisionId = result.hypothesis.id;
+    byId("start-audit").disabled = !["ready_for_review", "accepted"].includes(
+      result.hypothesis.status,
+    );
+    hypothesisRevisionId = result.hypothesis.id;
     byId("accept-opportunity").disabled = result.hypothesis.status !== "ready_for_review";
   } catch (error) {
     showError(error);
@@ -176,3 +185,67 @@ async function review(decision) {
 
 byId("accept-opportunity").addEventListener("click", () => review("accept"));
 byId("reject-opportunity").addEventListener("click", () => review("reject"));
+
+byId("start-audit").addEventListener("click", async () => {
+  byId("error").textContent = "";
+  try {
+    const result = await request(`/api/v1/opportunities/${hypothesisId}/audit-revisions`, {
+      method: "POST",
+      headers: { "Idempotency-Key": crypto.randomUUID() },
+      body: JSON.stringify({ expected_hypothesis_revision_id: hypothesisRevisionId }),
+    });
+    auditOperationId = result.operation.id;
+    byId("audit").textContent = JSON.stringify(result, null, 2);
+    byId("refresh-audit").disabled = false;
+  } catch (error) {
+    showError(error);
+  }
+});
+
+byId("refresh-audit").addEventListener("click", async () => {
+  byId("error").textContent = "";
+  try {
+    const operation = await request(`/api/v1/audit-operations/${auditOperationId}`);
+    if (!operation.operation.audit_revision_id) {
+      byId("audit").textContent = JSON.stringify(operation, null, 2);
+      return;
+    }
+    const result = await request(
+      `/api/v1/audit-revisions/${operation.operation.audit_revision_id}`,
+    );
+    auditRevision = result.revision;
+    byId("audit").textContent = JSON.stringify(result, null, 2);
+    const reviewable = auditRevision.state === "review_required";
+    byId("approve-audit").disabled = !reviewable || auditRevision.kind !== "full";
+    byId("reject-audit").disabled = !reviewable;
+  } catch (error) {
+    showError(error);
+  }
+});
+
+async function reviewAudit(decision) {
+  try {
+    const result = await request(
+      `/api/v1/audit-revisions/${auditRevision.id}/review-decisions`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          expected_revision_hash: auditRevision.revision_hash,
+          expected_manifest_hash: auditRevision.manifest.checksum,
+          decision,
+          reason: `Local diagnostic audit ${decision} decision.`,
+          acknowledged_qc_codes: [],
+        }),
+      },
+    );
+    auditRevision = result.revision;
+    byId("audit").textContent = JSON.stringify(result, null, 2);
+    byId("approve-audit").disabled = true;
+    byId("reject-audit").disabled = true;
+  } catch (error) {
+    showError(error);
+  }
+}
+
+byId("approve-audit").addEventListener("click", () => reviewAudit("approve"));
+byId("reject-audit").addEventListener("click", () => reviewAudit("reject"));

@@ -1,4 +1,4 @@
-# M2 Diagnostic Web UI
+# M3 Diagnostic Web UI
 
 ## Ownership
 
@@ -11,11 +11,12 @@ Application/web team.
 - Poll research state and display pages, snapshot links, and evidence provenance.
 - Start deterministic Commercial HVAC opportunity analysis, inspect lineage/gaps/economics/factors,
   edit visibly proposed assumptions, and record local human review.
+- Generate and inspect structured audit manifests, claims, QC, provenance, and exact review state.
 
 ## Forbidden responsibilities
 
-- Database access, provider credentials, crawling, raw HTML rendering, live AI, audits, demos,
-  outreach, integrations, production identity, or M3 behavior.
+- Database access, provider credentials, crawling, raw HTML rendering, live AI, demos, publication,
+  outreach, integrations, production identity, or M4 behavior.
 
 ## Public interface
 

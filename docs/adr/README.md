@@ -38,5 +38,10 @@ ADRs capture decisions that constrain implementation or are expensive to reverse
 | [ADR-0013](0013-deterministic-baseline-ai-routing.md) | Accepted | Advisory-only routing with deterministic M2 fallback |
 | [ADR-0014](0014-live-evaluation-isolation-and-budgets.md) | Accepted | Disabled live boundary, budgets, provenance, and data controls |
 | [ADR-0015](0015-controlled-live-model-tournament.md) | Accepted | Synthetic-only, budget-capped live model qualification tournament |
+| [ADR-0016](0016-structured-audit-claims-and-manifests.md) | Accepted | Structured audit claims and immutable input manifests |
+| [ADR-0017](0017-audit-lineage-and-qc.md) | Accepted | Audit lineage and non-overridable semantic QC |
+| [ADR-0018](0018-deterministic-audit-composition.md) | Accepted | Deterministic audit composition and disabled wording-only AI port |
+| [ADR-0019](0019-audit-review-and-invalidation.md) | Accepted | Exact revision review and invalidation lifecycle |
+| [ADR-0020](0020-audit-eligibility-and-publication-boundary.md) | Accepted | Opportunity eligibility and no-publication M3 boundary |
 
 The product/compliance decisions A-01 through A-20 are tracked separately in `docs/decisions/README.md` until they become ADRs.

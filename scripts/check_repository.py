@@ -1,4 +1,4 @@
-"""Validate the dependency-free repository foundation through M2.5.
+"""Validate the dependency-free repository foundation through M3.
 
 This script intentionally uses only the Python standard library so a clean
 checkout can validate governance and structure before application dependencies
@@ -54,6 +54,11 @@ REQUIRED_FILES = (
     "docs/adr/0013-deterministic-baseline-ai-routing.md",
     "docs/adr/0014-live-evaluation-isolation-and-budgets.md",
     "docs/adr/0015-controlled-live-model-tournament.md",
+    "docs/adr/0016-structured-audit-claims-and-manifests.md",
+    "docs/adr/0017-audit-lineage-and-qc.md",
+    "docs/adr/0018-deterministic-audit-composition.md",
+    "docs/adr/0019-audit-review-and-invalidation.md",
+    "docs/adr/0020-audit-eligibility-and-publication-boundary.md",
     "docs/adr/README.md",
     "docs/decisions/README.md",
     "docs/engineering/dependencies.md",
@@ -64,6 +69,7 @@ REQUIRED_FILES = (
     "docs/milestones/M2.md",
     "docs/milestones/M2.5.md",
     "docs/milestones/M2.6.md",
+    "docs/milestones/M3.md",
     "docs/policies/environment-and-data.md",
     "docs/policies/secrets.md",
     "packages/m0-core/README.md",
@@ -78,6 +84,10 @@ REQUIRED_FILES = (
     "packages/opportunity-core/pyproject.toml",
     "packages/opportunity-local/README.md",
     "packages/opportunity-local/pyproject.toml",
+    "packages/audit-core/README.md",
+    "packages/audit-core/pyproject.toml",
+    "packages/audit-local/README.md",
+    "packages/audit-local/pyproject.toml",
     "packages/qualification-core/README.md",
     "packages/qualification-core/pyproject.toml",
     "packages/qualification-local/README.md",
@@ -160,6 +170,8 @@ def validate_workspace(errors: list[str]) -> None:
         "packages/research-local",
         "packages/opportunity-core",
         "packages/opportunity-local",
+        "packages/audit-core",
+        "packages/audit-local",
         "packages/qualification-core",
         "packages/qualification-local",
         "packages/qualification-live",
@@ -170,7 +182,7 @@ def validate_workspace(errors: list[str]) -> None:
         "workers/intelligence",
     ]
     if members != expected_members:
-        errors.append("Python workspace members do not match the accepted M2.6 boundaries")
+        errors.append("Python workspace members do not match the accepted M3 boundaries")
 
 
 def validate_decision_register(errors: list[str]) -> None:

@@ -49,3 +49,7 @@ M2.6 adds no third-party dependency. `qualification-live` uses a narrow standard
 transport behind provider-native adapter boundaries. This keeps provider request/response types and
 credentials out of application contracts, avoids SDK drift in deterministic CI, and permits complete
 fake-transport coverage. The explicit tournament runner is the sole live-network entry point.
+
+M3 adds no third-party dependency. `audit-core` uses standard-library hashing, JSON, regular
+expressions, and existing typed contracts. `audit-local` reuses locked SQLAlchemy. No renderer,
+provider SDK, PDF, publishing, or network dependency is introduced.

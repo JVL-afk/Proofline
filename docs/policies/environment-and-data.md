@@ -55,6 +55,16 @@
 - The explicit tournament runner has a USD 50 total hard cap and per-deployment sub-budgets.
 - Normal tests never load credentials and deny network access through fake transports.
 
+## M3 audit data
+
+- Audit drafts and reviewer edits are `Confidential`.
+- M3 stores bounded evidence excerpts and canonical IDs/hashes only; M1 remains owner of snapshots
+  and raw source content.
+- M3 stores no provider payload and invokes no live provider.
+- Ordinary logs contain IDs, hashes, statuses, timings, and QC codes rather than audit prose,
+  evidence bodies, or reviewer edits.
+- M3 establishes no retention schedule and inherits future A-08 policy.
+
 ## Backups and recovery
 
 Backup scope, encryption, point-in-time recovery, RTO/RPO, region, retention, and restoration cadence remain blocked on A-04, A-08, and A-18. No infrastructure implementation should imply values for them.

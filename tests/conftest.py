@@ -9,6 +9,7 @@ from uuid import UUID, uuid4
 import pytest
 from fastapi.testclient import TestClient
 from opintel_api import create_app
+from opintel_audit_local import SqlAlchemyAuditRepository
 from opintel_m0.workflow import M0WorkflowRunner
 from opintel_m0_local import (
     FixtureHtmlExtractor,
@@ -77,11 +78,19 @@ def opportunity_repository(settings: LocalSettings) -> SqlAlchemyOpportunityRepo
 
 
 @pytest.fixture
+def audit_repository(settings: LocalSettings) -> SqlAlchemyAuditRepository:
+    value = SqlAlchemyAuditRepository(settings.database_url)
+    value.initialize()
+    return value
+
+
+@pytest.fixture
 def client(
     settings: LocalSettings,
     repository: SqlAlchemyM0Repository,
     research_repository: SqlAlchemyResearchRepository,
     opportunity_repository: SqlAlchemyOpportunityRepository,
+    audit_repository: SqlAlchemyAuditRepository,
     clock: FakeClock,
 ) -> Iterator[TestClient]:
     with TestClient(
@@ -92,6 +101,7 @@ def client(
             UuidFactory(),
             research_repository,
             opportunity_repository,
+            audit_repository,
         )
     ) as value:
         yield value

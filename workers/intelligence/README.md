@@ -1,12 +1,12 @@
-# M2 Intelligence Worker
+# M3 Intelligence Worker
 
-Owner: M2 opportunity intelligence.
+Owner: M2 opportunity intelligence and M3 audit composition.
 
-Responsibilities: claim durable local M2 analysis runs and execute deterministic Commercial HVAC
-rules, mock reasoning validation, economics, and factor snapshots.
+Responsibilities: claim durable local M2 analysis and M3 audit operations; execute deterministic
+Commercial HVAC rules, economics/factors, audit composition, and semantic QC.
 
-Forbidden: public-web access, live AI/provider credentials, audits, demos, outreach, integrations,
-arbitrary code, and M3 behavior.
+Forbidden: public-web access, live AI/provider credentials, canonical M1/M2 mutation, demos,
+publishing/export, outreach, integrations, arbitrary code, and M4 behavior.
 
-Public interface: `opintel-intelligence-worker` CLI. Data access: local M1 evidence through its
-declared repository contract and local M2 persistence.
+Public interface: `opintel-intelligence-worker` CLI. Data access: declared local M1/M2 catalogs and
+local M2/M3 persistence ports.

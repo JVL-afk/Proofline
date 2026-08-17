@@ -28,7 +28,7 @@ This register transcribes A-01 through A-20 from section 25 of the accepted arch
 | A-12 | Demo sharing | Authenticated-only initially | Open | Unassigned | ADR/access policy |
 | A-13 | ROI semantics | Approve formulas, sources, scenarios, currency, and value meaning | Accepted | Product/architecture owners | ADR-0008 initial M2 formula only |
 | A-14 | Score calibration | Approve rubrics, weights, thresholds, and heuristic labels | Deferred | Product/architecture owners | Uncalibrated M2 bands only under ADR-0009 |
-| A-15 | Human approval policy | Define permissions, warning overrides, duties, and reapproval triggers | Deferred | Product/architecture owners | Local M2 governance accepted by ADR-0010; production duties remain open |
+| A-15 | Human approval policy | Define permissions, warning overrides, duties, and reapproval triggers | Deferred | Product/architecture owners | Local M2/M3 governance accepted by ADR-0010/ADR-0019; production duties remain open |
 | A-16 | Outreach in MVP | Manual copy/export of drafts only | Open | Unassigned | Product/legal ADR |
 | A-17 | Legal/privacy/compliance review | Name accountable jurisdictional owners before live research | Open | Unassigned | Signed review record |
 | A-18 | SLO/DR/cost limits | Approve SLOs, RTO/RPO, budgets, alerts, and ownership | Open | Unassigned | Operations ADR/runbook baseline |

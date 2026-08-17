@@ -7,7 +7,7 @@
       http-equiv="Content-Security-Policy"
       content="default-src 'self'; connect-src http://127.0.0.1:8000 http://localhost:8000; img-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'"
     >
-    <title>M2 Opportunity Engine</title>
+    <title>M3 Evidence-Linked Audit Engine</title>
     <link rel="stylesheet" href="styles.css">
     <script src="app.js" defer></script>
   </head>
@@ -15,8 +15,8 @@
     <main class="shell">
       <header>
         <p class="eyebrow">Opportunity Intelligence Platform</p>
-        <h1>M2 opportunity engine</h1>
-        <p>Evidence-backed Commercial HVAC hypotheses, deterministic economics, and mandatory review. Live AI and M3 behavior are disabled.</p>
+        <h1>M3 evidence-linked audit engine</h1>
+        <p>Canonical evidence, deterministic Commercial HVAC opportunities, structured audits, hard QC, and version-bound human review. Live AI and publication are disabled.</p>
       </header>
 
       <section class="card" aria-labelledby="auth-heading">
@@ -70,6 +70,17 @@
         <button id="recalculate" type="button" disabled>Calculate hypothetical scenario</button>
         <button id="accept-opportunity" type="button" disabled>Accept reviewed revision</button>
         <button id="reject-opportunity" type="button" disabled>Reject reviewed revision</button>
+      </section>
+
+      <section class="card" aria-labelledby="audit-heading">
+        <h2 id="audit-heading">5. Generate and inspect an evidence-linked audit</h2>
+        <p class="notice">Accepted opportunities produce full audits. Ready-for-review opportunities produce internal diagnostic audits that cannot be approved.</p>
+        <button id="start-audit" type="button" disabled>Generate M3 audit</button>
+        <button id="refresh-audit" type="button" disabled>Refresh audit</button>
+        <button id="approve-audit" type="button" disabled>Approve exact audit revision</button>
+        <button id="reject-audit" type="button" disabled>Reject exact audit revision</button>
+        <h3>Operation, manifest, claims, QC, provenance, and review</h3>
+        <pre id="audit">No audit yet.</pre>
       </section>
 
       <p id="error" class="error" role="alert"></p>
