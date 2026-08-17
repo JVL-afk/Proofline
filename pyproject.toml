@@ -27,6 +27,7 @@ members = [
   "packages/opportunity-local",
   "packages/qualification-core",
   "packages/qualification-local",
+  "packages/qualification-live",
   "services/api",
   "workers/core",
   "workers/research",

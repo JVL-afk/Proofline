@@ -18,6 +18,11 @@ M2.5 has no live-provider adapter and requires no provider credential. Future ev
 must be scoped to the isolated evaluation runtime and must never be available to research/browser
 workers, ordinary CI, the web application, or deterministic M2 workers.
 
+M2.6 credentials may be read only by the explicit local tournament process from an ignored local
+secret file. `apikeys.txt`, `.env`, and `.env.local` are excluded from Git. Values must never appear
+in command arguments, exceptions, logs, provider metadata, hashes, ledgers, databases, test output,
+or tournament reports. The tournament process passes each credential only to its matching adapter.
+
 ## CI/CD
 
 - Prefer workload identity federation over long-lived repository secrets.

@@ -4,10 +4,12 @@ Greenfield repository for the evidence-first business opportunity detection and 
 
 ## Current status
 
-The repository implements **Milestone M2.5 AI qualification infrastructure**. M2 remains the
-authoritative opportunity engine. M2.5 adds provider-neutral task contracts, a versioned deployment
-registry, a controlled corpus, hard safety gates, deterministic mock providers, qualified-only
-advisory routing, and isolated cost/invocation ledgers.
+The repository has closed **Milestone M2.6 controlled live model qualification** as an experimental
+checkpoint. M2 remains the authoritative opportunity engine. Tournament Run 1 produced no qualified
+deployment/task pair; no model route is active and production AI remains disabled. The controlled
+evaluation infrastructure is available, while provider/model selection is intentionally deferred
+until representative end-to-end product workflows exist. Normal CI remains credential-free and
+network-free.
 
 M1/M2/M2.5 local adapters are constrained by
 [ADR-0005](docs/adr/0005-m1-bounded-local-research.md),
@@ -22,7 +24,7 @@ Open production source, retention, legal, workflow, and infrastructure decisions
 | `apps/` | Separate M2 diagnostic web UI |
 | `services/` | Authenticated API composition root |
 | `workers/` | Separate core, HTTP research, browser, and deterministic intelligence processes |
-| `packages/` | M0/M1/M2/M2.5 domain/application ports and local adapters |
+| `packages/` | M0/M1/M2/M2.5 contracts plus isolated M2.6 live-evaluation adapters |
 | `infra/` | Infrastructure-as-code and local-platform boundaries |
 | `docs/adr/` | Durable architectural decisions |
 | `docs/decisions/` | Human-approval decision register from the accepted architecture |
@@ -38,7 +40,8 @@ Open production source, retention, legal, workflow, and infrastructure decisions
 - uv 0.11.32–0.11.x
 - Git
 
-Docker, PostgreSQL, Temporal, Redis, cloud services, search, and AI providers are not required for M2.5.
+Docker, PostgreSQL, Temporal, Redis, cloud services, search, and AI providers are not required for
+normal deterministic development or CI. M2.6 live evaluation is a separate explicit local command.
 
 ## Run the M2 opportunity engine and offline M2.5 qualification tests
 
@@ -72,8 +75,8 @@ python -m http.server 3000 --bind 127.0.0.1 --directory apps/web
 Open `http://127.0.0.1:3000`. Copy `OPINTEL_AUTH_TOKEN` from ignored `.env`, authenticate,
 name one known business, enter one explicitly permitted public URL, start the bounded run, and
 refresh its pages/evidence, start deterministic M2 analysis, inspect gaps/economics/factors, and
-record human review. Keep live research disabled unless the URL is authorized. Live AI remains
-disabled; M2.5 has no production provider adapter and normal tests use deterministic mocks only.
+record human review. Keep live research disabled unless the URL is authorized. Production live AI
+remains disabled; M2.6 adapters are tournament-only and normal tests use deterministic fakes.
 
 Browser fallback is off by default. For an approved local browser test, run
 `uv run playwright install chromium`, then set `OPINTEL_RESEARCH_BROWSER_ENABLED=true` only on the
@@ -103,7 +106,7 @@ production use by ADR-0004, ADR-0005, and ADR-0010.
 ## Authoritative documents
 
 1. [Accepted greenfield architecture](GREENFIELD_ARCHITECTURE.md)
-2. [M2.5 scope and exit criteria](docs/milestones/M2.5.md)
+2. [M2.6 closed checkpoint](docs/milestones/M2.6.md)
 3. [Human decision register](docs/decisions/README.md)
 4. Accepted ADRs in [docs/adr/](docs/adr/)
 

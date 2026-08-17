@@ -23,7 +23,7 @@ This register transcribes A-01 through A-20 from section 25 of the accepted arch
 | A-07 | Identity provider and governance | Standards-based OIDC; explicit role/self-approval rules | Open | Unassigned | ADR and authorization matrix |
 | A-08 | Evidence retention/privacy | Encrypted versioned artifacts; defer full WORM pending legal decision | Open | Unassigned | ADR and retention schedule |
 | A-09 | Allowed data sources | Approve each provider/source class, terms, geography, retention, and cost | Open | Unassigned | Source-policy register |
-| A-10 | Model/search providers | Approve vendors, regions, data terms, budgets, and fallbacks | Deferred | Product/architecture owners | ADR-0011–0014 govern evaluation only; no provider/model approved |
+| A-10 | Model/search providers | Approve vendors, regions, data terms, budgets, and fallbacks | Deferred | Product/architecture owners | ADR-0015 records the closed synthetic Tournament Run 1; production selection remains unresolved and no route is approved |
 | A-11 | Demo generation boundary | Vetted declarative components only in MVP | Open | Unassigned | ADR and demo threat model |
 | A-12 | Demo sharing | Authenticated-only initially | Open | Unassigned | ADR/access policy |
 | A-13 | ROI semantics | Approve formulas, sources, scenarios, currency, and value meaning | Accepted | Product/architecture owners | ADR-0008 initial M2 formula only |

@@ -180,6 +180,10 @@ class IntelligenceRequest:
     max_output_tokens: int
     estimated_cost_micros: int
     trace_id: UUID
+    claim_labels: tuple[str, ...] = ()
+    unknown_fields: tuple[str, ...] = ()
+    contradiction_labels: tuple[str, ...] = ()
+    alternative_labels: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)

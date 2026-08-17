@@ -12,6 +12,7 @@ members = [
     "opintel-opportunity-core",
     "opintel-opportunity-local",
     "opintel-qualification-core",
+    "opintel-qualification-live",
     "opintel-qualification-local",
     "opintel-research-core",
     "opintel-research-local",
@@ -402,6 +403,17 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [{ name = "opintel-m0-core", editable = "packages/m0-core" }]
+
+[[package]]
+name = "opintel-qualification-live"
+version = "0.1.0"
+source = { editable = "packages/qualification-live" }
+dependencies = [
+    { name = "opintel-qualification-core" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "opintel-qualification-core", editable = "packages/qualification-core" }]
 
 [[package]]
 name = "opintel-qualification-local"

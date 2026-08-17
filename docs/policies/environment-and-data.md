@@ -44,6 +44,17 @@
 - A future live evaluation may use only an explicitly approved data class, provider policy,
   deployment/task allowlist, and budget under ADR-0014.
 
+## M2.6 controlled live evaluation
+
+- Only repository-owned synthetic qualification fixtures may leave the local environment.
+- Real prospect, customer, confidential, private, personal, raw website, and production workflow data
+  are prohibited.
+- Raw provider request/response bodies are ephemeral and are not persisted.
+- Safe results contain fixture/deployment identifiers, semantic outputs, hashes, gate outcomes, token
+  usage, latency, retry counts, provider response identifiers, and calculated cost only.
+- The explicit tournament runner has a USD 50 total hard cap and per-deployment sub-budgets.
+- Normal tests never load credentials and deny network access through fake transports.
+
 ## Backups and recovery
 
 Backup scope, encryption, point-in-time recovery, RTO/RPO, region, retention, and restoration cadence remain blocked on A-04, A-08, and A-18. No infrastructure implementation should imply values for them.

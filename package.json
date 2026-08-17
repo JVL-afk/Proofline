@@ -19,7 +19,7 @@
     "check:python": "uv run --locked ruff check packages services workers tests scripts && uv run --locked ruff format --check packages services workers tests scripts",
     "format:python": "uv run --locked ruff check --fix packages services workers tests scripts && uv run --locked ruff format packages services workers tests scripts",
     "test": "uv run --locked pytest",
-    "typecheck": "uv run --locked mypy packages/m0-core/src packages/m0-local/src packages/research-core/src packages/research-local/src packages/opportunity-core/src packages/opportunity-local/src packages/qualification-core/src packages/qualification-local/src services/api/src workers/core/src workers/research/src workers/browser/src workers/intelligence/src",
+    "typecheck": "uv run --locked mypy packages/m0-core/src packages/m0-local/src packages/research-core/src packages/research-local/src packages/opportunity-core/src packages/opportunity-local/src packages/qualification-core/src packages/qualification-local/src packages/qualification-live/src services/api/src workers/core/src workers/research/src workers/browser/src workers/intelligence/src",
     "bootstrap:local": "python scripts/bootstrap_local.py",
     "serve:web": "python -m http.server 3000 --bind 127.0.0.1 --directory apps/web"
   }

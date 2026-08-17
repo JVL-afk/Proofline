@@ -53,6 +53,7 @@ REQUIRED_FILES = (
     "docs/adr/0012-fixture-model-qualification-gates.md",
     "docs/adr/0013-deterministic-baseline-ai-routing.md",
     "docs/adr/0014-live-evaluation-isolation-and-budgets.md",
+    "docs/adr/0015-controlled-live-model-tournament.md",
     "docs/adr/README.md",
     "docs/decisions/README.md",
     "docs/engineering/dependencies.md",
@@ -62,6 +63,7 @@ REQUIRED_FILES = (
     "docs/milestones/M1.md",
     "docs/milestones/M2.md",
     "docs/milestones/M2.5.md",
+    "docs/milestones/M2.6.md",
     "docs/policies/environment-and-data.md",
     "docs/policies/secrets.md",
     "packages/m0-core/README.md",
@@ -80,6 +82,8 @@ REQUIRED_FILES = (
     "packages/qualification-core/pyproject.toml",
     "packages/qualification-local/README.md",
     "packages/qualification-local/pyproject.toml",
+    "packages/qualification-live/README.md",
+    "packages/qualification-live/pyproject.toml",
     "services/api/README.md",
     "services/api/pyproject.toml",
     "workers/core/README.md",
@@ -158,6 +162,7 @@ def validate_workspace(errors: list[str]) -> None:
         "packages/opportunity-local",
         "packages/qualification-core",
         "packages/qualification-local",
+        "packages/qualification-live",
         "services/api",
         "workers/core",
         "workers/research",
@@ -165,7 +170,7 @@ def validate_workspace(errors: list[str]) -> None:
         "workers/intelligence",
     ]
     if members != expected_members:
-        errors.append("Python workspace members do not match the accepted M2.5 boundaries")
+        errors.append("Python workspace members do not match the accepted M2.6 boundaries")
 
 
 def validate_decision_register(errors: list[str]) -> None:

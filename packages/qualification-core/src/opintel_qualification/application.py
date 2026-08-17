@@ -411,6 +411,10 @@ class QualificationApplicationService:
             1000,
             10,
             self._identifiers.new(),
+            tuple(item.label for item in case.required_claims),
+            case.protected_unknowns,
+            case.hard_contradictions,
+            case.acceptable_alternatives,
         )
 
     def _transition(

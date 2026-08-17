@@ -44,3 +44,8 @@ providers are prohibited by ADR-0010.
 M2.5 adds no third-party dependency. `qualification-core` uses the standard library and shared M0
 principal/clock contracts. `qualification-local` reuses the already locked SQLAlchemy dependency.
 No provider SDK, network client, credential library, or telemetry exporter is authorized.
+
+M2.6 adds no third-party dependency. `qualification-live` uses a narrow standard-library HTTPS
+transport behind provider-native adapter boundaries. This keeps provider request/response types and
+credentials out of application contracts, avoids SDK drift in deterministic CI, and permits complete
+fake-transport coverage. The explicit tournament runner is the sole live-network entry point.

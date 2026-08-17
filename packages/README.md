@@ -14,4 +14,7 @@ M2.5 adds `qualification-core` for provider-neutral tasks, corpus evaluation, li
 qualified-only routing, plus `qualification-local` for isolated SQLite ledgers, deterministic mock
 providers, budgets, and the disabled live gate.
 
+M2.6 adds `qualification-live` for explicit synthetic-only provider adapters and tournament support.
+Normal application processes and deterministic CI do not import or invoke it.
+
 Shared packages must not become a miscellaneous dumping ground for business logic.

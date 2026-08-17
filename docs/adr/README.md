@@ -37,5 +37,6 @@ ADRs capture decisions that constrain implementation or are expensive to reverse
 | [ADR-0012](0012-fixture-model-qualification-gates.md) | Accepted | Fixture-based qualification metrics and hard safety gates |
 | [ADR-0013](0013-deterministic-baseline-ai-routing.md) | Accepted | Advisory-only routing with deterministic M2 fallback |
 | [ADR-0014](0014-live-evaluation-isolation-and-budgets.md) | Accepted | Disabled live boundary, budgets, provenance, and data controls |
+| [ADR-0015](0015-controlled-live-model-tournament.md) | Accepted | Synthetic-only, budget-capped live model qualification tournament |
 
 The product/compliance decisions A-01 through A-20 are tracked separately in `docs/decisions/README.md` until they become ADRs.
