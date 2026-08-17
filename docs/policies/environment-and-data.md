@@ -32,6 +32,18 @@
 - No live outreach or active business form/chat/booking interactions.
 - Test fixtures containing hostile content are isolated and clearly labeled.
 
+## M2.5 qualification data
+
+- Controlled corpus labels, evaluator decisions, and model-quality annotations are `Internal`.
+- Raw future provider requests/responses are `Confidential` and require an approved retention rule;
+  M2.5 does not persist them.
+- Invocation ledgers contain identifiers, hashes, safe outcomes, usage, latency, and cost metadata,
+  not page bodies or prompts.
+- Normal CI uses deterministic mocks and controlled synthetic fixtures with zero provider network
+  access.
+- A future live evaluation may use only an explicitly approved data class, provider policy,
+  deployment/task allowlist, and budget under ADR-0014.
+
 ## Backups and recovery
 
 Backup scope, encryption, point-in-time recovery, RTO/RPO, region, retention, and restoration cadence remain blocked on A-04, A-08, and A-18. No infrastructure implementation should imply values for them.

@@ -14,6 +14,10 @@
 
 The approved local secret mechanism is pending the environment/IaC ADR. Until then, developers may use an ignored local `.env` for non-production placeholders only. Production credentials are prohibited on developer machines unless a separately approved emergency process requires them.
 
+M2.5 has no live-provider adapter and requires no provider credential. Future evaluation credentials
+must be scoped to the isolated evaluation runtime and must never be available to research/browser
+workers, ordinary CI, the web application, or deterministic M2 workers.
+
 ## CI/CD
 
 - Prefer workload identity federation over long-lived repository secrets.

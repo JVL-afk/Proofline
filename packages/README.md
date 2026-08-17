@@ -10,4 +10,8 @@ M2 adds `opportunity-core` for semantic lineage, deterministic rules/economics, 
 and review contracts, plus `opportunity-local` for development-only SQLite, evidence-catalog, and
 mock-reasoner adapters.
 
+M2.5 adds `qualification-core` for provider-neutral tasks, corpus evaluation, lifecycle, and
+qualified-only routing, plus `qualification-local` for isolated SQLite ledgers, deterministic mock
+providers, budgets, and the disabled live gate.
+
 Shared packages must not become a miscellaneous dumping ground for business logic.

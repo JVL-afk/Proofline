@@ -4,13 +4,15 @@ Greenfield repository for the evidence-first business opportunity detection and 
 
 ## Current status
 
-The repository implements the **Milestone M2 opportunity engine**. It retains M0/M1 authentication,
-research, provenance, and traceability while adding the single Texas Commercial HVAC inbound
-lead-response definition, explicit semantic lineage, deterministic hypothetical economics,
-heuristic factor bands, and mandatory human hypothesis review.
+The repository implements **Milestone M2.5 AI qualification infrastructure**. M2 remains the
+authoritative opportunity engine. M2.5 adds provider-neutral task contracts, a versioned deployment
+registry, a controlled corpus, hard safety gates, deterministic mock providers, qualified-only
+advisory routing, and isolated cost/invocation ledgers.
 
-M1/M2 local adapters are constrained by [ADR-0005](docs/adr/0005-m1-bounded-local-research.md) and
-[ADR-0010](docs/adr/0010-m2-rule-based-reasoning.md).
+M1/M2/M2.5 local adapters are constrained by
+[ADR-0005](docs/adr/0005-m1-bounded-local-research.md),
+[ADR-0010](docs/adr/0010-m2-rule-based-reasoning.md), and
+[ADR-0014](docs/adr/0014-live-evaluation-isolation-and-budgets.md).
 Open production source, retention, legal, workflow, and infrastructure decisions remain unresolved.
 
 ## Repository map
@@ -20,7 +22,7 @@ Open production source, retention, legal, workflow, and infrastructure decisions
 | `apps/` | Separate M2 diagnostic web UI |
 | `services/` | Authenticated API composition root |
 | `workers/` | Separate core, HTTP research, browser, and deterministic intelligence processes |
-| `packages/` | M0/M1/M2 domain/application ports and local adapters |
+| `packages/` | M0/M1/M2/M2.5 domain/application ports and local adapters |
 | `infra/` | Infrastructure-as-code and local-platform boundaries |
 | `docs/adr/` | Durable architectural decisions |
 | `docs/decisions/` | Human-approval decision register from the accepted architecture |
@@ -36,9 +38,9 @@ Open production source, retention, legal, workflow, and infrastructure decisions
 - uv 0.11.32–0.11.x
 - Git
 
-Docker, PostgreSQL, Temporal, Redis, cloud services, search, and AI providers are not required for M2.
+Docker, PostgreSQL, Temporal, Redis, cloud services, search, and AI providers are not required for M2.5.
 
-## Run the M2 opportunity engine
+## Run the M2 opportunity engine and offline M2.5 qualification tests
 
 From a fresh checkout:
 
@@ -71,7 +73,7 @@ Open `http://127.0.0.1:3000`. Copy `OPINTEL_AUTH_TOKEN` from ignored `.env`, aut
 name one known business, enter one explicitly permitted public URL, start the bounded run, and
 refresh its pages/evidence, start deterministic M2 analysis, inspect gaps/economics/factors, and
 record human review. Keep live research disabled unless the URL is authorized. Live AI remains
-disabled in all M2 modes.
+disabled; M2.5 has no production provider adapter and normal tests use deterministic mocks only.
 
 Browser fallback is off by default. For an approved local browser test, run
 `uv run playwright install chromium`, then set `OPINTEL_RESEARCH_BROWSER_ENABLED=true` only on the
@@ -101,7 +103,7 @@ production use by ADR-0004, ADR-0005, and ADR-0010.
 ## Authoritative documents
 
 1. [Accepted greenfield architecture](GREENFIELD_ARCHITECTURE.md)
-2. [M2 scope and exit criteria](docs/milestones/M2.md)
+2. [M2.5 scope and exit criteria](docs/milestones/M2.5.md)
 3. [Human decision register](docs/decisions/README.md)
 4. Accepted ADRs in [docs/adr/](docs/adr/)
 

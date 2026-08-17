@@ -1,4 +1,4 @@
-"""Validate the dependency-free repository foundation through M2.
+"""Validate the dependency-free repository foundation through M2.5.
 
 This script intentionally uses only the Python standard library so a clean
 checkout can validate governance and structure before application dependencies
@@ -49,6 +49,10 @@ REQUIRED_FILES = (
     "docs/adr/0008-m2-deterministic-economics-and-hypotheticals.md",
     "docs/adr/0009-m2-uncalibrated-factor-bands.md",
     "docs/adr/0010-m2-rule-based-reasoning.md",
+    "docs/adr/0011-provider-neutral-intelligence-contracts.md",
+    "docs/adr/0012-fixture-model-qualification-gates.md",
+    "docs/adr/0013-deterministic-baseline-ai-routing.md",
+    "docs/adr/0014-live-evaluation-isolation-and-budgets.md",
     "docs/adr/README.md",
     "docs/decisions/README.md",
     "docs/engineering/dependencies.md",
@@ -57,6 +61,7 @@ REQUIRED_FILES = (
     "docs/milestones/M0.md",
     "docs/milestones/M1.md",
     "docs/milestones/M2.md",
+    "docs/milestones/M2.5.md",
     "docs/policies/environment-and-data.md",
     "docs/policies/secrets.md",
     "packages/m0-core/README.md",
@@ -71,6 +76,10 @@ REQUIRED_FILES = (
     "packages/opportunity-core/pyproject.toml",
     "packages/opportunity-local/README.md",
     "packages/opportunity-local/pyproject.toml",
+    "packages/qualification-core/README.md",
+    "packages/qualification-core/pyproject.toml",
+    "packages/qualification-local/README.md",
+    "packages/qualification-local/pyproject.toml",
     "services/api/README.md",
     "services/api/pyproject.toml",
     "workers/core/README.md",
@@ -99,6 +108,8 @@ ADR_HEADINGS = (
 SENSITIVE_ENV_NAMES = re.compile(
     r"(?:SECRET|TOKEN|PASSWORD|PRIVATE_KEY|CLIENT_SECRET|DATABASE_URL)$"
 )
+
+LOCAL_SECRET_FILES = (".env.local", "apikeys.txt")
 
 
 def load_text(relative_path: str) -> str:
@@ -145,6 +156,8 @@ def validate_workspace(errors: list[str]) -> None:
         "packages/research-local",
         "packages/opportunity-core",
         "packages/opportunity-local",
+        "packages/qualification-core",
+        "packages/qualification-local",
         "services/api",
         "workers/core",
         "workers/research",
@@ -152,7 +165,7 @@ def validate_workspace(errors: list[str]) -> None:
         "workers/intelligence",
     ]
     if members != expected_members:
-        errors.append("Python workspace members do not match the accepted M2 boundaries")
+        errors.append("Python workspace members do not match the accepted M2.5 boundaries")
 
 
 def validate_decision_register(errors: list[str]) -> None:
@@ -190,6 +203,21 @@ def validate_example_environment(errors: list[str]) -> None:
             )
 
 
+def validate_local_secret_exclusions(errors: list[str]) -> None:
+    ignore_lines = {
+        line.strip()
+        for line in load_text(".gitignore").splitlines()
+        if line.strip() and not line.lstrip().startswith("#")
+    }
+    for relative_path in LOCAL_SECRET_FILES:
+        if relative_path == ".env.local":
+            if ".env.*" not in ignore_lines and relative_path not in ignore_lines:
+                errors.append(f"{relative_path} must be excluded by .gitignore")
+            continue
+        if relative_path not in ignore_lines:
+            errors.append(f"{relative_path} must be explicitly excluded by .gitignore")
+
+
 def validate_markdown_fences(errors: list[str]) -> None:
     ignored_parts = {".git", "node_modules"}
     for path in ROOT.rglob("*.md"):
@@ -210,6 +238,7 @@ def main() -> int:
         validate_decision_register(errors)
         validate_adrs(errors)
         validate_example_environment(errors)
+        validate_local_secret_exclusions(errors)
         validate_markdown_fences(errors)
 
     if errors:

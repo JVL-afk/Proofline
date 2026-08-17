@@ -40,3 +40,7 @@ M2 adds no third-party runtime dependency. `opportunity-core`, `opportunity-loca
 intelligence worker reuse Pydantic, SQLAlchemy, and the locked workspace tools. Deterministic rules,
 Decimal economics, hashing, and mock reasoning use the Python standard library. Live AI SDKs and
 providers are prohibited by ADR-0010.
+
+M2.5 adds no third-party dependency. `qualification-core` uses the standard library and shared M0
+principal/clock contracts. `qualification-local` reuses the already locked SQLAlchemy dependency.
+No provider SDK, network client, credential library, or telemetry exporter is authorized.

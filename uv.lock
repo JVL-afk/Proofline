@@ -11,6 +11,8 @@ members = [
     "opintel-m0-local",
     "opintel-opportunity-core",
     "opintel-opportunity-local",
+    "opintel-qualification-core",
+    "opintel-qualification-local",
     "opintel-research-core",
     "opintel-research-local",
     "opintel-research-worker",
@@ -387,6 +389,32 @@ dependencies = [
 requires-dist = [
     { name = "opintel-opportunity-core", editable = "packages/opportunity-core" },
     { name = "opintel-research-core", editable = "packages/research-core" },
+    { name = "sqlalchemy", specifier = ">=2.0.48,<2.1" },
+]
+
+[[package]]
+name = "opintel-qualification-core"
+version = "0.1.0"
+source = { editable = "packages/qualification-core" }
+dependencies = [
+    { name = "opintel-m0-core" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "opintel-m0-core", editable = "packages/m0-core" }]
+
+[[package]]
+name = "opintel-qualification-local"
+version = "0.1.0"
+source = { editable = "packages/qualification-local" }
+dependencies = [
+    { name = "opintel-qualification-core" },
+    { name = "sqlalchemy" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "opintel-qualification-core", editable = "packages/qualification-core" },
     { name = "sqlalchemy", specifier = ">=2.0.48,<2.1" },
 ]
 

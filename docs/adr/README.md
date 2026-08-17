@@ -33,5 +33,9 @@ ADRs capture decisions that constrain implementation or are expensive to reverse
 | [ADR-0008](0008-m2-deterministic-economics-and-hypotheticals.md) | Accepted | Deterministic potential-incremental-revenue scenarios |
 | [ADR-0009](0009-m2-uncalibrated-factor-bands.md) | Accepted | Heuristic factor bands until calibration exists |
 | [ADR-0010](0010-m2-rule-based-reasoning.md) | Accepted | Rule-based M2 reasoning and temporary local adapters |
+| [ADR-0011](0011-provider-neutral-intelligence-contracts.md) | Accepted | Provider-neutral task contracts and versioned deployment qualification |
+| [ADR-0012](0012-fixture-model-qualification-gates.md) | Accepted | Fixture-based qualification metrics and hard safety gates |
+| [ADR-0013](0013-deterministic-baseline-ai-routing.md) | Accepted | Advisory-only routing with deterministic M2 fallback |
+| [ADR-0014](0014-live-evaluation-isolation-and-budgets.md) | Accepted | Disabled live boundary, budgets, provenance, and data controls |
 
 The product/compliance decisions A-01 through A-20 are tracked separately in `docs/decisions/README.md` until they become ADRs.
