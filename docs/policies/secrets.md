@@ -23,6 +23,10 @@ secret file. `apikeys.txt`, `.env`, and `.env.local` are excluded from Git. Valu
 in command arguments, exceptions, logs, provider metadata, hashes, ledgers, databases, test output,
 or tournament reports. The tournament process passes each credential only to its matching adapter.
 
+M4 uses opaque, short-lived local capabilities. Only their SHA-256 digests may be persisted. The
+separate demo runtime receives no core cookie, database/provider/research credential, signing key,
+or general-purpose application credential. No M4 component requires a live provider secret.
+
 ## CI/CD
 
 - Prefer workload identity federation over long-lived repository secrets.

@@ -2,16 +2,16 @@
 
 ## Active milestone
 
-Milestone M3 Evidence-Linked Audit Engine only. Read `GREENFIELD_ARCHITECTURE.md`,
-`docs/milestones/M2.md`, `docs/milestones/M3.md`, and accepted ADR-0016 through ADR-0020 before
+Milestone M4 Personalized Demo Engine only. Read `GREENFIELD_ARCHITECTURE.md`,
+`docs/milestones/M3.md`, `docs/milestones/M4.md`, and accepted ADR-0021 through ADR-0026 before
 changing the repository.
 
-M1/M2 remain authoritative. M3 may only project canonical inputs into structured claims,
-deterministic prose, QC, and version-bound review. Live AI, all M2.6 routes, and production AI remain
-disabled. Normal CI remains credential-free and network-free.
+M1-M3 remain authoritative. M4 may only project exact accepted/approved inputs into declarative,
+deterministic, synthetic, mock-only simulations with a separate capability-scoped runtime. Live AI,
+all M2.6 routes, and production AI remain disabled. Normal CI remains credential-free and network-free.
 
-Do not implement M4 or later behavior: demos, proposals, outreach, CRM/channel integrations, mass
-discovery, autonomous agents, external publication/export, or generated code.
+Do not implement M5 or later behavior: proposals, outreach, real CRM/channel integrations, mass
+discovery, autonomous agents, external publication/export, media generation, or generated code.
 
 ## Required behavior
 
@@ -21,7 +21,7 @@ discovery, autonomous agents, external publication/export, or generated code.
 - Do not add executable infrastructure until its cloud/region/IaC/data decisions are accepted.
 - Do not commit secrets, personal data, live provider payloads, generated credentials, or local service data.
 - Use exact/locked dependencies and justify new direct dependencies under `docs/engineering/dependencies.md`.
-- Keep all behavior outside the exact M3 audit path out of the repository unless the user explicitly advances the milestone.
+- Keep all behavior outside the exact M4 demo path out of the repository unless the user explicitly advances the milestone.
 
 ## Validation
 

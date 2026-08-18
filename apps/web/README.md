@@ -1,4 +1,4 @@
-# M3 Diagnostic Web UI
+# M4 Diagnostic Web UI
 
 ## Ownership
 
@@ -12,11 +12,13 @@ Application/web team.
 - Start deterministic Commercial HVAC opportunity analysis, inspect lineage/gaps/economics/factors,
   edit visibly proposed assumptions, and record local human review.
 - Generate and inspect structured audit manifests, claims, QC, provenance, and exact review state.
+- Generate and inspect an eligible M4 declarative simulation, its manifest/specification/QC/lineage,
+  record exact review, and issue a short-lived private runtime capability.
 
 ## Forbidden responsibilities
 
-- Database access, provider credentials, crawling, raw HTML rendering, live AI, demos, publication,
-  outreach, integrations, production identity, or M4 behavior.
+- Database access, provider credentials, crawling, raw HTML rendering, live AI, public demo sharing,
+  export, outreach, real integrations, production identity, or M5 behavior.
 
 ## Public interface
 

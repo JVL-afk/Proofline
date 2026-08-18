@@ -43,5 +43,11 @@ ADRs capture decisions that constrain implementation or are expensive to reverse
 | [ADR-0018](0018-deterministic-audit-composition.md) | Accepted | Deterministic audit composition and disabled wording-only AI port |
 | [ADR-0019](0019-audit-review-and-invalidation.md) | Accepted | Exact revision review and invalidation lifecycle |
 | [ADR-0020](0020-audit-eligibility-and-publication-boundary.md) | Accepted | Opportunity eligibility and no-publication M3 boundary |
+| [ADR-0021](0021-declarative-demo-specification.md) | Accepted | Declarative demo specifications and immutable component registry |
+| [ADR-0022](0022-deterministic-demo-state-machine.md) | Accepted | Deterministic state machine and structurally mock-only actions |
+| [ADR-0023](0023-demo-personalization-and-disclosure.md) | Accepted | Evidence-bound personalization, synthetic data, and disclosure |
+| [ADR-0024](0024-demo-runtime-isolation.md) | Accepted | Separate runtime, capability sessions, CSP, and minimal telemetry |
+| [ADR-0025](0025-demo-eligibility-review-and-revocation.md) | Accepted | Exact eligibility, review, invalidation, and revocation |
+| [ADR-0026](0026-authenticated-demo-access.md) | Accepted | Authenticated-only demo access with no public sharing |
 
 The product/compliance decisions A-01 through A-20 are tracked separately in `docs/decisions/README.md` until they become ADRs.

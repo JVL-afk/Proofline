@@ -1,4 +1,4 @@
-"""Validate the dependency-free repository foundation through M3.
+"""Validate the dependency-free repository foundation through M4.
 
 This script intentionally uses only the Python standard library so a clean
 checkout can validate governance and structure before application dependencies
@@ -59,6 +59,12 @@ REQUIRED_FILES = (
     "docs/adr/0018-deterministic-audit-composition.md",
     "docs/adr/0019-audit-review-and-invalidation.md",
     "docs/adr/0020-audit-eligibility-and-publication-boundary.md",
+    "docs/adr/0021-declarative-demo-specification.md",
+    "docs/adr/0022-deterministic-demo-state-machine.md",
+    "docs/adr/0023-demo-personalization-and-disclosure.md",
+    "docs/adr/0024-demo-runtime-isolation.md",
+    "docs/adr/0025-demo-eligibility-review-and-revocation.md",
+    "docs/adr/0026-authenticated-demo-access.md",
     "docs/adr/README.md",
     "docs/decisions/README.md",
     "docs/engineering/dependencies.md",
@@ -70,6 +76,7 @@ REQUIRED_FILES = (
     "docs/milestones/M2.5.md",
     "docs/milestones/M2.6.md",
     "docs/milestones/M3.md",
+    "docs/milestones/M4.md",
     "docs/policies/environment-and-data.md",
     "docs/policies/secrets.md",
     "packages/m0-core/README.md",
@@ -88,6 +95,10 @@ REQUIRED_FILES = (
     "packages/audit-core/pyproject.toml",
     "packages/audit-local/README.md",
     "packages/audit-local/pyproject.toml",
+    "packages/demo-core/README.md",
+    "packages/demo-core/pyproject.toml",
+    "packages/demo-local/README.md",
+    "packages/demo-local/pyproject.toml",
     "packages/qualification-core/README.md",
     "packages/qualification-core/pyproject.toml",
     "packages/qualification-local/README.md",
@@ -96,6 +107,8 @@ REQUIRED_FILES = (
     "packages/qualification-live/pyproject.toml",
     "services/api/README.md",
     "services/api/pyproject.toml",
+    "services/demo-runtime/README.md",
+    "services/demo-runtime/pyproject.toml",
     "workers/core/README.md",
     "workers/core/pyproject.toml",
     "workers/research/README.md",
@@ -172,17 +185,20 @@ def validate_workspace(errors: list[str]) -> None:
         "packages/opportunity-local",
         "packages/audit-core",
         "packages/audit-local",
+        "packages/demo-core",
+        "packages/demo-local",
         "packages/qualification-core",
         "packages/qualification-local",
         "packages/qualification-live",
         "services/api",
+        "services/demo-runtime",
         "workers/core",
         "workers/research",
         "workers/browser",
         "workers/intelligence",
     ]
     if members != expected_members:
-        errors.append("Python workspace members do not match the accepted M3 boundaries")
+        errors.append("Python workspace members do not match the accepted M4 boundaries")
 
 
 def validate_decision_register(errors: list[str]) -> None:

@@ -24,11 +24,11 @@ This register transcribes A-01 through A-20 from section 25 of the accepted arch
 | A-08 | Evidence retention/privacy | Encrypted versioned artifacts; defer full WORM pending legal decision | Open | Unassigned | ADR and retention schedule |
 | A-09 | Allowed data sources | Approve each provider/source class, terms, geography, retention, and cost | Open | Unassigned | Source-policy register |
 | A-10 | Model/search providers | Approve vendors, regions, data terms, budgets, and fallbacks | Deferred | Product/architecture owners | ADR-0015 records the closed synthetic Tournament Run 1; production selection remains unresolved and no route is approved |
-| A-11 | Demo generation boundary | Vetted declarative components only in MVP | Open | Unassigned | ADR and demo threat model |
-| A-12 | Demo sharing | Authenticated-only initially | Open | Unassigned | ADR/access policy |
+| A-11 | Demo generation boundary | Vetted declarative components only in MVP | Accepted | Product/architecture owners | ADR-0021 through ADR-0025 |
+| A-12 | Demo sharing | Authenticated-only initially | Accepted | Product/architecture owners | ADR-0026; public access remains unapproved |
 | A-13 | ROI semantics | Approve formulas, sources, scenarios, currency, and value meaning | Accepted | Product/architecture owners | ADR-0008 initial M2 formula only |
 | A-14 | Score calibration | Approve rubrics, weights, thresholds, and heuristic labels | Deferred | Product/architecture owners | Uncalibrated M2 bands only under ADR-0009 |
-| A-15 | Human approval policy | Define permissions, warning overrides, duties, and reapproval triggers | Deferred | Product/architecture owners | Local M2/M3 governance accepted by ADR-0010/ADR-0019; production duties remain open |
+| A-15 | Human approval policy | Define permissions, warning overrides, duties, and reapproval triggers | Deferred | Product/architecture owners | Local M2-M4 governance accepted by ADR-0010/ADR-0019/ADR-0025; production duties remain open |
 | A-16 | Outreach in MVP | Manual copy/export of drafts only | Open | Unassigned | Product/legal ADR |
 | A-17 | Legal/privacy/compliance review | Name accountable jurisdictional owners before live research | Open | Unassigned | Signed review record |
 | A-18 | SLO/DR/cost limits | Approve SLOs, RTO/RPO, budgets, alerts, and ownership | Open | Unassigned | Operations ADR/runbook baseline |

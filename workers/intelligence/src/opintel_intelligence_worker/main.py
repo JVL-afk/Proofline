@@ -1,4 +1,4 @@
-"""Credential-free deterministic M2 opportunity and M3 audit worker entry point."""
+"""Credential-free deterministic M2 opportunity, M3 audit, and M4 demo worker."""
 
 from __future__ import annotations
 
@@ -9,6 +9,8 @@ import time
 
 from opintel_audit import AuditWorkflowRunner, DeterministicAuditComposer
 from opintel_audit_local import CanonicalAuditSourceCatalog, SqlAlchemyAuditRepository
+from opintel_demo import DemoWorkflowRunner, DeterministicDemoComposer
+from opintel_demo_local import CanonicalDemoSourceCatalog, SqlAlchemyDemoRepository
 from opintel_m0_local import SystemClock, UuidFactory
 from opintel_m0_local.settings import get_local_settings
 from opintel_opportunity import OpportunityWorkflowRunner
@@ -41,6 +43,14 @@ def run() -> None:
         DeterministicAuditComposer(UuidFactory()),
         SystemClock(),
     )
+    demo_repository = SqlAlchemyDemoRepository(settings.database_url)
+    demo_repository.initialize()
+    demo_runner = DemoWorkflowRunner(
+        demo_repository,
+        CanonicalDemoSourceCatalog(audit_repository, repository, research),
+        DeterministicDemoComposer(UuidFactory()),
+        SystemClock(),
+    )
     stopped = False
 
     def stop(signum: int, frame: object) -> None:
@@ -51,11 +61,15 @@ def run() -> None:
     signal.signal(signal.SIGINT, stop)
     signal.signal(signal.SIGTERM, stop)
     logging.basicConfig(level=logging.INFO, format="%(message)s")
-    logging.info(json.dumps({"event": "m3_intelligence_worker.started", "live_ai": False}))
+    logging.info(json.dumps({"event": "m4_intelligence_worker.started", "live_ai": False}))
     while not stopped:
-        if not opportunity_runner.run_once() and not audit_runner.run_once():
+        if (
+            not opportunity_runner.run_once()
+            and not audit_runner.run_once()
+            and not demo_runner.run_once()
+        ):
             time.sleep(settings.worker_poll_seconds)
-    logging.info(json.dumps({"event": "m3_intelligence_worker.stopped"}))
+    logging.info(json.dumps({"event": "m4_intelligence_worker.stopped"}))
 
 
 if __name__ == "__main__":

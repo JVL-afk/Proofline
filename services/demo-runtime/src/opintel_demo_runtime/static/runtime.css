@@ -1,0 +1,26 @@
+:root {
+  color-scheme: light;
+  font-family: system-ui, sans-serif;
+  color: #18222c;
+  background: #edf1f4;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+main { width: min(760px, calc(100% - 2rem)); margin: 1rem auto 4rem; }
+.disclosure {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  padding: 1rem;
+  border: 3px solid #8b3d18;
+  background: #fff1e9;
+  font-weight: 800;
+}
+.eyebrow { text-transform: uppercase; letter-spacing: .08em; font-weight: 700; }
+.card { margin-top: 1rem; padding: 1rem; border: 1px solid #b8c2ca; background: #fff; }
+label, select, input, button { display: block; width: 100%; margin-top: .65rem; }
+select, input, button { min-height: 2.7rem; padding: .6rem; }
+button { border: 0; background: #344c5c; color: #fff; font-weight: 700; }
+pre { overflow: auto; white-space: pre-wrap; }
+#error { color: #a02020; font-weight: 700; }

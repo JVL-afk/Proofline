@@ -10,6 +10,7 @@ import pytest
 from fastapi.testclient import TestClient
 from opintel_api import create_app
 from opintel_audit_local import SqlAlchemyAuditRepository
+from opintel_demo_local import SqlAlchemyDemoRepository
 from opintel_m0.workflow import M0WorkflowRunner
 from opintel_m0_local import (
     FixtureHtmlExtractor,
@@ -85,12 +86,20 @@ def audit_repository(settings: LocalSettings) -> SqlAlchemyAuditRepository:
 
 
 @pytest.fixture
+def demo_repository(settings: LocalSettings) -> SqlAlchemyDemoRepository:
+    value = SqlAlchemyDemoRepository(settings.database_url)
+    value.initialize()
+    return value
+
+
+@pytest.fixture
 def client(
     settings: LocalSettings,
     repository: SqlAlchemyM0Repository,
     research_repository: SqlAlchemyResearchRepository,
     opportunity_repository: SqlAlchemyOpportunityRepository,
     audit_repository: SqlAlchemyAuditRepository,
+    demo_repository: SqlAlchemyDemoRepository,
     clock: FakeClock,
 ) -> Iterator[TestClient]:
     with TestClient(
@@ -102,6 +111,7 @@ def client(
             research_repository,
             opportunity_repository,
             audit_repository,
+            demo_repository,
         )
     ) as value:
         yield value

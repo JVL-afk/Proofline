@@ -53,3 +53,8 @@ fake-transport coverage. The explicit tournament runner is the sole live-network
 M3 adds no third-party dependency. `audit-core` uses standard-library hashing, JSON, regular
 expressions, and existing typed contracts. `audit-local` reuses locked SQLAlchemy. No renderer,
 provider SDK, PDF, publishing, or network dependency is introduced.
+
+M4 adds no third-party dependency. `demo-core` uses standard-library hashing, declarative typed
+contracts, and the existing M0-M3 contracts. `demo-local` reuses locked SQLAlchemy. The separate
+runtime reuses FastAPI/Uvicorn and its local core gateway uses only the standard library. It contains
+no provider SDK, real action adapter, browser automation, arbitrary renderer, or external telemetry.

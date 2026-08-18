@@ -2,7 +2,8 @@
 
 Long-running APIs and isolated runtimes belong here.
 
-- `api`: M0 authenticated application API and composition root.
-- `demo`: reserved for a later approved milestone; absent in M0.
+- `api`: authenticated M0-M4 application API and composition root.
+- `demo-runtime`: separate-origin M4 declarative simulation runtime with no core credentials.
 
-Only the API is executable in M0. It does not run workflow activities in request threads.
+The API does not run workflow activities in request threads. The demo runtime has only a narrow
+capability exchange/event gateway and no database or external-action adapter.

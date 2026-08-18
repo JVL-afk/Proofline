@@ -65,6 +65,18 @@
   evidence bodies, or reviewer edits.
 - M3 establishes no retention schedule and inherits future A-08 policy.
 
+## M4 demo data
+
+- Demo manifests, specifications, reviews, and drafts are `Confidential`; safe registry/configuration
+  metadata is `Internal`.
+- Personas and interactive lead data are repository-owned synthetic fixtures. Actual names, contact
+  destinations, addresses, credentials, payment/health data, and production leads are prohibited.
+- One-time capability and runtime-session plaintext tokens are returned only to their authorized
+  caller and are never persisted; local persistence stores SHA-256 digests.
+- Telemetry is limited to approved IDs, registered event/outcome codes, durations, and synthetic
+  fixture IDs. It stores no free text, contact data, evidence body, audit prose, token, or transcript.
+- M4 establishes no production telemetry or demo-retention schedule.
+
 ## Backups and recovery
 
 Backup scope, encryption, point-in-time recovery, RTO/RPO, region, retention, and restoration cadence remain blocked on A-04, A-08, and A-18. No infrastructure implementation should imply values for them.

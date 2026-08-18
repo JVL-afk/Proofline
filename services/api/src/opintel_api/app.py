@@ -1,4 +1,4 @@
-"""FastAPI transport and local M0-M3 composition root."""
+"""FastAPI transport and local M0-M4 composition root."""
 
 from dataclasses import asdict
 from typing import Annotated
@@ -18,6 +18,26 @@ from opintel_audit.contracts import (
 from opintel_audit.domain import AuditError, AuditNotFoundError
 from opintel_audit.ports import AuditRepository
 from opintel_audit_local import CanonicalAuditSourceCatalog, SqlAlchemyAuditRepository
+from opintel_demo.application import DemoApplicationService, DemoRuntimeService
+from opintel_demo.contracts import (
+    CapabilityExchangeRequest,
+    DemoBundleView,
+    DemoCreate,
+    DemoOperationView,
+    DemoReviewRequest,
+    DemoRevokeRequest,
+    RuntimeEventRequest,
+    RuntimeSessionResponse,
+    SessionCapabilityView,
+    SessionIssueRequest,
+)
+from opintel_demo.domain import DemoError, DemoNotFoundError
+from opintel_demo.ports import DemoRepository
+from opintel_demo_local import (
+    CanonicalDemoSourceCatalog,
+    SecureLocalCapabilityFactory,
+    SqlAlchemyDemoRepository,
+)
 from opintel_m0.application import M0ApplicationService
 from opintel_m0.contracts import (
     CampaignCreate,
@@ -76,6 +96,7 @@ def create_app(
     research_repository: ResearchRepository | None = None,
     opportunity_repository: OpportunityRepository | None = None,
     audit_repository: AuditRepository | None = None,
+    demo_repository: DemoRepository | None = None,
 ) -> FastAPI:
     active_settings = settings or get_local_settings()
     active_repository = repository or SqlAlchemyM0Repository(active_settings.database_url)
@@ -92,6 +113,10 @@ def create_app(
         active_settings.database_url
     )
     active_audit_repository.initialize()
+    active_demo_repository = demo_repository or SqlAlchemyDemoRepository(
+        active_settings.database_url
+    )
+    active_demo_repository.initialize()
     authenticator = LocalTokenAuthenticator(
         active_settings.auth_token.get_secret_value(),
         active_settings.auth_subject,
@@ -122,13 +147,31 @@ def create_app(
         clock or SystemClock(),
         identifiers or UuidFactory(),
     )
+    demo_source = CanonicalDemoSourceCatalog(
+        active_audit_repository, active_opportunity_repository, active_research_repository
+    )
+    capabilities = SecureLocalCapabilityFactory()
+    demo_service = DemoApplicationService(
+        active_demo_repository,
+        demo_source,
+        clock or SystemClock(),
+        identifiers or UuidFactory(),
+        capabilities,
+    )
+    demo_runtime_service = DemoRuntimeService(
+        active_demo_repository,
+        demo_service,
+        clock or SystemClock(),
+        identifiers or UuidFactory(),
+        capabilities,
+    )
 
     app = FastAPI(
-        title="Opportunity Intelligence M3 API",
-        version="0.4.0",
+        title="Opportunity Intelligence M4 API",
+        version="0.5.0",
         description=(
-            "Bounded local research, deterministic opportunities, and evidence-linked audits. "
-            "Live AI and publication are disabled."
+            "Bounded research, deterministic opportunities, evidence-linked audits, and private "
+            "mock-only simulations. Live AI, publication, and real integrations are disabled."
         ),
     )
     app.add_middleware(
@@ -148,6 +191,10 @@ def create_app(
     app.state.audit_repository = active_audit_repository
     app.state.audit_source = audit_source
     app.state.audit_service = audit_service
+    app.state.demo_repository = active_demo_repository
+    app.state.demo_source = demo_source
+    app.state.demo_service = demo_service
+    app.state.demo_runtime_service = demo_runtime_service
 
     def current_principal(
         credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer)],
@@ -218,9 +265,22 @@ def create_app(
             content={"detail": error.safe_message, "code": error.code},
         )
 
+    @app.exception_handler(DemoNotFoundError)
+    def demo_not_found_handler(request: Request, error: DemoNotFoundError) -> JSONResponse:
+        del request, error
+        return JSONResponse(status_code=404, content={"detail": "demo resource not found"})
+
+    @app.exception_handler(DemoError)
+    def demo_error_handler(request: Request, error: DemoError) -> JSONResponse:
+        del request
+        return JSONResponse(
+            status_code=403 if error.code == "forbidden" else 400,
+            content={"detail": error.safe_message, "code": error.code},
+        )
+
     @app.get("/healthz", tags=["system"])
     def health() -> dict[str, str]:
-        return {"status": "ok", "mode": "m3-local"}
+        return {"status": "ok", "mode": "m4-local"}
 
     @app.get("/api/v1/session", response_model=PrincipalView, tags=["identity"])
     def session(principal: Annotated[Principal, Depends(current_principal)]) -> PrincipalView:
@@ -693,5 +753,215 @@ def create_app(
                 tuple(command.acknowledged_qc_codes),
             )
         )
+
+    @app.post(
+        "/api/v1/audit-revisions/{audit_revision_id}/demo-revisions",
+        response_model=DemoOperationView,
+        status_code=status.HTTP_202_ACCEPTED,
+        tags=["demos"],
+    )
+    def create_demo_revision(
+        audit_revision_id: UUID,
+        command: DemoCreate,
+        response: Response,
+        principal: Annotated[Principal, Depends(current_principal)],
+        idempotency_key: Annotated[
+            str,
+            Header(
+                alias="Idempotency-Key",
+                min_length=8,
+                max_length=128,
+                pattern=r"^[A-Za-z0-9._:-]+$",
+            ),
+        ],
+    ) -> DemoOperationView:
+        operation, created = demo_service.start_generation(
+            principal,
+            audit_revision_id,
+            command.expected_audit_revision_hash,
+            idempotency_key,
+            command.parent_revision_id,
+        )
+        if not created:
+            response.status_code = status.HTTP_200_OK
+        return DemoOperationView.from_domain(operation)
+
+    @app.get(
+        "/api/v1/demo-operations/{operation_id}",
+        response_model=DemoOperationView,
+        tags=["demos"],
+    )
+    def get_demo_operation(
+        operation_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> DemoOperationView:
+        return DemoOperationView.from_domain(demo_service.get_operation(principal, operation_id))
+
+    @app.get(
+        "/api/v1/demo-revisions/{revision_id}",
+        response_model=DemoBundleView,
+        tags=["demos"],
+    )
+    def get_demo_revision(
+        revision_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> DemoBundleView:
+        return DemoBundleView.from_domain(demo_service.get_revision(principal, revision_id))
+
+    @app.get(
+        "/api/v1/demos/{demo_id}/revisions",
+        response_model=list[DemoBundleView],
+        tags=["demos"],
+    )
+    def list_demo_revisions(
+        demo_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> list[DemoBundleView]:
+        return [
+            DemoBundleView.from_domain(item)
+            for item in demo_service.list_revisions(principal, demo_id)
+        ]
+
+    @app.get(
+        "/api/v1/demo-revisions/{revision_id}/statements/{statement_id}/lineage",
+        response_model=dict[str, object],
+        tags=["demos"],
+    )
+    def get_demo_statement_lineage(
+        revision_id: UUID,
+        statement_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> dict[str, object]:
+        bundle = demo_service.get_revision(principal, revision_id)
+        statement = next(
+            (item for item in bundle.revision.specification.statements if item.id == statement_id),
+            None,
+        )
+        if statement is None:
+            raise DemoNotFoundError()
+        return {
+            "statement": asdict(statement),
+            "manifest_hash": bundle.revision.manifest.checksum,
+            "audit_revision": (
+                f"/api/v1/audit-revisions/{bundle.revision.manifest.audit_revision_id}"
+            ),
+            "audit_claim_id": statement.audit_claim_id,
+            "evidence_links": [
+                f"/api/v1/research-evidence/{item}" for item in statement.evidence_ids
+            ],
+            "assumption_revision_ids": list(statement.assumption_revision_ids),
+            "economic_run_id": statement.economic_run_id,
+            "formula_version": statement.formula_version,
+        }
+
+    @app.post(
+        "/api/v1/demo-revisions/{revision_id}/review-decisions",
+        response_model=DemoBundleView,
+        tags=["demos"],
+    )
+    def review_demo_revision(
+        revision_id: UUID,
+        command: DemoReviewRequest,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> DemoBundleView:
+        return DemoBundleView.from_domain(
+            demo_service.review(
+                principal,
+                revision_id,
+                command.expected_revision_hash,
+                command.expected_manifest_hash,
+                command.expected_specification_hash,
+                command.decision,
+                command.reason,
+            )
+        )
+
+    @app.post(
+        "/api/v1/demo-revisions/{revision_id}/revocations",
+        response_model=DemoBundleView,
+        tags=["demos"],
+    )
+    def revoke_demo_revision(
+        revision_id: UUID,
+        command: DemoRevokeRequest,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> DemoBundleView:
+        return DemoBundleView.from_domain(
+            demo_service.revoke_revision(principal, revision_id, command.reason)
+        )
+
+    @app.post(
+        "/api/v1/demo-revisions/{revision_id}/session-issuances",
+        response_model=SessionCapabilityView,
+        tags=["demos"],
+    )
+    def issue_demo_session(
+        revision_id: UUID,
+        command: SessionIssueRequest,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> SessionCapabilityView:
+        issuance, capability = demo_service.issue_session(
+            principal, revision_id, command.expected_revision_hash
+        )
+        return SessionCapabilityView(
+            issuance_id=issuance.id,
+            capability=capability,
+            expires_at=issuance.expires_at.isoformat(),
+            runtime_origin=demo_service.runtime_origin,
+        )
+
+    @app.post(
+        "/api/v1/demo-runtime-sessions/{session_id}/revocations",
+        status_code=status.HTTP_204_NO_CONTENT,
+        tags=["demos"],
+    )
+    def revoke_demo_session(
+        session_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> Response:
+        demo_service.revoke_session(principal, session_id)
+        return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+    @app.get(
+        "/api/v1/demo-revisions/{revision_id}/telemetry",
+        response_model=list[dict[str, object]],
+        tags=["demos"],
+    )
+    def list_demo_telemetry(
+        revision_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> list[dict[str, object]]:
+        demo_service.get_revision(principal, revision_id)
+        return [
+            asdict(item)
+            for item in active_demo_repository.list_telemetry(principal.workspace_id, revision_id)
+        ]
+
+    # Capability possession is the sole narrow authority at this internal boundary. These routes
+    # deliberately do not accept the core bearer credential and are intended only for the separate
+    # localhost runtime process in M4.
+    @app.post(
+        "/internal/demo-runtime/capabilities/exchange",
+        response_model=RuntimeSessionResponse,
+        include_in_schema=False,
+    )
+    def exchange_demo_capability(
+        command: CapabilityExchangeRequest,
+    ) -> RuntimeSessionResponse:
+        runtime, token = demo_runtime_service.exchange(
+            command.capability, command.persona_id, command.seed
+        )
+        return RuntimeSessionResponse.from_domain(runtime, token)
+
+    @app.post(
+        "/internal/demo-runtime/events",
+        response_model=RuntimeSessionResponse,
+        include_in_schema=False,
+    )
+    def apply_demo_runtime_event(command: RuntimeEventRequest) -> RuntimeSessionResponse:
+        runtime = demo_runtime_service.apply_event(
+            command.session_token, command.event, command.value, command.duration_ms
+        )
+        return RuntimeSessionResponse.from_domain(runtime, command.session_token)
 
     return app

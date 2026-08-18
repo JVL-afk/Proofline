@@ -4,10 +4,11 @@ Greenfield repository for the evidence-first business opportunity detection and 
 
 ## Current status
 
-The repository implements **Milestone M3 evidence-linked audits** as a deterministic local slice.
-M1/M2 remain authoritative. M3 adds immutable input manifests, eleven structured audit sections,
-typed claims, exact lineage, hard semantic QC, leased composition, and version-bound human review.
-No model route is active; live AI, publication, export, demos, and external effects remain disabled.
+The repository implements **Milestone M4 personalized demos** as a deterministic local slice.
+M1-M3 remain authoritative. M4 adds immutable demo manifests, declarative registered components,
+synthetic personas, a bounded state machine, structurally mock-only receipts, hard QC, exact review,
+short-lived capabilities, and a separate credential-free runtime origin. No model route is active;
+live AI, real integrations, publication, export, public sharing, and outreach remain disabled.
 Normal CI remains credential-free and network-free.
 
 M1/M2/M2.5 local adapters are constrained by
@@ -20,10 +21,10 @@ Open production source, retention, legal, workflow, and infrastructure decisions
 
 | Path | Purpose |
 |---|---|
-| `apps/` | Separate M3 diagnostic web UI |
-| `services/` | Authenticated API composition root |
-| `workers/` | Separate core, HTTP research, browser, and deterministic M2/M3 intelligence processes |
-| `packages/` | M0-M3 contracts/local adapters plus isolated M2.6 evaluation adapters |
+| `apps/` | Authenticated M4 diagnostic web UI |
+| `services/` | Authenticated API plus separate M4 demo runtime |
+| `workers/` | Separate core, HTTP research, browser, and deterministic M2-M4 intelligence processes |
+| `packages/` | M0-M4 contracts/local adapters plus isolated M2.6 evaluation adapters |
 | `infra/` | Infrastructure-as-code and local-platform boundaries |
 | `docs/adr/` | Durable architectural decisions |
 | `docs/decisions/` | Human-approval decision register from the accepted architecture |
@@ -42,7 +43,7 @@ Open production source, retention, legal, workflow, and infrastructure decisions
 Docker, PostgreSQL, Temporal, Redis, cloud services, search, and AI providers are not required for
 normal deterministic development or CI. M2.6 live evaluation is a separate explicit local command.
 
-## Run the M3 evidence-linked audit engine
+## Run the M4 personalized demo engine
 
 From a fresh checkout:
 
@@ -52,7 +53,7 @@ uv sync --locked --all-packages
 python scripts/bootstrap_local.py
 ```
 
-Start four terminals from the repository root:
+Start five terminals from the repository root:
 
 ```powershell
 uv run --locked opintel-api
@@ -71,11 +72,17 @@ uv run --locked opintel-intelligence-worker
 python -m http.server 3000 --bind 127.0.0.1 --directory apps/web
 ```
 
+```powershell
+uv run --locked opintel-demo-runtime
+```
+
 Open `http://127.0.0.1:3000`. Copy `OPINTEL_AUTH_TOKEN` from ignored `.env`, authenticate,
 name one known business, enter one explicitly permitted public URL, start the bounded run, and
 refresh its pages/evidence, start deterministic M2 analysis, inspect gaps/economics/factors, record
-opportunity review, then generate and review the M3 audit. Keep live research disabled unless the
-URL is authorized. Production live AI remains disabled; M2.6 adapters are tournament-only.
+opportunity review, generate and approve the M3 audit, then generate, inspect, approve, and launch
+the M4 simulation on `http://127.0.0.1:8100`. Its one-time capability lasts 15 minutes and the
+runtime session lasts at most 60 minutes. Keep live research disabled unless the URL is authorized.
+Production live AI remains disabled; M2.6 adapters are tournament-only.
 
 Browser fallback is off by default. For an approved local browser test, run
 `uv run playwright install chromium`, then set `OPINTEL_RESEARCH_BROWSER_ENABLED=true` only on the
@@ -105,7 +112,7 @@ production use by ADR-0004, ADR-0005, and ADR-0010.
 ## Authoritative documents
 
 1. [Accepted greenfield architecture](GREENFIELD_ARCHITECTURE.md)
-2. [M3 scope and exit criteria](docs/milestones/M3.md)
+2. [M4 scope and exit criteria](docs/milestones/M4.md)
 3. [Human decision register](docs/decisions/README.md)
 4. Accepted ADRs in [docs/adr/](docs/adr/)
 

@@ -21,4 +21,8 @@ M3 adds `audit-core` for immutable manifests, structured claims, deterministic c
 version-bound review, plus `audit-local` for development-only SQLite and read-only canonical M1/M2
 catalog adapters. It includes no live AI or publication boundary.
 
+M4 adds `demo-core` for declarative specifications, deterministic state/replay, mock actions, QC,
+review, capabilities, and telemetry contracts, plus `demo-local` for SQLite and read-only canonical
+M1-M3 adapters. It includes no live AI, real integration, publication, export, or public sharing.
+
 Shared packages must not become a miscellaneous dumping ground for business logic.

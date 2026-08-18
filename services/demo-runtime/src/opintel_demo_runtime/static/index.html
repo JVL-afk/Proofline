@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Private simulation runtime</title>
+    <link rel="stylesheet" href="/runtime.css">
+    <script src="/runtime.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <p id="disclosure" class="disclosure">Simulation for evaluation only. This runtime performs no external action.</p>
+      <header>
+        <p class="eyebrow">Private authenticated simulation</p>
+        <h1 id="business">Loading approved demo…</h1>
+      </header>
+      <section id="state" class="card" aria-live="polite"></section>
+      <section class="card">
+        <h2>Registered event</h2>
+        <label for="event">Event</label>
+        <select id="event"></select>
+        <label for="value">Synthetic value (optional)</label>
+        <input id="value" maxlength="80" autocomplete="off">
+        <button id="advance" type="button">Advance deterministic simulation</button>
+      </section>
+      <section class="card">
+        <h2>Mock-only receipts</h2>
+        <pre id="receipts">No mock action yet.</pre>
+      </section>
+      <p id="error" role="alert"></p>
+    </main>
+  </body>
+</html>
