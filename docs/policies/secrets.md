@@ -40,6 +40,10 @@ M6.5 requires no secret and exposes no secret/provider/identity adapter. Infrast
 controls are represented only by safe evidence references and hashes. Missing secret isolation or
 workload-identity evidence blocks readiness; it is never satisfied by placing credentials locally.
 
+M6.6A requires no secret. Candidate records are deterministic fixtures and the fake runner contains
+no credential or network interface. Any future M6.6B credential boundary requires separate
+authorization and must not be added to normal application or CI processes.
+
 ## CI/CD
 
 - Prefer workload identity federation over long-lived repository secrets.

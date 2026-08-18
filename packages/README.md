@@ -38,4 +38,9 @@ fail-closed readiness, phased real-data permissions, and mandatory non-send `SHA
 `activation-local` for append-only SQLite. It has no infrastructure, identity, provider, source,
 real-data, domain, AI, network, or delivery adapter.
 
+M6.6A extends `qualification-core` with synthetic Tournament II task projections, semantic hard
+gates, immutable qualification history, fake-only candidate/provider machinery, blinded review,
+hierarchical fixture budgets, and task-level reports. It adds no live transport, credential, route,
+real-data permission, M6/M6.7 authority, or delivery capability.
+
 Shared packages must not become a miscellaneous dumping ground for business logic.

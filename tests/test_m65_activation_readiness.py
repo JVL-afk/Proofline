@@ -52,6 +52,10 @@ from opintel_activation.domain import (
 from opintel_contact.domain import Stage
 from opintel_contact_local import SqlAlchemyContactRepository
 from opintel_m0.domain import Principal, Role
+from opintel_qualification.tournament2_corpus import CASES as M66_CASES
+from opintel_qualification.tournament2_corpus import project_case
+from opintel_qualification.tournament2_domain import ProviderOutcome, TournamentTask
+from opintel_qualification.tournament2_provider import DeterministicTournamentProvider
 
 RETENTION_CATEGORIES = (
     "person_identity_evidence",
@@ -731,9 +735,30 @@ def test_shadow_ready_is_mandatory_distinct_and_cannot_authorize_or_deliver(
     service = client.app.state.activation_service
     records = satisfy_provider_phase(service, principal, clock)
     permissions = shadow_permissions(service, principal, clock)
-    result = service.evaluate_shadow(principal, valid_shadow_manifest(records, permissions))
+    manifest = valid_shadow_manifest(records, permissions)
+    result = service.evaluate_shadow(principal, manifest)
     assert result.state == ShadowState.SHADOW_READY
     assert result.can_create_m6_send_ready is False
+    synthetic_case = next(item for item in M66_CASES if item.family == "strong_opportunity")
+    projection = project_case(synthetic_case, TournamentTask.OPPORTUNITY_REASONING)
+    advisory = DeterministicTournamentProvider(ProviderOutcome.VALID).invoke(projection).artifact
+    assert advisory.graph is not None
+    after_advisory = service.evaluate_shadow(principal, manifest)
+    assert (
+        after_advisory.state,
+        after_advisory.blockers,
+        after_advisory.policy_versions,
+        after_advisory.can_create_m6_send_ready,
+        after_advisory.can_transition_to_send_authorized,
+        after_advisory.consumable_by_delivery_worker,
+    ) == (
+        result.state,
+        result.blockers,
+        result.policy_versions,
+        result.can_create_m6_send_ready,
+        result.can_transition_to_send_authorized,
+        result.consumable_by_delivery_worker,
+    )
     with pytest.raises(ActivationValidationError):
         service.authorize_shadow(principal, result.id)
 

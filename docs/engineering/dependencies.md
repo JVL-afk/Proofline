@@ -73,3 +73,8 @@ M6.5 adds no third-party dependency. `activation-core` reuses Pydantic and share
 contracts for immutable governance projections. `activation-local` reuses locked SQLAlchemy. It has
 no cloud, OIDC, KMS, secret, provider, domain, mail, webhook, contact-source, verification, AI, or
 network dependency.
+
+M6.6A adds no third-party dependency. Tournament II contracts, corpus, evaluators, fake providers,
+review artifacts, budgets, lifecycle, and reports use the Python standard library inside
+`qualification-core`. No live adapter, provider SDK, credential loader, network client, or route
+dependency is introduced.

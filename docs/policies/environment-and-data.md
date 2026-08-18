@@ -41,6 +41,15 @@
   not page bodies or prompts.
 - Normal CI uses deterministic mocks and controlled synthetic fixtures with zero provider network
   access.
+
+## M6.6A Tournament II data
+
+- M6.6A uses repository-owned synthetic M1-M6 case bundles only.
+- Task projections contain only the minimum fields permitted by the exact task contract.
+- Hidden qualification fixtures are sealed from development and calibration access.
+- Candidate outputs remain untrusted evaluation artifacts and are not canonical M1-M6 data.
+- M6.6A contains no credential, live provider transport, real business/contact data, or M6.7
+  real-data permission.
 - A future live evaluation may use only an explicitly approved data class, provider policy,
   deployment/task allowlist, and budget under ADR-0014.
 

@@ -49,6 +49,9 @@ Dependencies point inward. Adapters are composed at process entry points.
 - The M6.5 activation context consumes no M1-M6 persistence or delivery interface. It owns only
   immutable governance/readiness records and non-send shadow assessments. `SHADOW_READY` cannot
   create M6 `SEND_READY`, authorize, or reach a delivery worker.
+- The M6.6A qualification context owns only synthetic task projections, evaluation artifacts,
+  qualification evidence, review artifacts, budgets, and reports. Its runner accepts deterministic
+  fixture providers only and has no M6/M6.7 state, real-data, credential, route, or delivery port.
 - Approval state can only be changed through the authorized application service.
 - No model output is executed as code or trusted configuration.
 

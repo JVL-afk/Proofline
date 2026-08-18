@@ -4,14 +4,16 @@ Greenfield repository for the evidence-first business opportunity detection and 
 
 ## Current status
 
-The repository implements **Milestone M6.5 live activation readiness** as deterministic governance
-machinery. M1-M6 remain authoritative and frozen. M6 adds synthetic identity,
+The repository implements **Milestone M6.6A Tournament II qualification infrastructure** without
+live model execution. M1-M6 remain authoritative and frozen. M6 adds synthetic identity,
 proof-scoped verification, fixture-only eligibility, immutable suppression, exact plain-text send
 manifests, one-message human authorization, mock acceptance/receipts/replies, and first-party
 re-analysis requests. M6.5 adds immutable prerequisite records, exact blocker diagnostics, and a
-mandatory non-send `SHADOW_READY` boundary. Its current result is intentionally `NOT_READY`. No
-model route, real infrastructure, source, person, provider, sender, domain, or delivery is active.
-Normal CI remains credential-free and network-free.
+mandatory non-send `SHADOW_READY` boundary. M6.6A adds synthetic end-to-end task contracts, semantic
+hard gates, fake candidate/provider machinery, blinded review artifacts, hierarchical fixture
+budgets, and task-specific reports. M6.5 remains intentionally `NOT_READY`. No model route, real
+infrastructure, source, person, provider, sender, domain, or delivery is active. Normal CI remains
+credential-free and network-free.
 
 M1/M2/M2.5 local adapters are constrained by
 [ADR-0005](docs/adr/0005-m1-bounded-local-research.md),
@@ -26,7 +28,7 @@ Open production source, retention, legal, workflow, and infrastructure decisions
 | `apps/` | Authenticated M6/M6.5 diagnostic web UI |
 | `services/` | Authenticated API plus separate M4 demo runtime |
 | `workers/` | Separate core, HTTP research, browser, and deterministic M2-M5 intelligence processes |
-| `packages/` | M0-M6.5 contracts/local adapters plus isolated M2.6 evaluation adapters |
+| `packages/` | M0-M6.6A contracts/local adapters plus isolated M2.6 evaluation adapters |
 | `infra/` | Infrastructure-as-code and local-platform boundaries |
 | `docs/adr/` | Durable architectural decisions |
 | `docs/decisions/` | Human-approval decision register from the accepted architecture |

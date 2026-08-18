@@ -1,4 +1,4 @@
-"""Validate the dependency-free repository foundation through M6.5.
+"""Validate the dependency-free repository foundation through M6.6A.
 
 This script intentionally uses only the Python standard library so a clean
 checkout can validate governance and structure before application dependencies
@@ -92,6 +92,15 @@ REQUIRED_FILES = (
     "docs/adr/0051-isolated-production-delivery-boundary.md",
     "docs/adr/0052-operational-readiness-and-suspension.md",
     "docs/adr/0053-m67-shadow-ready-boundary.md",
+    "docs/adr/0054-tournament-ii-task-authority.md",
+    "docs/adr/0055-end-to-end-synthetic-corpus.md",
+    "docs/adr/0056-semantic-evaluation-and-blast-radius.md",
+    "docs/adr/0057-blinded-usefulness-and-material-gain.md",
+    "docs/adr/0058-immutable-candidate-intake.md",
+    "docs/adr/0059-tournament-no-route-lifecycle.md",
+    "docs/adr/0060-tournament-budget-ledger.md",
+    "docs/adr/0061-m67-ai-advisory-isolation.md",
+    "docs/adr/0062-tournament-security-and-retention.md",
     "docs/adr/README.md",
     "docs/decisions/README.md",
     "docs/engineering/dependencies.md",
@@ -107,6 +116,7 @@ REQUIRED_FILES = (
     "docs/milestones/M5.md",
     "docs/milestones/M6.md",
     "docs/milestones/M6.5.md",
+    "docs/milestones/M6.6A.md",
     "docs/policies/environment-and-data.md",
     "docs/policies/secrets.md",
     "packages/m0-core/README.md",
@@ -246,7 +256,7 @@ def validate_workspace(errors: list[str]) -> None:
         "workers/intelligence",
     ]
     if members != expected_members:
-        errors.append("Python workspace members do not match the accepted M6.5 boundaries")
+        errors.append("Python workspace members do not match the accepted M6.6A boundaries")
 
 
 def validate_decision_register(errors: list[str]) -> None:

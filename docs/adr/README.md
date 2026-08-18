@@ -76,5 +76,14 @@ ADRs capture decisions that constrain implementation or are expensive to reverse
 | [ADR-0051](0051-isolated-production-delivery-boundary.md) | Accepted | Attested isolated future delivery and webhook boundaries |
 | [ADR-0052](0052-operational-readiness-and-suspension.md) | Accepted | Operational ownership, runbooks, and emergency suspension |
 | [ADR-0053](0053-m67-shadow-ready-boundary.md) | Accepted | Mandatory non-send M6.7 SHADOW_READY boundary |
+| [ADR-0054](0054-tournament-ii-task-authority.md) | Accepted | Tournament II task authority and inclusion policy |
+| [ADR-0055](0055-end-to-end-synthetic-corpus.md) | Accepted | Synthetic end-to-end corpus and minimum-data projections |
+| [ADR-0056](0056-semantic-evaluation-and-blast-radius.md) | Accepted | Semantic hard gates with evidence-scoped failure blast radius |
+| [ADR-0057](0057-blinded-usefulness-and-material-gain.md) | Accepted | Blinded usefulness review and material-gain dispositions |
+| [ADR-0058](0058-immutable-candidate-intake.md) | Accepted | Just-in-time immutable candidate intake |
+| [ADR-0059](0059-tournament-no-route-lifecycle.md) | Accepted | Tournament lifecycle with no route activation |
+| [ADR-0060](0060-tournament-budget-ledger.md) | Accepted | Hierarchical tournament budget reservation and reconciliation |
+| [ADR-0061](0061-m67-ai-advisory-isolation.md) | Accepted | M6.7 AI advisory isolation |
+| [ADR-0062](0062-tournament-security-and-retention.md) | Accepted | Tournament security and safe result retention |
 
 The product/compliance decisions A-01 through A-20 are tracked separately in `docs/decisions/README.md` until they become ADRs.
