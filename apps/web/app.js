@@ -10,6 +10,8 @@ let auditOperationId = null;
 let auditRevision = null;
 let demoOperationId = null;
 let demoRevision = null;
+let outreachOperationId = null;
+let outreachRevision = null;
 
 const byId = (id) => document.getElementById(id);
 
@@ -285,6 +287,7 @@ byId("refresh-demo").addEventListener("click", async () => {
     byId("approve-demo").disabled = !reviewable;
     byId("reject-demo").disabled = !reviewable;
     byId("launch-demo").disabled = demoRevision.state !== "approved";
+    byId("start-outreach").disabled = demoRevision.state !== "approved";
   } catch (error) {
     showError(error);
   }
@@ -307,6 +310,7 @@ async function reviewDemo(decision) {
     byId("approve-demo").disabled = true;
     byId("reject-demo").disabled = true;
     byId("launch-demo").disabled = demoRevision.state !== "approved";
+    byId("start-outreach").disabled = demoRevision.state !== "approved";
   } catch (error) {
     showError(error);
   }
@@ -327,3 +331,74 @@ byId("launch-demo").addEventListener("click", async () => {
     showError(error);
   }
 });
+
+byId("start-outreach").addEventListener("click", async () => {
+  byId("error").textContent = "";
+  try {
+    const result = await request(
+      `/api/v1/demo-revisions/${demoRevision.id}/outreach-package-operations`,
+      {
+        method: "POST",
+        headers: { "Idempotency-Key": crypto.randomUUID() },
+        body: JSON.stringify({ expected_demo_revision_hash: demoRevision.revision_hash }),
+      },
+    );
+    outreachOperationId = result.operation.id;
+    byId("outreach").textContent = JSON.stringify(result, null, 2);
+    byId("refresh-outreach").disabled = false;
+  } catch (error) {
+    showError(error);
+  }
+});
+
+byId("refresh-outreach").addEventListener("click", async () => {
+  byId("error").textContent = "";
+  try {
+    const operation = await request(
+      `/api/v1/outreach-package-operations/${outreachOperationId}`,
+    );
+    if (!operation.operation.outreach_revision_id) {
+      byId("outreach").textContent = JSON.stringify(operation, null, 2);
+      return;
+    }
+    const result = await request(
+      `/api/v1/outreach-package-revisions/${operation.operation.outreach_revision_id}`,
+    );
+    outreachRevision = result.revision;
+    byId("outreach").textContent = JSON.stringify(result, null, 2);
+    const reviewable = outreachRevision.state === "ready_for_review";
+    byId("approve-outreach").disabled = !reviewable;
+    byId("reject-outreach").disabled = !reviewable;
+  } catch (error) {
+    showError(error);
+  }
+});
+
+async function reviewOutreach(decision) {
+  try {
+    const result = await request(
+      `/api/v1/outreach-package-revisions/${outreachRevision.id}/review-decisions`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          expected_revision_hash: outreachRevision.revision_hash,
+          expected_manifest_hash: outreachRevision.manifest.checksum,
+          expected_content_hash: outreachRevision.content_hash,
+          decision,
+          reason: `Local M5 content-only ${decision} decision.`,
+        }),
+      },
+    );
+    outreachRevision = result.revision;
+    byId("outreach").textContent = JSON.stringify(result, null, 2);
+    byId("approve-outreach").disabled = true;
+    byId("reject-outreach").disabled = true;
+  } catch (error) {
+    showError(error);
+  }
+}
+
+byId("approve-outreach").addEventListener("click", () =>
+  reviewOutreach("approve_content"),
+);
+byId("reject-outreach").addEventListener("click", () => reviewOutreach("reject"));

@@ -1,7 +1,7 @@
 [project]
 name = "opintel-intelligence-worker"
 version = "0.1.0"
-description = "Deterministic local M2 opportunity, M3 audit, and M4 demo worker"
+description = "Deterministic local M2-M5 intelligence worker"
 requires-python = ">=3.13,<3.14"
 dependencies = [
   "opintel-m0-local",
@@ -12,6 +12,8 @@ dependencies = [
   "opintel-audit-local",
   "opintel-demo-core",
   "opintel-demo-local",
+  "opintel-outreach-core",
+  "opintel-outreach-local",
 ]
 
 [project.scripts]
@@ -26,6 +28,8 @@ opintel-audit-core = { workspace = true }
 opintel-audit-local = { workspace = true }
 opintel-demo-core = { workspace = true }
 opintel-demo-local = { workspace = true }
+opintel-outreach-core = { workspace = true }
+opintel-outreach-local = { workspace = true }
 
 [build-system]
 requires = ["hatchling>=1.27,<2"]

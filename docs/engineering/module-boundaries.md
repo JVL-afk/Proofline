@@ -41,6 +41,8 @@ Dependencies point inward. Adapters are composed at process entry points.
 - Hostile-content fetch/browser processes receive no application/user/provider credentials beyond minimal job-specific capability.
 - The content interpreter has no tools or arbitrary network access.
 - The demo origin/runtime has no core application cookies or real side-effect integrations.
+- The outreach context consumes exact M1-M4 contracts read-only and has no person, recipient,
+  copy/export, delivery, channel, provider, or external-side-effect port.
 - Approval state can only be changed through the authorized application service.
 - No model output is executed as code or trusted configuration.
 

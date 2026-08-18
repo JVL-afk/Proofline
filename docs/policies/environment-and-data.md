@@ -77,6 +77,18 @@
   fixture IDs. It stores no free text, contact data, evidence body, audit prose, token, or transcript.
 - M4 establishes no production telemetry or demo-retention schedule.
 
+## M5 outreach-package data
+
+- Outreach manifests, projections, artifacts, risks, reviews, and reviewer edits are `Confidential`;
+  safe template/role/policy metadata is `Internal`.
+- M5 stores no person, recipient address, phone, email, social profile, contact destination, delivery
+  event, reply, or engagement data.
+- External drafts retain exact approved claim IDs and lineage; internal economics preserve source
+  value states and never authorize external financial use.
+- Ordinary logs contain IDs, hashes, states, timings, and QC codes rather than draft prose, evidence
+  bodies, internal notes, contact data, or reviewer edits.
+- M5 establishes no copy, export, publication, delivery, or production retention schedule.
+
 ## Backups and recovery
 
 Backup scope, encryption, point-in-time recovery, RTO/RPO, region, retention, and restoration cadence remain blocked on A-04, A-08, and A-18. No infrastructure implementation should imply values for them.

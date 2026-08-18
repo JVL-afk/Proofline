@@ -49,5 +49,11 @@ ADRs capture decisions that constrain implementation or are expensive to reverse
 | [ADR-0024](0024-demo-runtime-isolation.md) | Accepted | Separate runtime, capability sessions, CSP, and minimal telemetry |
 | [ADR-0025](0025-demo-eligibility-review-and-revocation.md) | Accepted | Exact eligibility, review, invalidation, and revocation |
 | [ADR-0026](0026-authenticated-demo-access.md) | Accepted | Authenticated-only demo access with no public sharing |
+| [ADR-0027](0027-outreach-packages-and-exact-manifests.md) | Accepted | Immutable M5 packages and exact approved M1-M4 manifests |
+| [ADR-0028](0028-outreach-claim-projection-and-economics.md) | Accepted | Typed claim projection and internal-only economics |
+| [ADR-0029](0029-deterministic-outreach-templates.md) | Accepted | Deterministic templates and disabled wording AI port |
+| [ADR-0030](0030-outreach-artifact-separation-and-qc.md) | Accepted | Internal/external separation and non-overridable hard QC |
+| [ADR-0031](0031-outreach-content-review-no-delivery.md) | Accepted | Content-only review, invalidation, and no-delivery boundary |
+| [ADR-0032](0032-functional-role-targeting.md) | Accepted | Functional-role targeting without people or impersonation |
 
 The product/compliance decisions A-01 through A-20 are tracked separately in `docs/decisions/README.md` until they become ADRs.

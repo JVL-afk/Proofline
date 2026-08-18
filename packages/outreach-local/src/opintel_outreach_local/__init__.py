@@ -1,0 +1,4 @@
+from opintel_outreach_local.adapters import CanonicalOutreachSourceCatalog
+from opintel_outreach_local.persistence import SqlAlchemyOutreachRepository
+
+__all__ = ["CanonicalOutreachSourceCatalog", "SqlAlchemyOutreachRepository"]

@@ -29,6 +29,8 @@ members = [
   "packages/audit-local",
   "packages/demo-core",
   "packages/demo-local",
+  "packages/outreach-core",
+  "packages/outreach-local",
   "packages/qualification-core",
   "packages/qualification-local",
   "packages/qualification-live",

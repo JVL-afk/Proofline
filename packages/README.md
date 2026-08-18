@@ -25,4 +25,8 @@ M4 adds `demo-core` for declarative specifications, deterministic state/replay, 
 review, capabilities, and telemetry contracts, plus `demo-local` for SQLite and read-only canonical
 M1-M3 adapters. It includes no live AI, real integration, publication, export, or public sharing.
 
+M5 adds `outreach-core` for exact manifests, claim projections, deterministic plain-text artifacts,
+hard QC, and content-only review, plus `outreach-local` for SQLite and a read-only M1-M4 catalog.
+It contains no people, recipient, copy, export, delivery, channel, live-AI, or side-effect adapter.
+
 Shared packages must not become a miscellaneous dumping ground for business logic.

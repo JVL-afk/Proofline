@@ -1,4 +1,4 @@
-"""FastAPI transport and local M0-M4 composition root."""
+"""FastAPI transport and local M0-M5 composition root."""
 
 from dataclasses import asdict
 from typing import Annotated
@@ -69,6 +69,19 @@ from opintel_opportunity.contracts import (
 from opintel_opportunity.domain import OpportunityError, OpportunityNotFoundError
 from opintel_opportunity.ports import OpportunityRepository
 from opintel_opportunity_local import SqlAlchemyOpportunityRepository
+from opintel_outreach.application import OutreachApplicationService
+from opintel_outreach.contracts import (
+    OutreachBundleView,
+    OutreachCreate,
+    OutreachOperationView,
+    OutreachReviewRequest,
+)
+from opintel_outreach.domain import OutreachError, OutreachNotFoundError
+from opintel_outreach.ports import OutreachRepository
+from opintel_outreach_local import (
+    CanonicalOutreachSourceCatalog,
+    SqlAlchemyOutreachRepository,
+)
 from opintel_research.application import ResearchApplicationService
 from opintel_research.contracts import (
     BusinessCreate,
@@ -97,6 +110,7 @@ def create_app(
     opportunity_repository: OpportunityRepository | None = None,
     audit_repository: AuditRepository | None = None,
     demo_repository: DemoRepository | None = None,
+    outreach_repository: OutreachRepository | None = None,
 ) -> FastAPI:
     active_settings = settings or get_local_settings()
     active_repository = repository or SqlAlchemyM0Repository(active_settings.database_url)
@@ -117,6 +131,10 @@ def create_app(
         active_settings.database_url
     )
     active_demo_repository.initialize()
+    active_outreach_repository = outreach_repository or SqlAlchemyOutreachRepository(
+        active_settings.database_url
+    )
+    active_outreach_repository.initialize()
     authenticator = LocalTokenAuthenticator(
         active_settings.auth_token.get_secret_value(),
         active_settings.auth_subject,
@@ -165,13 +183,26 @@ def create_app(
         identifiers or UuidFactory(),
         capabilities,
     )
+    outreach_source = CanonicalOutreachSourceCatalog(
+        active_demo_repository,
+        active_audit_repository,
+        active_opportunity_repository,
+        active_research_repository,
+    )
+    outreach_service = OutreachApplicationService(
+        active_outreach_repository,
+        outreach_source,
+        clock or SystemClock(),
+        identifiers or UuidFactory(),
+    )
 
     app = FastAPI(
-        title="Opportunity Intelligence M4 API",
-        version="0.5.0",
+        title="Opportunity Intelligence M5 API",
+        version="0.6.0",
         description=(
             "Bounded research, deterministic opportunities, evidence-linked audits, and private "
-            "mock-only simulations. Live AI, publication, and real integrations are disabled."
+            "mock-only simulations, and content-only outreach drafts. Live AI, contact, copy, "
+            "export, publication, sending, and real integrations are disabled."
         ),
     )
     app.add_middleware(
@@ -195,6 +226,9 @@ def create_app(
     app.state.demo_source = demo_source
     app.state.demo_service = demo_service
     app.state.demo_runtime_service = demo_runtime_service
+    app.state.outreach_repository = active_outreach_repository
+    app.state.outreach_source = outreach_source
+    app.state.outreach_service = outreach_service
 
     def current_principal(
         credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer)],
@@ -272,6 +306,19 @@ def create_app(
 
     @app.exception_handler(DemoError)
     def demo_error_handler(request: Request, error: DemoError) -> JSONResponse:
+        del request
+        return JSONResponse(
+            status_code=403 if error.code == "forbidden" else 400,
+            content={"detail": error.safe_message, "code": error.code},
+        )
+
+    @app.exception_handler(OutreachNotFoundError)
+    def outreach_not_found_handler(request: Request, error: OutreachNotFoundError) -> JSONResponse:
+        del request, error
+        return JSONResponse(status_code=404, content={"detail": "outreach resource not found"})
+
+    @app.exception_handler(OutreachError)
+    def outreach_error_handler(request: Request, error: OutreachError) -> JSONResponse:
         del request
         return JSONResponse(
             status_code=403 if error.code == "forbidden" else 400,
@@ -963,5 +1010,120 @@ def create_app(
             command.session_token, command.event, command.value, command.duration_ms
         )
         return RuntimeSessionResponse.from_domain(runtime, command.session_token)
+
+    @app.post(
+        "/api/v1/demo-revisions/{demo_revision_id}/outreach-package-operations",
+        response_model=OutreachOperationView,
+        status_code=status.HTTP_201_CREATED,
+        tags=["outreach-packages"],
+    )
+    def start_outreach_package(
+        demo_revision_id: UUID,
+        command: OutreachCreate,
+        response: Response,
+        principal: Annotated[Principal, Depends(current_principal)],
+        idempotency_key: Annotated[
+            str, Header(alias="Idempotency-Key", min_length=1, max_length=128)
+        ],
+    ) -> OutreachOperationView:
+        operation, created = outreach_service.start_generation(
+            principal,
+            demo_revision_id,
+            command.expected_demo_revision_hash,
+            idempotency_key,
+            command.parent_revision_id,
+        )
+        if not created:
+            response.status_code = status.HTTP_200_OK
+        return OutreachOperationView.from_domain(operation)
+
+    @app.get(
+        "/api/v1/outreach-package-operations/{operation_id}",
+        response_model=OutreachOperationView,
+        tags=["outreach-packages"],
+    )
+    def get_outreach_operation(
+        operation_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> OutreachOperationView:
+        return OutreachOperationView.from_domain(
+            outreach_service.get_operation(principal, operation_id)
+        )
+
+    @app.get(
+        "/api/v1/outreach-package-revisions/{revision_id}",
+        response_model=OutreachBundleView,
+        tags=["outreach-packages"],
+    )
+    def get_outreach_revision(
+        revision_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> OutreachBundleView:
+        return OutreachBundleView.from_domain(outreach_service.get_revision(principal, revision_id))
+
+    @app.get(
+        "/api/v1/outreach-packages/{package_id}/revisions",
+        response_model=list[OutreachBundleView],
+        tags=["outreach-packages"],
+    )
+    def list_outreach_revisions(
+        package_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> list[OutreachBundleView]:
+        return [
+            OutreachBundleView.from_domain(item)
+            for item in outreach_service.list_revisions(principal, package_id)
+        ]
+
+    @app.get(
+        "/api/v1/outreach-package-revisions/{revision_id}/projections/{projection_id}/lineage",
+        response_model=dict[str, object],
+        tags=["outreach-packages"],
+    )
+    def get_outreach_projection_lineage(
+        revision_id: UUID,
+        projection_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> dict[str, object]:
+        bundle = outreach_service.get_revision(principal, revision_id)
+        projection = next(
+            (item for item in bundle.revision.projections if item.id == projection_id), None
+        )
+        if projection is None:
+            raise OutreachNotFoundError()
+        return {
+            "projection": asdict(projection),
+            "manifest_hash": bundle.revision.manifest.checksum,
+            "audit_revision": (
+                f"/api/v1/audit-revisions/{bundle.revision.manifest.audit_revision_id}"
+            ),
+            "audit_claim_id": projection.source_claim_id,
+            "evidence_links": [
+                f"/api/v1/research-evidence/{item}" for item in projection.evidence_ids
+            ],
+            "economic_context_external": False,
+        }
+
+    @app.post(
+        "/api/v1/outreach-package-revisions/{revision_id}/review-decisions",
+        response_model=OutreachBundleView,
+        tags=["outreach-packages"],
+    )
+    def review_outreach_revision(
+        revision_id: UUID,
+        command: OutreachReviewRequest,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> OutreachBundleView:
+        return OutreachBundleView.from_domain(
+            outreach_service.review(
+                principal,
+                revision_id,
+                command.expected_revision_hash,
+                command.expected_manifest_hash,
+                command.expected_content_hash,
+                command.decision,
+                command.reason,
+            )
+        )
 
     return app

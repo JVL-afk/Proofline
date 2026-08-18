@@ -2,16 +2,16 @@
 
 ## Active milestone
 
-Milestone M4 Personalized Demo Engine only. Read `GREENFIELD_ARCHITECTURE.md`,
-`docs/milestones/M3.md`, `docs/milestones/M4.md`, and accepted ADR-0021 through ADR-0026 before
+Milestone M5 Evidence-Bound Outreach Package Engine only. Read `GREENFIELD_ARCHITECTURE.md`,
+`docs/milestones/M4.md`, `docs/milestones/M5.md`, and accepted ADR-0027 through ADR-0032 before
 changing the repository.
 
-M1-M3 remain authoritative. M4 may only project exact accepted/approved inputs into declarative,
-deterministic, synthetic, mock-only simulations with a separate capability-scoped runtime. Live AI,
-all M2.6 routes, and production AI remain disabled. Normal CI remains credential-free and network-free.
+M1-M4 remain authoritative. M5 may only project exact approved upstream claims into deterministic,
+audience-separated drafts with hard QC and content-only human review. Live AI, all M2.6 routes, and
+production AI remain disabled. Normal CI remains credential-free and network-free.
 
-Do not implement M5 or later behavior: proposals, outreach, real CRM/channel integrations, mass
-discovery, autonomous agents, external publication/export, media generation, or generated code.
+Do not implement M6 or later behavior: contact discovery, recipients, copy/export/download,
+publication, delivery/sending, CRM/channel integrations, mass outreach, or autonomous agents.
 
 ## Required behavior
 
@@ -21,7 +21,7 @@ discovery, autonomous agents, external publication/export, media generation, or 
 - Do not add executable infrastructure until its cloud/region/IaC/data decisions are accepted.
 - Do not commit secrets, personal data, live provider payloads, generated credentials, or local service data.
 - Use exact/locked dependencies and justify new direct dependencies under `docs/engineering/dependencies.md`.
-- Keep all behavior outside the exact M4 demo path out of the repository unless the user explicitly advances the milestone.
+- Keep all behavior outside the exact M5 package path out of the repository unless the user explicitly advances the milestone.
 
 ## Validation
 

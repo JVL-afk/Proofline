@@ -1,4 +1,4 @@
-"""Credential-free deterministic M2 opportunity, M3 audit, and M4 demo worker."""
+"""Credential-free deterministic M2-M5 intelligence worker."""
 
 from __future__ import annotations
 
@@ -19,6 +19,8 @@ from opintel_opportunity_local import (
     ResearchEvidenceCatalog,
     SqlAlchemyOpportunityRepository,
 )
+from opintel_outreach import DeterministicOutreachComposer, OutreachWorkflowRunner
+from opintel_outreach_local import CanonicalOutreachSourceCatalog, SqlAlchemyOutreachRepository
 from opintel_research_local import SqlAlchemyResearchRepository
 
 
@@ -51,6 +53,14 @@ def run() -> None:
         DeterministicDemoComposer(UuidFactory()),
         SystemClock(),
     )
+    outreach_repository = SqlAlchemyOutreachRepository(settings.database_url)
+    outreach_repository.initialize()
+    outreach_runner = OutreachWorkflowRunner(
+        outreach_repository,
+        CanonicalOutreachSourceCatalog(demo_repository, audit_repository, repository, research),
+        DeterministicOutreachComposer(UuidFactory()),
+        SystemClock(),
+    )
     stopped = False
 
     def stop(signum: int, frame: object) -> None:
@@ -61,15 +71,16 @@ def run() -> None:
     signal.signal(signal.SIGINT, stop)
     signal.signal(signal.SIGTERM, stop)
     logging.basicConfig(level=logging.INFO, format="%(message)s")
-    logging.info(json.dumps({"event": "m4_intelligence_worker.started", "live_ai": False}))
+    logging.info(json.dumps({"event": "m5_intelligence_worker.started", "live_ai": False}))
     while not stopped:
         if (
             not opportunity_runner.run_once()
             and not audit_runner.run_once()
             and not demo_runner.run_once()
+            and not outreach_runner.run_once()
         ):
             time.sleep(settings.worker_poll_seconds)
-    logging.info(json.dumps({"event": "m4_intelligence_worker.stopped"}))
+    logging.info(json.dumps({"event": "m5_intelligence_worker.stopped"}))
 
 
 if __name__ == "__main__":

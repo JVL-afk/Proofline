@@ -27,6 +27,10 @@ M4 uses opaque, short-lived local capabilities. Only their SHA-256 digests may b
 separate demo runtime receives no core cookie, database/provider/research credential, signing key,
 or general-purpose application credential. No M4 component requires a live provider secret.
 
+M5 requires no provider, mail, CRM, calendar, telephony, social-network, recipient-enrichment, or
+delivery credential. The disabled wording port has no adapter or route. Draft content, sender slots,
+reviewer edits, and future recipient data must never be treated as secret-injection mechanisms.
+
 ## CI/CD
 
 - Prefer workload identity federation over long-lived repository secrets.
