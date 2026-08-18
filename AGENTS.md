@@ -2,17 +2,18 @@
 
 ## Active milestone
 
-Milestone M6 Contact Eligibility & Controlled Delivery only. Read `GREENFIELD_ARCHITECTURE.md`,
-`docs/milestones/M5.md`, `docs/milestones/M6.md`, and accepted ADR-0033 through ADR-0042 before
+Milestone M6.5 Live Activation Readiness only. Read `GREENFIELD_ARCHITECTURE.md`,
+`docs/milestones/M6.md`, `docs/milestones/M6.5.md`, and accepted ADR-0033 through ADR-0053 before
 changing the repository.
 
-M1-M5 remain authoritative. M6 may only use synthetic identities, fixture policies, exact approved
-M5 revisions, and a deterministic zero-network single-message mock. Live AI, real providers, all
-M2.6 routes, and production AI remain disabled. Normal CI remains credential-free/network-free.
+M1-M6 remain authoritative and frozen. M6.5 may only represent immutable governance prerequisites,
+evaluate fail-closed activation readiness, and produce non-send SHADOW_READY assessments. Live AI,
+real data/providers/senders/infrastructure, all M2.6 routes, and production AI remain disabled.
+Normal CI remains credential-free/network-free.
 
-Do not implement M7 or live behavior: real person/contact discovery or verification, real sender,
-email/webhook provider, copy/export/publication, bulk/sequence delivery, CRM/channel integration,
-autonomous follow-up, or autonomous agents.
+Do not implement M6.6, M6.7 execution, M7, or live behavior: real research/person/contact data,
+sender/domain/site, provider/webhook, cloud/IdP/KMS/secrets, delivery, publication, bulk/sequence,
+CRM/channel integration, autonomous follow-up, or autonomous agents.
 
 ## Required behavior
 
@@ -22,7 +23,7 @@ autonomous follow-up, or autonomous agents.
 - Do not add executable infrastructure until its cloud/region/IaC/data decisions are accepted.
 - Do not commit secrets, personal data, live provider payloads, generated credentials, or local service data.
 - Use exact/locked dependencies and justify new direct dependencies under `docs/engineering/dependencies.md`.
-- Keep all behavior outside the exact mock-only M6 path out unless the user advances the milestone.
+- Keep all behavior outside exact M6.5 readiness diagnostics out unless the user advances the milestone.
 
 ## Validation
 

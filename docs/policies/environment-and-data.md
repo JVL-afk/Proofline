@@ -100,6 +100,18 @@
 - Deterministic CI has no provider credential and performs zero external person, verification,
   email, webhook, DNS, or delivery calls.
 
+## M6.5 activation-readiness data
+
+- M6.5 stores configuration, artifact references, hashes, approvals, safe gate outcomes, fixture
+  attestations, and deterministic test evidence only. Local records contain no real person/contact,
+  provider payload, domain credential, legal rule, secret, or message.
+- Initial source/proof records are visibly inactive proposals. A governance schema or accepted ADR
+  does not constitute a signed production legal/privacy release.
+- Real company research, identity resolution, contact storage, verification, eligibility, and
+  SHADOW_READY each require independent future permission. All are disabled in M6.5.
+- SHADOW_READY is Confidential governance metadata when later used with real candidates, but M6.5
+  tests use repository-owned synthetic identifiers only.
+
 ## Backups and recovery
 
 Backup scope, encryption, point-in-time recovery, RTO/RPO, region, retention, and restoration cadence remain blocked on A-04, A-08, and A-18. No infrastructure implementation should imply values for them.

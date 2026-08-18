@@ -4,12 +4,13 @@ Greenfield repository for the evidence-first business opportunity detection and 
 
 ## Current status
 
-The repository implements **Milestone M6 contact eligibility and controlled delivery** as a
-deterministic mock-only local slice. M1-M5 remain authoritative. M6 adds synthetic identity,
+The repository implements **Milestone M6.5 live activation readiness** as deterministic governance
+machinery. M1-M6 remain authoritative and frozen. M6 adds synthetic identity,
 proof-scoped verification, fixture-only eligibility, immutable suppression, exact plain-text send
 manifests, one-message human authorization, mock acceptance/receipts/replies, and first-party
-re-analysis requests. No model route or real provider is active; real people, contact verification,
-senders, messages, publication, bulk delivery, and integrations remain disabled.
+re-analysis requests. M6.5 adds immutable prerequisite records, exact blocker diagnostics, and a
+mandatory non-send `SHADOW_READY` boundary. Its current result is intentionally `NOT_READY`. No
+model route, real infrastructure, source, person, provider, sender, domain, or delivery is active.
 Normal CI remains credential-free and network-free.
 
 M1/M2/M2.5 local adapters are constrained by
@@ -22,10 +23,10 @@ Open production source, retention, legal, workflow, and infrastructure decisions
 
 | Path | Purpose |
 |---|---|
-| `apps/` | Authenticated M6 diagnostic web UI |
+| `apps/` | Authenticated M6/M6.5 diagnostic web UI |
 | `services/` | Authenticated API plus separate M4 demo runtime |
 | `workers/` | Separate core, HTTP research, browser, and deterministic M2-M5 intelligence processes |
-| `packages/` | M0-M6 contracts/local adapters plus isolated M2.6 evaluation adapters |
+| `packages/` | M0-M6.5 contracts/local adapters plus isolated M2.6 evaluation adapters |
 | `infra/` | Infrastructure-as-code and local-platform boundaries |
 | `docs/adr/` | Durable architectural decisions |
 | `docs/decisions/` | Human-approval decision register from the accepted architecture |
@@ -44,7 +45,7 @@ Open production source, retention, legal, workflow, and infrastructure decisions
 Docker, PostgreSQL, Temporal, Redis, cloud services, search, and AI providers are not required for
 normal deterministic development or CI. M2.6 live evaluation is a separate explicit local command.
 
-## Run the M6 mock-only contact lifecycle
+## Run the M6 mock lifecycle and M6.5 readiness diagnostic
 
 From a fresh checkout:
 

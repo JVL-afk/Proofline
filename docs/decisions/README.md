@@ -28,12 +28,12 @@ This register transcribes A-01 through A-20 from section 25 of the accepted arch
 | A-12 | Demo sharing | Authenticated-only initially | Accepted | Product/architecture owners | ADR-0026; public access remains unapproved |
 | A-13 | ROI semantics | Approve formulas, sources, scenarios, currency, and value meaning | Accepted | Product/architecture owners | ADR-0008 initial M2 formula only |
 | A-14 | Score calibration | Approve rubrics, weights, thresholds, and heuristic labels | Deferred | Product/architecture owners | Uncalibrated M2 bands only under ADR-0009 |
-| A-15 | Human approval policy | Define permissions, warning overrides, duties, and reapproval triggers | Deferred | Product/architecture owners | Local M2-M4 governance accepted by ADR-0010/ADR-0019/ADR-0025; production duties remain open |
-| A-16 | Outreach in MVP | Manual copy/export of drafts only | Open | Unassigned | ADR-0031 and ADR-0039 allow content plus mock delivery only; real outreach remains unapproved |
+| A-15 | Human approval policy | Define permissions, warning overrides, duties, and reapproval triggers | Accepted | Product/architecture owners | ADR-0049 accepts strict initial separation, step-up, no self-authorization, and no hard-gate override; A-07 identity values remain open |
+| A-16 | Outreach in MVP | Manual copy/export of drafts only | Accepted | Product/architecture owners | ADR-0043 accepts only the Texas one-to-one no-link/no-attachment envelope; delivery remains disabled pending all other gates |
 | A-17 | Legal/privacy/compliance review | Name accountable jurisdictional owners before live research | Open | Unassigned | ADR-0035 requires a signed scoped live-activation release; no real rule is encoded |
 | A-18 | SLO/DR/cost limits | Approve SLOs, RTO/RPO, budgets, alerts, and ownership | Open | Unassigned | Operations ADR/runbook baseline |
 | A-19 | Acceptance criteria | Set quantitative thresholds after a labeled baseline exists | Deferred | Product/architecture owners | No numeric M2 thresholds under ADR-0009 |
-| A-20 | Audit/demo exports | Web first; separately approve download/share formats and retention | Open | Unassigned | Product/security ADR |
+| A-20 | Audit/demo exports | Web first; separately approve download/share formats and retention | Open | Unassigned | ADR-0043 excludes links/attachments/exports from the initial live envelope; broader distribution remains unresolved |
 
 ## Blocking rule
 

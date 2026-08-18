@@ -1,4 +1,4 @@
-"""Validate the dependency-free repository foundation through M6.
+"""Validate the dependency-free repository foundation through M6.5.
 
 This script intentionally uses only the Python standard library so a clean
 checkout can validate governance and structure before application dependencies
@@ -81,6 +81,17 @@ REQUIRED_FILES = (
     "docs/adr/0040-receipts-replies-and-first-party-assertions.md",
     "docs/adr/0041-referrals-and-controlled-reanalysis.md",
     "docs/adr/0042-isolated-mock-delivery-security.md",
+    "docs/adr/0043-narrow-first-production-launch-envelope.md",
+    "docs/adr/0044-deterministic-live-activation-readiness.md",
+    "docs/adr/0045-versioned-production-outreach-policy.md",
+    "docs/adr/0046-contact-source-and-proof-governance.md",
+    "docs/adr/0047-sender-and-external-presence-lifecycle.md",
+    "docs/adr/0048-version-specific-provider-certification.md",
+    "docs/adr/0049-production-separation-of-duties.md",
+    "docs/adr/0050-contact-data-lifecycle-and-tombstones.md",
+    "docs/adr/0051-isolated-production-delivery-boundary.md",
+    "docs/adr/0052-operational-readiness-and-suspension.md",
+    "docs/adr/0053-m67-shadow-ready-boundary.md",
     "docs/adr/README.md",
     "docs/decisions/README.md",
     "docs/engineering/dependencies.md",
@@ -95,6 +106,7 @@ REQUIRED_FILES = (
     "docs/milestones/M4.md",
     "docs/milestones/M5.md",
     "docs/milestones/M6.md",
+    "docs/milestones/M6.5.md",
     "docs/policies/environment-and-data.md",
     "docs/policies/secrets.md",
     "packages/m0-core/README.md",
@@ -125,6 +137,10 @@ REQUIRED_FILES = (
     "packages/contact-core/pyproject.toml",
     "packages/contact-local/README.md",
     "packages/contact-local/pyproject.toml",
+    "packages/activation-core/README.md",
+    "packages/activation-core/pyproject.toml",
+    "packages/activation-local/README.md",
+    "packages/activation-local/pyproject.toml",
     "packages/qualification-core/README.md",
     "packages/qualification-core/pyproject.toml",
     "packages/qualification-local/README.md",
@@ -217,6 +233,8 @@ def validate_workspace(errors: list[str]) -> None:
         "packages/outreach-local",
         "packages/contact-core",
         "packages/contact-local",
+        "packages/activation-core",
+        "packages/activation-local",
         "packages/qualification-core",
         "packages/qualification-local",
         "packages/qualification-live",
@@ -228,7 +246,7 @@ def validate_workspace(errors: list[str]) -> None:
         "workers/intelligence",
     ]
     if members != expected_members:
-        errors.append("Python workspace members do not match the accepted M6 boundaries")
+        errors.append("Python workspace members do not match the accepted M6.5 boundaries")
 
 
 def validate_decision_register(errors: list[str]) -> None:

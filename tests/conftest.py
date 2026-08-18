@@ -8,6 +8,7 @@ from uuid import UUID, uuid4
 
 import pytest
 from fastapi.testclient import TestClient
+from opintel_activation_local import SqlAlchemyActivationRepository
 from opintel_api import create_app
 from opintel_audit_local import SqlAlchemyAuditRepository
 from opintel_contact_local import SqlAlchemyContactRepository
@@ -109,6 +110,13 @@ def contact_repository(settings: LocalSettings) -> SqlAlchemyContactRepository:
 
 
 @pytest.fixture
+def activation_repository(settings: LocalSettings) -> SqlAlchemyActivationRepository:
+    value = SqlAlchemyActivationRepository(settings.database_url)
+    value.initialize()
+    return value
+
+
+@pytest.fixture
 def client(
     settings: LocalSettings,
     repository: SqlAlchemyM0Repository,
@@ -118,6 +126,7 @@ def client(
     demo_repository: SqlAlchemyDemoRepository,
     outreach_repository: SqlAlchemyOutreachRepository,
     contact_repository: SqlAlchemyContactRepository,
+    activation_repository: SqlAlchemyActivationRepository,
     clock: FakeClock,
 ) -> Iterator[TestClient]:
     with TestClient(
@@ -132,6 +141,7 @@ def client(
             demo_repository,
             outreach_repository,
             contact_repository,
+            activation_repository,
         )
     ) as value:
         yield value

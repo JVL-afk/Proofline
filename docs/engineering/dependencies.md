@@ -68,3 +68,8 @@ M6 adds no third-party dependency. `contact-core` reuses Pydantic and standard-l
 time-zone logic, typed contracts, and policy checks. `contact-local` reuses locked SQLAlchemy. No
 provider SDK, DNS/mail verifier, contact/enrichment library, webhook server, encryption service,
 mailer, CRM, tracking, or network dependency is introduced.
+
+M6.5 adds no third-party dependency. `activation-core` reuses Pydantic and shared identity/clock
+contracts for immutable governance projections. `activation-local` reuses locked SQLAlchemy. It has
+no cloud, OIDC, KMS, secret, provider, domain, mail, webhook, contact-source, verification, AI, or
+network dependency.

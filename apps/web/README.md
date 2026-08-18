@@ -1,4 +1,4 @@
-# M6 Diagnostic Web UI
+# M6.5 Diagnostic Web UI
 
 ## Ownership
 
@@ -18,11 +18,14 @@ Application/web team.
   economic metadata, QC, and content-only review state.
 - Inspect the synthetic M6 lifecycle, independent safety gates, redacted identities, exact manifest,
   one-message authorization, mock attempt/receipt/reply, and interaction timeline.
+- Inspect the M6.5 Texas envelope, current `NOT_READY` projection, and exact missing evidence without
+  supplying legal, provider, sender, infrastructure, or real-data answers.
 
 ## Forbidden responsibilities
 
 - Database access, provider credentials, crawling, raw HTML rendering, live AI, real people/contact
-  data, copy/export/download, public sharing, real delivery/webhooks, integrations, or M7 behavior.
+  data, production provisioning/policy writes, copy/export/download, public sharing, real delivery/
+  webhooks, integrations, M6.6/M6.7 execution, or M7 behavior.
 
 ## Public interface
 

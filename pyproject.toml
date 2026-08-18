@@ -33,6 +33,8 @@ members = [
   "packages/outreach-local",
   "packages/contact-core",
   "packages/contact-local",
+  "packages/activation-core",
+  "packages/activation-local",
   "packages/qualification-core",
   "packages/qualification-local",
   "packages/qualification-live",

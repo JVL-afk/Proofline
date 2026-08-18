@@ -51,6 +51,7 @@ byId("authenticate").addEventListener("click", async () => {
   try {
     const identity = await request("/api/v1/session");
     byId("identity").textContent = `${identity.subject} — workspace ${identity.workspace_id}`;
+    byId("refresh-activation").disabled = false;
   } catch (error) {
     sessionStorage.removeItem("local-token");
     showError(error);
@@ -572,6 +573,16 @@ byId("refresh-timeline").addEventListener("click", async () => {
   try {
     const result = await request(`/api/v1/businesses/${businessId}/interaction-timeline`);
     byId("interaction-timeline").textContent = JSON.stringify(result, null, 2);
+  } catch (error) {
+    showError(error);
+  }
+});
+
+byId("refresh-activation").addEventListener("click", async () => {
+  byId("error").textContent = "";
+  try {
+    const result = await request("/api/v1/live-activation/readiness");
+    byId("activation-readiness").textContent = JSON.stringify(result, null, 2);
   } catch (error) {
     showError(error);
   }

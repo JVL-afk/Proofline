@@ -46,6 +46,9 @@ Dependencies point inward. Adapters are composed at process entry points.
 - The M6 contact context consumes exact CONTENT_APPROVED M5 contracts read-only. Its only delivery
   adapter is a zero-network, single-message mock. It emits re-analysis requests but cannot mutate
   M1-M5 canonical records. A future live provider must run in an isolated capability-scoped worker.
+- The M6.5 activation context consumes no M1-M6 persistence or delivery interface. It owns only
+  immutable governance/readiness records and non-send shadow assessments. `SHADOW_READY` cannot
+  create M6 `SEND_READY`, authorize, or reach a delivery worker.
 - Approval state can only be changed through the authorized application service.
 - No model output is executed as code or trusted configuration.
 

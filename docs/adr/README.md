@@ -65,5 +65,16 @@ ADRs capture decisions that constrain implementation or are expensive to reverse
 | [ADR-0040](0040-receipts-replies-and-first-party-assertions.md) | Accepted | Separate receipts/replies and first-party assertions |
 | [ADR-0041](0041-referrals-and-controlled-reanalysis.md) | Accepted | Referral restart and request-only upstream re-analysis |
 | [ADR-0042](0042-isolated-mock-delivery-security.md) | Accepted | Synthetic data, strict message QC, and isolation boundary |
+| [ADR-0043](0043-narrow-first-production-launch-envelope.md) | Accepted | Texas-only one-message plain-text launch envelope |
+| [ADR-0044](0044-deterministic-live-activation-readiness.md) | Accepted | Deterministic fail-closed activation-readiness projection |
+| [ADR-0045](0045-versioned-production-outreach-policy.md) | Accepted | Accountable production policy release mechanics |
+| [ADR-0046](0046-contact-source-and-proof-governance.md) | Accepted | Inactive source proposal and atomic proof governance |
+| [ADR-0047](0047-sender-and-external-presence-lifecycle.md) | Accepted | Independent domain, website, sender, and delivery attestations |
+| [ADR-0048](0048-version-specific-provider-certification.md) | Accepted | Version-specific one-message provider certification |
+| [ADR-0049](0049-production-separation-of-duties.md) | Accepted | Strict separation of duties and step-up authorization |
+| [ADR-0050](0050-contact-data-lifecycle-and-tombstones.md) | Accepted | Per-category lifecycle and suppression tombstone governance |
+| [ADR-0051](0051-isolated-production-delivery-boundary.md) | Accepted | Attested isolated future delivery and webhook boundaries |
+| [ADR-0052](0052-operational-readiness-and-suspension.md) | Accepted | Operational ownership, runbooks, and emergency suspension |
+| [ADR-0053](0053-m67-shadow-ready-boundary.md) | Accepted | Mandatory non-send M6.7 SHADOW_READY boundary |
 
 The product/compliance decisions A-01 through A-20 are tracked separately in `docs/decisions/README.md` until they become ADRs.

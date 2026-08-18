@@ -4,6 +4,8 @@ requires-python = "==3.13.*"
 
 [manifest]
 members = [
+    "opintel-activation-core",
+    "opintel-activation-local",
     "opintel-api",
     "opintel-audit-core",
     "opintel-audit-local",
@@ -280,11 +282,43 @@ wheels = [
 ]
 
 [[package]]
+name = "opintel-activation-core"
+version = "0.1.0"
+source = { editable = "packages/activation-core" }
+dependencies = [
+    { name = "opintel-m0-core" },
+    { name = "pydantic" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "opintel-m0-core", editable = "packages/m0-core" },
+    { name = "pydantic", specifier = ">=2.12,<3" },
+]
+
+[[package]]
+name = "opintel-activation-local"
+version = "0.1.0"
+source = { editable = "packages/activation-local" }
+dependencies = [
+    { name = "opintel-activation-core" },
+    { name = "sqlalchemy" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "opintel-activation-core", editable = "packages/activation-core" },
+    { name = "sqlalchemy", specifier = ">=2.0.48,<2.1" },
+]
+
+[[package]]
 name = "opintel-api"
-version = "0.7.0"
+version = "0.8.0"
 source = { editable = "services/api" }
 dependencies = [
     { name = "fastapi" },
+    { name = "opintel-activation-core" },
+    { name = "opintel-activation-local" },
     { name = "opintel-audit-core" },
     { name = "opintel-audit-local" },
     { name = "opintel-contact-core" },
@@ -306,6 +340,8 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "fastapi", specifier = ">=0.139,<0.140" },
+    { name = "opintel-activation-core", editable = "packages/activation-core" },
+    { name = "opintel-activation-local", editable = "packages/activation-local" },
     { name = "opintel-audit-core", editable = "packages/audit-core" },
     { name = "opintel-audit-local", editable = "packages/audit-local" },
     { name = "opintel-contact-core", editable = "packages/contact-core" },

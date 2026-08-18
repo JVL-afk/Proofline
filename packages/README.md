@@ -33,4 +33,9 @@ M6 adds `contact-core` for independent identity/verification/eligibility/readine
 records and `contact-local` for append-only SQLite plus synthetic, fixture-only adapters. The sole
 delivery adapter is a credential-free zero-network mock and has no bulk surface.
 
+M6.5 adds `activation-core` for immutable production-prerequisite contracts, deterministic
+fail-closed readiness, phased real-data permissions, and mandatory non-send `SHADOW_READY`, plus
+`activation-local` for append-only SQLite. It has no infrastructure, identity, provider, source,
+real-data, domain, AI, network, or delivery adapter.
+
 Shared packages must not become a miscellaneous dumping ground for business logic.

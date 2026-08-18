@@ -36,6 +36,10 @@ is public test data, not a secret. A future isolated delivery worker may receive
 credential and field-protection capability; API, research/browser, demo, AI, and normal CI processes
 must not receive them. No real mailbox/domain credential may be stored locally.
 
+M6.5 requires no secret and exposes no secret/provider/identity adapter. Infrastructure and sender
+controls are represented only by safe evidence references and hashes. Missing secret isolation or
+workload-identity evidence blocks readiness; it is never satisfied by placing credentials locally.
+
 ## CI/CD
 
 - Prefer workload identity federation over long-lived repository secrets.

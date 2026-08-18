@@ -1,4 +1,4 @@
-"""FastAPI transport and local M0-M6 mock-only composition root."""
+"""FastAPI transport and local M0-M6.5 mock-only composition root."""
 
 from dataclasses import asdict
 from typing import Annotated
@@ -8,6 +8,14 @@ from fastapi import Depends, FastAPI, Header, HTTPException, Request, Response, 
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from opintel_activation.application import ActivationReadinessService
+from opintel_activation.contracts import ActivationReadinessView, ActivationRecordView
+from opintel_activation.domain import (
+    ActivationError,
+    ActivationNotFoundError,
+)
+from opintel_activation.ports import ActivationRepository
+from opintel_activation_local import SqlAlchemyActivationRepository
 from opintel_audit.application import AuditApplicationService
 from opintel_audit.contracts import (
     AuditBundleView,
@@ -139,6 +147,7 @@ def create_app(
     demo_repository: DemoRepository | None = None,
     outreach_repository: OutreachRepository | None = None,
     contact_repository: ContactRepository | None = None,
+    activation_repository: ActivationRepository | None = None,
 ) -> FastAPI:
     active_settings = settings or get_local_settings()
     active_repository = repository or SqlAlchemyM0Repository(active_settings.database_url)
@@ -167,6 +176,10 @@ def create_app(
         active_settings.database_url
     )
     active_contact_repository.initialize()
+    active_activation_repository = activation_repository or SqlAlchemyActivationRepository(
+        active_settings.database_url
+    )
+    active_activation_repository.initialize()
     authenticator = LocalTokenAuthenticator(
         active_settings.auth_token.get_secret_value(),
         active_settings.auth_subject,
@@ -242,14 +255,21 @@ def create_app(
         BoundedFirstPartyStatementExtractor(),
     )
     contact_service.ensure_fixture_policy(active_settings.workspace_id)
+    activation_service = ActivationReadinessService(
+        active_activation_repository,
+        clock or SystemClock(),
+        identifiers or UuidFactory(),
+    )
+    activation_service.ensure_baseline(active_settings.workspace_id)
 
     app = FastAPI(
-        title="Opportunity Intelligence M6 API",
-        version="0.7.0",
+        title="Opportunity Intelligence M6.5 API",
+        version="0.8.0",
         description=(
             "Bounded research, deterministic opportunities, evidence-linked audits, and private "
-            "mock-only simulations, content-approved outreach, and synthetic controlled delivery. "
-            "Live AI, real recipients/providers, publication, and external delivery are disabled."
+            "mock-only simulations, content-approved outreach, synthetic controlled delivery, and "
+            "fail-closed activation readiness. Live AI, real recipients/providers, production "
+            "infrastructure, publication, and external delivery are disabled."
         ),
     )
     app.add_middleware(
@@ -279,6 +299,8 @@ def create_app(
     app.state.contact_repository = active_contact_repository
     app.state.contact_service = contact_service
     app.state.mock_delivery_provider = mock_delivery_provider
+    app.state.activation_repository = active_activation_repository
+    app.state.activation_service = activation_service
 
     def current_principal(
         credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer)],
@@ -389,9 +411,24 @@ def create_app(
             content={"detail": error.safe_message, "code": error.code},
         )
 
+    @app.exception_handler(ActivationNotFoundError)
+    def activation_not_found_handler(
+        request: Request, error: ActivationNotFoundError
+    ) -> JSONResponse:
+        del request, error
+        return JSONResponse(status_code=404, content={"detail": "activation resource not found"})
+
+    @app.exception_handler(ActivationError)
+    def activation_error_handler(request: Request, error: ActivationError) -> JSONResponse:
+        del request
+        return JSONResponse(
+            status_code=403 if error.code == "forbidden" else 400,
+            content={"detail": error.safe_message, "code": error.code},
+        )
+
     @app.get("/healthz", tags=["system"])
     def health() -> dict[str, str]:
-        return {"status": "ok", "mode": "m6-mock-only"}
+        return {"status": "ok", "mode": "m6.5-readiness-not-live"}
 
     @app.get("/api/v1/session", response_model=PrincipalView, tags=["identity"])
     def session(principal: Annotated[Principal, Depends(current_principal)]) -> PrincipalView:
@@ -1456,5 +1493,58 @@ def create_app(
             ContactRecordView.from_domain(item)
             for item in contact_service.timeline(principal, business_id)
         ]
+
+    @app.get(
+        "/api/v1/live-activation/readiness",
+        response_model=ActivationReadinessView,
+        tags=["activation-readiness"],
+    )
+    def evaluate_live_activation_readiness(
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> ActivationReadinessView:
+        return ActivationReadinessView.from_domain(activation_service.evaluate(principal))
+
+    @app.get(
+        "/api/v1/live-activation/launch-envelope",
+        response_model=ActivationRecordView,
+        tags=["activation-readiness"],
+    )
+    def get_live_activation_launch_envelope(
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> ActivationRecordView:
+        return ActivationRecordView.from_domain(activation_service.launch_envelope(principal))
+
+    @app.get(
+        "/api/v1/live-activation/m6-6-gate",
+        response_model=ActivationRecordView,
+        tags=["activation-readiness"],
+    )
+    def get_m66_gate(
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> ActivationRecordView:
+        return ActivationRecordView.from_domain(activation_service.m66_gate(principal))
+
+    @app.get(
+        "/api/v1/live-activation/m6-7-real-data-permissions",
+        response_model=ActivationRecordView,
+        tags=["activation-readiness"],
+    )
+    def get_m67_permissions(
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> ActivationRecordView:
+        return ActivationRecordView.from_domain(activation_service.real_data_permissions(principal))
+
+    @app.get(
+        "/api/v1/live-activation/readiness-revisions/{readiness_id}",
+        response_model=ActivationRecordView,
+        tags=["activation-readiness"],
+    )
+    def get_live_activation_readiness_revision(
+        readiness_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> ActivationRecordView:
+        return ActivationRecordView.from_domain(
+            activation_service.get_record(principal, "activation_readiness", readiness_id)
+        )
 
     return app
