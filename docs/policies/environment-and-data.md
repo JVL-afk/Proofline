@@ -89,6 +89,17 @@
   bodies, internal notes, contact data, or reviewer edits.
 - M5 establishes no copy, export, publication, delivery, or production retention schedule.
 
+## M6 synthetic contact and delivery data
+
+- Local/test M6 accepts only repository-owned synthetic identities and reserved `fixture.invalid`
+  contact/sender values. Real personal or regulated data remains prohibited.
+- Contact details, reply bodies, and first-party statements are `Confidential`. API views redact
+  contact values and raw replies; ordinary logs contain safe IDs, hashes, states, and QC codes.
+- Production field protection, access policy, retention/deletion, suppression tombstone policy, and
+  a signed A-17 release are required before real data or delivery.
+- Deterministic CI has no provider credential and performs zero external person, verification,
+  email, webhook, DNS, or delivery calls.
+
 ## Backups and recovery
 
 Backup scope, encryption, point-in-time recovery, RTO/RPO, region, retention, and restoration cadence remain blocked on A-04, A-08, and A-18. No infrastructure implementation should imply values for them.

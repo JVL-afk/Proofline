@@ -64,6 +64,8 @@ class SegmentKind(StrEnum):
     CTA = "cta"
     SALUTATION = "salutation"
     VERIFIED_SENDER_SLOT = "verified_sender_slot"
+    REQUIRED_POSTAL_DISCLOSURE_SLOT = "required_postal_disclosure_slot"
+    APPROVED_OPT_OUT_INSTRUCTION_SLOT = "approved_opt_out_instruction_slot"
     TRANSITION = "transition"
     INTERNAL_CONTEXT = "internal_context"
 

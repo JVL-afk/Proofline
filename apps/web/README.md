@@ -1,4 +1,4 @@
-# M5 Diagnostic Web UI
+# M6 Diagnostic Web UI
 
 ## Ownership
 
@@ -16,11 +16,13 @@ Application/web team.
   record exact review, and issue a short-lived private runtime capability.
 - Generate and inspect an exact M5 package, its projections, audience-separated artifacts, risks,
   economic metadata, QC, and content-only review state.
+- Inspect the synthetic M6 lifecycle, independent safety gates, redacted identities, exact manifest,
+  one-message authorization, mock attempt/receipt/reply, and interaction timeline.
 
 ## Forbidden responsibilities
 
-- Database access, provider credentials, crawling, raw HTML rendering, live AI, people/recipients,
-  copy/export/download, public sharing, sending/delivery, real integrations, or M6 behavior.
+- Database access, provider credentials, crawling, raw HTML rendering, live AI, real people/contact
+  data, copy/export/download, public sharing, real delivery/webhooks, integrations, or M7 behavior.
 
 ## Public interface
 

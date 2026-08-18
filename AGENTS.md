@@ -2,16 +2,17 @@
 
 ## Active milestone
 
-Milestone M5 Evidence-Bound Outreach Package Engine only. Read `GREENFIELD_ARCHITECTURE.md`,
-`docs/milestones/M4.md`, `docs/milestones/M5.md`, and accepted ADR-0027 through ADR-0032 before
+Milestone M6 Contact Eligibility & Controlled Delivery only. Read `GREENFIELD_ARCHITECTURE.md`,
+`docs/milestones/M5.md`, `docs/milestones/M6.md`, and accepted ADR-0033 through ADR-0042 before
 changing the repository.
 
-M1-M4 remain authoritative. M5 may only project exact approved upstream claims into deterministic,
-audience-separated drafts with hard QC and content-only human review. Live AI, all M2.6 routes, and
-production AI remain disabled. Normal CI remains credential-free and network-free.
+M1-M5 remain authoritative. M6 may only use synthetic identities, fixture policies, exact approved
+M5 revisions, and a deterministic zero-network single-message mock. Live AI, real providers, all
+M2.6 routes, and production AI remain disabled. Normal CI remains credential-free/network-free.
 
-Do not implement M6 or later behavior: contact discovery, recipients, copy/export/download,
-publication, delivery/sending, CRM/channel integrations, mass outreach, or autonomous agents.
+Do not implement M7 or live behavior: real person/contact discovery or verification, real sender,
+email/webhook provider, copy/export/publication, bulk/sequence delivery, CRM/channel integration,
+autonomous follow-up, or autonomous agents.
 
 ## Required behavior
 
@@ -21,7 +22,7 @@ publication, delivery/sending, CRM/channel integrations, mass outreach, or auton
 - Do not add executable infrastructure until its cloud/region/IaC/data decisions are accepted.
 - Do not commit secrets, personal data, live provider payloads, generated credentials, or local service data.
 - Use exact/locked dependencies and justify new direct dependencies under `docs/engineering/dependencies.md`.
-- Keep all behavior outside the exact M5 package path out of the repository unless the user explicitly advances the milestone.
+- Keep all behavior outside the exact mock-only M6 path out unless the user advances the milestone.
 
 ## Validation
 

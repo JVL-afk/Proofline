@@ -1047,12 +1047,12 @@ def test_no_public_share_export_or_operational_routes_exist(client: TestClient) 
         "share",
         "export",
         "download",
-        "send",
         "book",
         "dispatch",
         "crm",
     }
     assert not any(fragment in path for path in paths for fragment in forbidden_fragments)
+    assert not any(fragment in path for path in paths for fragment in {"bulk", "sequence"})
     source_files = tuple(Path("packages/demo-core").rglob("*.py")) + tuple(
         Path("packages/demo-local").rglob("*.py")
     )

@@ -1,4 +1,4 @@
-"""FastAPI transport and local M0-M5 composition root."""
+"""FastAPI transport and local M0-M6 mock-only composition root."""
 
 from dataclasses import asdict
 from typing import Annotated
@@ -18,6 +18,33 @@ from opintel_audit.contracts import (
 from opintel_audit.domain import AuditError, AuditNotFoundError
 from opintel_audit.ports import AuditRepository
 from opintel_audit_local import CanonicalAuditSourceCatalog, SqlAlchemyAuditRepository
+from opintel_contact.application import ContactApplicationService
+from opintel_contact.contracts import (
+    AuthorizationRequest,
+    ClassificationCorrectionRequest,
+    ContactPointRequest,
+    ContactRecordView,
+    EligibilityRequest,
+    FixtureEventRequest,
+    PersonIdentifyRequest,
+    ReadinessRequest,
+    ReanalysisRequest,
+    SenderRequest,
+    SuppressionRequest,
+)
+from opintel_contact.domain import ContactError, ContactNotFoundError, stable_hash
+from opintel_contact.ports import ContactRepository
+from opintel_contact_local import (
+    ApprovedOutreachSource,
+    BoundedFirstPartyStatementExtractor,
+    DeterministicContactVerifier,
+    DeterministicMockDeliveryProvider,
+    DeterministicSenderVerifier,
+    FixtureContextResolver,
+    RuleBasedReplyClassifier,
+    SqlAlchemyContactRepository,
+    SyntheticPersonResolver,
+)
 from opintel_demo.application import DemoApplicationService, DemoRuntimeService
 from opintel_demo.contracts import (
     CapabilityExchangeRequest,
@@ -111,6 +138,7 @@ def create_app(
     audit_repository: AuditRepository | None = None,
     demo_repository: DemoRepository | None = None,
     outreach_repository: OutreachRepository | None = None,
+    contact_repository: ContactRepository | None = None,
 ) -> FastAPI:
     active_settings = settings or get_local_settings()
     active_repository = repository or SqlAlchemyM0Repository(active_settings.database_url)
@@ -135,6 +163,10 @@ def create_app(
         active_settings.database_url
     )
     active_outreach_repository.initialize()
+    active_contact_repository = contact_repository or SqlAlchemyContactRepository(
+        active_settings.database_url
+    )
+    active_contact_repository.initialize()
     authenticator = LocalTokenAuthenticator(
         active_settings.auth_token.get_secret_value(),
         active_settings.auth_subject,
@@ -195,14 +227,29 @@ def create_app(
         clock or SystemClock(),
         identifiers or UuidFactory(),
     )
+    mock_delivery_provider = DeterministicMockDeliveryProvider()
+    contact_service = ContactApplicationService(
+        active_contact_repository,
+        ApprovedOutreachSource(active_outreach_repository),
+        clock or SystemClock(),
+        identifiers or UuidFactory(),
+        SyntheticPersonResolver(),
+        DeterministicContactVerifier(),
+        FixtureContextResolver(),
+        DeterministicSenderVerifier(),
+        mock_delivery_provider,
+        RuleBasedReplyClassifier(),
+        BoundedFirstPartyStatementExtractor(),
+    )
+    contact_service.ensure_fixture_policy(active_settings.workspace_id)
 
     app = FastAPI(
-        title="Opportunity Intelligence M5 API",
-        version="0.6.0",
+        title="Opportunity Intelligence M6 API",
+        version="0.7.0",
         description=(
             "Bounded research, deterministic opportunities, evidence-linked audits, and private "
-            "mock-only simulations, and content-only outreach drafts. Live AI, contact, copy, "
-            "export, publication, sending, and real integrations are disabled."
+            "mock-only simulations, content-approved outreach, and synthetic controlled delivery. "
+            "Live AI, real recipients/providers, publication, and external delivery are disabled."
         ),
     )
     app.add_middleware(
@@ -229,6 +276,9 @@ def create_app(
     app.state.outreach_repository = active_outreach_repository
     app.state.outreach_source = outreach_source
     app.state.outreach_service = outreach_service
+    app.state.contact_repository = active_contact_repository
+    app.state.contact_service = contact_service
+    app.state.mock_delivery_provider = mock_delivery_provider
 
     def current_principal(
         credentials: Annotated[HTTPAuthorizationCredentials | None, Depends(bearer)],
@@ -325,9 +375,23 @@ def create_app(
             content={"detail": error.safe_message, "code": error.code},
         )
 
+    @app.exception_handler(ContactNotFoundError)
+    def contact_not_found_handler(request: Request, error: ContactNotFoundError) -> JSONResponse:
+        del request, error
+        return JSONResponse(status_code=404, content={"detail": "contact resource not found"})
+
+    @app.exception_handler(ContactError)
+    def contact_error_handler(request: Request, error: ContactError) -> JSONResponse:
+        del request
+        status_code = 403 if error.code == "forbidden" else 409 if error.code == "conflict" else 400
+        return JSONResponse(
+            status_code=status_code,
+            content={"detail": error.safe_message, "code": error.code},
+        )
+
     @app.get("/healthz", tags=["system"])
     def health() -> dict[str, str]:
-        return {"status": "ok", "mode": "m4-local"}
+        return {"status": "ok", "mode": "m6-mock-only"}
 
     @app.get("/api/v1/session", response_model=PrincipalView, tags=["identity"])
     def session(principal: Annotated[Principal, Depends(current_principal)]) -> PrincipalView:
@@ -1125,5 +1189,272 @@ def create_app(
                 command.reason,
             )
         )
+
+    @app.post(
+        "/api/v1/outreach-package-revisions/{revision_id}/person-identities",
+        response_model=ContactRecordView,
+        status_code=status.HTTP_201_CREATED,
+        tags=["contact-control"],
+    )
+    def identify_contact_person(
+        revision_id: UUID,
+        command: PersonIdentifyRequest,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> ContactRecordView:
+        return ContactRecordView.from_domain(
+            contact_service.identify_person(
+                principal,
+                revision_id,
+                command.full_name,
+                command.functional_role,
+                command.source_uri,
+                command.source_locator,
+            )
+        )
+
+    @app.post(
+        "/api/v1/person-identities/{person_id}/contact-points",
+        response_model=ContactRecordView,
+        status_code=status.HTTP_201_CREATED,
+        tags=["contact-control"],
+    )
+    def create_contact_point(
+        person_id: UUID,
+        command: ContactPointRequest,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> ContactRecordView:
+        return ContactRecordView.from_domain(
+            contact_service.create_contact_point(
+                principal,
+                person_id,
+                command.value,
+                command.acquisition_origin,
+                command.source_uri,
+                command.source_locator,
+            )
+        )
+
+    @app.post(
+        "/api/v1/contact-points/{contact_point_id}/verification-operations",
+        response_model=ContactRecordView,
+        status_code=status.HTTP_201_CREATED,
+        tags=["contact-control"],
+    )
+    def verify_contact_point(
+        contact_point_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> ContactRecordView:
+        return ContactRecordView.from_domain(
+            contact_service.verify_contact(principal, contact_point_id)
+        )
+
+    @app.post(
+        "/api/v1/contact-points/{contact_point_id}/eligibility-evaluations",
+        response_model=ContactRecordView,
+        status_code=status.HTTP_201_CREATED,
+        tags=["contact-control"],
+    )
+    def evaluate_contact_eligibility(
+        contact_point_id: UUID,
+        command: EligibilityRequest,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> ContactRecordView:
+        return ContactRecordView.from_domain(
+            contact_service.evaluate_eligibility(principal, contact_point_id, command.purpose)
+        )
+
+    @app.post(
+        "/api/v1/contact-points/{contact_point_id}/suppressions",
+        response_model=ContactRecordView,
+        status_code=status.HTTP_201_CREATED,
+        tags=["contact-control"],
+    )
+    def suppress_contact_point(
+        contact_point_id: UUID,
+        command: SuppressionRequest,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> ContactRecordView:
+        return ContactRecordView.from_domain(
+            contact_service.suppress(principal, contact_point_id, command.reason)
+        )
+
+    @app.post(
+        "/api/v1/sender-identities",
+        response_model=ContactRecordView,
+        status_code=status.HTTP_201_CREATED,
+        tags=["contact-control"],
+    )
+    def create_sender_identity(
+        command: SenderRequest,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> ContactRecordView:
+        return ContactRecordView.from_domain(
+            contact_service.create_sender(
+                principal,
+                command.display_name,
+                command.mailbox,
+                command.signature,
+                command.postal_disclosure,
+                command.opt_out_instruction,
+            )
+        )
+
+    @app.post(
+        "/api/v1/outreach-package-revisions/{revision_id}/send-readiness",
+        response_model=dict[str, object],
+        status_code=status.HTTP_201_CREATED,
+        tags=["controlled-delivery"],
+    )
+    def prepare_exact_send(
+        revision_id: UUID,
+        command: ReadinessRequest,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> dict[str, object]:
+        manifest, readiness = contact_service.prepare_send(
+            principal,
+            revision_id,
+            command.contact_point_id,
+            command.sender_identity_id,
+            command.artifact_kind,
+        )
+        return {
+            "manifest": ContactRecordView.from_domain(manifest).record,
+            "readiness": ContactRecordView.from_domain(readiness).record,
+            "manifest_hash": stable_hash(manifest.model_dump(mode="json")),
+            "mock_only": True,
+        }
+
+    @app.post(
+        "/api/v1/send-manifests/{manifest_id}/authorizations",
+        response_model=ContactRecordView,
+        status_code=status.HTTP_201_CREATED,
+        tags=["controlled-delivery"],
+    )
+    def authorize_exact_send(
+        manifest_id: UUID,
+        command: AuthorizationRequest,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> ContactRecordView:
+        return ContactRecordView.from_domain(
+            contact_service.authorize_send(
+                principal,
+                manifest_id,
+                command.expected_manifest_hash,
+                command.expected_preview_hash,
+                command.reason,
+            )
+        )
+
+    @app.post(
+        "/api/v1/send-authorizations/{authorization_id}/delivery-attempts",
+        response_model=ContactRecordView,
+        status_code=status.HTTP_201_CREATED,
+        tags=["controlled-delivery"],
+    )
+    def submit_mock_delivery(
+        authorization_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+        idempotency_key: Annotated[
+            str, Header(alias="Idempotency-Key", min_length=1, max_length=128)
+        ],
+    ) -> ContactRecordView:
+        return ContactRecordView.from_domain(
+            contact_service.submit_authorized(principal, authorization_id, idempotency_key)
+        )
+
+    @app.post(
+        "/api/v1/delivery-attempts/{attempt_id}/fixture-events",
+        response_model=list[ContactRecordView],
+        status_code=status.HTTP_201_CREATED,
+        tags=["controlled-delivery"],
+    )
+    def ingest_mock_provider_event(
+        attempt_id: UUID,
+        command: FixtureEventRequest,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> list[ContactRecordView]:
+        return [
+            ContactRecordView.from_domain(item)
+            for item in contact_service.ingest_fixture_event(
+                principal,
+                attempt_id,
+                command.event_id,
+                command.event_type,
+                command.body,
+                command.signature,
+            )
+        ]
+
+    @app.post(
+        "/api/v1/inbound-replies/{reply_id}/classification-corrections",
+        response_model=ContactRecordView,
+        tags=["controlled-delivery"],
+    )
+    def correct_mock_reply(
+        reply_id: UUID,
+        command: ClassificationCorrectionRequest,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> ContactRecordView:
+        return ContactRecordView.from_domain(
+            contact_service.correct_reply_classification(principal, reply_id, command.kind)
+        )
+
+    @app.post(
+        "/api/v1/businesses/{business_id}/reanalysis-requests",
+        response_model=ContactRecordView,
+        status_code=status.HTTP_201_CREATED,
+        tags=["contact-control"],
+    )
+    def request_first_party_reanalysis(
+        business_id: UUID,
+        command: ReanalysisRequest,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> ContactRecordView:
+        return ContactRecordView.from_domain(
+            contact_service.request_reanalysis(
+                principal, business_id, command.statement_ids, command.reason
+            )
+        )
+
+    @app.post(
+        "/api/v1/delivery-attempts/{attempt_id}/first-contact-verifications",
+        response_model=ContactRecordView,
+        tags=["controlled-delivery"],
+    )
+    def verify_mock_first_contact(
+        attempt_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> ContactRecordView:
+        return ContactRecordView.from_domain(
+            contact_service.verify_first_contact(principal, attempt_id)
+        )
+
+    @app.get(
+        "/api/v1/contact-records/{record_kind}/{record_id}",
+        response_model=ContactRecordView,
+        tags=["contact-control"],
+    )
+    def get_contact_record(
+        record_kind: str,
+        record_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> ContactRecordView:
+        return ContactRecordView.from_domain(
+            contact_service.get_record(principal, record_kind, record_id)
+        )
+
+    @app.get(
+        "/api/v1/businesses/{business_id}/interaction-timeline",
+        response_model=list[ContactRecordView],
+        tags=["contact-control"],
+    )
+    def get_interaction_timeline(
+        business_id: UUID,
+        principal: Annotated[Principal, Depends(current_principal)],
+    ) -> list[ContactRecordView]:
+        return [
+            ContactRecordView.from_domain(item)
+            for item in contact_service.timeline(principal, business_id)
+        ]
 
     return app

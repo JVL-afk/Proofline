@@ -31,6 +31,11 @@ M5 requires no provider, mail, CRM, calendar, telephony, social-network, recipie
 delivery credential. The disabled wording port has no adapter or route. Draft content, sender slots,
 reviewer edits, and future recipient data must never be treated as secret-injection mechanisms.
 
+M6 requires no live secret. The deterministic mock uses no credential and its fixture-event marker
+is public test data, not a secret. A future isolated delivery worker may receive only its provider
+credential and field-protection capability; API, research/browser, demo, AI, and normal CI processes
+must not receive them. No real mailbox/domain credential may be stored locally.
+
 ## CI/CD
 
 - Prefer workload identity federation over long-lived repository secrets.

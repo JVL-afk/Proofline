@@ -37,7 +37,7 @@ from opintel_outreach.domain import (
 )
 
 OUTREACH_SCHEMA_VERSION = "outreach.schema@1"
-TEMPLATE_VERSION = "commercial_hvac.lead_response.outreach.v1"
+TEMPLATE_VERSION = "commercial_hvac.lead_response.outreach.v2"
 PROJECTION_POLICY_VERSION = "outreach.projection@1"
 TARGET_ROLE_POLICY_VERSION = "outreach.roles.commercial_hvac@1"
 CTA_POLICY_VERSION = "outreach.permission_cta@1"
@@ -491,6 +491,16 @@ class DeterministicOutreachComposer:
                     SegmentKind.VERIFIED_SENDER_SLOT,
                     "{{verified_sender_signature}}",
                 ),
+                ArtifactSegment(
+                    self._ids.new(),
+                    SegmentKind.REQUIRED_POSTAL_DISCLOSURE_SLOT,
+                    "{{required_postal_disclosure}}",
+                ),
+                ArtifactSegment(
+                    self._ids.new(),
+                    SegmentKind.APPROVED_OPT_OUT_INSTRUCTION_SLOT,
+                    "{{approved_opt_out_instruction}}",
+                ),
             )
         )
         first_body = "\n\n".join(item.text for item in email_segments)
@@ -504,6 +514,16 @@ class DeterministicOutreachComposer:
             ArtifactSegment(self._ids.new(), SegmentKind.CTA, CTA),
             ArtifactSegment(
                 self._ids.new(), SegmentKind.VERIFIED_SENDER_SLOT, "{{verified_sender_signature}}"
+            ),
+            ArtifactSegment(
+                self._ids.new(),
+                SegmentKind.REQUIRED_POSTAL_DISCLOSURE_SLOT,
+                "{{required_postal_disclosure}}",
+            ),
+            ArtifactSegment(
+                self._ids.new(),
+                SegmentKind.APPROVED_OPT_OUT_INSTRUCTION_SLOT,
+                "{{approved_opt_out_instruction}}",
             ),
         )
         call_segments = (

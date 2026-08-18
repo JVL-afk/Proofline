@@ -4,11 +4,12 @@ Greenfield repository for the evidence-first business opportunity detection and 
 
 ## Current status
 
-The repository implements **Milestone M5 evidence-bound outreach packages** as a deterministic local
-slice. M1-M4 remain authoritative. M5 adds exact manifests, typed claim projections, separated
-internal/external artifacts, deterministic plain-text templates, functional-role targeting, hard
-QC, and exact content-only review. No model route is active; live AI, people/recipient discovery,
-copy/export, delivery, sending, publication, public sharing, and real integrations remain disabled.
+The repository implements **Milestone M6 contact eligibility and controlled delivery** as a
+deterministic mock-only local slice. M1-M5 remain authoritative. M6 adds synthetic identity,
+proof-scoped verification, fixture-only eligibility, immutable suppression, exact plain-text send
+manifests, one-message human authorization, mock acceptance/receipts/replies, and first-party
+re-analysis requests. No model route or real provider is active; real people, contact verification,
+senders, messages, publication, bulk delivery, and integrations remain disabled.
 Normal CI remains credential-free and network-free.
 
 M1/M2/M2.5 local adapters are constrained by
@@ -21,10 +22,10 @@ Open production source, retention, legal, workflow, and infrastructure decisions
 
 | Path | Purpose |
 |---|---|
-| `apps/` | Authenticated M5 diagnostic web UI |
+| `apps/` | Authenticated M6 diagnostic web UI |
 | `services/` | Authenticated API plus separate M4 demo runtime |
 | `workers/` | Separate core, HTTP research, browser, and deterministic M2-M5 intelligence processes |
-| `packages/` | M0-M5 contracts/local adapters plus isolated M2.6 evaluation adapters |
+| `packages/` | M0-M6 contracts/local adapters plus isolated M2.6 evaluation adapters |
 | `infra/` | Infrastructure-as-code and local-platform boundaries |
 | `docs/adr/` | Durable architectural decisions |
 | `docs/decisions/` | Human-approval decision register from the accepted architecture |
@@ -43,7 +44,7 @@ Open production source, retention, legal, workflow, and infrastructure decisions
 Docker, PostgreSQL, Temporal, Redis, cloud services, search, and AI providers are not required for
 normal deterministic development or CI. M2.6 live evaluation is a separate explicit local command.
 
-## Run the M5 outreach package engine
+## Run the M6 mock-only contact lifecycle
 
 From a fresh checkout:
 
@@ -80,10 +81,10 @@ Open `http://127.0.0.1:3000`. Copy `OPINTEL_AUTH_TOKEN` from ignored `.env`, aut
 name one known business, enter one explicitly permitted public URL, start the bounded run, and
 refresh its pages/evidence, start deterministic M2 analysis, inspect gaps/economics/factors, record
 opportunity review, generate and approve the M3 audit, then generate, inspect, approve, and launch
-the M4 simulation on `http://127.0.0.1:8100`, then generate and review the M5 package in the
-authenticated diagnostic UI. M5 text is inspectable only: there is no copy, export, recipient, or
-send capability. Keep live research disabled unless the URL is authorized. Production live AI
-remains disabled; M2.6 adapters are tournament-only.
+the M4 simulation on `http://127.0.0.1:8100`, then generate and review the M5 package. The M6 API/UI
+can use only synthetic fixture.invalid identities and its deterministic mock provider; it cannot
+send a real message. Keep live research disabled unless the URL is authorized. Production live AI
+and delivery remain disabled; M2.6 adapters are tournament-only.
 
 Browser fallback is off by default. For an approved local browser test, run
 `uv run playwright install chromium`, then set `OPINTEL_RESEARCH_BROWSER_ENABLED=true` only on the
@@ -113,7 +114,7 @@ production use by ADR-0004, ADR-0005, and ADR-0010.
 ## Authoritative documents
 
 1. [Accepted greenfield architecture](GREENFIELD_ARCHITECTURE.md)
-2. [M5 scope and exit criteria](docs/milestones/M5.md)
+2. [M6 scope and exit criteria](docs/milestones/M6.md)
 3. [Human decision register](docs/decisions/README.md)
 4. Accepted ADRs in [docs/adr/](docs/adr/)
 

@@ -8,6 +8,8 @@ members = [
     "opintel-audit-core",
     "opintel-audit-local",
     "opintel-browser-worker",
+    "opintel-contact-core",
+    "opintel-contact-local",
     "opintel-demo-core",
     "opintel-demo-local",
     "opintel-demo-runtime",
@@ -279,12 +281,14 @@ wheels = [
 
 [[package]]
 name = "opintel-api"
-version = "0.6.0"
+version = "0.7.0"
 source = { editable = "services/api" }
 dependencies = [
     { name = "fastapi" },
     { name = "opintel-audit-core" },
     { name = "opintel-audit-local" },
+    { name = "opintel-contact-core" },
+    { name = "opintel-contact-local" },
     { name = "opintel-demo-core" },
     { name = "opintel-demo-local" },
     { name = "opintel-m0-core" },
@@ -304,6 +308,8 @@ requires-dist = [
     { name = "fastapi", specifier = ">=0.139,<0.140" },
     { name = "opintel-audit-core", editable = "packages/audit-core" },
     { name = "opintel-audit-local", editable = "packages/audit-local" },
+    { name = "opintel-contact-core", editable = "packages/contact-core" },
+    { name = "opintel-contact-local", editable = "packages/contact-local" },
     { name = "opintel-demo-core", editable = "packages/demo-core" },
     { name = "opintel-demo-local", editable = "packages/demo-local" },
     { name = "opintel-m0-core", editable = "packages/m0-core" },
@@ -367,6 +373,40 @@ dependencies = [
 requires-dist = [
     { name = "opintel-research-core", editable = "packages/research-core" },
     { name = "playwright", specifier = ">=1.62,<1.63" },
+]
+
+[[package]]
+name = "opintel-contact-core"
+version = "0.1.0"
+source = { editable = "packages/contact-core" }
+dependencies = [
+    { name = "opintel-m0-core" },
+    { name = "opintel-outreach-core" },
+    { name = "pydantic" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "opintel-m0-core", editable = "packages/m0-core" },
+    { name = "opintel-outreach-core", editable = "packages/outreach-core" },
+    { name = "pydantic", specifier = ">=2.12,<3" },
+]
+
+[[package]]
+name = "opintel-contact-local"
+version = "0.1.0"
+source = { editable = "packages/contact-local" }
+dependencies = [
+    { name = "opintel-contact-core" },
+    { name = "opintel-outreach-core" },
+    { name = "sqlalchemy" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "opintel-contact-core", editable = "packages/contact-core" },
+    { name = "opintel-outreach-core", editable = "packages/outreach-core" },
+    { name = "sqlalchemy", specifier = ">=2.0.48,<2.1" },
 ]
 
 [[package]]

@@ -29,4 +29,8 @@ M5 adds `outreach-core` for exact manifests, claim projections, deterministic pl
 hard QC, and content-only review, plus `outreach-local` for SQLite and a read-only M1-M4 catalog.
 It contains no people, recipient, copy, export, delivery, channel, live-AI, or side-effect adapter.
 
+M6 adds `contact-core` for independent identity/verification/eligibility/readiness/authorization/send
+records and `contact-local` for append-only SQLite plus synthetic, fixture-only adapters. The sole
+delivery adapter is a credential-free zero-network mock and has no bulk surface.
+
 Shared packages must not become a miscellaneous dumping ground for business logic.

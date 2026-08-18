@@ -10,6 +10,7 @@ import pytest
 from fastapi.testclient import TestClient
 from opintel_api import create_app
 from opintel_audit_local import SqlAlchemyAuditRepository
+from opintel_contact_local import SqlAlchemyContactRepository
 from opintel_demo_local import SqlAlchemyDemoRepository
 from opintel_m0.workflow import M0WorkflowRunner
 from opintel_m0_local import (
@@ -101,6 +102,13 @@ def outreach_repository(settings: LocalSettings) -> SqlAlchemyOutreachRepository
 
 
 @pytest.fixture
+def contact_repository(settings: LocalSettings) -> SqlAlchemyContactRepository:
+    value = SqlAlchemyContactRepository(settings.database_url)
+    value.initialize()
+    return value
+
+
+@pytest.fixture
 def client(
     settings: LocalSettings,
     repository: SqlAlchemyM0Repository,
@@ -109,6 +117,7 @@ def client(
     audit_repository: SqlAlchemyAuditRepository,
     demo_repository: SqlAlchemyDemoRepository,
     outreach_repository: SqlAlchemyOutreachRepository,
+    contact_repository: SqlAlchemyContactRepository,
     clock: FakeClock,
 ) -> Iterator[TestClient]:
     with TestClient(
@@ -122,6 +131,7 @@ def client(
             audit_repository,
             demo_repository,
             outreach_repository,
+            contact_repository,
         )
     ) as value:
         yield value

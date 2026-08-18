@@ -12,6 +12,14 @@ let demoOperationId = null;
 let demoRevision = null;
 let outreachOperationId = null;
 let outreachRevision = null;
+let personId = null;
+let contactPointId = null;
+let senderIdentityId = null;
+let sendManifestId = null;
+let sendManifestHash = null;
+let sendPreviewHash = null;
+let sendAuthorizationId = null;
+let deliveryAttemptId = null;
 
 const byId = (id) => document.getElementById(id);
 
@@ -393,6 +401,7 @@ async function reviewOutreach(decision) {
     byId("outreach").textContent = JSON.stringify(result, null, 2);
     byId("approve-outreach").disabled = true;
     byId("reject-outreach").disabled = true;
+    byId("identify-contact").disabled = outreachRevision.state !== "content_approved";
   } catch (error) {
     showError(error);
   }
@@ -402,3 +411,168 @@ byId("approve-outreach").addEventListener("click", () =>
   reviewOutreach("approve_content"),
 );
 byId("reject-outreach").addEventListener("click", () => reviewOutreach("reject"));
+
+byId("identify-contact").addEventListener("click", async () => {
+  try {
+    const person = await request(
+      `/api/v1/outreach-package-revisions/${outreachRevision.id}/person-identities`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          full_name: byId("fixture-person").value,
+          functional_role: "service_operations_lead",
+          source_uri: "fixture://m6/ui/person",
+          source_locator: "ui.person[0]",
+        }),
+      },
+    );
+    personId = person.record.id;
+    const contact = await request(`/api/v1/person-identities/${personId}/contact-points`, {
+      method: "POST",
+      body: JSON.stringify({
+        value: byId("fixture-contact").value,
+        acquisition_origin: "observed",
+        source_uri: "fixture://m6/ui/contact",
+        source_locator: "ui.contact[0]",
+      }),
+    });
+    contactPointId = contact.record.id;
+    byId("contact-control").textContent = JSON.stringify({ person, contact }, null, 2);
+    byId("verify-contact").disabled = false;
+    byId("refresh-timeline").disabled = false;
+  } catch (error) {
+    showError(error);
+  }
+});
+
+byId("verify-contact").addEventListener("click", async () => {
+  try {
+    const result = await request(
+      `/api/v1/contact-points/${contactPointId}/verification-operations`,
+      { method: "POST" },
+    );
+    byId("contact-control").textContent = JSON.stringify(result, null, 2);
+    byId("evaluate-contact").disabled = false;
+  } catch (error) {
+    showError(error);
+  }
+});
+
+byId("evaluate-contact").addEventListener("click", async () => {
+  try {
+    const result = await request(
+      `/api/v1/contact-points/${contactPointId}/eligibility-evaluations`,
+      { method: "POST", body: JSON.stringify({ purpose: "b2b_first_contact" }) },
+    );
+    byId("contact-control").textContent = JSON.stringify(result, null, 2);
+    byId("create-sender").disabled = result.record.state !== "eligible";
+  } catch (error) {
+    showError(error);
+  }
+});
+
+byId("create-sender").addEventListener("click", async () => {
+  try {
+    const result = await request("/api/v1/sender-identities", {
+      method: "POST",
+      body: JSON.stringify({
+        display_name: "Alex Fixture",
+        mailbox: "sender@fixture.invalid",
+        signature: "Alex Fixture, Fixture Outreach",
+        postal_disclosure: "123 Fixture Way, Austin, TX 78701",
+        opt_out_instruction: "Reply opt out to stop fixture messages.",
+      }),
+    });
+    senderIdentityId = result.record.id;
+    byId("contact-control").textContent = JSON.stringify(result, null, 2);
+    byId("prepare-send").disabled = false;
+  } catch (error) {
+    showError(error);
+  }
+});
+
+byId("prepare-send").addEventListener("click", async () => {
+  try {
+    const result = await request(
+      `/api/v1/outreach-package-revisions/${outreachRevision.id}/send-readiness`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          contact_point_id: contactPointId,
+          sender_identity_id: senderIdentityId,
+          artifact_kind: "first_contact_email",
+        }),
+      },
+    );
+    sendManifestId = result.manifest.id;
+    sendManifestHash = result.manifest_hash;
+    sendPreviewHash = result.manifest.preview_hash;
+    byId("contact-control").textContent = JSON.stringify(result, null, 2);
+    byId("authorize-send").disabled = !result.readiness.passed;
+  } catch (error) {
+    showError(error);
+  }
+});
+
+byId("authorize-send").addEventListener("click", async () => {
+  try {
+    const result = await request(`/api/v1/send-manifests/${sendManifestId}/authorizations`, {
+      method: "POST",
+      body: JSON.stringify({
+        expected_manifest_hash: sendManifestHash,
+        expected_preview_hash: sendPreviewHash,
+        reason: "One exact synthetic fixture message approved in the diagnostic UI.",
+      }),
+    });
+    sendAuthorizationId = result.record.id;
+    byId("contact-control").textContent = JSON.stringify(result, null, 2);
+    byId("submit-send").disabled = false;
+  } catch (error) {
+    showError(error);
+  }
+});
+
+byId("submit-send").addEventListener("click", async () => {
+  try {
+    const result = await request(
+      `/api/v1/send-authorizations/${sendAuthorizationId}/delivery-attempts`,
+      { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() } },
+    );
+    deliveryAttemptId = result.record.id;
+    byId("contact-control").textContent = JSON.stringify(result, null, 2);
+    byId("submit-send").disabled = true;
+    byId("record-receipt").disabled = result.record.state !== "provider_accepted";
+  } catch (error) {
+    showError(error);
+  }
+});
+
+byId("record-receipt").addEventListener("click", async () => {
+  try {
+    const result = await request(
+      `/api/v1/delivery-attempts/${deliveryAttemptId}/fixture-events`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          event_id: crypto.randomUUID(),
+          event_type: "delivered",
+          body: "",
+          signature: "fixture-signature-v1",
+        }),
+      },
+    );
+    byId("contact-control").textContent = JSON.stringify(result, null, 2);
+    byId("record-receipt").disabled = true;
+  } catch (error) {
+    showError(error);
+  }
+});
+
+byId("refresh-timeline").addEventListener("click", async () => {
+  try {
+    const result = await request(`/api/v1/businesses/${businessId}/interaction-timeline`);
+    byId("interaction-timeline").textContent = JSON.stringify(result, null, 2);
+  } catch (error) {
+    showError(error);
+  }
+});

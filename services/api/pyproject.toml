@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "opintel-api"
-version = "0.6.0"
-description = "Authenticated M0-M5 evidence, audit, demo, and outreach-package API"
+version = "0.7.0"
+description = "Authenticated M0-M6 evidence, audit, outreach, and mock contact-control API"
 requires-python = ">=3.13,<3.14"
 dependencies = [
   "fastapi>=0.139,<0.140",
@@ -21,6 +21,8 @@ dependencies = [
   "opintel-demo-local",
   "opintel-outreach-core",
   "opintel-outreach-local",
+  "opintel-contact-core",
+  "opintel-contact-local",
   "pydantic-settings>=2.10,<3",
   "uvicorn>=0.51,<0.52",
 ]
@@ -41,6 +43,8 @@ opintel-demo-core = { workspace = true }
 opintel-demo-local = { workspace = true }
 opintel-outreach-core = { workspace = true }
 opintel-outreach-local = { workspace = true }
+opintel-contact-core = { workspace = true }
+opintel-contact-local = { workspace = true }
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/opintel_api"]

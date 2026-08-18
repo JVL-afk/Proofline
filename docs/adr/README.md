@@ -55,5 +55,15 @@ ADRs capture decisions that constrain implementation or are expensive to reverse
 | [ADR-0030](0030-outreach-artifact-separation-and-qc.md) | Accepted | Internal/external separation and non-overridable hard QC |
 | [ADR-0031](0031-outreach-content-review-no-delivery.md) | Accepted | Content-only review, invalidation, and no-delivery boundary |
 | [ADR-0032](0032-functional-role-targeting.md) | Accepted | Functional-role targeting without people or impersonation |
+| [ADR-0033](0033-independent-contact-and-send-stages.md) | Accepted | Six independent contact and send stages |
+| [ADR-0034](0034-proof-scoped-contact-verification.md) | Accepted | Acquisition origin and proof-scoped verification stay separate |
+| [ADR-0035](0035-fixture-eligibility-and-a17-live-gate.md) | Accepted | Fixture-only eligibility and mandatory A-17 live gate |
+| [ADR-0036](0036-suppression-cadence-and-time-precedence.md) | Accepted | Suppression, cadence, time, and kill-switch precedence |
+| [ADR-0037](0037-typed-m5-delivery-slots.md) | Accepted | Typed M5 delivery/compliance slots without prose mutation |
+| [ADR-0038](0038-exact-manifest-and-one-send-authorization.md) | Accepted | Exact manifests and one-message human authorization |
+| [ADR-0039](0039-mock-only-single-message-delivery.md) | Accepted | Zero-network mock-only single-message delivery |
+| [ADR-0040](0040-receipts-replies-and-first-party-assertions.md) | Accepted | Separate receipts/replies and first-party assertions |
+| [ADR-0041](0041-referrals-and-controlled-reanalysis.md) | Accepted | Referral restart and request-only upstream re-analysis |
+| [ADR-0042](0042-isolated-mock-delivery-security.md) | Accepted | Synthetic data, strict message QC, and isolation boundary |
 
 The product/compliance decisions A-01 through A-20 are tracked separately in `docs/decisions/README.md` until they become ADRs.

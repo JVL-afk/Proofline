@@ -616,13 +616,11 @@ def test_hostile_external_wording_fails_closed(
 def test_no_copy_export_send_or_contact_capability_exists(client: TestClient) -> None:
     paths = set(client.app.openapi()["paths"])
     prohibited = (
-        "send",
         "publish",
         "share",
         "export",
         "download",
         "copy",
-        "recipient",
         "contact-discovery",
         "crm",
         "calendar",
@@ -630,6 +628,8 @@ def test_no_copy_export_send_or_contact_capability_exists(client: TestClient) ->
         "phone",
     )
     assert not any(any(word in path.lower() for word in prohibited) for path in paths)
+    assert not any("bulk" in path.lower() or "sequence" in path.lower() for path in paths)
+    assert "/api/v1/outreach-package-revisions/{revision_id}/review-decisions" in paths
     assert not hasattr(client.app.state, "outreach_provider")
     assert not hasattr(client.app.state, "outreach_sender")
 

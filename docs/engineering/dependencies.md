@@ -63,3 +63,8 @@ M5 adds no third-party dependency. `outreach-core` uses standard-library hashing
 expressions, typed projections, deterministic templates, and existing M1-M4 contracts.
 `outreach-local` reuses locked SQLAlchemy. There is no provider SDK, recipient/contact library,
 mailer, CRM/calendar client, renderer, exporter, or network dependency.
+
+M6 adds no third-party dependency. `contact-core` reuses Pydantic and standard-library hashing,
+time-zone logic, typed contracts, and policy checks. `contact-local` reuses locked SQLAlchemy. No
+provider SDK, DNS/mail verifier, contact/enrichment library, webhook server, encryption service,
+mailer, CRM, tracking, or network dependency is introduced.
