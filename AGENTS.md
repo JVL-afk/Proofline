@@ -2,17 +2,19 @@
 
 ## Active milestone
 
-Milestone M6.6B-2 pre-freeze candidate certification preparation only. Read
+Milestone M6.6B-3 controlled live candidate certification is closed. Read
 `GREENFIELD_ARCHITECTURE.md`, `docs/milestones/M6.5.md`, `docs/milestones/M6.6A.md`,
-`docs/milestones/M6.6B-2.md`, and accepted ADR-0054 through ADR-0062 before changing the repository.
+`docs/milestones/M6.6B-2.md`, `docs/milestones/M6.6B-3.md`, and accepted ADR-0054 through ADR-0062
+before changing the repository.
 
-M1-M6.5 and the M6.6A commit remain authoritative and frozen. M6.6B-2 may only maintain inert draft
-candidate configurations, dated official-source evidence, visible-fixture projections, reviewer
-policy, and the future bounded certification-call plan. Live AI, credentials, hidden fixture access,
-real data/providers/senders/infrastructure, all routes, and production AI remain disabled. Normal CI
-remains credential-free/network-free.
+M1-M6.5, M6.6A, and the closed M6.6B-2 package remain authoritative and frozen. The M6.6B-3
+authorization was consumed after exactly five synthetic certification calls and must not be reused.
+Its code and safe receipt may be maintained, but no additional live call is authorized. Hidden
+fixtures, real data, application routes, qualification scoring, candidate freeze/readiness,
+production AI, and all other live behavior remain disabled. Normal CI remains
+credential-free/network-free.
 
-Do not execute Tournament II, freeze/approve a candidate or manifest, implement M6.7, M7, or live
+Do not execute Tournament II, freeze/approve a candidate or manifest, implement M6.7, M7, or other live
 behavior: real research/person/contact data, sender/domain/site, provider/webhook,
 cloud/IdP/KMS/secrets, delivery, publication, bulk/sequence, CRM/channel integration, autonomous
 follow-up, or autonomous agents.
@@ -25,7 +27,7 @@ follow-up, or autonomous agents.
 - Do not add executable infrastructure until its cloud/region/IaC/data decisions are accepted.
 - Do not commit secrets, personal data, live provider payloads, generated credentials, or local service data.
 - Use exact/locked dependencies and justify new direct dependencies under `docs/engineering/dependencies.md`.
-- Keep all behavior outside exact M6.6A qualification infrastructure out unless the user advances the milestone.
+- Keep all behavior outside the exact M6.6B-3 certification authorization out unless the user advances the milestone.
 
 ## Validation
 

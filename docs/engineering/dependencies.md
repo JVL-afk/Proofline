@@ -83,3 +83,8 @@ M6.6B-2 adds no third-party dependency. Its draft manifest validation, conservat
 token ceilings, dated price calculations, and certification plan use the Python standard library in
 `qualification-core`. It adds no provider SDK, transport, credential reader, hidden-corpus reader,
 or executable live boundary.
+
+M6.6B-3 adds no third-party dependency. Its separately invoked one-shot certification process uses
+the existing `qualification-live` standard-library HTTPS transport, now constrained by exact
+provider host allowlists and redirect checks. Deterministic CI uses fake transports and never reads
+credentials or opens external connections.

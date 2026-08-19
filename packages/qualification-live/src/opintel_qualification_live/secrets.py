@@ -28,7 +28,23 @@ class SecretBundle:
         raise SecretConfigurationError(provider)
 
 
-def load_secret_bundle(path: Path) -> SecretBundle:
+@dataclass(frozen=True, slots=True)
+class AvailableSecretBundle:
+    openai: str | None = field(repr=False)
+    anthropic: str | None = field(repr=False)
+    gemini: str | None = field(repr=False)
+
+    def for_provider(self, provider: str) -> str | None:
+        if provider == "openai":
+            return self.openai
+        if provider == "anthropic":
+            return self.anthropic
+        if provider == "gemini":
+            return self.gemini
+        raise SecretConfigurationError(provider)
+
+
+def _read_secret_values(path: Path) -> dict[str, str]:
     raw = path.read_bytes()
     text: str | None = None
     encodings = (
@@ -55,6 +71,18 @@ def load_secret_bundle(path: Path) -> SecretBundle:
         if len(value) >= 2 and value[0] in quote_chars and value[-1] in quote_chars:
             value = value[1:-1]
         values[label.strip().upper()] = value
+    return values
+
+
+def load_available_secret_bundle(path: Path) -> AvailableSecretBundle:
+    values = _read_secret_values(path)
+    return AvailableSecretBundle(
+        values.get("OPENAI"), values.get("ANTHROPIC"), values.get("GEMINI")
+    )
+
+
+def load_secret_bundle(path: Path) -> SecretBundle:
+    values = _read_secret_values(path)
     for label in ("OPENAI", "ANTHROPIC", "GEMINI"):
         if not values.get(label):
             raise SecretConfigurationError(label)

@@ -1,0 +1,46 @@
+{
+  "schema_version": "m6.6b3.official-pricing-preflight@1",
+  "checked_at": "2026-08-19",
+  "currency": "USD",
+  "unit": "per_1m_tokens",
+  "sources": [
+    {
+      "provider": "openai",
+      "model": "gpt-5.6-sol",
+      "input": "5.00",
+      "cached_input": "0.50",
+      "output": "30.00",
+      "url": "https://developers.openai.com/api/docs/models/gpt-5.6-sol"
+    },
+    {
+      "provider": "anthropic",
+      "model": "claude-sonnet-5",
+      "input": "2.00",
+      "cached_input": "0.20",
+      "output": "10.00",
+      "effective_through": "2026-08-31",
+      "url": "https://platform.claude.com/docs/en/about-claude/models/whats-new-sonnet-5"
+    },
+    {
+      "provider": "google",
+      "model": "gemini-3.6-flash",
+      "input": "0.75",
+      "cached_input": "0.075",
+      "output": "3.75",
+      "effective_through": "2026-12-31",
+      "url": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    {
+      "provider": "google",
+      "model": "gemini-3.5-flash-lite",
+      "input": "0.30",
+      "cached_input": "0.03",
+      "output": "2.50",
+      "url": "https://ai.google.dev/gemini-api/docs/pricing"
+    }
+  ],
+  "five_call_maximum_micros": 145467,
+  "maximum_with_one_full_retry_per_call_micros": 290934,
+  "hard_ceiling_micros": 1000000,
+  "unknown_pricing_behavior": "fail_closed"
+}

@@ -44,6 +44,13 @@ M6.6A requires no secret. Candidate records are deterministic fixtures and the f
 no credential or network interface. Any future M6.6B credential boundary requires separate
 authorization and must not be added to normal application or CI processes.
 
+M6.6B-3 permits the explicit one-shot local certification process to read only OpenAI, Anthropic,
+and Gemini credentials from the already ignored `apikeys.txt` boundary. Missing credentials are
+provider-local `CREDENTIAL_UNAVAILABLE` outcomes. Values may exist only in process memory and their
+matching authorization headers; they are never printed, hashed, persisted, passed as command-line
+arguments, or exposed to another provider. The process retains only approved safe metadata and
+removes its credential bundle reference after execution. Normal CI never invokes this process.
+
 ## CI/CD
 
 - Prefer workload identity federation over long-lived repository secrets.
