@@ -1,0 +1,68 @@
+{
+  "schema_version": "m6.6b5r.recovery-safe-summary@1",
+  "recovery_run_id": "551c3c0d-d68e-568c-b9b8-14d947eec22e",
+  "sample_class": "NEW_MODEL_SAMPLES_FOR_HUMAN_USEFULNESS_EVALUATION",
+  "original_run_id": "3b37a366-3957-5f8b-94da-c83dac6f323e",
+  "original_manifest_hash": "f3695a274cdfbdba09a69d5143c15662057329c571f0dfda225819af9aa793ea",
+  "original_artifact_sha256": "3673c1178e574d4f289e9b7642716d00e66204279dbd4ab8a67cda2d4599b490",
+  "authorization_hash": "b4952aa4d1b8803c0ee356b30472580667915a93d02504ad5b2c293f5ec1af26",
+  "authorized_scope": {
+    "deployment": "anthropic-claude-sonnet-5",
+    "model": "claude-sonnet-5",
+    "tasks": [
+      "evidence_interpretation",
+      "contradiction_analysis",
+      "opportunity_reasoning",
+      "audit_wording",
+      "outreach_wording"
+    ],
+    "frozen_case_count_per_binding": 21,
+    "logical_call_count": 105,
+    "other_provider_calls": 0
+  },
+  "execution": {
+    "calls_planned": 105,
+    "calls_attempted": 105,
+    "calls_completed": 105,
+    "transport_attempts": 105,
+    "retries": 0,
+    "new_safety_failures": 0,
+    "stop_reason": null
+  },
+  "budget": {
+    "pricing_version": "anthropic-claude-sonnet-5-intro-2026-08-19",
+    "input_usd_per_million": "2",
+    "output_usd_per_million": "10",
+    "conservative_primary_max_micros": 2376780,
+    "conservative_with_retry_max_micros": 4753560,
+    "hard_cap_micros": 5000000,
+    "actual_cost_micros": 597460
+  },
+  "artifacts": {
+    "safe_result_sha256": "04397a75f504e2574758e23e83462c5cdbfc49827db116f61b6af4f7deaaac00",
+    "rendered_outputs_sha256": "698a231f57172e362df29261168eda7894573052be54956e1012914eb2fa0726",
+    "assignment_file_sha256": "c5794d20e00a35a747d30cb7856864ad17ce3ce0a9e94d3431ac3b93985cfbe7",
+    "assignment_manifest_hash": "025cb7222e86da535a3cb3121cf445b52fcd45b3bf19a808053a259e87258a72",
+    "reviewer_package_set_sha256": "1a1753dfdd409ced403e5864c5e06c49e2f753dde671999a9026d7c09b30bb01",
+    "rendered_output_count": 105,
+    "usable_rendered_output_count": 105,
+    "reviewer_assignment_count": 420,
+    "sealed_package_count": 20,
+    "reviewer_identity_or_telemetry_hits": 0,
+    "raw_provider_envelopes_persisted": false
+  },
+  "review": {
+    "primary_slots": 3,
+    "conditional_adjudicator_slots": 1,
+    "named_assignments": 0,
+    "packages_sealed": true,
+    "packages_released": false,
+    "scores_created": 0
+  },
+  "authority": {
+    "qualified_bindings": 0,
+    "route_activations": 0,
+    "canonical_mutations": 0,
+    "m67_started": false
+  }
+}

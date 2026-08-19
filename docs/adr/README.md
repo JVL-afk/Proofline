@@ -87,5 +87,6 @@ ADRs capture decisions that constrain implementation or are expensive to reverse
 | [ADR-0062](0062-tournament-security-and-retention.md) | Accepted | Tournament security and safe result retention |
 | [ADR-0063](0063-tournament-ii-run-bound-identity.md) | Accepted | Pinned and run-bound identity for synthetic Tournament II only |
 | [ADR-0064](0064-synthetic-tournament-retention-and-reviewer-release.md) | Accepted | Synthetic retention approval and reviewer assignment at package release |
+| [ADR-0065](0065-synthetic-human-review-output-retention.md) | Accepted | Minimal synthetic rendered-output retention for sealed human review |
 
 The product/compliance decisions A-01 through A-20 are tracked separately in `docs/decisions/README.md` until they become ADRs.
