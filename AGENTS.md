@@ -2,13 +2,12 @@
 
 ## Active milestone
 
-Milestone M6.6B-4B provider-control resolution is `READY_FOR_AUTOMATED_TOURNAMENT`, but no live
-execution authorization exists. Read
+Milestone M6.6B-5 closed the original Tournament II machine run as immutable evidence. Read
 `GREENFIELD_ARCHITECTURE.md`, `docs/milestones/M6.5.md`, `docs/milestones/M6.6A.md`,
 `docs/milestones/M6.6B-2.md`, `docs/milestones/M6.6B-3.md`,
 `docs/milestones/M6.6B-3R.md`, `docs/milestones/M6.6B-4.md`,
-`docs/milestones/M6.6B-4A.md`, `docs/milestones/M6.6B-4B.md`, and accepted ADR-0054 through ADR-0064 before changing the
-repository.
+`docs/milestones/M6.6B-4A.md`, `docs/milestones/M6.6B-4B.md`,
+`docs/milestones/M6.6B-5.md`, and accepted ADR-0054 through ADR-0064 before changing the repository.
 
 M1-M6.5, M6.6A, and the closed M6.6B-2 package remain authoritative and frozen. The M6.6B-3
 authorization was consumed after exactly five synthetic certification calls and must not be reused.
@@ -22,11 +21,13 @@ must not be reused. Its code and safe receipt may be maintained, but no addition
 authorized. No OpenAI or Anthropic call is authorized. The original M6.6B-3 evidence blob remains
 append-only and byte-identical.
 
-The four candidates and twelve bindings remain frozen. Human control-plane attestations resolve the
-OpenAI sharing and Google Interactions-storage gates without claiming Zero Data Retention. Automated
-readiness does not itself authorize provider calls. Do not access hidden fixtures, create or consume
-a live authorization, make inference calls, release Stage 5 packages, or activate a route unless a
-new explicit task binds the exact final readiness manifest and all execution-day drift checks pass.
+The original Tournament II authorization is consumed. Its 194 attempted calls, 190 released calls,
+zero retries, USD 1.145397 cost, seven disqualified bindings, and five safety-only Sonnet bindings
+must not be changed or rerun. The five Sonnet results are
+`AUTOMATED_SAFETY_PASS_HUMAN_REVIEW_UNAVAILABLE`; missing review text must not be reconstructed.
+No binding qualified. Do not access hidden fixtures, create or consume another live authorization,
+make inference calls, release packages, or activate a route unless a new explicit task authorizes a
+separate successor run with exact scope and budget.
 
 Do not execute Tournament II, approve the manifest, implement M6.7, M7, or other live
 behavior: real research/person/contact data, sender/domain/site, provider/webhook,

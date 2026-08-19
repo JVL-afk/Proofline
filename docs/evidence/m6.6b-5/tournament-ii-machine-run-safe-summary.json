@@ -1,0 +1,28 @@
+{
+  "schema_version": "m6.6b5.original-machine-run-safe-summary@1",
+  "run_id": "3b37a366-3957-5f8b-94da-c83dac6f323e",
+  "manifest_hash": "f3695a274cdfbdba09a69d5143c15662057329c571f0dfda225819af9aa793ea",
+  "safe_artifact_sha256": "3673c1178e574d4f289e9b7642716d00e66204279dbd4ab8a67cda2d4599b490",
+  "calls": {
+    "planned": 384,
+    "attempted": 194,
+    "released": 190,
+    "retries": 0
+  },
+  "budget": {
+    "actual_cost_micros": 1145397,
+    "hard_cap_micros": 25000000,
+    "increased": false
+  },
+  "authority": {
+    "canonical_mutations": 0,
+    "route_activations": 0,
+    "qualified_bindings": 0
+  },
+  "review_retention": {
+    "hash_only_package_markers": 5,
+    "usable_human_review_packages": 0,
+    "human_usefulness_state": "NOT_EVALUABLE_FROM_RETAINED_ARTIFACTS"
+  },
+  "historical_evidence_rewritten": false
+}
