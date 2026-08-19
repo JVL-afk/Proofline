@@ -92,3 +92,9 @@ credentials or opens external connections.
 M6.6B-3R adds no third-party dependency. The Gemini-only successor validator, one-shot repair
 authorization, redacted error diagnostics, and fake transport tests reuse the same standard-library
 boundary. Only the separately invoked repair script can open the exact Google HTTPS endpoint.
+
+M6.6B-4/M6.6B-4A add no third-party dependency. Immutable freeze/readiness manifests, account
+finding classification, pacing, budget and reviewer-stage controls use the standard library. Four
+explicitly invoked read-only model-metadata checks reuse the existing exact-host HTTPS transport;
+normal CI uses fake transports and opens no network connection. The credential-value audit uses
+standard-library subprocess and Git plumbing without placing secret values in arguments or output.

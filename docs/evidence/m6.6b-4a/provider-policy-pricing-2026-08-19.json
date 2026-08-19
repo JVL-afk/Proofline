@@ -1,0 +1,77 @@
+{
+  "evidence_id": "m6.6b4a.provider-policy-pricing@2026-08-19",
+  "captured_on": "2026-08-19",
+  "synthetic_retention_decision": {
+    "state": "ACCEPTED_FOR_M6_6_SYNTHETIC_ONLY",
+    "standard_provider_security_logging_accepted": true,
+    "real_or_production_data_allowed": false,
+    "opt_in_training_or_data_sharing_allowed": false
+  },
+  "pricing": [
+    {
+      "deployment": "gpt-5.6-sol",
+      "input_usd_per_million": "5.00",
+      "cached_input_usd_per_million": "0.50",
+      "output_usd_per_million": "30.00",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.6-sol"
+    },
+    {
+      "deployment": "claude-sonnet-5",
+      "input_usd_per_million": "2.00",
+      "cached_input_usd_per_million": "0.20",
+      "output_usd_per_million": "10.00",
+      "effective_through": "2026-08-31",
+      "source": "https://platform.claude.com/docs/en/about-claude/pricing"
+    },
+    {
+      "deployment": "gemini-3.6-flash",
+      "input_usd_per_million": "0.75",
+      "cached_input_usd_per_million": "0.075",
+      "output_usd_per_million": "3.75",
+      "effective_through": "2026-12-31",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    {
+      "deployment": "gemini-3.5-flash-lite",
+      "input_usd_per_million": "0.30",
+      "cached_input_usd_per_million": "0.03",
+      "output_usd_per_million": "2.50",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    }
+  ],
+  "public_rate_and_data_policy": {
+    "openai": {
+      "minimum_supported_paid_model_limit": "Tier 1: 500 RPM and 500000 TPM",
+      "standard_abuse_log_retention": "up to 30 days",
+      "training_default": "API data not used for training unless explicitly opted in",
+      "sources": [
+        "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
+        "https://platform.openai.com/docs/models/default-usage-policies-by-endpoint"
+      ]
+    },
+    "anthropic": {
+      "published_sonnet_5_start_limits": "1000 RPM, 2000000 ITPM, 400000 OTPM",
+      "rate_limit_algorithm": "token bucket with Retry-After on 429",
+      "training_default": "commercial API data is not used for training without permission",
+      "sources": [
+        "https://platform.claude.com/docs/en/api/rate-limits",
+        "https://privacy.claude.com/en/articles/7996868-is-my-data-used-for-model-training"
+      ]
+    },
+    "google": {
+      "rate_dimensions": "project-scoped RPM, input TPM, RPD, and tier-dependent spend limits",
+      "tier_1_spend_limit": "USD 10 per rolling 10 minutes when applicable",
+      "paid_data_default": "not used to improve products unless explicitly shared",
+      "sources": [
+        "https://ai.google.dev/gemini-api/docs/rate-limits",
+        "https://ai.google.dev/gemini-api/docs/billing",
+        "https://ai.google.dev/gemini-api/docs/logs-policy"
+      ]
+    }
+  },
+  "conservative_preflight_micros": 21970114,
+  "hard_cap_micros": 25000000,
+  "reserve_micros": 3029886,
+  "raw_provider_bodies_retained": false,
+  "credentials_present": false
+}

@@ -56,6 +56,13 @@ does not receive OpenAI or Anthropic credentials and cannot call either provider
 output and committed safe receipt follow the same no-value, no-hash, no-body rules. Normal CI tests
 the repair through fake transports only.
 
+M6.6B-4A permits four read-only model-metadata requests through the existing provider-specific
+credential boundary and exact HTTPS hosts. These checks submit no prompt, fixture, or inference
+request and retain only status, exact returned model ID, approved rate-limit headers when present,
+and latency. Raw bodies and credentials remain memory-only. The credential-value audit compares the
+local values in memory against tracked working-tree files and reachable Git blobs without placing a
+value in process arguments or output. Normal CI uses fake transports and no credential.
+
 ## CI/CD
 
 - Prefer workload identity federation over long-lived repository secrets.

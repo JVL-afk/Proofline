@@ -1,0 +1,54 @@
+{
+  "evidence_id": "m6.6b4.provider-policy-pricing@2026-08-19",
+  "captured_on": "2026-08-19",
+  "purpose": "Tournament II freeze; public pricing and policy evidence only",
+  "pricing": [
+    {
+      "deployment": "gpt-5.6-sol",
+      "input_usd_per_million": "5.00",
+      "cached_input_usd_per_million": "0.50",
+      "output_usd_per_million": "30.00",
+      "source": "https://developers.openai.com/api/docs/models/gpt-5.6-sol"
+    },
+    {
+      "deployment": "claude-sonnet-5",
+      "input_usd_per_million": "2.00",
+      "cached_input_usd_per_million": "0.20",
+      "output_usd_per_million": "10.00",
+      "effective_through": "2026-08-31",
+      "source": "https://platform.claude.com/docs/en/about-claude/pricing"
+    },
+    {
+      "deployment": "gemini-3.6-flash",
+      "input_usd_per_million": "0.75",
+      "cached_input_usd_per_million": "0.075",
+      "output_usd_per_million": "3.75",
+      "effective_through": "2026-12-31",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    },
+    {
+      "deployment": "gemini-3.5-flash-lite",
+      "input_usd_per_million": "0.30",
+      "cached_input_usd_per_million": "0.03",
+      "output_usd_per_million": "2.50",
+      "source": "https://ai.google.dev/gemini-api/docs/pricing"
+    }
+  ],
+  "public_data_controls": {
+    "openai": {
+      "summary": "API content is not used for training unless opted in; abuse-monitoring retention can be up to 30 days; zero-data-retention is account-specific.",
+      "source": "https://platform.openai.com/docs/guides/your-data"
+    },
+    "anthropic": {
+      "summary": "Commercial inputs and outputs are not used for model training without permission; zero-data-retention is organization-specific.",
+      "source": "https://privacy.claude.com/en/articles/7996868-is-my-data-used-for-model-training"
+    },
+    "google": {
+      "summary": "Paid-service content is not used to improve products; store=false is required by the frozen synthetic configuration; effective account logging remains an account-control check.",
+      "source": "https://ai.google.dev/gemini-api/terms"
+    }
+  },
+  "account_control_status": "NOT_ESTABLISHED_BY_PUBLIC_DOCUMENTATION",
+  "raw_provider_bodies_retained": false,
+  "credentials_present": false
+}

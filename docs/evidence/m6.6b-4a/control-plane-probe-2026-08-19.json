@@ -1,0 +1,73 @@
+{
+  "schema_version": "m6.6b4a.control-plane-probe@1",
+  "started_at": "2026-08-19 11:42:28.485022+00:00",
+  "completed_at": "2026-08-19 11:42:30.112062+00:00",
+  "receipts": [
+    {
+      "provider": "openai",
+      "requested_model": "gpt-5.6-sol",
+      "endpoint": "https://api.openai.com/v1/models/gpt-5.6-sol",
+      "api_revision": "v1",
+      "http_status": 200,
+      "outcome": "verified",
+      "returned_model": "gpt-5.6-sol",
+      "latency_ms": 635,
+      "rate_limit_evidence": [],
+      "body_retained": false,
+      "credential_retained": false,
+      "inference_requested": false,
+      "safe_failure_code": null
+    },
+    {
+      "provider": "anthropic",
+      "requested_model": "claude-sonnet-5",
+      "endpoint": "https://api.anthropic.com/v1/models/claude-sonnet-5",
+      "api_revision": "anthropic-version:2023-06-01",
+      "http_status": 200,
+      "outcome": "verified",
+      "returned_model": "claude-sonnet-5",
+      "latency_ms": 446,
+      "rate_limit_evidence": [],
+      "body_retained": false,
+      "credential_retained": false,
+      "inference_requested": false,
+      "safe_failure_code": null
+    },
+    {
+      "provider": "google",
+      "requested_model": "gemini-3.6-flash",
+      "endpoint": "https://generativelanguage.googleapis.com/v1/models/gemini-3.6-flash",
+      "api_revision": "v1",
+      "http_status": 200,
+      "outcome": "verified",
+      "returned_model": "gemini-3.6-flash",
+      "latency_ms": 217,
+      "rate_limit_evidence": [],
+      "body_retained": false,
+      "credential_retained": false,
+      "inference_requested": false,
+      "safe_failure_code": null
+    },
+    {
+      "provider": "google",
+      "requested_model": "gemini-3.5-flash-lite",
+      "endpoint": "https://generativelanguage.googleapis.com/v1/models/gemini-3.5-flash-lite",
+      "api_revision": "v1",
+      "http_status": 200,
+      "outcome": "verified",
+      "returned_model": "gemini-3.5-flash-lite",
+      "latency_ms": 221,
+      "rate_limit_evidence": [],
+      "body_retained": false,
+      "credential_retained": false,
+      "inference_requested": false,
+      "safe_failure_code": null
+    }
+  ],
+  "calls_attempted": 4,
+  "calls_completed": 4,
+  "inference_calls": 0,
+  "hidden_fixture_access": false,
+  "raw_bodies_retained": false,
+  "credentials_retained": false
+}
