@@ -121,6 +121,7 @@ REQUIRED_FILES = (
     "docs/milestones/M6.6A.md",
     "docs/milestones/M6.6B-4.md",
     "docs/milestones/M6.6B-4A.md",
+    "docs/milestones/M6.6B-4B.md",
     "docs/policies/environment-and-data.md",
     "docs/policies/secrets.md",
     "packages/m0-core/README.md",

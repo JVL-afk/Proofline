@@ -98,3 +98,7 @@ finding classification, pacing, budget and reviewer-stage controls use the stand
 explicitly invoked read-only model-metadata checks reuse the existing exact-host HTTPS transport;
 normal CI uses fake transports and opens no network connection. The credential-value audit uses
 standard-library subprocess and Git plumbing without placing secret values in arguments or output.
+
+M6.6B-4B adds no third-party dependency and no live transport. Human-attested provider-control
+evidence, official-policy conclusions, and the immutable final readiness successor use the standard
+library. Deterministic tests perform no provider or external-network call.

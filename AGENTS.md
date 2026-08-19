@@ -2,11 +2,12 @@
 
 ## Active milestone
 
-Milestone M6.6B-4A Tournament II gate resolution is `NOT_APPROVED`. Read
+Milestone M6.6B-4B provider-control resolution is `READY_FOR_AUTOMATED_TOURNAMENT`, but no live
+execution authorization exists. Read
 `GREENFIELD_ARCHITECTURE.md`, `docs/milestones/M6.5.md`, `docs/milestones/M6.6A.md`,
 `docs/milestones/M6.6B-2.md`, `docs/milestones/M6.6B-3.md`,
 `docs/milestones/M6.6B-3R.md`, `docs/milestones/M6.6B-4.md`,
-`docs/milestones/M6.6B-4A.md`, and accepted ADR-0054 through ADR-0064 before changing the
+`docs/milestones/M6.6B-4A.md`, `docs/milestones/M6.6B-4B.md`, and accepted ADR-0054 through ADR-0064 before changing the
 repository.
 
 M1-M6.5, M6.6A, and the closed M6.6B-2 package remain authoritative and frozen. The M6.6B-3
@@ -21,12 +22,11 @@ must not be reused. Its code and safe receipt may be maintained, but no addition
 authorized. No OpenAI or Anthropic call is authorized. The original M6.6B-3 evidence blob remains
 append-only and byte-identical.
 
-The four candidates and twelve bindings remain frozen. The M6.6B-4A successor records conservative
-pacing, the reviewer-slot amendment, security controls, and a window but remains non-executable.
-OpenAI project training/data-sharing opt-in state and Google project logging/dataset-sharing opt-in
-state are the two exact unresolved blockers. Do not transition to automated readiness, access hidden
-fixtures, create a live authorization, or make inference calls until both are verified disabled and
-a new explicit authorization binds the successor hash.
+The four candidates and twelve bindings remain frozen. Human control-plane attestations resolve the
+OpenAI sharing and Google Interactions-storage gates without claiming Zero Data Retention. Automated
+readiness does not itself authorize provider calls. Do not access hidden fixtures, create or consume
+a live authorization, make inference calls, release Stage 5 packages, or activate a route unless a
+new explicit task binds the exact final readiness manifest and all execution-day drift checks pass.
 
 Do not execute Tournament II, approve the manifest, implement M6.7, M7, or other live
 behavior: real research/person/contact data, sender/domain/site, provider/webhook,

@@ -1,0 +1,42 @@
+{
+  "evidence_id": "m6.6b4b.human-provider-control-attestation@2026-08-19",
+  "evidence_timestamp": "2026-08-19T12:19:37Z",
+  "provenance": "HUMAN_CONTROL_PLANE_ATTESTATION",
+  "attestor_role": "provider-account-owner",
+  "evidence_form": "human-supplied screenshot attestation in approval session",
+  "screenshot_binary_stored": false,
+  "openai": {
+    "control": "OPENAI_DATA_SHARING",
+    "state": "DATA_SHARING_DISABLED_VERIFIED",
+    "observed_surface": "OpenAI Platform / Data controls / Sharing",
+    "settings": {
+      "enable_sharing_of_model_feedback_from_platform": "disabled",
+      "share_evaluation_and_fine_tuning_data": "disabled",
+      "share_inputs_and_outputs": "disabled"
+    },
+    "standard_abuse_security_logging_may_apply": true,
+    "zero_data_retention_claimed": false,
+    "official_policy_source": "https://platform.openai.com/docs/models/default-usage-policies-by-endpoint"
+  },
+  "google": {
+    "control": "GOOGLE_INTERACTIONS_REQUEST_STORAGE",
+    "state": "DISABLED_VERIFIED",
+    "observed_surface": "Google AI Studio / Gemini API log settings",
+    "settings": {
+      "generate_content_api_request_storage": "disabled",
+      "interactions_api_request_storage": "disabled"
+    },
+    "paid_project": true,
+    "paid_service_prompts_or_responses_used_for_product_improvement_by_default": false,
+    "separate_contribution_control_relevant_to_ordinary_paid_calls": false,
+    "contribution_explanation": "Dataset contribution and feedback require explicit manual selection or submission of logged data; Interactions request storage is disabled.",
+    "standard_abuse_security_logging_may_apply": true,
+    "zero_data_retention_claimed": false,
+    "official_policy_sources": [
+      "https://ai.google.dev/gemini-api/terms",
+      "https://ai.google.dev/gemini-api/docs/logs-policy"
+    ]
+  },
+  "provider_inference_calls": 0,
+  "hidden_fixture_access": false
+}
