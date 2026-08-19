@@ -1,0 +1,161 @@
+{
+  "artifact_version": "m6.6b2.official-provider-snapshot@1",
+  "retrieved_at": "2026-08-19T06:26:02Z",
+  "classification": "PUBLIC_DOC_RESOLVED",
+  "mutable_fact_notice": "This is dated discovery evidence, not a timeless architecture constant. Refresh before any manifest freeze or execution.",
+  "sources": [
+    {
+      "id": "openai-model-gpt-5.6-sol",
+      "provider": "openai",
+      "url": "https://developers.openai.com/api/docs/models/gpt-5.6-sol",
+      "claims": [
+        "Requested model ID gpt-5.6-sol is currently documented.",
+        "Responses v1/responses and structured outputs are supported.",
+        "Context is 1,050,000 tokens and maximum output is 128,000 tokens.",
+        "Standard text pricing is USD 5 input, USD 0.50 cached input, and USD 30 output per million tokens.",
+        "Prompts above 272K input tokens use the documented long-context multiplier; the draft projection stays below it.",
+        "The public snapshot list does not expose a distinct immutable snapshot identifier beyond gpt-5.6-sol."
+      ]
+    },
+    {
+      "id": "openai-responses-structured-output",
+      "provider": "openai",
+      "url": "https://developers.openai.com/api/reference/resources/responses/methods/create",
+      "claims": [
+        "Responses supports JSON-schema structured output and reports response status and usage metadata.",
+        "Refusal, incomplete output, schema validity, and semantic validity remain separate evaluator outcomes."
+      ]
+    },
+    {
+      "id": "anthropic-sonnet-5",
+      "provider": "anthropic",
+      "url": "https://platform.claude.com/docs/en/about-claude/models/whats-new-sonnet-5",
+      "claims": [
+        "Requested model ID claude-sonnet-5 is currently documented.",
+        "Context is 1,000,000 tokens and maximum output is 128,000 tokens.",
+        "Adaptive thinking replaces manual extended-thinking budgets; non-default temperature, top_p, and top_k are rejected.",
+        "max_tokens includes thinking and visible response tokens.",
+        "Refusal is returned with HTTP 200 and stop_reason refusal.",
+        "Introductory pricing is USD 2 input and USD 10 output per million through 2026-08-31, then USD 3 and USD 15."
+      ]
+    },
+    {
+      "id": "anthropic-model-versioning",
+      "provider": "anthropic",
+      "url": "https://platform.claude.com/docs/en/about-claude/models/model-ids-and-versions",
+      "claims": [
+        "Claude 4.6-and-later dateless model IDs are provider-documented pinned snapshots.",
+        "Model weights and configuration stay fixed for the ID, while serving infrastructure may change."
+      ]
+    },
+    {
+      "id": "anthropic-structured-output",
+      "provider": "anthropic",
+      "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs",
+      "claims": [
+        "Claude Sonnet 5 supports output_config.format structured output.",
+        "The exact conservative schema family still requires bounded certification against the account endpoint.",
+        "Refusal and max-token truncation can prevent a normal schema-valid output and must fail closed."
+      ]
+    },
+    {
+      "id": "anthropic-pricing",
+      "provider": "anthropic",
+      "url": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "claims": [
+        "Sonnet 5 prompt-cache hits are USD 0.20 per million through 2026-08-31 and USD 0.30 from 2026-09-01.",
+        "No cache discount is assumed in the draft preflight."
+      ]
+    },
+    {
+      "id": "google-api-versions",
+      "provider": "google",
+      "url": "https://ai.google.dev/gemini-api/docs/api-versions",
+      "claims": [
+        "Stable v1 supports the Interactions API.",
+        "The draft endpoint is /v1/interactions; no required M6.6B-2 capability gap was found."
+      ]
+    },
+    {
+      "id": "google-interactions",
+      "provider": "google",
+      "url": "https://ai.google.dev/gemini-api/docs/interactions-overview",
+      "claims": [
+        "Interactions is GA and lists gemini-3.6-flash and gemini-3.5-flash-lite as supported.",
+        "Structured output is supported.",
+        "Interactions stores requests by default, so every draft call requires store=false and no previous_interaction_id."
+      ]
+    },
+    {
+      "id": "google-structured-output",
+      "provider": "google",
+      "url": "https://ai.google.dev/gemini-api/docs/structured-output",
+      "claims": [
+        "The documented JSON Schema subset includes object, array, string, boolean, properties, required, additionalProperties, items, and enum.",
+        "Syntactically valid structured output still requires application semantic validation.",
+        "Large or deeply nested schemas may be rejected, so exact schema acceptance remains a certification blocker."
+      ]
+    },
+    {
+      "id": "google-gemini-3.6-flash",
+      "provider": "google",
+      "url": "https://ai.google.dev/gemini-api/docs/models/gemini-3.6-flash",
+      "claims": [
+        "Requested model ID gemini-3.6-flash is currently documented as stable.",
+        "Context is 1,048,576 tokens, maximum output is 65,536 tokens, and structured output and thinking are supported.",
+        "Stable labeling alone does not satisfy the project's immutable qualification identity standard."
+      ]
+    },
+    {
+      "id": "google-latest-models",
+      "provider": "google",
+      "url": "https://ai.google.dev/gemini-api/docs/latest-model",
+      "claims": [
+        "gemini-3.6-flash should omit deprecated sampling parameters and supports thinking_level.",
+        "gemini-3.5-flash-lite recommends minimal thinking for extraction and classification.",
+        "The draft omits temperature, top_p, top_k, candidate_count, tools, and prior model turns."
+      ]
+    },
+    {
+      "id": "google-pricing",
+      "provider": "google",
+      "url": "https://ai.google.dev/gemini-api/docs/pricing",
+      "claims": [
+        "Gemini 3.6 Flash standard paid pricing is USD 0.75 input, USD 3.75 output including thinking, and USD 0.075 cached input per million through 2026-12-31; rates double on 2027-01-01.",
+        "Gemini 3.5 Flash-Lite standard paid pricing is USD 0.30 input, USD 2.50 output including thinking, and USD 0.03 cached input per million.",
+        "No cache discount, free tier, batch, flex, priority, grounding, or tool pricing is assumed."
+      ]
+    },
+    {
+      "id": "openai-data-controls",
+      "provider": "openai",
+      "url": "https://platform.openai.com/docs/models/default-usage-policies-by-endpoint",
+      "claims": [
+        "API data is not used for model training unless the customer explicitly opts in.",
+        "Default abuse-monitoring logs may retain customer content for up to 30 days.",
+        "Responses application state is retained by default, so the draft requires store=false and background=false.",
+        "Modified Abuse Monitoring and Zero Data Retention are approval- and account-specific controls that must be checked in the project control plane."
+      ]
+    },
+    {
+      "id": "anthropic-data-retention",
+      "provider": "anthropic",
+      "url": "https://platform.claude.com/docs/en/manage-claude/api-and-data-retention",
+      "claims": [
+        "Retained API data is not used for model training without express permission.",
+        "Messages and adaptive thinking are documented as ZDR-eligible for an eligible organization.",
+        "ZDR is organization-specific and requires account enablement; the effective workspace arrangement remains an account-control-plane blocker."
+      ]
+    },
+    {
+      "id": "google-zdr",
+      "provider": "google",
+      "url": "https://ai.google.dev/gemini-api/docs/zdr",
+      "claims": [
+        "Paid Services do not use prompts or responses to improve Google products.",
+        "Interactions storage is enabled by default and store=false is required to opt out of interaction-state retention.",
+        "The account's paid-project and logging configuration remains an account-control-plane blocker."
+      ]
+    }
+  ]
+}

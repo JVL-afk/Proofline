@@ -2,18 +2,20 @@
 
 ## Active milestone
 
-Milestone M6.6A Tournament II Qualification Infrastructure only. Read `GREENFIELD_ARCHITECTURE.md`,
-`docs/milestones/M6.5.md`, `docs/milestones/M6.6A.md`, and accepted ADR-0054 through ADR-0062 before
-changing the repository.
+Milestone M6.6B-2 pre-freeze candidate certification preparation only. Read
+`GREENFIELD_ARCHITECTURE.md`, `docs/milestones/M6.5.md`, `docs/milestones/M6.6A.md`,
+`docs/milestones/M6.6B-2.md`, and accepted ADR-0054 through ADR-0062 before changing the repository.
 
-M1-M6 remain authoritative and frozen. M6.6A may only implement synthetic task contracts, corpus,
-semantic evaluation, fake candidate/provider machinery, blinded review tooling, budgets, and reports.
-Live AI, real data/providers/senders/infrastructure, all routes, and production AI remain disabled.
-Normal CI remains credential-free/network-free.
+M1-M6.5 and the M6.6A commit remain authoritative and frozen. M6.6B-2 may only maintain inert draft
+candidate configurations, dated official-source evidence, visible-fixture projections, reviewer
+policy, and the future bounded certification-call plan. Live AI, credentials, hidden fixture access,
+real data/providers/senders/infrastructure, all routes, and production AI remain disabled. Normal CI
+remains credential-free/network-free.
 
-Do not execute M6.6B, implement M6.7, M7, or live behavior: real research/person/contact data,
-sender/domain/site, provider/webhook, cloud/IdP/KMS/secrets, delivery, publication, bulk/sequence,
-CRM/channel integration, autonomous follow-up, or autonomous agents.
+Do not execute Tournament II, freeze/approve a candidate or manifest, implement M6.7, M7, or live
+behavior: real research/person/contact data, sender/domain/site, provider/webhook,
+cloud/IdP/KMS/secrets, delivery, publication, bulk/sequence, CRM/channel integration, autonomous
+follow-up, or autonomous agents.
 
 ## Required behavior
 

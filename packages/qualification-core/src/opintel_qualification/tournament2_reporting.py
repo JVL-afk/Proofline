@@ -68,11 +68,14 @@ def validate_report(report: TournamentReport) -> TournamentReport:
     if report.canonical_mutation_count != 0:
         raise ValueError("Tournament II reports cannot record canonical mutations")
     for row in report.task_rows:
-        if row.disposition is RecommendationDisposition.SAFE_BUT_NO_MATERIAL_GAIN and not (
+        if row.disposition in {
+            RecommendationDisposition.SAFE_BUT_NO_MATERIAL_GAIN,
+            RecommendationDisposition.DETERMINISTIC_SUPERIOR,
+        } and not (
             row.deterministic_preferred
             and row.post_tournament_state is PostTournamentState.NO_ROUTE
         ):
-            raise ValueError("safe-without-gain must preserve deterministic preference")
+            raise ValueError("deterministic preference requires no-route state")
         if row.disposition is RecommendationDisposition.DISQUALIFIED and row.safety_passed:
             raise ValueError("disqualified row cannot claim a safety pass")
     return report

@@ -78,3 +78,8 @@ M6.6A adds no third-party dependency. Tournament II contracts, corpus, evaluator
 review artifacts, budgets, lifecycle, and reports use the Python standard library inside
 `qualification-core`. No live adapter, provider SDK, credential loader, network client, or route
 dependency is introduced.
+
+M6.6B-2 adds no third-party dependency. Its draft manifest validation, conservative serialized-shape
+token ceilings, dated price calculations, and certification plan use the Python standard library in
+`qualification-core`. It adds no provider SDK, transport, credential reader, hidden-corpus reader,
+or executable live boundary.

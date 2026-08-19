@@ -90,6 +90,7 @@ class HardGate(StrEnum):
 class RecommendationDisposition(StrEnum):
     QUALIFIED_WITH_MATERIAL_GAIN = "qualified_with_material_gain"
     SAFE_BUT_NO_MATERIAL_GAIN = "safe_but_no_material_gain"
+    DETERMINISTIC_SUPERIOR = "deterministic_superior"
     CONDITIONAL = "conditional"
     DISQUALIFIED = "disqualified"
 
