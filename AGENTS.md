@@ -2,10 +2,11 @@
 
 ## Active milestone
 
-Milestone M6.6B-3 controlled live candidate certification is closed. Read
+Milestone M6.6B-3R Gemini certification repair is closed. Read
 `GREENFIELD_ARCHITECTURE.md`, `docs/milestones/M6.5.md`, `docs/milestones/M6.6A.md`,
-`docs/milestones/M6.6B-2.md`, `docs/milestones/M6.6B-3.md`, and accepted ADR-0054 through ADR-0062
-before changing the repository.
+`docs/milestones/M6.6B-2.md`, `docs/milestones/M6.6B-3.md`,
+`docs/milestones/M6.6B-3R.md`, and accepted ADR-0054 through ADR-0062 before changing the
+repository.
 
 M1-M6.5, M6.6A, and the closed M6.6B-2 package remain authoritative and frozen. The M6.6B-3
 authorization was consumed after exactly five synthetic certification calls and must not be reused.
@@ -13,6 +14,11 @@ Its code and safe receipt may be maintained, but no additional live call is auth
 fixtures, real data, application routes, qualification scoring, candidate freeze/readiness,
 production AI, and all other live behavior remain disabled. Normal CI remains
 credential-free/network-free.
+
+The M6.6B-3R authorization was consumed after exactly two successful synthetic successor calls and
+must not be reused. Its code and safe receipt may be maintained, but no additional live call is
+authorized. No OpenAI or Anthropic call is authorized. The original M6.6B-3 evidence blob remains
+append-only and byte-identical.
 
 Do not execute Tournament II, freeze/approve a candidate or manifest, implement M6.7, M7, or other live
 behavior: real research/person/contact data, sender/domain/site, provider/webhook,

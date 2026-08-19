@@ -88,3 +88,7 @@ M6.6B-3 adds no third-party dependency. Its separately invoked one-shot certific
 the existing `qualification-live` standard-library HTTPS transport, now constrained by exact
 provider host allowlists and redirect checks. Deterministic CI uses fake transports and never reads
 credentials or opens external connections.
+
+M6.6B-3R adds no third-party dependency. The Gemini-only successor validator, one-shot repair
+authorization, redacted error diagnostics, and fake transport tests reuse the same standard-library
+boundary. Only the separately invoked repair script can open the exact Google HTTPS endpoint.

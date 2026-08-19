@@ -1,0 +1,169 @@
+{
+  "schema_version": "m6.6b3r.gemini-certification-repair@1",
+  "authorization": {
+    "authorization_id": "89ff591d-9cb7-5b2e-9973-fbd9092f0a57",
+    "state": "consumed",
+    "closure_commit": "c787e0961c31fefca87cd46f09fdef32497bcb73",
+    "predecessor_evidence_blob": "7b2d8c6ce1f162c42a5a6fb5b3643636cc332ea1",
+    "approved_revision_ids": [
+      "m6.6b3r.google-gemini-3.6-flash.controlled_wording@2",
+      "m6.6b3r.google-gemini-3.5-flash-lite.objective_extraction@2"
+    ],
+    "approved_revision_hashes": [
+      "765c611fde33be82c42f338e98dfa3d0985448680b32cebf53af92d2162c9f7b",
+      "ef69fb51c63672311dda446dbd1357d0c194f9a7bb4aa580d881f5ff6ab04206"
+    ],
+    "approved_call_ids": [
+      "gemini-repair-01-google-gemini-3.6-flash",
+      "gemini-repair-02-google-gemini-3.5-flash-lite"
+    ],
+    "approved_models": [
+      "gemini-3.6-flash",
+      "gemini-3.5-flash-lite"
+    ],
+    "approved_provider": "google",
+    "approved_endpoint": "https://generativelanguage.googleapis.com/v1/interactions",
+    "synthetic_only": true,
+    "certification_schema_only": true,
+    "hidden_fixture_access": false,
+    "tournament_execution": false,
+    "openai_calls_authorized": false,
+    "anthropic_calls_authorized": false,
+    "maximum_primary_calls": 2,
+    "budget_ceiling_micros": 250000,
+    "actor": "codex-on-behalf-of-project-owner",
+    "window_start": "2026-08-19 08:40:46.429628+00:00",
+    "window_end": "2026-08-19 08:55:46.429628+00:00",
+    "nonce_hash": "64c9b308ff3e8a21ce35bd8e6945720215ea55c88603dae320bfc5a84822ff6b",
+    "global_kill_switch_armed": true,
+    "budget_kill_switch_armed": true
+  },
+  "authorization_hash": "c326236f149d4c121a9962ebe2f4c72245b7b4cbea036e879d02174c078e4ae2",
+  "started_at": "2026-08-19 08:40:46.494397+00:00",
+  "completed_at": "2026-08-19 08:41:02.115930+00:00",
+  "pricing_date": "2026-08-19",
+  "reserved_maximum_cost_micros": 26578,
+  "actual_cost_micros": 864,
+  "calls_authorized": 2,
+  "calls_attempted": 2,
+  "calls_completed": 2,
+  "transport_attempts": 2,
+  "receipts": [
+    {
+      "revision_id": "m6.6b3r.google-gemini-3.6-flash.controlled_wording@2",
+      "predecessor_configuration_hash": "abaa2ade613f4dbacab2d9491b0d2e442c55cfa14b5ab61ca41ea3bc0debcee6",
+      "semantic_diff": [
+        "MOVE tool_choice='none' from top-level to generation_config.tool_choice",
+        "NO_CHANGE endpoint model input schema thinking storage output ceiling or task"
+      ],
+      "provider_receipt": {
+        "call_id": "gemini-repair-01-google-gemini-3.6-flash",
+        "provider": "google",
+        "deployment_key": "google-gemini-3.6-flash",
+        "requested_model": "gemini-3.6-flash",
+        "returned_model": "gemini-3.6-flash",
+        "endpoint": "https://generativelanguage.googleapis.com/v1/interactions",
+        "api_revision": "v1",
+        "task": "audit_wording",
+        "schema_family": "controlled_wording",
+        "schema_version": "m6.6b2.audit_wording.output@1",
+        "schema_hash": "87087f1eae1c9d9f11a29e739fdc12ae1a208917ccd847635869d7b918163039",
+        "configuration_hash": "fd40373329037b3159b0614f90c6c6f6bfb0abd0a1bf18da864325616cef1d56",
+        "request_hash": "1b08bf3bb76aa568e7c99c17d5337d008376058227495f1a92bf16e822194a17",
+        "output_hash": "356f3e66dfaa184fb23ff1b1f5bce39f806061a74bc030e338bd46bf9c917186",
+        "provider_request_id": null,
+        "response_id": null,
+        "response_status": "completed",
+        "finish_reason": "completed",
+        "http_status": 200,
+        "attempts": 1,
+        "state": "completed",
+        "schema_accepted": true,
+        "structured_output_valid": true,
+        "semantic_contract_valid": true,
+        "tools_observed": false,
+        "identity_outcome": "identity_conditional",
+        "input_tokens": 135,
+        "output_tokens": 147,
+        "reasoning_tokens": 0,
+        "cached_tokens": 0,
+        "total_tokens": 282,
+        "latency_ms": 14470,
+        "pricing_version": "google-gemini-3.6-flash-promo-2026-08-19",
+        "actual_cost_micros": 653,
+        "storage_setting": "store=false; background=false; no previous_interaction_id",
+        "safe_failure_code": null,
+        "lineage_metadata": [
+          "created=2026-08-19T08:41:01Z",
+          "updated=2026-08-19T08:41:01Z"
+        ]
+      },
+      "failure_diagnostic": null
+    },
+    {
+      "revision_id": "m6.6b3r.google-gemini-3.5-flash-lite.objective_extraction@2",
+      "predecessor_configuration_hash": "7f22e18d917d297ed7470fc9b7acc550e7686e364819a00aa318e3cf4b8a293a",
+      "semantic_diff": [
+        "MOVE tool_choice='none' from top-level to generation_config.tool_choice",
+        "NO_CHANGE endpoint model input schema thinking storage output ceiling or task"
+      ],
+      "provider_receipt": {
+        "call_id": "gemini-repair-02-google-gemini-3.5-flash-lite",
+        "provider": "google",
+        "deployment_key": "google-gemini-3.5-flash-lite",
+        "requested_model": "gemini-3.5-flash-lite",
+        "returned_model": "gemini-3.5-flash-lite",
+        "endpoint": "https://generativelanguage.googleapis.com/v1/interactions",
+        "api_revision": "v1",
+        "task": "first_party_statement_extraction",
+        "schema_family": "objective_extraction",
+        "schema_version": "m6.6b2.first_party_statement_extraction.output@1",
+        "schema_hash": "7631a8aa29851daa5e8180992564005285dd864e2e75d29b1c00fca322cfa86a",
+        "configuration_hash": "2dba56adf1ff53caebc27776042275a477917ef12c80e7604aeaf516131800fc",
+        "request_hash": "4663799a715bc47de753b4253a1929ed14ad2b176daac3633950e445448eec12",
+        "output_hash": "09b3eecfbc0082a0301101b8cfc17e69a4185daef733ce7b9848211f4975aae0",
+        "provider_request_id": null,
+        "response_id": null,
+        "response_status": "completed",
+        "finish_reason": "completed",
+        "http_status": 200,
+        "attempts": 1,
+        "state": "completed",
+        "schema_accepted": true,
+        "structured_output_valid": true,
+        "semantic_contract_valid": true,
+        "tools_observed": false,
+        "identity_outcome": "identity_conditional",
+        "input_tokens": 109,
+        "output_tokens": 71,
+        "reasoning_tokens": 0,
+        "cached_tokens": 0,
+        "total_tokens": 180,
+        "latency_ms": 1144,
+        "pricing_version": "google-gemini-3.5-flash-lite-2026-08-19",
+        "actual_cost_micros": 211,
+        "storage_setting": "store=false; background=false; no previous_interaction_id",
+        "safe_failure_code": null,
+        "lineage_metadata": [
+          "created=2026-08-19T08:41:02Z",
+          "updated=2026-08-19T08:41:02Z"
+        ]
+      },
+      "failure_diagnostic": null
+    }
+  ],
+  "deployment_outcomes": {
+    "google-gemini-3.6-flash": "certification_conditional",
+    "google-gemini-3.5-flash-lite": "certification_conditional"
+  },
+  "security_attestation": [
+    "Gemini successor revisions only",
+    "original M6.6B-3 evidence retained unchanged",
+    "synthetic certification fixtures only",
+    "hidden real OpenAI and Anthropic access disabled",
+    "stable v1 Google endpoint and exact host allowlist",
+    "tools search files functions code and computer disabled",
+    "raw request and response bodies not persisted",
+    "Tournament II routes and M6.7 untouched"
+  ]
+}

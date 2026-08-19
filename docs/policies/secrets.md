@@ -51,6 +51,11 @@ matching authorization headers; they are never printed, hashed, persisted, passe
 arguments, or exposed to another provider. The process retains only approved safe metadata and
 removes its credential bundle reference after execution. Normal CI never invokes this process.
 
+M6.6B-3R narrows the live boundary to the Gemini credential and exact Google host. The repair runner
+does not receive OpenAI or Anthropic credentials and cannot call either provider. Its ignored local
+output and committed safe receipt follow the same no-value, no-hash, no-body rules. Normal CI tests
+the repair through fake transports only.
+
 ## CI/CD
 
 - Prefer workload identity federation over long-lived repository secrets.
