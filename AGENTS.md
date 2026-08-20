@@ -2,15 +2,15 @@
 
 ## Active milestone
 
-Milestone M6.6B-8 verified three immutable primary reviews, froze the 41-case adjudication set,
-released only that blinded subset to `ADJUDICATOR_D`, and locked the valid returned adjudication
-review. Final qualification remains prohibited. Read
+Milestone M6.6B-9 closed Tournament II with task-specific dispositions, no qualified binding, no
+route activation, and no canonical mutation. M6.7 remains unstarted. Read
 `GREENFIELD_ARCHITECTURE.md`, `docs/milestones/M6.5.md`, `docs/milestones/M6.6A.md`,
 `docs/milestones/M6.6B-2.md`, `docs/milestones/M6.6B-3.md`,
 `docs/milestones/M6.6B-3R.md`, `docs/milestones/M6.6B-4.md`,
 `docs/milestones/M6.6B-4A.md`, `docs/milestones/M6.6B-4B.md`,
 `docs/milestones/M6.6B-5.md`, `docs/milestones/M6.6B-5R.md`,
-`docs/milestones/M6.6B-6.md`, `docs/milestones/M6.6B-8.md`, and accepted ADR-0054 through ADR-0066
+`docs/milestones/M6.6B-6.md`, `docs/milestones/M6.6B-8.md`,
+`docs/milestones/M6.6B-9.md`, and accepted ADR-0054 through ADR-0067
 before changing the repository.
 
 M1-M6.5, M6.6A, and the closed M6.6B-2 package remain authoritative and frozen. The M6.6B-3
@@ -32,10 +32,13 @@ must not be changed or rerun. The five Sonnet results are
 No binding qualified. M6.6B-5R completed 105 calls with zero retries and zero new safety failures,
 then sealed 20 packages. Its authorization is consumed and must not be reused. The normalized
 synthetic review renderings remain sealed except for the three locked primary releases and the exact
-41-case locked adjudication review bound by M6.6B-8. No final scoring, qualification disposition, candidate
-identity reveal, or mapping reveal is authorized. Case `51ee87af09907a072639e7b6` remains a separate
-final-disposition policy blocker. OpenAI, Google, further Sonnet calls, other tasks, further package
-release, routes, M6.7, real data, and configuration changes remain forbidden.
+41-case locked adjudication review bound by M6.6B-8. M6.6B-9 unblinded only after all human records
+were immutable. The three reasoning bindings are `SAFE_BUT_NO_MATERIAL_GAIN`; audit and outreach
+wording are `CONDITIONAL / NO_ROUTE`; the seven machine-stage disqualifications remain unchanged.
+No binding qualified. The rendered-wording/structured-CTA gap remains a future versioned validator
+requirement and must not be patched into or used to rescore historical evidence. OpenAI, Google,
+further Sonnet calls, further package release, routes, M6.7, real data, and configuration changes
+remain forbidden.
 
 Do not execute Tournament II, approve the manifest, implement M6.7, M7, or other live
 behavior: real research/person/contact data, sender/domain/site, provider/webhook,

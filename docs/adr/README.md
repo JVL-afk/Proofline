@@ -89,5 +89,6 @@ ADRs capture decisions that constrain implementation or are expensive to reverse
 | [ADR-0064](0064-synthetic-tournament-retention-and-reviewer-release.md) | Accepted | Synthetic retention approval and reviewer assignment at package release |
 | [ADR-0065](0065-synthetic-human-review-output-retention.md) | Accepted | Minimal synthetic rendered-output retention for sealed human review |
 | [ADR-0066](0066-adjudication-release-and-validator-gap.md) | Accepted | Blinded adjudication release and explicit validator-gap blocker |
+| [ADR-0067](0067-tournament-ii-final-disposition-and-no-route-closure.md) | Accepted | Task-specific Tournament II dispositions and no-route closure |
 
 The product/compliance decisions A-01 through A-20 are tracked separately in `docs/decisions/README.md` until they become ADRs.

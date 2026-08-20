@@ -1,0 +1,88 @@
+{
+  "binding_results": [
+    {"deployment_key":"openai-gpt-5.6-sol","disposition":"disqualified","post_tournament_state":"no_route","shadow_eligibility":"no_ai_shadow_candidate","task":"evidence_interpretation"},
+    {"deployment_key":"openai-gpt-5.6-sol","disposition":"disqualified","post_tournament_state":"no_route","shadow_eligibility":"no_ai_shadow_candidate","task":"contradiction_analysis"},
+    {"deployment_key":"openai-gpt-5.6-sol","disposition":"disqualified","post_tournament_state":"no_route","shadow_eligibility":"no_ai_shadow_candidate","task":"opportunity_reasoning"},
+    {"deployment_key":"google-gemini-3.6-flash","disposition":"disqualified","post_tournament_state":"no_route","shadow_eligibility":"no_ai_shadow_candidate","task":"audit_wording"},
+    {"deployment_key":"google-gemini-3.6-flash","disposition":"disqualified","post_tournament_state":"no_route","shadow_eligibility":"no_ai_shadow_candidate","task":"outreach_wording"},
+    {"deployment_key":"google-gemini-3.5-flash-lite","disposition":"disqualified","post_tournament_state":"no_route","shadow_eligibility":"no_ai_shadow_candidate","task":"reply_classification"},
+    {"deployment_key":"google-gemini-3.5-flash-lite","disposition":"disqualified","post_tournament_state":"no_route","shadow_eligibility":"no_ai_shadow_candidate","task":"first_party_statement_extraction"},
+    {"deployment_key":"anthropic-claude-sonnet-5","disposition":"safe_but_no_material_gain","post_tournament_state":"no_route","shadow_eligibility":"no_ai_shadow_candidate","task":"evidence_interpretation"},
+    {"deployment_key":"anthropic-claude-sonnet-5","disposition":"safe_but_no_material_gain","post_tournament_state":"no_route","shadow_eligibility":"no_ai_shadow_candidate","task":"contradiction_analysis"},
+    {"deployment_key":"anthropic-claude-sonnet-5","disposition":"safe_but_no_material_gain","post_tournament_state":"no_route","shadow_eligibility":"no_ai_shadow_candidate","task":"opportunity_reasoning"},
+    {"deployment_key":"anthropic-claude-sonnet-5","disposition":"conditional","post_tournament_state":"no_route","shadow_eligibility":"blocked_pending_validator_fix","task":"audit_wording"},
+    {"deployment_key":"anthropic-claude-sonnet-5","disposition":"conditional","post_tournament_state":"no_route","shadow_eligibility":"blocked_pending_validator_fix","task":"outreach_wording"}
+  ],
+  "canonical_mutation_count": 0,
+  "human_task_results": [
+    {
+      "adjudication_count":0,"comparison_cases":21,"disposition":"safe_but_no_material_gain",
+      "final_preferences":{"candidate":0,"deterministic":0,"tie":21},"identical_cases":21,
+      "mechanically_confirmed_semantic_defects":0,"original_cost_micros":194934,
+      "post_tournament_state":"no_route","primary_preferences":{"candidate":0,"deterministic":0,"tie":63},
+      "reason_codes":["NO_EVIDENCE_OF_MATERIAL_GAIN"],"recovery_cost_micros":127960,
+      "material_gain_checks":{"automated_safety_survived":true,"reviewer_preference_threshold":false,"usefulness_improvement":false,"no_trustworthiness_regression":true,"improvement_across_multiple_cases":false,"more_than_superficial_style":false,"no_unresolved_material_defect":true,"cost_latency_within_frozen_envelope":true},
+      "resolved_material_defects":0,"shadow_eligibility":"no_ai_shadow_candidate","task":"evidence_interpretation",
+      "trustworthiness_differences":{"counts":[[0,21]]},"usefulness_differences":{"counts":[[0,21]]}
+    },
+    {
+      "adjudication_count":0,"comparison_cases":21,"disposition":"safe_but_no_material_gain",
+      "final_preferences":{"candidate":0,"deterministic":0,"tie":21},"identical_cases":21,
+      "mechanically_confirmed_semantic_defects":0,"original_cost_micros":197338,
+      "post_tournament_state":"no_route","primary_preferences":{"candidate":0,"deterministic":0,"tie":63},
+      "reason_codes":["NO_EVIDENCE_OF_MATERIAL_GAIN"],"recovery_cost_micros":129598,
+      "material_gain_checks":{"automated_safety_survived":true,"reviewer_preference_threshold":false,"usefulness_improvement":false,"no_trustworthiness_regression":true,"improvement_across_multiple_cases":false,"more_than_superficial_style":false,"no_unresolved_material_defect":true,"cost_latency_within_frozen_envelope":true},
+      "resolved_material_defects":0,"shadow_eligibility":"no_ai_shadow_candidate","task":"contradiction_analysis",
+      "trustworthiness_differences":{"counts":[[0,21]]},"usefulness_differences":{"counts":[[0,21]]}
+    },
+    {
+      "adjudication_count":0,"comparison_cases":21,"disposition":"safe_but_no_material_gain",
+      "final_preferences":{"candidate":0,"deterministic":0,"tie":21},"identical_cases":21,
+      "mechanically_confirmed_semantic_defects":0,"original_cost_micros":195330,
+      "post_tournament_state":"no_route","primary_preferences":{"candidate":0,"deterministic":0,"tie":63},
+      "reason_codes":["NO_EVIDENCE_OF_MATERIAL_GAIN"],"recovery_cost_micros":131856,
+      "material_gain_checks":{"automated_safety_survived":true,"reviewer_preference_threshold":false,"usefulness_improvement":false,"no_trustworthiness_regression":true,"improvement_across_multiple_cases":false,"more_than_superficial_style":false,"no_unresolved_material_defect":true,"cost_latency_within_frozen_envelope":true},
+      "resolved_material_defects":0,"shadow_eligibility":"no_ai_shadow_candidate","task":"opportunity_reasoning",
+      "trustworthiness_differences":{"counts":[[0,21]]},"usefulness_differences":{"counts":[[0,21]]}
+    },
+    {
+      "adjudication_count":20,"comparison_cases":21,"disposition":"conditional",
+      "final_preferences":{"candidate":19,"deterministic":1,"tie":1},"identical_cases":1,
+      "mechanically_confirmed_semantic_defects":0,"original_cost_micros":150130,
+      "post_tournament_state":"no_route","primary_preferences":{"candidate":58,"deterministic":2,"tie":3},
+      "reason_codes":["RESOLVED_MATERIAL_DEFECT"],"recovery_cost_micros":100672,
+      "material_gain_checks":{"automated_safety_survived":true,"reviewer_preference_threshold":true,"usefulness_improvement":true,"no_trustworthiness_regression":true,"improvement_across_multiple_cases":true,"more_than_superficial_style":true,"no_unresolved_material_defect":false,"cost_latency_within_frozen_envelope":true},
+      "resolved_material_defects":1,"shadow_eligibility":"blocked_pending_validator_fix","task":"audit_wording",
+      "trustworthiness_differences":{"counts":[[-1,1],[0,1],[2,19]]},
+      "usefulness_differences":{"counts":[[0,2],[3,19]]}
+    },
+    {
+      "adjudication_count":21,"comparison_cases":21,"disposition":"conditional",
+      "final_preferences":{"candidate":20,"deterministic":1,"tie":0},"identical_cases":0,
+      "mechanically_confirmed_semantic_defects":1,"original_cost_micros":159500,
+      "post_tournament_state":"no_route","primary_preferences":{"candidate":55,"deterministic":8,"tie":0},
+      "reason_codes":["RENDERED_CTA_SEMANTIC_CONSISTENCY_GAP","RESOLVED_MATERIAL_DEFECT"],
+      "recovery_cost_micros":107374,"resolved_material_defects":2,
+      "material_gain_checks":{"automated_safety_survived":true,"reviewer_preference_threshold":true,"usefulness_improvement":true,"no_trustworthiness_regression":true,"improvement_across_multiple_cases":true,"more_than_superficial_style":true,"no_unresolved_material_defect":false,"cost_latency_within_frozen_envelope":true},
+      "shadow_eligibility":"blocked_pending_validator_fix","task":"outreach_wording",
+      "trustworthiness_differences":{"counts":[[-1,1],[0,1],[1,5],[2,13],[3,1]]},
+      "usefulness_differences":{"counts":[[2,7],[3,13],[4,1]]}
+    }
+  ],
+  "m66_complete": true,
+  "m67_started": false,
+  "original_calls": 194,
+  "original_cost_micros": 1145397,
+  "recovery_calls": 105,
+  "recovery_cost_micros": 597460,
+  "route_activation_count": 0,
+  "schema_version": "m6.6b9.final-tournament-report@1",
+  "unblinding": {
+    "assignment_mapping_sha256":"c5794d20e00a35a747d30cb7856864ad17ce3ce0a9e94d3431ac3b93985cfbe7",
+    "event_sha256":"bb2eda7215867cc58bc91ad2b3f43c2e4650c576dfdccf8d3f500ce0c6e3eecf",
+    "locked_scoring_inputs_sha256":"2e27f382374161ca91a4481c95b85cd2bcaff16f80ba99abed332d733b03f699",
+    "mapping":"VERSION A/B -> deterministic baseline / Claude Sonnet 5 per sealed assignment",
+    "policy_version":"m6.6b9.locked-inputs-before-identity@1",
+    "unblinded_at":"2026-08-20T13:53:12Z"
+  }
+}
