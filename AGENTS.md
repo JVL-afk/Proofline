@@ -2,9 +2,10 @@
 
 ## Active milestone
 
-Milestone M6.7B is closed at `c2e80baf7b1e42948ea9fecd1e495245f88b59e6`. M6.7C implements
-synthetic live-research gates and preflight only; every real-data permission remains
-`NOT_AUTHORIZED`. M6.6B-9
+Milestone M6.7C is closed at `8cc38bd19cc45ae3712d6a106b982e3faf75d431`. The final Phase 1
+authorization package is documentation only. Owner scope, workload ceilings and the USD 250/AI
+USD 0 caps are recorded, but retention remains provisional, exact sources/environment/roles remain
+unapproved, A-17 remains blocked, and every real-data permission remains `NOT_AUTHORIZED`. M6.6B-9
 remains closed with no qualified binding, no route activation, and no canonical mutation. Read
 `GREENFIELD_ARCHITECTURE.md`, `docs/milestones/M6.5.md`, `docs/milestones/M6.6A.md`,
 `docs/milestones/M6.6B-2.md`, `docs/milestones/M6.6B-3.md`,
@@ -13,7 +14,10 @@ remains closed with no qualified binding, no route activation, and no canonical 
 `docs/milestones/M6.6B-5.md`, `docs/milestones/M6.6B-5R.md`,
 `docs/milestones/M6.6B-6.md`, `docs/milestones/M6.6B-8.md`,
 `docs/milestones/M6.6B-9.md`, `docs/milestones/M6.7A.md`, `docs/milestones/M6.7B.md`,
-`docs/milestones/M6.7C.md`, `docs/readiness/m6.7b/README.md`, and accepted ADR-0054 through
+`docs/milestones/M6.7C.md`, `docs/readiness/m6.7b/README.md`,
+`docs/readiness/m6.7-authorization/README.md`,
+`docs/readiness/m6.7-authorization/owner-decisions.md`,
+`docs/readiness/m6.7-authorization/counsel-review-form.md`, and accepted ADR-0054 through
 ADR-0070 plus ADR-0072 and ADR-0074
 before changing the repository.
 
