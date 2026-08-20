@@ -76,6 +76,11 @@ immutable release.
 `REAL_BUSINESS_DISCOVERY` and `REAL_PUBLIC_RESEARCH` remain `NOT_AUTHORIZED`. No real source,
 business, person, contact, or external communication is approved by this proposal.
 
+M6.7C implements the policy schema and synthetic fail-closed tests under accepted ADR-0074. That
+implementation supplies no retention duration, exact source, real environment attestation, legal
+interpretation, accountable approval, or permission and therefore does not accept this ADR for live
+use.
+
 ## Validation
 
 Before authorization, synthetic preflight must prove that:

@@ -68,6 +68,10 @@ bounded context has no live research, person/contact, AI, sender, delivery, CRM,
 messaging, form, booking, or other external provider adapter. Synthetic CI is network-free, and no
 M6.6 provider credential or registry is available to M6.7A.
 
+M6.7C adds no credential loader or live transport. Environment and workload identities are modeled
+only as immutable evidence references. Fake transport tests receive no secret, and the future
+research-egress identity cannot contain AI, M6, sender, delivery, browser-session, or user secrets.
+
 ## CI/CD
 
 - Prefer workload identity federation over long-lived repository secrets.

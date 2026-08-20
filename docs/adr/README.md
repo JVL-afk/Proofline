@@ -94,6 +94,7 @@ ADRs capture decisions that constrain implementation or are expensive to reverse
 | [ADR-0069](0069-split-m67-real-data-permissions.md) | Accepted | Split real-data permissions with no inheritance |
 | [ADR-0070](0070-texas-hvac-shadow-cohort-selection.md) | Accepted | Frozen Texas Commercial HVAC cohort selection and anti-cherry-picking |
 | [ADR-0072](0072-synthetic-shadow-review-metrics-and-stops.md) | Accepted | Synthetic review, metrics, costs, and safety stops |
+| [ADR-0074](0074-m67c-live-research-gates.md) | Accepted | Synthetic live-research gates without live authority |
 
 ## Proposed ADRs
 

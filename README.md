@@ -4,7 +4,7 @@ Greenfield repository for the evidence-first business opportunity detection and 
 
 ## Current status
 
-The repository implements **Milestone M6.7A synthetic shadow-validation control plane**. M1-M6
+The repository implements **Milestone M6.7C synthetic live-research gate preflight**. M1-M6
 remain authoritative and frozen. M6 adds synthetic identity,
 proof-scoped verification, fixture-only eligibility, immutable suppression, exact plain-text send
 manifests, one-message human authorization, mock acceptance/receipts/replies, and first-party
@@ -12,7 +12,9 @@ re-analysis requests. M6.5 adds immutable prerequisite records, exact blocker di
 mandatory non-send `SHADOW_READY` boundary. Tournament II is closed with no qualified-with-gain
 binding and no route. M6.7A adds independent real-data permissions, frozen 24-slot synthetic cohort
 selection, deterministic M1-M5 projections, review/QA, metrics/costs/stops, and M6.8 evidence-package
-generation. Every real-data permission is `NOT_AUTHORIZED`; Phase 1 stops at
+generation. M6.7C adds explicit retention/source/environment/release/budget/role gates, bounded
+SQLite work leases, fake-only egress, deletion controls, and staged preflight. Every real-data
+permission is `NOT_AUTHORIZED`; Phase 1 stops at
 `CONTACT_PHASE_NOT_AUTHORIZED`. No real infrastructure, source, business, person, contact, AI route,
 sender, domain, provider, or delivery is active. Normal CI remains credential-free and network-free.
 
@@ -29,7 +31,7 @@ Open production source, retention, legal, workflow, and infrastructure decisions
 | `apps/` | Authenticated M6/M6.5 diagnostic web UI |
 | `services/` | Authenticated API plus separate M4 demo runtime |
 | `workers/` | Separate core, HTTP research, browser, and deterministic M2-M5 intelligence processes |
-| `packages/` | M0-M6.7A contracts/local adapters plus isolated M2.6 evaluation adapters |
+| `packages/` | M0-M6.7C contracts/local adapters plus isolated M2.6 evaluation adapters |
 | `infra/` | Infrastructure-as-code and local-platform boundaries |
 | `docs/adr/` | Durable architectural decisions |
 | `docs/decisions/` | Human-approval decision register from the accepted architecture |

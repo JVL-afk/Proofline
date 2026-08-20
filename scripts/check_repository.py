@@ -1,4 +1,4 @@
-"""Validate the dependency-free repository foundation through M6.7A.
+"""Validate the dependency-free repository foundation through M6.7C.
 
 This script intentionally uses only the Python standard library so a clean
 checkout can validate governance and structure before application dependencies
@@ -110,6 +110,7 @@ REQUIRED_FILES = (
     "docs/adr/0069-split-m67-real-data-permissions.md",
     "docs/adr/0070-texas-hvac-shadow-cohort-selection.md",
     "docs/adr/0072-synthetic-shadow-review-metrics-and-stops.md",
+    "docs/adr/0074-m67c-live-research-gates.md",
     "docs/adr/proposals/0071-real-shadow-source-privacy-retention.md",
     "docs/adr/proposals/0073-shadow-person-contact-evaluation.md",
     "docs/adr/README.md",
@@ -132,6 +133,8 @@ REQUIRED_FILES = (
     "docs/milestones/M6.6B-4A.md",
     "docs/milestones/M6.6B-4B.md",
     "docs/milestones/M6.7A.md",
+    "docs/milestones/M6.7B.md",
+    "docs/milestones/M6.7C.md",
     "docs/policies/environment-and-data.md",
     "docs/policies/secrets.md",
     "packages/m0-core/README.md",
@@ -277,7 +280,7 @@ def validate_workspace(errors: list[str]) -> None:
         "workers/intelligence",
     ]
     if members != expected_members:
-        errors.append("Python workspace members do not match the accepted M6.7A boundaries")
+        errors.append("Python workspace members do not match the accepted M6.7C boundaries")
 
 
 def validate_decision_register(errors: list[str]) -> None:

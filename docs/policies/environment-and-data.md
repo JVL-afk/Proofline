@@ -136,6 +136,20 @@
 - Capture/replay determinism applies only to identical immutable captures and identical
   configuration/code revisions. Changed source content is recorded as `SOURCE_DRIFT`.
 
+## M6.7C live-research gate data
+
+- M6.7C stores synthetic policy, source, environment, role, budget, release, lease, deletion,
+  cohort-gate, stage, and preflight records only. Exact real values remain unresolved approvals.
+- Retention durations have no defaults. A complete explicit data-class schedule is mandatory before
+  a live capture can pass the gate.
+- Synthetic captures may model incidental public person/contact content only as restricted immutable
+  source bytes. No person/contact domain record, index, search, M6 projection, ordinary-log value,
+  or metric exists.
+- A technical `READY_FOR_REAL_RESEARCH_AUTHORIZATION` result is not permission. All successor
+  permissions remain independently `NOT_AUTHORIZED` until a later accountable release.
+- CI uses fake resolver/HTTP scripts only and records zero real businesses, URLs, people, contacts,
+  providers, communications, delivery capabilities, and AI calls.
+
 ## Backups and recovery
 
 Backup scope, encryption, point-in-time recovery, RTO/RPO, region, retention, and restoration cadence remain blocked on A-04, A-08, and A-18. No infrastructure implementation should imply values for them.

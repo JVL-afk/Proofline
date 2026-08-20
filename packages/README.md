@@ -48,4 +48,8 @@ outcome/review/QA/metric/cost/stop records, and M6.8 evidence packages, plus `sh
 append-only SQLite and synthetic canonical projections. It has no real-data, person/contact, AI,
 network, M6 command, sender, or delivery interface.
 
+M6.7C extends those packages with immutable research-gate policies and a bounded SQLite work-lease
+adapter. Its only resolver/HTTP adapters are deterministic fakes; it adds no live permission,
+credential, person/contact, M6 command, AI route, provider, sender, or delivery capability.
+
 Shared packages must not become a miscellaneous dumping ground for business logic.

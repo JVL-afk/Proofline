@@ -107,3 +107,6 @@ M6.7A adds no third-party dependency. `shadow-core` reuses Pydantic and the exis
 contracts; `shadow-local` reuses locked SQLAlchemy. It has no discovery/research transport, browser,
 person/contact provider, AI SDK, model registry, sender, delivery, CRM, calendar, messaging, form,
 booking, or network dependency.
+
+M6.7C adds no direct dependency. Its gate layer reuses the existing M1 URL policy and locked
+SQLAlchemy/Pydantic workspace dependencies. The fake resolver and transport use no network library.

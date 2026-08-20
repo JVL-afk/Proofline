@@ -1,7 +1,7 @@
 [project]
 name = "opintel-shadow-core"
 version = "0.1.0"
-description = "M6.7A deterministic synthetic shadow-validation control plane"
+description = "M6.7A-C deterministic shadow-validation control and live-research gate contracts"
 requires-python = ">=3.13,<3.14"
 dependencies = [
   "opintel-audit-core",

@@ -1,7 +1,7 @@
 [project]
 name = "opintel-shadow-local"
 version = "0.1.0"
-description = "Local synthetic adapters for M6.7A shadow validation"
+description = "Local synthetic adapters for M6.7A-C shadow validation and gate preflight"
 requires-python = ">=3.13,<3.14"
 dependencies = [
   "opintel-shadow-core",

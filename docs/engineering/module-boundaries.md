@@ -53,8 +53,10 @@ Dependencies point inward. Adapters are composed at process entry points.
   qualification evidence, review artifacts, budgets, and reports. Its runner accepts deterministic
   fixture providers only and has no M6/M6.7 state, real-data, credential, route, or delivery port.
 - The M6.7 shadow-validation context consumes M1-M5 only through declared canonical contracts and
-  owns synthetic cohort/control-plane records. It has no M6 command, person/contact, AI, sender,
-  delivery, provider, or network port. Phase 1 terminates at `CONTACT_PHASE_NOT_AUTHORIZED`.
+  owns synthetic cohort/control-plane and M6.7C gate records. It has no M6 command,
+  person/contact, AI, sender, delivery, or provider port. M6.7C declares a future research-egress
+  gate but supplies only a fake transport and reuses M1 URL/DNS/SSRF controls; no live transport is
+  present. Phase 1 terminates at `CONTACT_PHASE_NOT_AUTHORIZED`.
 - Approval state can only be changed through the authorized application service.
 - No model output is executed as code or trusted configuration.
 
