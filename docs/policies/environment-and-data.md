@@ -121,6 +121,21 @@
 - SHADOW_READY is Confidential governance metadata when later used with real candidates, but M6.5
   tests use repository-owned synthetic identifiers only.
 
+## M6.7A synthetic shadow-validation data
+
+- M6.7A accepts repository-owned synthetic business fixtures and immutable synthetic source
+  snapshots only. Every successor real-data permission remains `NOT_AUTHORIZED`.
+- Source-snapshot references use a restricted storage class and may flag possible incidental public
+  personal/contact content. Phase 1 cannot index, project, search, log, or measure that content as a
+  person/contact artifact.
+- No retention duration is established. Live source approval, privacy controls, deletion, and
+  retention remain blocked on ADR-0071 and A-08.
+- Ordinary records contain synthetic IDs, hashes, enumerated states, measured review duration, safe
+  costs, and safety codes. No real company, person, contact value, page body, provider payload, or
+  communication is permitted.
+- Capture/replay determinism applies only to identical immutable captures and identical
+  configuration/code revisions. Changed source content is recorded as `SOURCE_DRIFT`.
+
 ## Backups and recovery
 
 Backup scope, encryption, point-in-time recovery, RTO/RPO, region, retention, and restoration cadence remain blocked on A-04, A-08, and A-18. No infrastructure implementation should imply values for them.

@@ -2,15 +2,16 @@
 
 ## Active milestone
 
-Milestone M6.6B-9 closed Tournament II with task-specific dispositions, no qualified binding, no
-route activation, and no canonical mutation. M6.7 remains unstarted. Read
+Milestone M6.7A implements only the synthetic Real-World Shadow Validation control plane. M6.6B-9
+remains closed with no qualified binding, no route activation, and no canonical mutation. Read
 `GREENFIELD_ARCHITECTURE.md`, `docs/milestones/M6.5.md`, `docs/milestones/M6.6A.md`,
 `docs/milestones/M6.6B-2.md`, `docs/milestones/M6.6B-3.md`,
 `docs/milestones/M6.6B-3R.md`, `docs/milestones/M6.6B-4.md`,
 `docs/milestones/M6.6B-4A.md`, `docs/milestones/M6.6B-4B.md`,
 `docs/milestones/M6.6B-5.md`, `docs/milestones/M6.6B-5R.md`,
 `docs/milestones/M6.6B-6.md`, `docs/milestones/M6.6B-8.md`,
-`docs/milestones/M6.6B-9.md`, and accepted ADR-0054 through ADR-0067
+`docs/milestones/M6.6B-9.md`, `docs/milestones/M6.7A.md`, and accepted ADR-0054 through ADR-0070
+plus ADR-0072
 before changing the repository.
 
 M1-M6.5, M6.6A, and the closed M6.6B-2 package remain authoritative and frozen. The M6.6B-3
@@ -37,10 +38,13 @@ were immutable. The three reasoning bindings are `SAFE_BUT_NO_MATERIAL_GAIN`; au
 wording are `CONDITIONAL / NO_ROUTE`; the seven machine-stage disqualifications remain unchanged.
 No binding qualified. The rendered-wording/structured-CTA gap remains a future versioned validator
 requirement and must not be patched into or used to rescore historical evidence. OpenAI, Google,
-further Sonnet calls, further package release, routes, M6.7, real data, and configuration changes
+further Sonnet calls, further package release, routes, M6.7 live data, and configuration changes
 remain forbidden.
 
-Do not execute Tournament II, approve the manifest, implement M6.7, M7, or other live
+M6.7A owns synthetic cohort/control-plane records only. All seven successor real-data permissions
+are `NOT_AUTHORIZED`; ADR-0071 and ADR-0073 are proposed, not accepted for live use. Do not execute
+Tournament II, approve the manifest, begin M6.7 live discovery/research, M6.7 person/contact phases,
+M6.8, M7, or other live
 behavior: real research/person/contact data, sender/domain/site, provider/webhook,
 cloud/IdP/KMS/secrets, delivery, publication, bulk/sequence, CRM/channel integration, autonomous
 follow-up, or autonomous agents.
@@ -53,7 +57,7 @@ follow-up, or autonomous agents.
 - Do not add executable infrastructure until its cloud/region/IaC/data decisions are accepted.
 - Do not commit secrets, personal data, live provider payloads, generated credentials, or local service data.
 - Use exact/locked dependencies and justify new direct dependencies under `docs/engineering/dependencies.md`.
-- Keep all behavior outside the exact non-executable M6.6B-4 freeze out unless the user advances the milestone.
+- Keep all behavior outside the synthetic M6.7A control plane out unless the user advances the milestone.
 
 ## Validation
 

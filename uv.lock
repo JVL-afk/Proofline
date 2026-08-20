@@ -28,6 +28,8 @@ members = [
     "opintel-research-core",
     "opintel-research-local",
     "opintel-research-worker",
+    "opintel-shadow-core",
+    "opintel-shadow-local",
     "opintel-worker",
     "opportunity-intelligence-platform",
 ]
@@ -706,6 +708,46 @@ requires-dist = [
     { name = "opintel-research-core", editable = "packages/research-core" },
     { name = "pydantic-settings", specifier = ">=2.10,<3" },
     { name = "sqlalchemy", specifier = ">=2.0,<2.1" },
+]
+
+[[package]]
+name = "opintel-shadow-core"
+version = "0.1.0"
+source = { editable = "packages/shadow-core" }
+dependencies = [
+    { name = "opintel-audit-core" },
+    { name = "opintel-demo-core" },
+    { name = "opintel-m0-core" },
+    { name = "opintel-opportunity-core" },
+    { name = "opintel-outreach-core" },
+    { name = "opintel-research-core" },
+    { name = "pydantic" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "opintel-audit-core", editable = "packages/audit-core" },
+    { name = "opintel-demo-core", editable = "packages/demo-core" },
+    { name = "opintel-m0-core", editable = "packages/m0-core" },
+    { name = "opintel-opportunity-core", editable = "packages/opportunity-core" },
+    { name = "opintel-outreach-core", editable = "packages/outreach-core" },
+    { name = "opintel-research-core", editable = "packages/research-core" },
+    { name = "pydantic", specifier = ">=2.13,<2.14" },
+]
+
+[[package]]
+name = "opintel-shadow-local"
+version = "0.1.0"
+source = { editable = "packages/shadow-local" }
+dependencies = [
+    { name = "opintel-shadow-core" },
+    { name = "sqlalchemy" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "opintel-shadow-core", editable = "packages/shadow-core" },
+    { name = "sqlalchemy", specifier = ">=2.0.48,<2.1" },
 ]
 
 [[package]]

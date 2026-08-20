@@ -90,5 +90,16 @@ ADRs capture decisions that constrain implementation or are expensive to reverse
 | [ADR-0065](0065-synthetic-human-review-output-retention.md) | Accepted | Minimal synthetic rendered-output retention for sealed human review |
 | [ADR-0066](0066-adjudication-release-and-validator-gap.md) | Accepted | Blinded adjudication release and explicit validator-gap blocker |
 | [ADR-0067](0067-tournament-ii-final-disposition-and-no-route-closure.md) | Accepted | Task-specific Tournament II dispositions and no-route closure |
+| [ADR-0068](0068-deterministic-m67-shadow-control-plane.md) | Accepted | Deterministic M6.7 bounded context and structural no-delivery boundary |
+| [ADR-0069](0069-split-m67-real-data-permissions.md) | Accepted | Split real-data permissions with no inheritance |
+| [ADR-0070](0070-texas-hvac-shadow-cohort-selection.md) | Accepted | Frozen Texas Commercial HVAC cohort selection and anti-cherry-picking |
+| [ADR-0072](0072-synthetic-shadow-review-metrics-and-stops.md) | Accepted | Synthetic review, metrics, costs, and safety stops |
+
+## Proposed ADRs
+
+| ADR | Status | Topic |
+|---|---|---|
+| [ADR-0071](proposals/0071-real-shadow-source-privacy-retention.md) | Proposed | Live source, privacy, and retention policy before real data |
+| [ADR-0073](proposals/0073-shadow-person-contact-evaluation.md) | Proposed | Later real person/contact shadow phases |
 
 The product/compliance decisions A-01 through A-20 are tracked separately in `docs/decisions/README.md` until they become ADRs.

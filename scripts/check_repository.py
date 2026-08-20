@@ -1,4 +1,4 @@
-"""Validate the dependency-free repository foundation through M6.6A.
+"""Validate the dependency-free repository foundation through M6.7A.
 
 This script intentionally uses only the Python standard library so a clean
 checkout can validate governance and structure before application dependencies
@@ -103,6 +103,15 @@ REQUIRED_FILES = (
     "docs/adr/0062-tournament-security-and-retention.md",
     "docs/adr/0063-tournament-ii-run-bound-identity.md",
     "docs/adr/0064-synthetic-tournament-retention-and-reviewer-release.md",
+    "docs/adr/0065-synthetic-human-review-output-retention.md",
+    "docs/adr/0066-adjudication-release-and-validator-gap.md",
+    "docs/adr/0067-tournament-ii-final-disposition-and-no-route-closure.md",
+    "docs/adr/0068-deterministic-m67-shadow-control-plane.md",
+    "docs/adr/0069-split-m67-real-data-permissions.md",
+    "docs/adr/0070-texas-hvac-shadow-cohort-selection.md",
+    "docs/adr/0072-synthetic-shadow-review-metrics-and-stops.md",
+    "docs/adr/proposals/0071-real-shadow-source-privacy-retention.md",
+    "docs/adr/proposals/0073-shadow-person-contact-evaluation.md",
     "docs/adr/README.md",
     "docs/decisions/README.md",
     "docs/engineering/dependencies.md",
@@ -122,6 +131,7 @@ REQUIRED_FILES = (
     "docs/milestones/M6.6B-4.md",
     "docs/milestones/M6.6B-4A.md",
     "docs/milestones/M6.6B-4B.md",
+    "docs/milestones/M6.7A.md",
     "docs/policies/environment-and-data.md",
     "docs/policies/secrets.md",
     "packages/m0-core/README.md",
@@ -162,6 +172,10 @@ REQUIRED_FILES = (
     "packages/qualification-local/pyproject.toml",
     "packages/qualification-live/README.md",
     "packages/qualification-live/pyproject.toml",
+    "packages/shadow-core/README.md",
+    "packages/shadow-core/pyproject.toml",
+    "packages/shadow-local/README.md",
+    "packages/shadow-local/pyproject.toml",
     "services/api/README.md",
     "services/api/pyproject.toml",
     "services/demo-runtime/README.md",
@@ -253,6 +267,8 @@ def validate_workspace(errors: list[str]) -> None:
         "packages/qualification-core",
         "packages/qualification-local",
         "packages/qualification-live",
+        "packages/shadow-core",
+        "packages/shadow-local",
         "services/api",
         "services/demo-runtime",
         "workers/core",
@@ -261,7 +277,7 @@ def validate_workspace(errors: list[str]) -> None:
         "workers/intelligence",
     ]
     if members != expected_members:
-        errors.append("Python workspace members do not match the accepted M6.6A boundaries")
+        errors.append("Python workspace members do not match the accepted M6.7A boundaries")
 
 
 def validate_decision_register(errors: list[str]) -> None:

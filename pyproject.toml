@@ -38,6 +38,8 @@ members = [
   "packages/qualification-core",
   "packages/qualification-local",
   "packages/qualification-live",
+  "packages/shadow-core",
+  "packages/shadow-local",
   "services/api",
   "services/demo-runtime",
   "workers/core",

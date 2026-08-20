@@ -63,6 +63,11 @@ and latency. Raw bodies and credentials remain memory-only. The credential-value
 local values in memory against tracked working-tree files and reachable Git blobs without placing a
 value in process arguments or output. Normal CI uses fake transports and no credential.
 
+M6.7A requires no secret and defines no credential-loading interface. The shadow-validation
+bounded context has no live research, person/contact, AI, sender, delivery, CRM, calendar,
+messaging, form, booking, or other external provider adapter. Synthetic CI is network-free, and no
+M6.6 provider credential or registry is available to M6.7A.
+
 ## CI/CD
 
 - Prefer workload identity federation over long-lived repository secrets.

@@ -52,6 +52,9 @@ Dependencies point inward. Adapters are composed at process entry points.
 - The M6.6A qualification context owns only synthetic task projections, evaluation artifacts,
   qualification evidence, review artifacts, budgets, and reports. Its runner accepts deterministic
   fixture providers only and has no M6/M6.7 state, real-data, credential, route, or delivery port.
+- The M6.7 shadow-validation context consumes M1-M5 only through declared canonical contracts and
+  owns synthetic cohort/control-plane records. It has no M6 command, person/contact, AI, sender,
+  delivery, provider, or network port. Phase 1 terminates at `CONTACT_PHASE_NOT_AUTHORIZED`.
 - Approval state can only be changed through the authorized application service.
 - No model output is executed as code or trusted configuration.
 

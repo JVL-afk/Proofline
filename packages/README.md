@@ -43,4 +43,9 @@ gates, immutable qualification history, fake-only candidate/provider machinery, 
 hierarchical fixture budgets, and task-level reports. It adds no live transport, credential, route,
 real-data permission, M6/M6.7 authority, or delivery capability.
 
+M6.7A adds `shadow-core` for split permissions, frozen synthetic cohorts, read-only M1-M5 lineage,
+outcome/review/QA/metric/cost/stop records, and M6.8 evidence packages, plus `shadow-local` for
+append-only SQLite and synthetic canonical projections. It has no real-data, person/contact, AI,
+network, M6 command, sender, or delivery interface.
+
 Shared packages must not become a miscellaneous dumping ground for business logic.

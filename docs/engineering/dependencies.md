@@ -102,3 +102,8 @@ standard-library subprocess and Git plumbing without placing secret values in ar
 M6.6B-4B adds no third-party dependency and no live transport. Human-attested provider-control
 evidence, official-policy conclusions, and the immutable final readiness successor use the standard
 library. Deterministic tests perform no provider or external-network call.
+
+M6.7A adds no third-party dependency. `shadow-core` reuses Pydantic and the existing M0-M5 typed
+contracts; `shadow-local` reuses locked SQLAlchemy. It has no discovery/research transport, browser,
+person/contact provider, AI SDK, model registry, sender, delivery, CRM, calendar, messaging, form,
+booking, or network dependency.
