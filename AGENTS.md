@@ -2,16 +2,16 @@
 
 ## Active milestone
 
-Milestone M6.6B-5 closed the original Tournament II machine run as immutable evidence. M6.6B-5R
-completed one separate Anthropic-only human-review recovery and consumed its authorization.
-M6.6B-6 froze four distinct pseudonymous reviewer assignments and released exactly three primary
-offline workbooks; primary review is in progress. Read
+Milestone M6.6B-8 verified three immutable primary reviews, froze the 41-case adjudication set,
+released only that blinded subset to `ADJUDICATOR_D`, and locked the valid returned adjudication
+review. Final qualification remains prohibited. Read
 `GREENFIELD_ARCHITECTURE.md`, `docs/milestones/M6.5.md`, `docs/milestones/M6.6A.md`,
 `docs/milestones/M6.6B-2.md`, `docs/milestones/M6.6B-3.md`,
 `docs/milestones/M6.6B-3R.md`, `docs/milestones/M6.6B-4.md`,
 `docs/milestones/M6.6B-4A.md`, `docs/milestones/M6.6B-4B.md`,
 `docs/milestones/M6.6B-5.md`, `docs/milestones/M6.6B-5R.md`,
-`docs/milestones/M6.6B-6.md`, and accepted ADR-0054 through ADR-0065 before changing the repository.
+`docs/milestones/M6.6B-6.md`, `docs/milestones/M6.6B-8.md`, and accepted ADR-0054 through ADR-0066
+before changing the repository.
 
 M1-M6.5, M6.6A, and the closed M6.6B-2 package remain authoritative and frozen. The M6.6B-3
 authorization was consumed after exactly five synthetic certification calls and must not be reused.
@@ -31,12 +31,11 @@ must not be changed or rerun. The five Sonnet results are
 `AUTOMATED_SAFETY_PASS_HUMAN_REVIEW_UNAVAILABLE`; missing review text must not be reconstructed.
 No binding qualified. M6.6B-5R completed 105 calls with zero retries and zero new safety failures,
 then sealed 20 packages. Its authorization is consumed and must not be reused. The normalized
-synthetic review renderings remain sealed except for the exact three primary workbook releases
-bound by M6.6B-6. The three primaries each have 105 cases in `IN_PROGRESS`; no review is yet locked.
-The adjudicator package remains sealed and unreleased. No scoring, aggregation, disposition,
-candidate identity reveal, or mapping reveal is authorized. OpenAI, Google, further Sonnet calls,
-other tasks, further package release, routes, M6.7, real data, and configuration changes remain
-forbidden.
+synthetic review renderings remain sealed except for the three locked primary releases and the exact
+41-case locked adjudication review bound by M6.6B-8. No final scoring, qualification disposition, candidate
+identity reveal, or mapping reveal is authorized. Case `51ee87af09907a072639e7b6` remains a separate
+final-disposition policy blocker. OpenAI, Google, further Sonnet calls, other tasks, further package
+release, routes, M6.7, real data, and configuration changes remain forbidden.
 
 Do not execute Tournament II, approve the manifest, implement M6.7, M7, or other live
 behavior: real research/person/contact data, sender/domain/site, provider/webhook,
