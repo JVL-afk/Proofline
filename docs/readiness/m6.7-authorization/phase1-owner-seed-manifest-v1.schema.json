@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:opintel:m6.7:PHASE1_OWNER_SEED_MANIFEST_V1",
+  "title": "PHASE1_OWNER_SEED_MANIFEST_V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_type",
+    "schema_version",
+    "state",
+    "candidate_frame_maximum",
+    "source_policy_revision",
+    "created_at",
+    "created_by_subject_ref",
+    "candidates",
+    "manifest_hash"
+  ],
+  "properties": {
+    "record_type": {"const": "PHASE1_OWNER_SEED_MANIFEST_V1"},
+    "schema_version": {"const": "1.0.0"},
+    "state": {"enum": ["DRAFT", "FROZEN"]},
+    "candidate_frame_maximum": {"const": 100},
+    "source_policy_revision": {"type": "string", "minLength": 1},
+    "created_at": {"type": ["string", "null"], "format": "date-time"},
+    "created_by_subject_ref": {"type": ["string", "null"], "minLength": 1},
+    "seed_commitment": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+    "manifest_hash": {"type": ["string", "null"], "pattern": "^[a-f0-9]{64}$"},
+    "candidates": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "candidate_ref",
+          "public_business_name",
+          "identity_business_evidence_refs",
+          "texas_eligibility_evidence_refs",
+          "commercial_hvac_evidence_refs",
+          "b2b_relevance_evidence_refs",
+          "first_party_host_candidate",
+          "first_party_host_evidence_refs",
+          "organization_group_hint",
+          "lead_flow_unit_hint",
+          "provenance"
+        ],
+        "properties": {
+          "candidate_ref": {"type": "string", "minLength": 1},
+          "public_business_name": {"type": "string", "minLength": 1},
+          "public_business_aliases": {"type": "array", "items": {"type": "string"}},
+          "texas_city_or_service_area": {"type": ["string", "null"]},
+          "identity_business_evidence_refs": {"$ref": "#/$defs/evidenceRefs"},
+          "texas_eligibility_evidence_refs": {"$ref": "#/$defs/evidenceRefs"},
+          "commercial_hvac_evidence_refs": {"$ref": "#/$defs/evidenceRefs"},
+          "b2b_relevance_evidence_refs": {"$ref": "#/$defs/evidenceRefs"},
+          "first_party_host_candidate": {
+            "type": "string",
+            "pattern": "^(?=.{1,253}$)(?!.*\\.\\.)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])$"
+          },
+          "first_party_host_evidence_refs": {"$ref": "#/$defs/evidenceRefs"},
+          "organization_group_hint": {"type": "string", "minLength": 1},
+          "franchise_or_shared_brand_hint": {"type": ["string", "null"]},
+          "lead_flow_unit_hint": {"type": "string", "minLength": 1},
+          "distinct_lead_flow_evidence_refs": {"$ref": "#/$defs/optionalEvidenceRefs"},
+          "provenance": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["source_id", "source_artifact_ref", "source_locator", "observed_at", "artifact_hash"],
+              "properties": {
+                "source_id": {"type": "string", "minLength": 1},
+                "source_artifact_ref": {"type": "string", "minLength": 1},
+                "source_locator": {"type": "string", "minLength": 1},
+                "observed_at": {"type": "string", "format": "date-time"},
+                "artifact_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"state": {"const": "FROZEN"}}},
+      "then": {
+        "properties": {
+          "created_at": {"type": "string", "format": "date-time"},
+          "created_by_subject_ref": {"type": "string", "minLength": 1},
+          "seed_commitment": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+          "manifest_hash": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+          "candidates": {"minItems": 24}
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "evidenceRefs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"type": "string", "minLength": 1}
+    },
+    "optionalEvidenceRefs": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1}
+    }
+  }
+}

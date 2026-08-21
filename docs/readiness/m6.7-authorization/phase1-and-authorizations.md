@@ -16,6 +16,7 @@ vertical = COMMERCIAL_HVAC
 business_model = B2B_RELEVANT
 opportunity = INBOUND_LEAD_RESPONSE
 target_size = 24
+maximum_raw_candidate_frame = 100
 unit_of_analysis = ONE_DISTINCT_PUBLIC_BUSINESS_LEAD_FLOW
 public_first_party_web_presence_required = true
 cohort_policy_version = m6.7a.phase-1-cohort-policy@1
@@ -24,6 +25,7 @@ retention_policy_version = UNAPPROVED_A08_SUCCESSOR_REQUIRED
 franchise_shared_brand_cap = 1
 multi_location_split = ONLY_WHEN_DISTINCT_PUBLIC_LEAD_FLOW_IS_VERIFIED
 sampling = FROZEN_SEEDED_SYSTEMATIC_RANDOM_ORDER
+selection_algorithm = SEEDED_SHA256_SYSTEMATIC_ORDER_V1
 reserve_order = FROZEN_BEFORE_RESEARCH
 replacement = PREDETERMINED_COHORT_INELIGIBILITY_ONLY
 research_failure_replacement = false
@@ -32,6 +34,11 @@ no_supported_opportunity_replacement = false
 opportunity_or_yield_based_replacement = false
 execution = STAGED
 initial_execution_scope = SLOT_1_ONLY
+negative_outcome_qa_rate = 25_PERCENT
+negative_outcome_qa_minimum = 3
+small_batch_slots = SLOTS_2_TO_6
+small_batch_size = 5
+remainder_slots = SLOTS_7_TO_24
 automatic_slot_2 = false
 company_selection_performed_by_this_approval = false
 owner_approval_id = M67_PHASE1_OWNER_DECISIONS_2026-08-20_01
@@ -42,11 +49,9 @@ expires_at = UNRESOLVED
 configuration_hash = NOT_COMPUTABLE
 ```
 
-The exact candidate-frame maximum, source-manifest artifact/provenance, negative-QA sample,
-contiguous small-batch size and frozen seed generation value remain unresolved. They must be frozen
-before outcomes are visible. The owner-approved strategy requires a complete frozen cohort first,
-slot one only, mandatory pause, a contiguous small batch only after separate continuation approval,
-another mandatory pause, and the remainder only after another separate continuation approval.
+The owner has fixed the maximum frame, QA rate/minimum, small-batch size and staged slot ranges. The
+exact source-manifest artifact/provenance, QA seed, cohort seed and resulting order remain unresolved
+until their authorized freeze ceremonies. They must be frozen before relevant outcomes are visible.
 
 ## Draft 1 — REAL_BUSINESS_DISCOVERY
 
@@ -72,7 +77,9 @@ retention_policy_revision: UNRESOLVED
 source_policy_revision: UNRESOLVED
 environment_revision: UNRESOLVED
 cohort_scope_approval_id: UNRESOLVED
-seed_manifest_hash: UNRESOLVED
+seed_manifest_type: PHASE1_OWNER_SEED_MANIFEST_V1
+seed_manifest_maximum_candidates: 100
+seed_manifest_hash: UNRESOLVED_FUTURE_APPROVED_ARTIFACT
 workload_budget_revision: UNRESOLVED
 monetary_budget_revision: UNRESOLVED
 role_assignment_revision: UNRESOLVED
@@ -83,6 +90,10 @@ expires_at: UNRESOLVED
 accountable_approval_ids: []
 configuration_hash: NOT_COMPUTABLE
 ```
+
+The eventual release must use the already owner-approved 120 logical fetch, 360 attempt,
+36,000,000-byte, USD 250, and AI USD 0 ceilings. Those decisions do not satisfy the unresolved exact
+policy/environment/source/role bindings or sign the release.
 
 Signing this release permits only import/validation of the approved candidate manifest, exact-host
 discovery validation within its allocation, deterministic eligibility/deduplication/clustering, and

@@ -90,6 +90,19 @@ One person may hold compatible operational roles if approved, but the primary an
 opportunity reviewers must always be different humans. Legal, privacy and security conclusions
 remain distinct evidence even when a small team assigns multiple roles.
 
+### Exact subject values the owner must supply
+
+For each assignment, supply `opaque_subject_id`, `role_pseudonym`, `assignment_approval_id`,
+`identity_provider_revision`, `effective_at`, and `expires_at`. The identifier must be the stable OIDC
+subject or an approved salted digest; do not put names, email addresses, telephone numbers, or
+credentials in repository records.
+
+The same project-owner subject may fill `PROJECT_OWNER`, `OPPORTUNITY_REVIEWER`, `INCIDENT_OWNER`,
+`PRIVACY_DATA_OWNER`, `KILL_SWITCH_OPERATOR`, and `SECURITY_ENVIRONMENT_OWNER` if separately
+attested for each role. Supply a different human subject for `INDEPENDENT_SECOND_REVIEWER`.
+`QUALIFIED_LEGAL_REVIEWER` must not be the project-owner subject; it may equal the independent
+second-reviewer subject only if the person has a separate qualification/credential record.
+
 ### Minimum human separation
 
 Subject to competence and separate attestations, the project owner may also hold

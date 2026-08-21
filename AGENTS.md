@@ -17,6 +17,9 @@ remains closed with no qualified binding, no route activation, and no canonical 
 `docs/milestones/M6.7C.md`, `docs/readiness/m6.7b/README.md`,
 `docs/readiness/m6.7-authorization/README.md`,
 `docs/readiness/m6.7-authorization/owner-decisions.md`,
+`docs/readiness/m6.7-authorization/owner-decisions-successor-2026-08-21.md`,
+`docs/readiness/m6.7-authorization/seed-and-selection-policy.md`,
+`docs/readiness/m6.7-authorization/discovery-readiness.md`,
 `docs/readiness/m6.7-authorization/counsel-review-form.md`, and accepted ADR-0054 through
 ADR-0070 plus ADR-0072 and ADR-0074
 before changing the repository.
@@ -56,6 +59,12 @@ M6.8, M7, or other live
 behavior: real research/person/contact data, sender/domain/site, provider/webhook,
 cloud/IdP/KMS/secrets, delivery, publication, bulk/sequence, CRM/channel integration, autonomous
 follow-up, or autonomous agents.
+
+The owner has frozen a maximum 100-candidate business-only seed frame, seeded 24-company selection,
+25%/minimum-three negative QA, and the slot 1 → pause → slots 2-6 → pause → slots 7-24 sequence.
+These values grant no source, environment, person/contact, discovery, research, or delivery authority.
+The AWS files under `infra/aws/phase1/` are non-executable specifications only; intended configuration
+is not actual infrastructure evidence.
 
 ## Required behavior
 

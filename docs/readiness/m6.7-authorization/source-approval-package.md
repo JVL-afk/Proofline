@@ -29,6 +29,11 @@ Exact first-party domains cannot be listed before discovery is authorized and th
 accepted. Each domain must become its own immutable source entry; wildcards such as `*.example.com`
 are prohibited. Redirect targets require their own exact source approval or are rejected.
 
+The seed artifact must validate against `phase1-owner-seed-manifest-v1.schema.json`, contain no more
+than 100 business-level candidates, preserve provenance for every eligibility claim, and contain no
+person/contact or opportunity-selection field. Its exact artifact/hash, construction provenance,
+storage/reuse terms, accountable approvals, effective time and expiry remain unapproved.
+
 ## Optional government validation sources — disabled pending exact review
 
 | Proposed source ID | Kind | Exact official entry point | Intended purpose | Current state | Required review before any system access |

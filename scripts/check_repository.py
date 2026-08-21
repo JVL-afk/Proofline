@@ -13,6 +13,8 @@ import sys
 import tomllib
 from pathlib import Path
 
+from validate_m67_authorization_package import AuthorizationPackageError, validate_package
+
 ROOT = Path(__file__).resolve().parents[1]
 
 REQUIRED_FILES = (
@@ -135,6 +137,16 @@ REQUIRED_FILES = (
     "docs/milestones/M6.7A.md",
     "docs/milestones/M6.7B.md",
     "docs/milestones/M6.7C.md",
+    "docs/readiness/m6.7-authorization/README.md",
+    "docs/readiness/m6.7-authorization/discovery-readiness.md",
+    "docs/readiness/m6.7-authorization/owner-control-package.json",
+    "docs/readiness/m6.7-authorization/owner-decisions-successor-2026-08-21.md",
+    "docs/readiness/m6.7-authorization/phase1-owner-seed-manifest-v1.schema.json",
+    "docs/readiness/m6.7-authorization/phase1-owner-seed-manifest-v1.template.json",
+    "docs/readiness/m6.7-authorization/seed-and-selection-policy.md",
+    "infra/aws/phase1/README.md",
+    "infra/aws/phase1/deployed-environment-evidence.template.json",
+    "infra/aws/phase1/provisioning-spec.json",
     "docs/policies/environment-and-data.md",
     "docs/policies/secrets.md",
     "packages/m0-core/README.md",
@@ -345,6 +357,20 @@ def validate_markdown_fences(errors: list[str]) -> None:
             errors.append(f"{path.relative_to(ROOT)} has an unbalanced fenced code block")
 
 
+def validate_m67_authorization_preparation(errors: list[str]) -> None:
+    try:
+        report = validate_package()
+    except (AuthorizationPackageError, json.JSONDecodeError) as error:
+        errors.append(f"M6.7 authorization package is invalid: {error}")
+        return
+    if report["state"] != "NOT_READY_TO_AUTHORIZE_DISCOVERY":
+        errors.append("M6.7 preparation must remain NOT_READY_TO_AUTHORIZE_DISCOVERY")
+    if report["real_business_discovery"] != "NOT_AUTHORIZED":
+        errors.append("M6.7 preparation must not authorize discovery")
+    if report["real_public_research"] != "NOT_AUTHORIZED":
+        errors.append("M6.7 preparation must not authorize research")
+
+
 def main() -> int:
     errors: list[str] = []
     validate_required_files(errors)
@@ -355,6 +381,7 @@ def main() -> int:
         validate_example_environment(errors)
         validate_local_secret_exclusions(errors)
         validate_markdown_fences(errors)
+        validate_m67_authorization_preparation(errors)
 
     if errors:
         print("Repository foundation validation failed:", file=sys.stderr)

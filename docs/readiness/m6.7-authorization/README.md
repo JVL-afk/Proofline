@@ -71,3 +71,8 @@ execution is a separate post-research-authorization run gate rather than a real-
 - `phase1-and-authorizations.md`: cohort approval plus three independent draft authorization records.
 - `owner-decisions.md`: explicit scope, workload, budget, retention preference and dependency graph.
 - `counsel-review-form.md`: concise 14-question A-17 response artifact; no legal conclusions.
+- `owner-decisions-successor-2026-08-21.md`: frozen 100-frame, QA and staged-batch decisions.
+- `owner-control-package.json`: machine-readable exact owner decisions and disabled permissions.
+- `phase1-owner-seed-manifest-v1.schema.json`: business-only seed-manifest contract.
+- `seed-and-selection-policy.md`: eligibility, deduplication, seed, ordering and replacement rules.
+- `discovery-readiness.md`: unsigned discovery-release scope and current exact blockers.

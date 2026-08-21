@@ -1,0 +1,12 @@
+{
+  "record_type": "PHASE1_OWNER_SEED_MANIFEST_V1",
+  "schema_version": "1.0.0",
+  "state": "DRAFT",
+  "candidate_frame_maximum": 100,
+  "source_policy_revision": "UNRESOLVED_A09_SUCCESSOR_REQUIRED",
+  "created_at": null,
+  "created_by_subject_ref": null,
+  "seed_commitment": null,
+  "candidates": [],
+  "manifest_hash": null
+}

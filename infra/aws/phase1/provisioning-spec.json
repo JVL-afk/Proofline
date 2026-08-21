@@ -1,0 +1,53 @@
+{
+  "record_type": "M67_PHASE1_AWS_PROVISIONING_SPEC",
+  "version": "2026-08-21.1",
+  "status": "NON_EXECUTABLE_SPECIFICATION",
+  "executable_iac_present": false,
+  "deployment_performed": false,
+  "provider": "AWS",
+  "region": "us-east-2",
+  "account": {"dedicated": true, "account_id": null},
+  "network": {
+    "private_vpc": true,
+    "private_subnets": true,
+    "public_application_ingress": false,
+    "dedicated_restricted_research_egress": true,
+    "exact_source_allowlisting_required": true
+  },
+  "compute": {
+    "service": "ECS_FARGATE",
+    "worker_concurrency": 1,
+    "immutable_image_digest_required": true
+  },
+  "database": {
+    "service": "RDS_POSTGRESQL",
+    "private": true,
+    "encrypted": true,
+    "customer_managed_kms_key": true
+  },
+  "captures": {
+    "service": "S3",
+    "private": true,
+    "versioned": true,
+    "public_access_blocked": true,
+    "customer_managed_kms_key": true
+  },
+  "identity": {
+    "human": "IAM_IDENTITY_CENTER_OIDC_MFA",
+    "operator_sessions": "NAMED_SHORT_LIVED",
+    "workload": "IAM_ROLES"
+  },
+  "audit": {
+    "cloudtrail_required": true,
+    "log_and_alarm_destinations_require_actual_evidence": true
+  },
+  "backups": {
+    "approved_configuration_required": true,
+    "maximum_overhang_days": 30
+  },
+  "forbidden_credentials": ["AI", "BROWSER", "M6", "SENDER", "DELIVERY"],
+  "kill_switch_integration_required": true,
+  "remote_state_backend": "UNRESOLVED",
+  "iac_tool": "UNRESOLVED",
+  "configuration_hash": null
+}

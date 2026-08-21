@@ -1,0 +1,72 @@
+{
+  "record_type": "M67_PHASE1_OWNER_CONTROL_PACKAGE",
+  "version": "2026-08-21.1",
+  "predecessor_commit": "519b92d02461c14ecaecfa522997abfcd7185622",
+  "scope": {
+    "candidate_frame_maximum": 100,
+    "cohort_target": 24,
+    "jurisdiction": "US-TX",
+    "vertical": "COMMERCIAL_HVAC",
+    "business_context": "B2B",
+    "opportunity": "INBOUND_LEAD_RESPONSE"
+  },
+  "selection": {
+    "eligibility_and_deduplication_before_selection": true,
+    "algorithm": "SEEDED_SHA256_SYSTEMATIC_ORDER_V1",
+    "seed_frozen_before_opportunity_research": true,
+    "complete_order_and_reserves_frozen": true,
+    "outcome_based_replacement_allowed": false
+  },
+  "quality_assurance": {
+    "negative_outcome_rate_basis_points": 2500,
+    "minimum_negative_outcome_cases": 3,
+    "seeded": true
+  },
+  "stages": [
+    {
+      "stage": "SLOT_1",
+      "slots": [1],
+      "continuation_approval_required_before": false,
+      "mandatory_pause_after": true
+    },
+    {
+      "stage": "SLOTS_2_TO_6",
+      "slots": [2, 3, 4, 5, 6],
+      "continuation_approval_required_before": true,
+      "mandatory_pause_after": true
+    },
+    {
+      "stage": "SLOTS_7_TO_24",
+      "slots": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+      "continuation_approval_required_before": true,
+      "mandatory_pause_after": true
+    }
+  ],
+  "workload_and_budget": {
+    "logical_fetch_cap": 120,
+    "attempt_cap": 360,
+    "aggregate_response_byte_cap": 36000000,
+    "monetary_hard_cap_usd": "250.00",
+    "ai_budget_usd": "0.00"
+  },
+  "authority": {
+    "browser": "DISABLED",
+    "person_contact_processing": "NOT_AUTHORIZED",
+    "delivery": "UNAVAILABLE",
+    "a08": "OWNER_PROVISIONALLY_APPROVED_PENDING_LEGAL_REVIEW",
+    "a09": "EXACT_SOURCE_INSTANCES_NOT_APPROVED",
+    "a17": "BLOCKED_PENDING_QUALIFIED_LEGAL_REVIEW",
+    "real_business_discovery": "NOT_AUTHORIZED",
+    "real_public_research": "NOT_AUTHORIZED"
+  },
+  "role_slots": {
+    "PROJECT_OWNER": null,
+    "OPPORTUNITY_REVIEWER": null,
+    "INDEPENDENT_SECOND_REVIEWER": null,
+    "INCIDENT_OWNER": null,
+    "PRIVACY_DATA_OWNER": null,
+    "KILL_SWITCH_OPERATOR": null,
+    "SECURITY_ENVIRONMENT_OWNER": null,
+    "QUALIFIED_LEGAL_REVIEWER": null
+  }
+}
