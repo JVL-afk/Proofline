@@ -194,6 +194,7 @@ REQUIRED_FILES = (
     "docs/readiness/m6.7-deployment/README.md",
     "docs/readiness/m6.7-deployment/terraform-plan-review.template.json",
     "docs/readiness/m6.7-deployment/bootstrap-deployed-evidence-2026-08-21.json",
+    "docs/readiness/m6.7-deployment/worker-registry-plan-review-2026-08-21.json",
     "docs/readiness/m6.7-deployment/terraform-apply-approval.template.json",
     "docs/readiness/m6.7-deployment/consolidated-environment-acceptance.template.json",
     "docs/readiness/m6.7-deployment/approval-interactions.md",

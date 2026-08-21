@@ -8,7 +8,9 @@ state boundary, state plan/apply roles, and CloudTrail state-object audit contro
 `docs/readiness/m6.7-deployment/bootstrap-deployed-evidence-2026-08-21.json`. Bootstrap state was
 migrated to `m67/bootstrap/terraform.tfstate`; obsolete local resource state was removed. The exact
 worker ECR repository does not exist, so no worker build or Phase 1 application plan may proceed
-until a separate registry-only plan is approved and applied. All live-data permissions remain
+until the exact registry-only plan recorded in
+`docs/readiness/m6.7-deployment/worker-registry-plan-review-2026-08-21.json` is approved and applied.
+That plan is not authorized merely because it is ready. All live-data permissions remain
 `NOT_AUTHORIZED`.
 
 M6.7 owner approvals are consolidated: discretionary defaults are recorded once, three actor

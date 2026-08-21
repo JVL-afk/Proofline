@@ -1,0 +1,81 @@
+{
+  "record_type": "M67_WORKER_REGISTRY_TERRAFORM_PLAN_REVIEW",
+  "version": "2026-08-21.1",
+  "state": "READY_FOR_WORKER_REGISTRY_APPLY_AUTHORIZATION",
+  "required_owner_event": "APPROVE_WORKER_REGISTRY_APPLY",
+  "target": {
+    "account_id": "785072247535",
+    "partition": "aws",
+    "region": "us-east-2"
+  },
+  "source_git_commit": "03e818c789ca1d8d4f4cca5cf4d60f2e7ab5dd38",
+  "versions": {
+    "terraform": "1.15.9",
+    "aws_provider": "6.53.0"
+  },
+  "hashes": {
+    "saved_plan_sha256": "03781a266da268b8dbed7dac08e85acb85b0f2116342e81dce49f533d0933aad",
+    "plan_json_sha256": "4bf85b01521f44f21f8405a26f9f59b49a95d868dc5282a71209e08ebf6d1189",
+    "configuration_sha256": "2b4010f4d983f2a2e1ee3efb07df8d86145096b76650139d78edfbb3d2bf5355",
+    "provider_lock_sha256": "b0f95a645ac5a5db24949e074c48758bb1a1f867ef73148e174a1e1ae1e76c9f"
+  },
+  "changes": {
+    "create": 6,
+    "change": 0,
+    "replace": 0,
+    "destroy": 0
+  },
+  "managed_resources": [
+    "aws_ecr_lifecycle_policy.worker",
+    "aws_ecr_repository.worker",
+    "aws_iam_role.publisher",
+    "aws_iam_role_policy.publisher",
+    "aws_kms_alias.registry",
+    "aws_kms_key.registry"
+  ],
+  "security_review": {
+    "repository_name": "m67-phase1-worker",
+    "private_repository": true,
+    "image_tags": "IMMUTABLE",
+    "scan_on_push": true,
+    "encryption": "CUSTOMER_MANAGED_KMS",
+    "kms_rotation": true,
+    "kms_deletion_window_days": 30,
+    "force_delete": false,
+    "untagged_image_expiry_days": 7,
+    "tagged_immutable_images_expire": false,
+    "publisher_session_maximum_seconds": 3600,
+    "publisher_repository_scope": "EXACT_M67_PHASE1_WORKER",
+    "authorization_token_wildcard_reason": "ECR_GET_AUTHORIZATION_TOKEN_DOES_NOT_SUPPORT_RESOURCE_LEVEL_PERMISSION",
+    "workload_infrastructure_present": false,
+    "ai_browser_sender_delivery_or_business_access_infrastructure_present": false
+  },
+  "cost": {
+    "conservative_registry_monthly_allowance_usd": "2.00",
+    "bootstrap_monthly_allowance_usd": "2.00",
+    "combined_bootstrap_and_registry_allowance_usd": "4.00",
+    "phase1_total_hard_ceiling_usd": "250.00",
+    "within_ceiling": true,
+    "fixed_component": "ONE_CUSTOMER_MANAGED_KMS_KEY_AT_USD_1_PER_MONTH_PRORATED",
+    "usage_components": [
+      "PRIVATE_ECR_STORAGE_AT_USD_0.10_PER_GB_MONTH",
+      "IMAGE_SCAN_AND_REQUEST_USAGE_IF_BILLABLE",
+      "CROSS_REGION_OR_INTERNET_TRANSFER_IF_ANY"
+    ],
+    "same_region_ecr_to_fargate_transfer": "USD_0_PER_GB",
+    "phase1_application_cost": "NOT_YET_PLANNED_OR_ESTIMATED",
+    "estimate_is_apply_authority": false
+  },
+  "warnings": [
+    "CURRENT_ADMINISTRATIVE_SSO_ROLE_IS_BOOTSTRAP_PUBLISHER_TRUST_ONLY_NOT_FINAL_A07_EVIDENCE",
+    "WORKER_IMAGE_BUILD_PUSH_AND_DIGEST_DO_NOT_EXIST_UNTIL_SEPARATE_REGISTRY_APPLY",
+    "REGISTRY_APPLY_NOT_AUTHORIZED"
+  ],
+  "live_permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "PHASE1_APPLICATION_APPLY": "NOT_AUTHORIZED"
+  },
+  "owner_signature": null
+}
