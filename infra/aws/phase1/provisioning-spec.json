@@ -1,8 +1,8 @@
 {
   "record_type": "M67_PHASE1_AWS_PROVISIONING_SPEC",
   "version": "2026-08-21.1",
-  "status": "NON_EXECUTABLE_SPECIFICATION",
-  "executable_iac_present": false,
+  "status": "REVIEWABLE_TERRAFORM_PACKAGE_NOT_INITIALIZED",
+  "executable_iac_present": true,
   "deployment_performed": false,
   "provider": "AWS",
   "region": "us-east-2",
@@ -47,7 +47,7 @@
   },
   "forbidden_credentials": ["AI", "BROWSER", "M6", "SENDER", "DELIVERY"],
   "kill_switch_integration_required": true,
-  "remote_state_backend": "UNRESOLVED",
-  "iac_tool": "UNRESOLVED",
+  "remote_state_backend": "S3_KMS_USE_LOCKFILE_PARTIAL_CONFIGURATION_REQUIRED",
+  "iac_tool": "TERRAFORM_1_15",
   "configuration_hash": null
 }

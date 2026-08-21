@@ -1,0 +1,6 @@
+bucket       = "REPLACE_WITH_APPROVED_STATE_BUCKET"
+key          = "m67/phase1/terraform.tfstate"
+region       = "REPLACE_WITH_APPROVED_STATE_BUCKET_REGION"
+encrypt      = true
+kms_key_id   = "REPLACE_WITH_APPROVED_STATE_KMS_KEY_ARN"
+use_lockfile = true

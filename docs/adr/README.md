@@ -95,6 +95,7 @@ ADRs capture decisions that constrain implementation or are expensive to reverse
 | [ADR-0070](0070-texas-hvac-shadow-cohort-selection.md) | Accepted | Frozen Texas Commercial HVAC cohort selection and anti-cherry-picking |
 | [ADR-0072](0072-synthetic-shadow-review-metrics-and-stops.md) | Accepted | Synthetic review, metrics, costs, and safety stops |
 | [ADR-0074](0074-m67c-live-research-gates.md) | Accepted | Synthetic live-research gates without live authority |
+| [ADR-0075](0075-terraform-phase1-provisioning-and-state.md) | Accepted | Terraform Phase 1 provisioning with protected S3/KMS remote state and separate plan/apply approval |
 
 ## Proposed ADRs
 

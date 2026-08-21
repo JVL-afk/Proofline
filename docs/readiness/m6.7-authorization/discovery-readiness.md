@@ -28,7 +28,8 @@ forms, booking, chat, mailboxes, communication, M6 activity, delivery, or AI.
 
 - Actual deployed AWS environment and evidence; intended configuration is insufficient.
 - Accepted A-03 tenancy, A-04 cloud/region/data, and A-07 identity/governance records.
-- Approved IaC tool and remote-state/backend policy before executable provisioning exists.
+- Actual protected state bucket/KMS key, approved partial backend configuration, and reviewed plan
+  under accepted ADR-0075. The cross-platform AWS provider lock is complete but grants no authority.
 - Opaque stable subject assignments for all eight operational roles.
 - Final A-08 approval after qualified legal/privacy review.
 - Exact A-09 approval for the provenance-backed seed artifact and every discovery host instance.

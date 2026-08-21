@@ -1,12 +1,14 @@
 # M6.7 Phase 1 AWS Provisioning Boundary
 
-This directory contains a non-executable target specification and an actual-deployment evidence
-template. It contains no Terraform/OpenTofu module, provider block, state backend, credential,
-deployment command, or live resource identifier.
+This directory contains the target specification and actual-deployment evidence template. The
+reviewable Terraform root module is under `infra/terraform/phase1/`; neither directory contains a
+credential, initialized backend, state, plan, deployment receipt, or live resource identifier.
 
-Executable infrastructure remains blocked until A-03/A-04/A-07, the final A-08 policy, A-17, the
-IaC tool/state/backend policy, exact operators, and accountable environment approvals are accepted.
-The target specification is not infrastructure evidence and cannot satisfy any environment gate.
+ADR-0075 selects Terraform and the S3/KMS state policy. Initialization, planning and apply remain
+blocked until the exact backend/account, A-03/A-04/A-07 inputs, final A-08 policy, A-17, exact
+operators, AWS charge authorization, and accountable environment approvals are present. The target
+specification and Terraform code are not infrastructure evidence and cannot satisfy an environment
+gate.
 
 After a separately authorized deployment, an operator records observed resource identifiers and
 control evidence in an immutable successor of `deployed-environment-evidence.template.json`. The

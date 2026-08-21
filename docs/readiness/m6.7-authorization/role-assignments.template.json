@@ -1,0 +1,25 @@
+{
+  "record_type": "M67_OPERATIONAL_ROLE_ASSIGNMENTS",
+  "version": "DRAFT",
+  "state": "AWAITING_OPAQUE_SUBJECTS",
+  "identity_provider_revision": null,
+  "effective_at": null,
+  "expires_at": null,
+  "assignments": [
+    {"role": "PROJECT_OWNER", "subject_ref": null, "role_pseudonym": null, "assignment_approval_id": null},
+    {"role": "OPPORTUNITY_REVIEWER", "subject_ref": null, "role_pseudonym": null, "assignment_approval_id": null},
+    {"role": "INDEPENDENT_SECOND_REVIEWER", "subject_ref": null, "role_pseudonym": null, "assignment_approval_id": null},
+    {"role": "INCIDENT_OWNER", "subject_ref": null, "role_pseudonym": null, "assignment_approval_id": null},
+    {"role": "PRIVACY_DATA_OWNER", "subject_ref": null, "role_pseudonym": null, "assignment_approval_id": null},
+    {"role": "KILL_SWITCH_OPERATOR", "subject_ref": null, "role_pseudonym": null, "assignment_approval_id": null},
+    {"role": "SECURITY_ENVIRONMENT_OWNER", "subject_ref": null, "role_pseudonym": null, "assignment_approval_id": null},
+    {"role": "QUALIFIED_LEGAL_REVIEWER", "subject_ref": null, "role_pseudonym": null, "assignment_approval_id": null}
+  ],
+  "constraints": {
+    "opportunity_reviewer_must_differ_from_independent_second": true,
+    "project_owner_must_differ_from_qualified_legal_reviewer": true,
+    "personally_identifying_values_prohibited": true
+  },
+  "approval_ids": [],
+  "configuration_hash": null
+}

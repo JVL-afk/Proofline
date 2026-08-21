@@ -1,5 +1,9 @@
 # Terraform/OpenTofu Boundary
 
-Reserved for reviewed infrastructure modules after the cloud, region, IaC tool, remote state, environment-account, and recovery decisions are accepted.
+ADR-0075 accepts Terraform for the Phase 1 provisioning package and its protected remote-state
+policy. `phase1/` contains the reviewable root module, but it cannot be initialized, planned, or
+applied until the exact backend, account, identity, retention, recovery, legal, role, cost, and apply
+approvals exist.
 
-Expected future module boundaries include network/edge, identity/secrets, compute, data, object artifacts, observability, and research egress. This directory contains no executable infrastructure in the repository-preparation pass.
+The package does not create an AWS account or state backend, and no deployment evidence may be
+derived from configuration alone.

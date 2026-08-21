@@ -15,6 +15,10 @@ SEED_TEMPLATE = (
 )
 PROVISIONING_SPEC = ROOT / "infra/aws/phase1/provisioning-spec.json"
 DEPLOYMENT_EVIDENCE = ROOT / "infra/aws/phase1/deployed-environment-evidence.template.json"
+ROLE_ASSIGNMENTS = ROOT / "docs/readiness/m6.7-authorization/role-assignments.template.json"
+A17_REVIEW = ROOT / "docs/readiness/m6.7-authorization/a17-qualified-review.template.json"
+DISCOVERY_SIGNATURE = ROOT / "docs/readiness/m6.7-authorization/discovery-signature.template.json"
+TERRAFORM_ROOT = ROOT / "infra/terraform/phase1"
 
 ROLE_NAMES = (
     "PROJECT_OWNER",
@@ -200,13 +204,19 @@ def validate_seed_manifest(value: dict[str, Any], *, allow_populated: bool = Fal
 
 
 def validate_provisioning_spec(value: dict[str, Any]) -> None:
-    _require(value.get("status") == "NON_EXECUTABLE_SPECIFICATION", "spec must not be executable")
-    _require(value.get("executable_iac_present") is False, "executable IaC is not approved")
+    _require(
+        value.get("status") == "REVIEWABLE_TERRAFORM_PACKAGE_NOT_INITIALIZED",
+        "provisioning specification state drift",
+    )
+    _require(value.get("executable_iac_present") is True, "Terraform package must be present")
     _require(value.get("deployment_performed") is False, "deployment is not authorized")
     _require(value.get("provider") == "AWS", "provider baseline drift")
     _require(value.get("region") == "us-east-2", "region baseline drift")
-    _require(value.get("iac_tool") == "UNRESOLVED", "IaC tool must remain unresolved")
-    _require(value.get("remote_state_backend") == "UNRESOLVED", "state backend unresolved")
+    _require(value.get("iac_tool") == "TERRAFORM_1_15", "Terraform selection drift")
+    _require(
+        value.get("remote_state_backend") == "S3_KMS_USE_LOCKFILE_PARTIAL_CONFIGURATION_REQUIRED",
+        "remote-state policy drift",
+    )
     network = cast(dict[str, Any], value.get("network"))
     compute = cast(dict[str, Any], value.get("compute"))
     _require(network.get("public_application_ingress") is False, "public ingress prohibited")
@@ -215,6 +225,94 @@ def validate_provisioning_spec(value: dict[str, Any]) -> None:
         value.get("forbidden_credentials") == ["AI", "BROWSER", "M6", "SENDER", "DELIVERY"],
         "forbidden credential set drift",
     )
+
+
+def validate_role_assignments(value: dict[str, Any]) -> None:
+    _require(value.get("record_type") == "M67_OPERATIONAL_ROLE_ASSIGNMENTS", "wrong role type")
+    assignments = cast(list[dict[str, Any]], value.get("assignments"))
+    _require([item.get("role") for item in assignments] == list(ROLE_NAMES), "role order drift")
+    by_role = {str(item["role"]): item.get("subject_ref") for item in assignments}
+    primary = by_role["OPPORTUNITY_REVIEWER"]
+    second = by_role["INDEPENDENT_SECOND_REVIEWER"]
+    owner = by_role["PROJECT_OWNER"]
+    legal = by_role["QUALIFIED_LEGAL_REVIEWER"]
+    if primary and second:
+        _require(primary != second, "opportunity reviewer separation violated")
+    if owner and legal:
+        _require(owner != legal, "project owner/legal reviewer separation violated")
+
+
+def validate_a17_template(value: dict[str, Any]) -> None:
+    _require(value.get("record_type") == "A17_QUALIFIED_LEGAL_REVIEW", "wrong A-17 type")
+    issues = cast(list[dict[str, Any]], value.get("issues"))
+    _require(
+        [item.get("issue_id") for item in issues]
+        == [f"A17-Q{number:02d}" for number in range(1, 15)],
+        "A-17 issue inventory drift",
+    )
+    if value.get("state") == "APPROVED":
+        _require(bool(value.get("reviewer_subject_ref")), "approved A-17 requires reviewer")
+        _require(bool(value.get("reviewer_attestation")), "approved A-17 requires attestation")
+        for issue in issues:
+            _require(bool(issue.get("conclusion")), "approved A-17 requires every conclusion")
+            _require(bool(issue.get("authority")), "approved A-17 requires supporting authority")
+            _require(issue.get("state") != "UNRESOLVED", "approved A-17 has unresolved issue")
+
+
+def validate_discovery_signature(value: dict[str, Any]) -> None:
+    _require(
+        value.get("record_type") == "REAL_BUSINESS_DISCOVERY_OWNER_SIGNATURE",
+        "wrong discovery signature type",
+    )
+    _require(
+        value.get("research_authorized") is False, "discovery signature cannot authorize research"
+    )
+    _require(value.get("slot_1_authorized") is False, "discovery signature cannot authorize slot 1")
+    _require(
+        value.get("person_contact_authorized") is False,
+        "discovery signature cannot authorize person/contact",
+    )
+    _require(
+        value.get("browser_authorized") is False, "discovery signature cannot authorize browser"
+    )
+    _require(
+        value.get("communication_authorized") is False,
+        "discovery signature cannot authorize communication",
+    )
+
+
+def validate_terraform_package() -> None:
+    versions = (TERRAFORM_ROOT / "versions.tf").read_text(encoding="utf-8")
+    backend = (TERRAFORM_ROOT / "backend.tf").read_text(encoding="utf-8")
+    variables = (TERRAFORM_ROOT / "variables.tf").read_text(encoding="utf-8")
+    lock = (TERRAFORM_ROOT / ".terraform.lock.hcl").read_text(encoding="utf-8")
+    terraform_text = "\n".join(
+        path.read_text(encoding="utf-8") for path in sorted(TERRAFORM_ROOT.glob("*.tf"))
+    )
+    _require('required_version = ">= 1.15.9, < 1.16.0"' in versions, "Terraform version drift")
+    _require('version = "= 6.53.0"' in versions, "AWS provider version drift")
+    _require(
+        'version     = "6.53.0"' in lock and 'constraints = "6.53.0"' in lock,
+        "AWS provider lock drift",
+    )
+    _require(lock.count("h1:") >= 2, "provider lock must cover Windows and Linux")
+    _require('backend "s3" {}' in backend, "S3 partial backend required")
+    _require('default     = "us-east-2"' in variables, "Phase 1 region drift")
+    _require("default     = 0" in variables, "worker must default to zero")
+    for prohibited in (
+        'provisioner "',
+        "local-exec",
+        "remote-exec",
+        "access_key =",
+        "secret_key =",
+    ):
+        _require(prohibited not in terraform_text, f"prohibited Terraform construct: {prohibited}")
+    _require(
+        "manage_master_user_password         = true" in terraform_text,
+        "AWS-managed DB password required",
+    )
+    _require(not list(TERRAFORM_ROOT.glob("*.tfstate*")), "Terraform state must not be tracked")
+    _require(not list(TERRAFORM_ROOT.glob("*.tfplan*")), "Terraform plan must not be tracked")
 
 
 def deployed_environment_blockers(value: dict[str, Any]) -> tuple[str, ...]:
@@ -244,12 +342,16 @@ def deployed_environment_blockers(value: dict[str, Any]) -> tuple[str, ...]:
 
 
 def discovery_readiness_blockers(
-    owner: dict[str, Any], seed: dict[str, Any], deployment: dict[str, Any]
+    owner: dict[str, Any],
+    seed: dict[str, Any],
+    deployment: dict[str, Any],
+    role_assignments: dict[str, Any],
+    a17_review: dict[str, Any],
 ) -> tuple[str, ...]:
     blockers = list(deployed_environment_blockers(deployment))
-    roles = cast(dict[str, Any], owner["role_slots"])
+    assignments = cast(list[dict[str, Any]], role_assignments["assignments"])
     blockers.extend(
-        f"ROLE_SUBJECT_REQUIRED:{role}" for role, subject in roles.items() if not subject
+        f"ROLE_SUBJECT_REQUIRED:{item['role']}" for item in assignments if not item["subject_ref"]
     )
     if seed.get("state") != "FROZEN" or not seed.get("candidates"):
         blockers.append("EXACT_PROVENANCE_BACKED_OWNER_SEED_MANIFEST_REQUIRED")
@@ -258,7 +360,7 @@ def discovery_readiness_blockers(
         blockers.append("A08_FINAL_RETENTION_APPROVAL_REQUIRED")
     if authority.get("a09") != "APPROVED":
         blockers.append("A09_EXACT_DISCOVERY_SOURCE_APPROVAL_REQUIRED")
-    if authority.get("a17") != "APPROVED":
+    if authority.get("a17") != "APPROVED" or a17_review.get("state") != "APPROVED":
         blockers.append("A17_QUALIFIED_LEGAL_APPROVAL_REQUIRED")
     blockers.extend(
         (
@@ -266,7 +368,10 @@ def discovery_readiness_blockers(
             "A03_TENANCY_APPROVAL_REQUIRED",
             "A04_CLOUD_REGION_DATA_APPROVAL_REQUIRED",
             "A07_IDENTITY_GOVERNANCE_APPROVAL_REQUIRED",
-            "IAC_TOOL_AND_REMOTE_STATE_APPROVAL_REQUIRED",
+            "TERRAFORM_BACKEND_RESOURCES_AND_PARTIAL_CONFIG_REQUIRED",
+            "AWS_CHARGE_AUTHORIZATION_REQUIRED",
+            "AWS_AUTHENTICATED_PLAN_APPLY_AUTHORITY_REQUIRED",
+            "REVIEWED_TERRAFORM_PLAN_REQUIRED",
             "OWNER_DISCOVERY_RELEASE_SIGNATURE_REQUIRED",
         )
     )
@@ -278,10 +383,17 @@ def validate_package() -> dict[str, Any]:
     seed = _load(SEED_TEMPLATE)
     provisioning = _load(PROVISIONING_SPEC)
     deployment = _load(DEPLOYMENT_EVIDENCE)
+    role_assignments = _load(ROLE_ASSIGNMENTS)
+    a17_review = _load(A17_REVIEW)
+    discovery_signature = _load(DISCOVERY_SIGNATURE)
     validate_owner_package(owner)
     validate_seed_manifest(seed)
     validate_provisioning_spec(provisioning)
-    blockers = discovery_readiness_blockers(owner, seed, deployment)
+    validate_role_assignments(role_assignments)
+    validate_a17_template(a17_review)
+    validate_discovery_signature(discovery_signature)
+    validate_terraform_package()
+    blockers = discovery_readiness_blockers(owner, seed, deployment, role_assignments, a17_review)
     return {
         "state": "NOT_READY_TO_AUTHORIZE_DISCOVERY"
         if blockers

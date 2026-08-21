@@ -79,7 +79,7 @@ def test_deployment_template_cannot_satisfy_actual_environment_evidence() -> Non
     assert "DEPLOYMENT_EVIDENCE_REQUIRED:configuration_hash" in blockers
 
 
-def test_no_executable_cloud_provisioning_or_credentials_were_added() -> None:
+def test_provisioning_spec_still_records_no_deployment_or_credentials() -> None:
     phase1 = ROOT / "infra/aws/phase1"
     files = {path.name for path in phase1.iterdir() if path.is_file()}
     assert files == {
@@ -87,9 +87,8 @@ def test_no_executable_cloud_provisioning_or_credentials_were_added() -> None:
         "deployed-environment-evidence.template.json",
         "provisioning-spec.json",
     }
-    assert not any(ROOT.rglob("*.tf"))
     specification = json.loads((phase1 / "provisioning-spec.json").read_text(encoding="utf-8"))
-    assert not specification["executable_iac_present"]
+    assert specification["executable_iac_present"]
     assert not specification["deployment_performed"]
     assert specification["forbidden_credentials"] == [
         "AI",
@@ -98,3 +97,58 @@ def test_no_executable_cloud_provisioning_or_credentials_were_added() -> None:
         "SENDER",
         "DELIVERY",
     ]
+
+
+def test_role_and_legal_templates_do_not_invent_human_decisions() -> None:
+    roles = json.loads(
+        (ROOT / "docs/readiness/m6.7-authorization/role-assignments.template.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert all(item["subject_ref"] is None for item in roles["assignments"])
+    assert roles["constraints"]["opportunity_reviewer_must_differ_from_independent_second"]
+    assert roles["constraints"]["project_owner_must_differ_from_qualified_legal_reviewer"]
+
+    legal = json.loads(
+        (ROOT / "docs/readiness/m6.7-authorization/a17-qualified-review.template.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert legal["state"] == "BLOCKED_PENDING_QUALIFIED_LEGAL_REVIEW"
+    assert legal["reviewer_subject_ref"] is None
+    assert len(legal["issues"]) == 14
+    assert all(item["conclusion"] is None for item in legal["issues"])
+
+
+def test_discovery_signature_template_is_unsigned_and_cannot_collapse_authorities() -> None:
+    value = json.loads(
+        (ROOT / "docs/readiness/m6.7-authorization/discovery-signature.template.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    assert value["state"] == "UNSIGNED_NOT_AUTHORIZED"
+    assert value["only_effect_if_validly_signed"] == "REAL_BUSINESS_DISCOVERY_AUTHORIZED"
+    assert not value["research_authorized"]
+    assert not value["slot_1_authorized"]
+    assert not value["person_contact_authorized"]
+    assert value["owner_signature"] is None
+
+
+def test_terraform_package_is_pinned_zero_worker_and_secret_minimized() -> None:
+    root = ROOT / "infra/terraform/phase1"
+    versions = (root / "versions.tf").read_text(encoding="utf-8")
+    variables = (root / "variables.tf").read_text(encoding="utf-8")
+    database = (root / "database.tf").read_text(encoding="utf-8")
+    assert 'required_version = ">= 1.15.9, < 1.16.0"' in versions
+    assert 'version = "= 6.53.0"' in versions
+    assert 'default     = "us-east-2"' in variables
+    assert 'variable "worker_desired_count"' in variables
+    assert "manage_master_user_password         = true" in database
+    lock = (root / ".terraform.lock.hcl").read_text(encoding="utf-8")
+    assert 'version     = "6.53.0"' in lock
+    assert lock.count("h1:") >= 2
+
+    blockers = set(validate_package()["blockers"])
+    assert "TERRAFORM_PROVIDER_LOCK_REQUIRED" not in blockers
+    assert "AWS_CHARGE_AUTHORIZATION_REQUIRED" in blockers
+    assert "AWS_AUTHENTICATED_PLAN_APPLY_AUTHORITY_REQUIRED" in blockers

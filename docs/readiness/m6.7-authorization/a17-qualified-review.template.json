@@ -1,0 +1,28 @@
+{
+  "record_type": "A17_QUALIFIED_LEGAL_REVIEW",
+  "version": "DRAFT",
+  "state": "BLOCKED_PENDING_QUALIFIED_LEGAL_REVIEW",
+  "reviewer_subject_ref": null,
+  "reviewer_credential_record_ref": null,
+  "effective_at": null,
+  "expires_at": null,
+  "issues": [
+    {"issue_id": "A17-Q01", "conclusion": null, "assumptions": [], "authority": [], "required_controls": [], "unresolved_issues": [], "state": "UNRESOLVED"},
+    {"issue_id": "A17-Q02", "conclusion": null, "assumptions": [], "authority": [], "required_controls": [], "unresolved_issues": [], "state": "UNRESOLVED"},
+    {"issue_id": "A17-Q03", "conclusion": null, "assumptions": [], "authority": [], "required_controls": [], "unresolved_issues": [], "state": "UNRESOLVED"},
+    {"issue_id": "A17-Q04", "conclusion": null, "assumptions": [], "authority": [], "required_controls": [], "unresolved_issues": [], "state": "UNRESOLVED"},
+    {"issue_id": "A17-Q05", "conclusion": null, "assumptions": [], "authority": [], "required_controls": [], "unresolved_issues": [], "state": "UNRESOLVED"},
+    {"issue_id": "A17-Q06", "conclusion": null, "assumptions": [], "authority": [], "required_controls": [], "unresolved_issues": [], "state": "UNRESOLVED"},
+    {"issue_id": "A17-Q07", "conclusion": null, "assumptions": [], "authority": [], "required_controls": [], "unresolved_issues": [], "state": "UNRESOLVED"},
+    {"issue_id": "A17-Q08", "conclusion": null, "assumptions": [], "authority": [], "required_controls": [], "unresolved_issues": [], "state": "UNRESOLVED"},
+    {"issue_id": "A17-Q09", "conclusion": null, "assumptions": [], "authority": [], "required_controls": [], "unresolved_issues": [], "state": "UNRESOLVED"},
+    {"issue_id": "A17-Q10", "conclusion": null, "assumptions": [], "authority": [], "required_controls": [], "unresolved_issues": [], "state": "UNRESOLVED"},
+    {"issue_id": "A17-Q11", "conclusion": null, "assumptions": [], "authority": [], "required_controls": [], "unresolved_issues": [], "state": "UNRESOLVED"},
+    {"issue_id": "A17-Q12", "conclusion": null, "assumptions": [], "authority": [], "required_controls": [], "unresolved_issues": [], "state": "UNRESOLVED"},
+    {"issue_id": "A17-Q13", "conclusion": null, "assumptions": [], "authority": [], "required_controls": [], "unresolved_issues": [], "state": "UNRESOLVED"},
+    {"issue_id": "A17-Q14", "conclusion": null, "assumptions": [], "authority": [], "required_controls": [], "unresolved_issues": [], "state": "UNRESOLVED"}
+  ],
+  "reviewer_attestation": null,
+  "approval_ids": [],
+  "configuration_hash": null
+}

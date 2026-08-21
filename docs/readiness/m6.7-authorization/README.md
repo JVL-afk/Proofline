@@ -76,3 +76,11 @@ execution is a separate post-research-authorization run gate rather than a real-
 - `phase1-owner-seed-manifest-v1.schema.json`: business-only seed-manifest contract.
 - `seed-and-selection-policy.md`: eligibility, deduplication, seed, ordering and replacement rules.
 - `discovery-readiness.md`: unsigned discovery-release scope and current exact blockers.
+- `role-assignments.template.json`: immutable opaque-subject assignment shape; every subject remains
+  unassigned.
+- `a17-qualified-review.template.json`: qualified-reviewer intake with fourteen unresolved issues;
+  it contains no generated legal conclusion.
+- `discovery-signature.template.json`: exact unsigned discovery-only release shape; it cannot grant
+  research or slot authority.
+- `../../../infra/terraform/phase1/`: reviewable ADR-0075 Terraform package and locked provider;
+  locally validated without an AWS backend, plan, apply, or cloud observation.

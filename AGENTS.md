@@ -21,8 +21,13 @@ remains closed with no qualified binding, no route activation, and no canonical 
 `docs/readiness/m6.7-authorization/seed-and-selection-policy.md`,
 `docs/readiness/m6.7-authorization/discovery-readiness.md`,
 `docs/readiness/m6.7-authorization/counsel-review-form.md`, and accepted ADR-0054 through
-ADR-0070 plus ADR-0072 and ADR-0074
+ADR-0070 plus ADR-0072, ADR-0074, and ADR-0075
 before changing the repository.
+
+ADR-0075 accepts Terraform for Phase 1 provisioning. Its provider lock and locally validated
+configuration grant no AWS, discovery, research, or slot authority. No plan/apply is authorized
+without the missing account/backend inputs, exact roles, final data/legal decisions, AWS charge
+authorization, short-lived credentials, and separately reviewed plan.
 
 M1-M6.5, M6.6A, and the closed M6.6B-2 package remain authoritative and frozen. The M6.6B-3
 authorization was consumed after exactly five synthetic certification calls and must not be reused.
