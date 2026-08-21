@@ -1,0 +1,26 @@
+{
+  "record_type": "M67_GENERATED_SEED_SOURCE_APPROVAL_PACKAGE",
+  "version": "DRAFT",
+  "state": "BLOCKED_UNTIL_DISCOVERY_SOURCE_AUTHORITY",
+  "seed_schema_revision": "PHASE1_OWNER_SEED_MANIFEST_V1@1.0.0",
+  "candidate_frame_maximum": 100,
+  "cohort_target": 24,
+  "prohibited_fields": ["PERSON", "CONTACT", "OPPORTUNITY", "REVENUE", "CRM", "RESPONSE_TIME", "LEAD_VOLUME"],
+  "generated_seed": {
+    "artifact_id": null,
+    "artifact_hash": null,
+    "seed_commitment": null,
+    "manifest_hash": null,
+    "deterministic_selection_order_hash": null
+  },
+  "host_reviews": [],
+  "host_review_requirements": {
+    "separate_result_per_exact_host": true,
+    "wildcard_approval_prohibited": true,
+    "automatically_collected": ["NORMALIZED_HOST", "TERMS_URL", "ROBOTS_URL", "RETRIEVAL_TIMESTAMP", "HTTP_ACCESSIBILITY", "SOURCE_HASHES", "TECHNICAL_RESTRICTIONS"],
+    "human_conclusion_required": true,
+    "blocked_or_uncertain_host_remains_visible": true
+  },
+  "batch_signature": null,
+  "configuration_hash": null
+}

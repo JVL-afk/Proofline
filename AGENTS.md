@@ -2,6 +2,14 @@
 
 ## Active milestone
 
+M6.7 owner approvals are consolidated: discretionary defaults are recorded once, three actor
+pseudonyms are generated with private reconciliation material outside Git, and only the AWS
+account/organization fact plus short-lived SSO entry point remain owner-supplied infrastructure
+facts. Resource identifiers, hashes, worker-image evidence, seed artifacts, and technical host
+metadata are derived or observed. This consolidation grants no permission: OIDC reconciliation,
+authenticated reviewed applies, deployed evidence, exact seed/host approval, and the final discovery
+signature remain fail-closed gates. Research and slot authority remain separate and unauthorized.
+
 Milestone M6.7C is closed at `8cc38bd19cc45ae3712d6a106b982e3faf75d431`. The final Phase 1
 authorization package is documentation only. Owner scope, workload ceilings and the USD 250/AI
 USD 0 caps are recorded. A-08 is approved but not live-effective, attorney-provided A-17 is

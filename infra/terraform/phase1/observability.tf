@@ -1,3 +1,40 @@
+resource "aws_sns_topic" "operations" {
+  name              = "${var.name_prefix}-operations"
+  kms_master_key_id = aws_kms_key.logs.arn
+}
+
+data "aws_iam_policy_document" "operations_topic" {
+  statement {
+    sid     = "AccountOwnerAdministration"
+    actions = ["SNS:GetTopicAttributes", "SNS:SetTopicAttributes", "SNS:Subscribe"]
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:root"]
+    }
+    resources = [aws_sns_topic.operations.arn]
+  }
+
+  statement {
+    sid     = "AwsServicePublish"
+    actions = ["SNS:Publish"]
+    principals {
+      type        = "Service"
+      identifiers = ["budgets.amazonaws.com", "cloudwatch.amazonaws.com"]
+    }
+    resources = [aws_sns_topic.operations.arn]
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
+  }
+}
+
+resource "aws_sns_topic_policy" "operations" {
+  arn    = aws_sns_topic.operations.arn
+  policy = data.aws_iam_policy_document.operations_topic.json
+}
+
 resource "aws_cloudtrail" "phase1" {
   name                          = "${var.name_prefix}-audit"
   s3_bucket_name                = aws_s3_bucket.audit.id
@@ -24,6 +61,14 @@ resource "aws_budgets_budget" "phase1" {
   limit_amount = tostring(var.monthly_budget_limit_usd)
   limit_unit   = "USD"
   time_unit    = "MONTHLY"
+
+  notification {
+    comparison_operator       = "GREATER_THAN"
+    threshold                 = 80
+    threshold_type            = "PERCENTAGE"
+    notification_type         = "FORECASTED"
+    subscriber_sns_topic_arns = [aws_sns_topic.operations.arn]
+  }
 }
 
 resource "aws_cloudwatch_metric_alarm" "database_cpu" {
@@ -36,6 +81,7 @@ resource "aws_cloudwatch_metric_alarm" "database_cpu" {
   statistic           = "Average"
   threshold           = 80
   alarm_description   = "Phase 1 RDS CPU exceeds 80 percent"
+  alarm_actions       = [aws_sns_topic.operations.arn]
   dimensions          = { DBInstanceIdentifier = aws_db_instance.phase1.identifier }
 }
 
@@ -49,6 +95,7 @@ resource "aws_cloudwatch_metric_alarm" "database_storage" {
   statistic           = "Minimum"
   threshold           = 2147483648
   alarm_description   = "Phase 1 RDS free storage below 2 GiB"
+  alarm_actions       = [aws_sns_topic.operations.arn]
   dimensions          = { DBInstanceIdentifier = aws_db_instance.phase1.identifier }
 }
 
@@ -65,7 +112,7 @@ data "aws_iam_policy_document" "operator_assume" {
 resource "aws_iam_role" "operator" {
   name                 = "${var.name_prefix}-operator"
   assume_role_policy   = data.aws_iam_policy_document.operator_assume.json
-  max_session_duration = 3600
+  max_session_duration = 14400
 }
 
 data "aws_iam_policy_document" "kill_operator_assume" {
@@ -81,7 +128,7 @@ data "aws_iam_policy_document" "kill_operator_assume" {
 resource "aws_iam_role" "kill_operator" {
   name                 = "${var.name_prefix}-kill-switch-operator"
   assume_role_policy   = data.aws_iam_policy_document.kill_operator_assume.json
-  max_session_duration = 3600
+  max_session_duration = 14400
 }
 
 data "aws_iam_policy_document" "kill_operator" {

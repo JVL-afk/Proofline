@@ -1,0 +1,27 @@
+{
+  "record_type": "M67_OPERATIONAL_ROLE_ASSIGNMENTS",
+  "version": "2026-08-21.3",
+  "state": "APPROVED_PENDING_OIDC_RECONCILIATION",
+  "identity_provider_revision": "PREDEPLOYMENT_PSEUDONYMS_V1",
+  "effective_at": "2026-08-21T12:00:00+00:00",
+  "expires_at": "2026-11-19T12:00:00+00:00",
+  "assignments": [
+    {"role": "PROJECT_OWNER", "approved_actor_binding": "OWNER_ACTOR", "subject_ref": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981", "assignment_approval_id": "M67_CONSOLIDATED_OWNER_APPROVAL_V1"},
+    {"role": "OPPORTUNITY_REVIEWER", "approved_actor_binding": "OWNER_ACTOR", "subject_ref": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981", "assignment_approval_id": "M67_CONSOLIDATED_OWNER_APPROVAL_V1"},
+    {"role": "INDEPENDENT_SECOND_REVIEWER", "approved_actor_binding": "PRIMARY_A_ACTOR", "subject_ref": "m67-subject-71411f1094857b41cf4906b108936e30a7f76a65ac1d768e1957825fd1c6453d", "assignment_approval_id": "M67_CONSOLIDATED_OWNER_APPROVAL_V1"},
+    {"role": "INCIDENT_OWNER", "approved_actor_binding": "OWNER_ACTOR", "subject_ref": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981", "assignment_approval_id": "M67_CONSOLIDATED_OWNER_APPROVAL_V1"},
+    {"role": "PRIVACY_DATA_OWNER", "approved_actor_binding": "OWNER_ACTOR", "subject_ref": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981", "assignment_approval_id": "M67_CONSOLIDATED_OWNER_APPROVAL_V1"},
+    {"role": "KILL_SWITCH_OPERATOR", "approved_actor_binding": "OWNER_ACTOR", "subject_ref": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981", "assignment_approval_id": "M67_CONSOLIDATED_OWNER_APPROVAL_V1"},
+    {"role": "SECURITY_ENVIRONMENT_OWNER", "approved_actor_binding": "OWNER_ACTOR", "subject_ref": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981", "assignment_approval_id": "M67_CONSOLIDATED_OWNER_APPROVAL_V1"},
+    {"role": "QUALIFIED_LEGAL_REVIEWER", "approved_actor_binding": "EXTERNAL_ATTORNEY_A17_ACTOR", "subject_ref": "m67-subject-1ad4d35a48d52a5fe7b4468c7b90cf9334b4254ded64e26fbb1b8327bd627ba0", "assignment_approval_id": "M67_CONSOLIDATED_OWNER_APPROVAL_V1"}
+  ],
+  "constraints": {
+    "opportunity_reviewer_must_differ_from_independent_second": true,
+    "project_owner_must_differ_from_qualified_legal_reviewer": true,
+    "personally_identifying_values_prohibited": true,
+    "live_operational_actor_oidc_reconciliation_required_before_discovery": true,
+    "attorney_record_reconciliation_required": true
+  },
+  "approval_ids": ["M67_CONSOLIDATED_OWNER_APPROVAL_V1"],
+  "owner_approval_hash": "aff8ba153c2307bbdd03543015f29453c073b72b9da1132d8c9f1e789450e061"
+}

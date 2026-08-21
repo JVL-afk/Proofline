@@ -1,6 +1,7 @@
 locals {
-  state_key      = "m67/phase1/terraform.tfstate"
-  state_lock_key = "${local.state_key}.tflock"
+  state_bucket_name = "m67-phase1-tfstate-${var.expected_state_account_id}-${var.aws_region}"
+  state_key         = "m67/phase1/terraform.tfstate"
+  state_lock_key    = "${local.state_key}.tflock"
   state_resources = [
     "${aws_s3_bucket.state.arn}/${local.state_key}",
     "${aws_s3_bucket.state.arn}/${local.state_lock_key}",
@@ -19,7 +20,7 @@ resource "aws_kms_alias" "state" {
 }
 
 resource "aws_s3_bucket" "state" {
-  bucket = var.state_bucket_name
+  bucket = local.state_bucket_name
 
   lifecycle {
     prevent_destroy = true
@@ -78,7 +79,7 @@ resource "aws_s3_bucket_policy" "state_transport" {
 }
 
 resource "aws_s3_bucket" "audit" {
-  bucket = "${var.state_bucket_name}-audit"
+  bucket = "${local.state_bucket_name}-audit"
 
   lifecycle {
     prevent_destroy = true

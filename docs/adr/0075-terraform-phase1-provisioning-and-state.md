@@ -47,8 +47,11 @@ deprecated DynamoDB locking for this new state. Backend bucket, key, region, KMS
 supplied through an owner-approved partial backend configuration file outside Git. Credentials use
 short-lived OIDC/IAM Identity Center federation or workload identity and never backend arguments.
 
-The Terraform state administration boundary is separate from the Phase 1 workload account. State
-read access is sensitive because state may expose resource metadata. Do not deliberately place
+The Terraform state administration boundary is separate from the Phase 1 workload authority. For
+the bounded 24-company pilot, the protected state resources and workload may reside in the same
+dedicated AWS account; separate bootstrap, state-plan, state-apply, workload-plan, workload-apply,
+operator, worker, and kill-switch roles preserve the boundary. A second AWS account is not required.
+State read access is sensitive because state may expose resource metadata. Do not deliberately place
 passwords, tokens, private key material, page content, personal/contact data, or provider credentials
 in variables, outputs, provisioners, user data, or state. Prefer AWS-managed password generation,
 IAM database authentication, and resource references.

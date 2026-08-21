@@ -1,6 +1,6 @@
 {
   "record_type": "M67_PHASE1_OWNER_CONTROL_PACKAGE",
-  "version": "2026-08-21.2",
+  "version": "2026-08-21.3",
   "predecessor_commit": "519b92d02461c14ecaecfa522997abfcd7185622",
   "scope": {
     "candidate_frame_maximum": 100,
@@ -60,13 +60,13 @@
     "real_public_research": "NOT_AUTHORIZED"
   },
   "role_slots": {
-    "PROJECT_OWNER": null,
-    "OPPORTUNITY_REVIEWER": null,
-    "INDEPENDENT_SECOND_REVIEWER": null,
-    "INCIDENT_OWNER": null,
-    "PRIVACY_DATA_OWNER": null,
-    "KILL_SWITCH_OPERATOR": null,
-    "SECURITY_ENVIRONMENT_OWNER": null,
-    "QUALIFIED_LEGAL_REVIEWER": null
+    "PROJECT_OWNER": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981",
+    "OPPORTUNITY_REVIEWER": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981",
+    "INDEPENDENT_SECOND_REVIEWER": "m67-subject-71411f1094857b41cf4906b108936e30a7f76a65ac1d768e1957825fd1c6453d",
+    "INCIDENT_OWNER": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981",
+    "PRIVACY_DATA_OWNER": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981",
+    "KILL_SWITCH_OPERATOR": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981",
+    "SECURITY_ENVIRONMENT_OWNER": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981",
+    "QUALIFIED_LEGAL_REVIEWER": "m67-subject-1ad4d35a48d52a5fe7b4468c7b90cf9334b4254ded64e26fbb1b8327bd627ba0"
   }
 }

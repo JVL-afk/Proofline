@@ -15,7 +15,10 @@ SEED_TEMPLATE = (
 )
 PROVISIONING_SPEC = ROOT / "infra/aws/phase1/provisioning-spec.json"
 DEPLOYMENT_EVIDENCE = ROOT / "infra/aws/phase1/deployed-environment-evidence.template.json"
-ROLE_ASSIGNMENTS = ROOT / "docs/readiness/m6.7-authorization/role-assignments.template.json"
+ROLE_ASSIGNMENTS = ROOT / "docs/readiness/m6.7-authorization/role-assignments.predeployment.json"
+CONSOLIDATED_OWNER_APPROVAL = (
+    ROOT / "docs/readiness/m6.7-authorization/consolidated-owner-approval-2026-08-21.json"
+)
 A17_REVIEW = ROOT / "docs/readiness/m6.7-authorization/a17-attorney-result-2026-08-21.json"
 STATUTORY_PROVENANCE = (
     ROOT / "docs/readiness/m6.7-authorization/texas-statutory-provenance-2026-08-21.json"
@@ -236,8 +239,8 @@ def validate_role_assignments(value: dict[str, Any]) -> None:
     assignments = cast(list[dict[str, Any]], value.get("assignments"))
     _require([item.get("role") for item in assignments] == list(ROLE_NAMES), "role order drift")
     _require(
-        value.get("state") == "APPROVED_PENDING_IDENTITY_BINDING",
-        "role decisions must remain pending identity binding",
+        value.get("state") == "APPROVED_PENDING_OIDC_RECONCILIATION",
+        "predeployment role assignments must require OIDC reconciliation",
     )
     bindings = {str(item["role"]): item.get("approved_actor_binding") for item in assignments}
     owner_roles = {
@@ -249,15 +252,15 @@ def validate_role_assignments(value: dict[str, Any]) -> None:
         "SECURITY_ENVIRONMENT_OWNER",
     }
     _require(
-        all(bindings[role] == "OWNER_SUBJECT" for role in owner_roles),
+        all(bindings[role] == "OWNER_ACTOR" for role in owner_roles),
         "owner role decision drift",
     )
     _require(
-        bindings["INDEPENDENT_SECOND_REVIEWER"] == "PRIMARY_A_SUBJECT",
+        bindings["INDEPENDENT_SECOND_REVIEWER"] == "PRIMARY_A_ACTOR",
         "independent reviewer decision drift",
     )
     _require(
-        bindings["QUALIFIED_LEGAL_REVIEWER"] == "EXTERNAL_ATTORNEY_A17_SUBJECT",
+        bindings["QUALIFIED_LEGAL_REVIEWER"] == "EXTERNAL_ATTORNEY_A17_ACTOR",
         "legal reviewer decision drift",
     )
     by_role = {str(item["role"]): item.get("subject_ref") for item in assignments}
@@ -269,6 +272,69 @@ def validate_role_assignments(value: dict[str, Any]) -> None:
         _require(primary != second, "opportunity reviewer separation violated")
     if owner and legal:
         _require(owner != legal, "project owner/legal reviewer separation violated")
+    _require(all(by_role.values()), "every predeployment role requires an opaque subject")
+    constraints = cast(dict[str, Any], value.get("constraints"))
+    _require(
+        constraints.get("live_operational_actor_oidc_reconciliation_required_before_discovery")
+        is True,
+        "OIDC reconciliation must remain a live-discovery gate",
+    )
+
+
+def validate_consolidated_owner_approval(value: dict[str, Any]) -> None:
+    _require(value.get("record_type") == "M67_CONSOLIDATED_OWNER_APPROVAL", "wrong approval type")
+    _require(value.get("state") == "OWNER_APPROVED_RECORDED", "owner approval not recorded")
+    decisions = cast(dict[str, Any], value.get("decisions"))
+    expected = {
+        "jurisdiction": "US-TX",
+        "vertical": "COMMERCIAL_HVAC",
+        "context": "B2B",
+        "opportunity": "INBOUND_LEAD_RESPONSE",
+        "candidate_frame_maximum": 100,
+        "frozen_cohort_target": 24,
+        "aws_region": "us-east-2",
+        "terraform_authority": "PRODUCTION_AND_DEPLOYMENT_SUBJECT_TO_REVIEWED_PLANS",
+        "monetary_hard_ceiling_usd": "250.00",
+        "ai_budget_usd": "0.00",
+        "worker_concurrency": 1,
+        "browser": "DISABLED",
+        "person_contact_processing": "NOT_AUTHORIZED",
+        "delivery": "UNAVAILABLE",
+        "outcome_based_cohort_replacement": "PROHIBITED",
+        "negative_qa_rate_basis_points": 2500,
+        "negative_qa_minimum": 3,
+        "execution_sequence": ["SLOT_1", "PAUSE", "SLOTS_2_TO_6", "PAUSE", "SLOTS_7_TO_24"],
+        "operator_session_maximum_seconds": 14_400,
+        "access_review_interval_days": 90,
+        "backup_rpo_seconds": 86_400,
+        "backup_rto_seconds": 86_400,
+        "discovery_release_validity_seconds": 604_800,
+    }
+    _require(decisions == expected, "consolidated owner decision drift")
+    actors = cast(dict[str, dict[str, Any]], value.get("actors"))
+    refs = [item.get("subject_ref") for item in actors.values()]
+    _require(len(refs) == 3 and len(set(refs)) == 3, "actor pseudonyms must be unique")
+    _require(
+        all(re.fullmatch(r"m67-subject-[a-f0-9]{64}", str(item)) for item in refs),
+        "actor pseudonyms must be cryptographically random opaque references",
+    )
+    binding = cast(dict[str, Any], value.get("binding"))
+    _require(
+        binding.get("live_actor_oidc_reconciliation_required_before_discovery")
+        == ["OWNER_ACTOR", "PRIMARY_A_ACTOR"],
+        "live actor OIDC gate",
+    )
+    _require(binding.get("attorney_record_reconciliation_required") is True, "attorney record gate")
+    _require(binding.get("underlying_human_identity_fabricated") is False, "identity fabrication")
+    configuration_hash = value.get("configuration_hash")
+    payload = {key: item for key, item in value.items() if key != "configuration_hash"}
+    _require(
+        configuration_hash
+        == hashlib.sha256(
+            json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest(),
+        "consolidated owner approval hash mismatch",
+    )
 
 
 def validate_a17_template(value: dict[str, Any]) -> None:
@@ -448,12 +514,15 @@ def discovery_readiness_blockers(
     deployment: dict[str, Any],
     role_assignments: dict[str, Any],
     a17_review: dict[str, Any],
+    consolidated_owner_approval: dict[str, Any],
 ) -> tuple[str, ...]:
     blockers = list(deployed_environment_blockers(deployment))
-    assignments = cast(list[dict[str, Any]], role_assignments["assignments"])
-    blockers.extend(
-        f"ROLE_SUBJECT_REQUIRED:{item['role']}" for item in assignments if not item["subject_ref"]
-    )
+    constraints = cast(dict[str, Any], role_assignments["constraints"])
+    if (
+        constraints.get("live_operational_actor_oidc_reconciliation_required_before_discovery")
+        is True
+    ):
+        blockers.append("PREDEPLOYMENT_LIVE_SUBJECTS_REQUIRE_OIDC_RECONCILIATION")
     if seed.get("state") != "FROZEN" or not seed.get("candidates"):
         blockers.append("EXACT_PROVENANCE_BACKED_OWNER_SEED_MANIFEST_REQUIRED")
     authority = cast(dict[str, Any], owner["authority"])
@@ -466,6 +535,7 @@ def discovery_readiness_blockers(
         or a17_review.get("state") != "APPROVE_WITH_CONTROLS"
     ):
         blockers.append("A17_QUALIFIED_LEGAL_APPROVAL_REQUIRED")
+    owner_decisions = cast(dict[str, Any], consolidated_owner_approval["decisions"])
     blockers.extend(
         (
             "ADR_0071_ACCEPTANCE_REQUIRED",
@@ -473,12 +543,17 @@ def discovery_readiness_blockers(
             "A04_CLOUD_REGION_DATA_APPROVAL_REQUIRED",
             "A07_IDENTITY_GOVERNANCE_APPROVAL_REQUIRED",
             "TERRAFORM_BACKEND_RESOURCES_AND_PARTIAL_CONFIG_REQUIRED",
-            "AWS_CHARGE_AUTHORIZATION_REQUIRED",
             "AWS_AUTHENTICATED_PLAN_APPLY_AUTHORITY_REQUIRED",
             "REVIEWED_TERRAFORM_PLAN_REQUIRED",
             "OWNER_DISCOVERY_RELEASE_SIGNATURE_REQUIRED",
         )
     )
+    if (
+        owner_decisions.get("terraform_authority")
+        != "PRODUCTION_AND_DEPLOYMENT_SUBJECT_TO_REVIEWED_PLANS"
+        or owner_decisions.get("monetary_hard_ceiling_usd") != "250.00"
+    ):
+        blockers.append("AWS_CHARGE_AUTHORIZATION_REQUIRED")
     return tuple(dict.fromkeys(blockers))
 
 
@@ -488,6 +563,7 @@ def validate_package() -> dict[str, Any]:
     provisioning = _load(PROVISIONING_SPEC)
     deployment = _load(DEPLOYMENT_EVIDENCE)
     role_assignments = _load(ROLE_ASSIGNMENTS)
+    consolidated_owner_approval = _load(CONSOLIDATED_OWNER_APPROVAL)
     a17_review = _load(A17_REVIEW)
     statutory_provenance = _load(STATUTORY_PROVENANCE)
     retention_policy = _load(RETENTION_POLICY)
@@ -496,12 +572,20 @@ def validate_package() -> dict[str, Any]:
     validate_seed_manifest(seed)
     validate_provisioning_spec(provisioning)
     validate_role_assignments(role_assignments)
+    validate_consolidated_owner_approval(consolidated_owner_approval)
     validate_a17_template(a17_review)
     validate_statutory_provenance(statutory_provenance)
     validate_retention_policy(retention_policy)
     validate_discovery_signature(discovery_signature)
     validate_terraform_package()
-    blockers = discovery_readiness_blockers(owner, seed, deployment, role_assignments, a17_review)
+    blockers = discovery_readiness_blockers(
+        owner,
+        seed,
+        deployment,
+        role_assignments,
+        a17_review,
+        consolidated_owner_approval,
+    )
     return {
         "state": "NOT_READY_TO_AUTHORIZE_DISCOVERY"
         if blockers

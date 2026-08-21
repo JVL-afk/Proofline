@@ -30,9 +30,8 @@ def test_owner_package_is_exact_and_discovery_remains_not_ready() -> None:
 
 def test_exact_human_environment_and_policy_blockers_are_visible() -> None:
     blockers = set(validate_package()["blockers"])
-    assert "ROLE_SUBJECT_REQUIRED:PROJECT_OWNER" in blockers
-    assert "ROLE_SUBJECT_REQUIRED:INDEPENDENT_SECOND_REVIEWER" in blockers
-    assert "ROLE_SUBJECT_REQUIRED:QUALIFIED_LEGAL_REVIEWER" in blockers
+    assert not any(item.startswith("ROLE_SUBJECT_REQUIRED:") for item in blockers)
+    assert "PREDEPLOYMENT_LIVE_SUBJECTS_REQUIRE_OIDC_RECONCILIATION" in blockers
     assert "ACTUAL_ENVIRONMENT_NOT_DEPLOYED_OR_ATTESTED" in blockers
     assert "A08_FINAL_RETENTION_APPROVAL_REQUIRED" not in blockers
     assert "A09_EXACT_DISCOVERY_SOURCE_APPROVAL_REQUIRED" in blockers
@@ -150,5 +149,5 @@ def test_terraform_package_is_pinned_zero_worker_and_secret_minimized() -> None:
 
     blockers = set(validate_package()["blockers"])
     assert "TERRAFORM_PROVIDER_LOCK_REQUIRED" not in blockers
-    assert "AWS_CHARGE_AUTHORIZATION_REQUIRED" in blockers
+    assert "AWS_CHARGE_AUTHORIZATION_REQUIRED" not in blockers
     assert "AWS_AUTHENTICATED_PLAN_APPLY_AUTHORITY_REQUIRED" in blockers

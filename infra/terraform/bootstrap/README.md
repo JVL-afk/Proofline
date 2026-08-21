@@ -5,6 +5,12 @@ least-privilege state roles, and the dedicated CloudTrail data-event audit path 
 ADR-0075. It creates no Phase 1 workload, worker, business access, AI, browser, delivery, or
 application resource.
 
+For the bounded 24-company pilot, state and workload may use the same dedicated AWS account. The
+required separation is an IAM/resource/approval boundary rather than a second-account requirement:
+bootstrap, state-plan, state-apply, workload-plan, workload-apply, operator, worker, and kill-switch
+roles remain distinct. The state bucket name is derived as
+`m67-phase1-tfstate-<account-id>-us-east-2`; it is not an owner decision.
+
 ## One-time bootstrap boundary
 
 The backend cannot store the state used to create itself before it exists. An approved bootstrap
@@ -22,9 +28,7 @@ then securely destroy every local state copy. The Phase 1 application root uses
 ## Required owner inputs
 
 - exact state-administration AWS account and short-lived profile/execution identity;
-- confirmation of `us-east-2`;
-- globally unique state bucket name;
-- exact short-lived plan and apply principal ARNs;
+- exact short-lived plan and apply principal identities, derived from the authenticated SSO session;
 - explicit authorization for a future bootstrap apply and its AWS charges.
 
 No credential, generated backend file, tfvars file, plan, or state belongs in Git.

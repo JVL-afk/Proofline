@@ -1,0 +1,41 @@
+{
+  "record_type": "M67_TERRAFORM_APPLY_APPROVAL",
+  "version": "DRAFT",
+  "state": "AWAITING_AUTHENTICATED_PLAN",
+  "approval_event": "APPROVE_BOOTSTRAP_APPLY_OR_APPROVE_PHASE1_APPLY",
+  "plan_kind": null,
+  "system_observed_target": {"account_id": null, "organization_id": null, "region": "us-east-2", "authenticated_role": null},
+  "system_generated": {
+    "resource_names": [],
+    "resource_changes": [],
+    "plan_sha256": null,
+    "plan_json_sha256": null,
+    "configuration_sha256": null,
+    "provider_lock_sha256": null,
+    "container_image_digest": null
+  },
+  "review": {
+    "create_count": null,
+    "update_count": null,
+    "replace_count": null,
+    "destroy_count": null,
+    "security_settings": null,
+    "estimated_cost_usd": null,
+    "within_250_usd_ceiling": null,
+    "prohibited_infrastructure_present": null,
+    "unresolved_warnings": []
+  },
+  "fail_closed": {
+    "unexpected_destroy_blocks": true,
+    "unexpected_replace_blocks": true,
+    "cost_unknown_or_above_cap_blocks": true,
+    "target_mismatch_blocks": true,
+    "approval_applies_only_to_exact_plan_hash": true
+  },
+  "owner_subject_ref": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981",
+  "owner_signature": null,
+  "signed_at": null,
+  "expires_at": null,
+  "real_business_discovery": "NOT_AUTHORIZED",
+  "real_public_research": "NOT_AUTHORIZED"
+}

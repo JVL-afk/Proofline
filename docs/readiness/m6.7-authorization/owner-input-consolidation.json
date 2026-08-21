@@ -1,0 +1,27 @@
+{
+  "record_type": "M67_OWNER_INPUT_CONSOLIDATION",
+  "version": "1.0.0",
+  "previous_manual_input_line_items": 16,
+  "converted_to_system_derived_or_observed": 13,
+  "remaining_external_fact_line_items": 3,
+  "remaining_external_facts": [
+    "APPROVED_AWS_ACCOUNT",
+    "AWS_ORGANIZATION_IF_APPLICABLE",
+    "APPROVED_SHORT_LIVED_AWS_SSO_PROFILE_ENTRY_POINT"
+  ],
+  "conditional_non_business_operational_input": "HUMAN_ALARM_DESTINATION_ONLY_IF_AWS_NATIVE_DESTINATION_IS_INSUFFICIENT",
+  "owner_interactions_before_initial_discovery": 6,
+  "owner_interactions_through_seed_package_approval": 7,
+  "interactions": [
+    "CONFIGURE_AWS_ACCOUNT_AND_SHORT_LIVED_AUTHENTICATION",
+    "APPROVE_BOOTSTRAP_APPLY",
+    "APPROVE_PHASE1_APPLY",
+    "APPROVE_CONSOLIDATED_ENVIRONMENT_POLICY_EVIDENCE",
+    "APPROVE_SEED_SOURCE_GENERATION_POLICY_NO_LIVE_ACCESS",
+    "AUTHORIZE_REAL_BUSINESS_DISCOVERY_SEED_CONSTRUCTION_SUBSTAGE",
+    "APPROVE_GENERATED_SEED_SOURCE_PACKAGE_TO_CONTINUE_DISCOVERY"
+  ],
+  "research_pre_authorized": false,
+  "slot_1_pre_authorized": false,
+  "fail_closed_gates_weakened": false
+}

@@ -10,6 +10,18 @@ contains recommendations and draft records, not decisions. No real source was ac
 preparing it. If a new material prerequisite is discovered, it must be added through an immutable
 successor blocker record; it cannot remain an implicit or hidden gate.
 
+## Consolidated owner decisions
+
+`consolidated-owner-approval-2026-08-21.json` records every discretionary owner decision in one
+immutable artifact. It explicitly separates `OWNER_DECISION`, `EXTERNAL_FACT`,
+`SYSTEM_DERIVED_VALUE`, and `POST_DEPLOYMENT_EVIDENCE`. Random pre-deployment actor pseudonyms are
+recorded in `role-assignments.predeployment.json`; the private reconciliation salt remains outside
+Git, and live discovery still requires reconciliation to the deployed OIDC identity.
+
+The owner is not asked to invent AWS resource names, ARNs, image/plan/configuration/provider hashes,
+candidate references, source references, timestamps, seed commitments, or manifest hashes. Those
+are generated or observed and included in bounded approval artifacts.
+
 ## State separation
 
 ```text

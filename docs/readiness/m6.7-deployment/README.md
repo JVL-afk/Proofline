@@ -5,12 +5,12 @@ creation, business discovery, and public research remain separate authorities.
 
 ## Minimum inputs for the plan
 
-1. Approved workload AWS account ID and short-lived profile or role used for read/plan calls.
-2. Confirmed region `us-east-2`.
-3. Pre-created protected backend values: bucket, state key, KMS key ARN, and plan-role ARN.
-4. Immutable worker ECR URI pinned by `@sha256:<64 hex>`.
-5. Exact approved operator and kill-switch operator principal ARNs.
-6. A non-secret globally unique resource-name prefix only if the default cannot be used.
+1. Approved dedicated AWS account/organization fact, if an account already exists.
+2. Approved short-lived AWS CLI v2 IAM Identity Center/SSO profile entry point.
+
+Region `us-east-2`, resource names, role ARNs, backend values, image digest, plan hashes, provider
+lock hash, and configuration hashes are system-derived or observed. They are presented in the
+bootstrap/application plan records and are not independent owner inputs.
 
 Values AWS can return after authentication are observed rather than requested again. Credentials,
 backend files, tfvars, saved plans, and plan JSON stay outside Git.

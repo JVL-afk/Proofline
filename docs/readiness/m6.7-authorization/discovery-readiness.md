@@ -30,14 +30,16 @@ forms, booking, chat, mailboxes, communication, M6 activity, delivery, or AI.
 - Accepted A-03 tenancy, A-04 cloud/region/data, and A-07 identity/governance records.
 - Actual protected state bucket/KMS key, approved partial backend configuration, and reviewed plan
   under accepted ADR-0075. The cross-platform AWS provider lock is complete but grants no authority.
-- Explicit AWS charge authorization remains absent. The owner's Terraform-code authorization permits
-  formatting, validation and non-creating plan preparation only; it does not permit apply or charges.
-- Opaque stable subject bindings for the owner actor, PRIMARY_A actor, and external-attorney record;
-  the human role decisions are approved but no identity-provider subjects were invented.
+- The owner approved Terraform production/deployment under the USD 250 ceiling, but each exact saved
+  plan still requires its bounded `APPROVE_BOOTSTRAP_APPLY` or `APPROVE_PHASE1_APPLY` signature.
+- Pre-deployment pseudonymous bindings have been generated for the owner actor, PRIMARY_A actor,
+  and external-attorney record. Reconciliation to actual deployed OIDC issuer/subject evidence is
+  still required before live discovery; the owner is not asked to invent identifiers.
 - Exact A-09 approval for the provenance-backed seed artifact and every discovery host instance.
 - Acceptance of ADR-0071 after the deployed storage/environment and identity dependencies are
   complete. A-08 is approved but not live-effective, and A-17 is `APPROVE_WITH_CONTROLS`.
-- A populated, provenance-backed, approved and frozen seed manifest with at most 100 candidates.
+- A system-generated, provenance-backed, approved and frozen seed manifest with at most 100
+  candidates. The owner approves the immutable artifact rather than populating rows.
 - Final project-owner discovery-release signature after every other blocker clears.
 
 Only when every blocker except the final signature is resolved may the state become

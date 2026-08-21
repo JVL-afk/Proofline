@@ -4,8 +4,9 @@
 **Browser:** `DISABLED`
 **Live source operations performed while preparing this package:** 0
 
-The owner-approved source-category preference avoids a general search provider. An accountable owner supplies a
-bounded, provenance-backed Texas Commercial HVAC candidate manifest; the system freezes a seeded
+The owner-approved source-category preference avoids a general search provider. After discovery
+source authority exists, the system constructs a bounded, provenance-backed Texas Commercial HVAC
+candidate manifest through the approved mechanism; the system freezes a seeded
 selection and uses only each selected business's exact unauthenticated first-party website. Public
 government sources remain optional, targeted identity/eligibility validators and are
 `NOT_APPROVED_PENDING_SEPARATE_REVIEW` until their exact interface, terms and field treatment are
@@ -25,9 +26,14 @@ preserves the global 120 logical-fetch, 360-attempt and 36 MB ceilings. A host n
 research pages receives a terminal bounded/partial outcome unless a separately approved successor
 budget reduces another allocation; the cohort cap cannot silently increase.
 
-Exact first-party domains cannot be listed before discovery is authorized and the seed manifest is
-accepted. Each domain must become its own immutable source entry; wildcards such as `*.example.com`
+Exact first-party domains cannot be listed before the approved source mechanism constructs the seed
+artifact. Each domain must become its own immutable source entry; wildcards such as `*.example.com`
 are prohibited. Redirect targets require their own exact source approval or are rejected.
+
+Terms/robots URLs, normalized hosts, retrieval timestamps, accessibility, source hashes, and
+technical restrictions are collected automatically after the applicable source authority exists.
+The required human conclusion remains explicit per host. One signed batch may bind many separately
+enumerated host conclusions, but no blocked, uncertain, expired, or omitted host inherits approval.
 
 The seed artifact must validate against `phase1-owner-seed-manifest-v1.schema.json`, contain no more
 than 100 business-level candidates, preserve provenance for every eligibility claim, and contain no

@@ -1,0 +1,19 @@
+{
+  "record_type": "M67_CONSOLIDATED_ENVIRONMENT_ACCEPTANCE",
+  "version": "DRAFT",
+  "state": "AWAITING_POST_DEPLOYMENT_EVIDENCE",
+  "owner_subject_ref": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981",
+  "environment_evidence_hash": null,
+  "decisions": [
+    {"decision": "A-03", "meaning": "TENANCY_BOUNDARY", "evidence_refs": [], "state": "DRAFT"},
+    {"decision": "A-04", "meaning": "CLOUD_REGION_DATA_CONTROLS", "evidence_refs": [], "state": "DRAFT"},
+    {"decision": "A-07", "meaning": "IDENTITY_ACCESS_GOVERNANCE", "evidence_refs": [], "state": "DRAFT"},
+    {"decision": "A-08", "meaning": "RETENTION_LIVE_EFFECTIVENESS", "evidence_refs": [], "state": "DRAFT"},
+    {"decision": "ADR-0071", "meaning": "REAL_SOURCE_PRIVACY_RETENTION", "evidence_refs": [], "state": "DRAFT"}
+  ],
+  "single_signature_binds_every_enumerated_decision": true,
+  "decisions_remain_independently_auditable": true,
+  "signature": null,
+  "signed_at": null,
+  "configuration_hash": null
+}

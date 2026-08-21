@@ -1,0 +1,18 @@
+{
+  "record_type": "M67_PHASE1_WORKER_IMAGE_EVIDENCE",
+  "version": "DRAFT",
+  "state": "NOT_BUILT",
+  "source_commit": null,
+  "source_tree_clean": null,
+  "base_image_digest": null,
+  "dependency_inventory_hash": null,
+  "sbom_hash": null,
+  "vulnerability_scan_hash": null,
+  "blocking_findings": null,
+  "ecr_repository": null,
+  "image_digest": null,
+  "builder_identity_ref": null,
+  "built_at": null,
+  "configuration_hash": null,
+  "live_authority_granted": false
+}
