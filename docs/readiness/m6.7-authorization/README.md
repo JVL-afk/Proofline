@@ -1,6 +1,6 @@
 # M6.7 Phase 1 Final Authorization Package
 
-**Status:** `OWNER_SCOPE_AND_BUDGET_RESOLVED_AWAITING_LEGAL_ENVIRONMENT_SOURCE_ROLE_APPROVALS`
+**Status:** `LEGAL_AND_RETENTION_CONTROLS_RECORDED_AWAITING_IDENTITY_ENVIRONMENT_SOURCE_APPROVALS`
 **Prepared:** 2026-08-20
 **M6.7C closure:** `8cc38bd19cc45ae3712d6a106b982e3faf75d431`
 **Authority granted:** None
@@ -33,11 +33,11 @@ No state, approval, or activity implies the next.
 
 | Blocker | Current state | Decision/evidence required | Who must approve | Can remain blocked? |
 |---|---|---|---|---|
-| ADR-0071 | `BLOCKED` | Accept exact source/privacy/retention/environment policy after the packages below are completed | Project, privacy/data, security, qualified legal owners | Yes; blocks both permissions |
+| ADR-0071 | `PROPOSED_IMPLEMENTED_NOT_LIVE_ACCEPTED` | Accept after deployed storage/environment evidence and opaque owner bindings exist | Project, privacy/data and security owners | Yes; blocks both permissions |
 | Owner scope | `OWNER_APPROVED` | Recorded in `owner-decisions.md`; no company or source selected | Resolved for scope only | No hidden scope blocker remains |
-| A-08 | `OWNER_PROVISIONALLY_APPROVED_PENDING_LEGAL_REVIEW` | Counsel confirms/revises values; privacy/data and security owners approve exact successor | Privacy/data owner, qualified legal reviewer, security owner | Yes; blocks capture |
-| A-09 | `OWNER_CATEGORY_PREFERENCE_RECORDED_EXACT_INSTANCES_NOT_APPROVED` | Approve exact seed artifact and, after cohort freeze, every exact first-party host | Privacy/data owner, project owner, qualified legal/terms reviewer | Yes; blocks matching activity |
-| A-17 | `BLOCKED` | Scoped Texas legal/privacy/source conclusion answering the exact questions in this package | Qualified legal reviewer plus accountable project acceptance | Yes; blocks both permissions |
+| A-08 | `APPROVED_POLICY_NOT_LIVE_EFFECTIVE` | Bind to deployed environment and opaque owner identities | Privacy/data and security owner actor bindings | Policy resolved; live gate remains blocked |
+| A-09 | `APPROVED_WITH_PER_HOST_REVIEW_EXACT_INSTANCES_NOT_APPROVED` | Approve exact seed artifact and, after cohort freeze, every exact first-party host | Privacy/data owner and accountable per-host reviewer | Yes; blocks matching activity |
+| A-17 | `APPROVE_WITH_CONTROLS` | Attorney result recorded; controls implemented; attorney identity/credential record remains to be bound | External attorney record plus project acceptance | Conclusion resolved; identity release gate remains |
 | A-03 | `BLOCKED` | Select the exact single-workspace tenancy boundary and accountable operator | Project and security owners | Yes; blocks live environment |
 | A-04 | `BLOCKED` | Select cloud, US region, storage, encryption/key ownership, backups and recovery evidence | Security/environment and project owners | Yes; blocks live environment |
 | A-07 | `BLOCKED` | Select OIDC/MFA, workload identity, operator roles, access review and audit behavior | Security/environment and privacy/data owners | Yes; blocks live environment |
@@ -76,10 +76,15 @@ execution is a separate post-research-authorization run gate rather than a real-
 - `phase1-owner-seed-manifest-v1.schema.json`: business-only seed-manifest contract.
 - `seed-and-selection-policy.md`: eligibility, deduplication, seed, ordering and replacement rules.
 - `discovery-readiness.md`: unsigned discovery-release scope and current exact blockers.
+- `a17-attorney-result-2026-08-21.json`: attorney-provided fact-bound result; not a Codex legal opinion.
+- `texas-statutory-provenance-2026-08-21.json`: official Texas proposition-level verification.
+- `phase1-retention-policy-v1.json`: approved, non-live-effective minimized-capture schedule.
+- `phase1-counsel-controls.md`: implemented minimization, destruction, incident, source, and
+  mandatory re-review boundaries.
 - `role-assignments.template.json`: immutable opaque-subject assignment shape; every subject remains
   unassigned.
-- `a17-qualified-review.template.json`: qualified-reviewer intake with fourteen unresolved issues;
-  it contains no generated legal conclusion.
+- `a17-qualified-review.template.json`: preserved original qualified-reviewer intake; the completed
+  attorney-provided result is a separate immutable successor.
 - `discovery-signature.template.json`: exact unsigned discovery-only release shape; it cannot grant
   research or slot authority.
 - `../../../infra/terraform/phase1/`: reviewable ADR-0075 Terraform package and locked provider;

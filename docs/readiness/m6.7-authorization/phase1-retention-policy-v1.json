@@ -1,0 +1,35 @@
+{
+  "record_type": "A08_PHASE1_MINIMIZED_RETENTION_POLICY",
+  "version": "2026-08-21.1",
+  "state": "APPROVED_POLICY_NOT_LIVE_EFFECTIVE",
+  "approval_actor_binding": "OWNER_SUBJECT_PENDING_IDP_BINDING",
+  "backup_overhang_days": 30,
+  "rules": [
+    {"data_class":"SUCCESSFUL_MINIMIZED_SNAPSHOT","days":90,"maximum_effective_days":120},
+    {"data_class":"FAILED_ABORTED_CAPTURE","days":30,"maximum_effective_days":60},
+    {"data_class":"EXTRACTED_TEXT","days":90,"maximum_effective_days":120},
+    {"data_class":"EVIDENCE_EXCERPT_LOCATOR","days":90,"maximum_effective_days":120},
+    {"data_class":"ANALYSIS_ARTIFACT","days":180,"maximum_effective_days":210},
+    {"data_class":"HUMAN_REVIEW_RECORD","days":365,"maximum_effective_days":395,"redacted_excerpts_only":true},
+    {"data_class":"COMPANY_METRIC","days":180,"maximum_effective_days":210},
+    {"data_class":"APPROVED_AGGREGATE_METRIC","days":365,"maximum_effective_days":395},
+    {"data_class":"OPERATIONAL_LOG","days":90,"maximum_effective_days":120},
+    {"data_class":"SECURITY_ACCESS_LOG","days":365,"maximum_effective_days":395},
+    {"data_class":"ENCRYPTED_BACKUP","days":30,"maximum_effective_days":30},
+    {"data_class":"DELETION_TOMBSTONE","days":730,"maximum_effective_days":730}
+  ],
+  "destruction_methods": [
+    "HARD_DELETE_PRIMARY_AND_DERIVED",
+    "OBJECT_VERSION_LIFECYCLE_DELETE",
+    "LOG_EXPIRY",
+    "CRYPTOGRAPHIC_ERASURE",
+    "CONTENT_FREE_TOMBSTONE"
+  ],
+  "store_scope": ["primary","replicas","object_versions","backups","derived_stores"],
+  "tombstone_allowed_fields": [
+    "artifact_hash","internal_artifact_id","data_class","deletion_reason_code","deleted_at","policy_revision"
+  ],
+  "tombstone_source_url_allowed": false,
+  "legal_hold_policy": "EXACT_SCOPE_EXPLICIT_APPROVAL_EXPIRY_AND_PERIODIC_REAPPROVAL_REQUIRED",
+  "live_capture_authority_granted": false
+}

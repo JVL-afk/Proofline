@@ -21,10 +21,10 @@ resource "aws_db_instance" "phase1" {
   db_subnet_group_name                = aws_db_subnet_group.phase1.name
   vpc_security_group_ids              = [aws_security_group.database.id]
   backup_retention_period             = var.backup_retention_days
+  delete_automated_backups            = true
   copy_tags_to_snapshot               = true
   deletion_protection                 = true
-  skip_final_snapshot                 = false
-  final_snapshot_identifier           = "${var.name_prefix}-postgres-final"
+  skip_final_snapshot                 = true
   auto_minor_version_upgrade          = false
   apply_immediately                   = false
 }

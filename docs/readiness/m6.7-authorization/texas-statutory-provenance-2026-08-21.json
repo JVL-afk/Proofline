@@ -1,0 +1,89 @@
+{
+  "record_type": "TEXAS_PRIMARY_STATUTORY_PROVENANCE",
+  "version": "2026-08-21.1",
+  "retrieved_at": "2026-08-21T14:01:10+03:00",
+  "purpose": "Independent proposition-level citation verification; not a substituted legal opinion",
+  "authorities": [
+    {
+      "authority_id": "TX-BC-521.002",
+      "official_url": "https://statutes.capitol.texas.gov/Docs/BC/pdf/BC.521.pdf",
+      "section": "Texas Business & Commerce Code 521.002",
+      "subsection": "(a)(2), (b)",
+      "proposition": "The chapter defines sensitive personal information through specified identity/financial combinations and identified health-related information, while excluding qualifying publicly available government information.",
+      "verification": "STATUTORILY_VERIFIED"
+    },
+    {
+      "authority_id": "TX-BC-521.052-A",
+      "official_url": "https://statutes.capitol.texas.gov/Docs/BC/pdf/BC.521.pdf",
+      "section": "Texas Business & Commerce Code 521.052",
+      "subsection": "(a)",
+      "proposition": "A business must implement and maintain reasonable procedures, including appropriate corrective action, to protect sensitive personal information collected or maintained in the regular course of business from unlawful use or disclosure.",
+      "verification": "STATUTORILY_VERIFIED"
+    },
+    {
+      "authority_id": "TX-BC-521.052-B",
+      "official_url": "https://statutes.capitol.texas.gov/Docs/BC/pdf/BC.521.pdf",
+      "section": "Texas Business & Commerce Code 521.052",
+      "subsection": "(b)",
+      "proposition": "Customer records containing sensitive personal information that are not retained must be destroyed by shredding, erasing, or otherwise modifying the information so it is unreadable or indecipherable.",
+      "verification": "STATUTORILY_VERIFIED"
+    },
+    {
+      "authority_id": "TX-BC-521.053-B",
+      "official_url": "https://statutes.capitol.texas.gov/Docs/BC/pdf/BC.521.pdf",
+      "section": "Texas Business & Commerce Code 521.053",
+      "subsection": "(b)",
+      "proposition": "When the subsection applies, disclosure to affected individuals must occur without unreasonable delay and no later than 60 days after breach determination, subject to the subsection's stated exceptions.",
+      "verification": "STATUTORILY_VERIFIED"
+    },
+    {
+      "authority_id": "TX-BC-521.053-I",
+      "official_url": "https://statutes.capitol.texas.gov/Docs/BC/pdf/BC.521.pdf",
+      "section": "Texas Business & Commerce Code 521.053",
+      "subsection": "(i)",
+      "proposition": "A person required to provide breach notification must notify the Texas Attorney General as soon as practicable and no later than 30 days after breach determination when the breach involves at least 250 Texas residents.",
+      "verification": "STATUTORILY_VERIFIED"
+    },
+    {
+      "authority_id": "TX-BC-541.002-A",
+      "official_url": "https://statutes.capitol.texas.gov/Docs/BC/pdf/BC.541.pdf",
+      "section": "Texas Business & Commerce Code 541.002",
+      "subsection": "(a)",
+      "proposition": "Chapter 541 applies only when all listed conditions are met, including that the person is not an SBA-defined small business, except to the extent Section 541.107 applies.",
+      "verification": "STATUTORILY_VERIFIED"
+    },
+    {
+      "authority_id": "TX-BC-541.107",
+      "official_url": "https://statutes.capitol.texas.gov/Docs/BC/pdf/BC.541.pdf",
+      "section": "Texas Business & Commerce Code 541.107",
+      "subsection": "(a)-(b)",
+      "proposition": "The small-business treatment does not permit sale of sensitive personal data without prior consumer consent and violations remain subject to the referenced penalty provision.",
+      "verification": "STATUTORILY_VERIFIED"
+    },
+    {
+      "authority_id": "TX-BC-510.001-4",
+      "official_url": "https://statutes.capitol.texas.gov/Docs/BC/pdf/BC.510.pdf",
+      "section": "Texas Business & Commerce Code 510.001",
+      "subsection": "(4)",
+      "proposition": "A data broker is a business entity that collects, processes, or transfers personal data not collected directly from the linked or linkable individual.",
+      "verification": "STATUTORILY_VERIFIED"
+    },
+    {
+      "authority_id": "TX-BC-510.002",
+      "official_url": "https://statutes.capitol.texas.gov/Docs/BC/pdf/BC.510.pdf",
+      "section": "Texas Business & Commerce Code 510.002",
+      "subsection": "(a)-(b)",
+      "proposition": "The chapter applies to personal data handled by a data broker but excludes specified categories including publicly available information and qualifying public-source inferences that do not reveal sensitive individual data.",
+      "verification": "STATUTORILY_VERIFIED"
+    },
+    {
+      "authority_id": "TX-BC-510.003",
+      "official_url": "https://statutes.capitol.texas.gov/Docs/BC/pdf/BC.510.pdf",
+      "section": "Texas Business & Commerce Code 510.003",
+      "subsection": "(a)-(b)",
+      "proposition": "Entity applicability requires either more than 50 percent of twelve-month revenue from covered processing/transfers or revenue from covered data of more than 50,000 individuals, subject to listed entity exclusions.",
+      "verification": "STATUTORILY_VERIFIED"
+    }
+  ],
+  "attorney_asserted_citation_unresolved": []
+}

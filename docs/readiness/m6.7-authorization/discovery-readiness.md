@@ -30,11 +30,13 @@ forms, booking, chat, mailboxes, communication, M6 activity, delivery, or AI.
 - Accepted A-03 tenancy, A-04 cloud/region/data, and A-07 identity/governance records.
 - Actual protected state bucket/KMS key, approved partial backend configuration, and reviewed plan
   under accepted ADR-0075. The cross-platform AWS provider lock is complete but grants no authority.
-- Opaque stable subject assignments for all eight operational roles.
-- Final A-08 approval after qualified legal/privacy review.
+- Explicit AWS charge authorization remains absent. The owner's Terraform-code authorization permits
+  formatting, validation and non-creating plan preparation only; it does not permit apply or charges.
+- Opaque stable subject bindings for the owner actor, PRIMARY_A actor, and external-attorney record;
+  the human role decisions are approved but no identity-provider subjects were invented.
 - Exact A-09 approval for the provenance-backed seed artifact and every discovery host instance.
-- Qualified A-17 conclusions and required controls.
-- Acceptance of ADR-0071 after its dependent decisions are complete.
+- Acceptance of ADR-0071 after the deployed storage/environment and identity dependencies are
+  complete. A-08 is approved but not live-effective, and A-17 is `APPROVE_WITH_CONTROLS`.
 - A populated, provenance-backed, approved and frozen seed manifest with at most 100 candidates.
 - Final project-owner discovery-release signature after every other blocker clears.
 

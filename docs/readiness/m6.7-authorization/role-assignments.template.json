@@ -1,25 +1,33 @@
 {
   "record_type": "M67_OPERATIONAL_ROLE_ASSIGNMENTS",
-  "version": "DRAFT",
-  "state": "AWAITING_OPAQUE_SUBJECTS",
+  "version": "2026-08-21.2",
+  "state": "APPROVED_PENDING_IDENTITY_BINDING",
   "identity_provider_revision": null,
   "effective_at": null,
   "expires_at": null,
   "assignments": [
-    {"role": "PROJECT_OWNER", "subject_ref": null, "role_pseudonym": null, "assignment_approval_id": null},
-    {"role": "OPPORTUNITY_REVIEWER", "subject_ref": null, "role_pseudonym": null, "assignment_approval_id": null},
-    {"role": "INDEPENDENT_SECOND_REVIEWER", "subject_ref": null, "role_pseudonym": null, "assignment_approval_id": null},
-    {"role": "INCIDENT_OWNER", "subject_ref": null, "role_pseudonym": null, "assignment_approval_id": null},
-    {"role": "PRIVACY_DATA_OWNER", "subject_ref": null, "role_pseudonym": null, "assignment_approval_id": null},
-    {"role": "KILL_SWITCH_OPERATOR", "subject_ref": null, "role_pseudonym": null, "assignment_approval_id": null},
-    {"role": "SECURITY_ENVIRONMENT_OWNER", "subject_ref": null, "role_pseudonym": null, "assignment_approval_id": null},
-    {"role": "QUALIFIED_LEGAL_REVIEWER", "subject_ref": null, "role_pseudonym": null, "assignment_approval_id": null}
+    {"role": "PROJECT_OWNER", "approved_actor_binding": "OWNER_SUBJECT", "subject_ref": null, "assignment_approval_id": "OWNER_DECISION_2026-08-21"},
+    {"role": "OPPORTUNITY_REVIEWER", "approved_actor_binding": "OWNER_SUBJECT", "subject_ref": null, "assignment_approval_id": "OWNER_DECISION_2026-08-21"},
+    {"role": "INDEPENDENT_SECOND_REVIEWER", "approved_actor_binding": "PRIMARY_A_SUBJECT", "subject_ref": null, "assignment_approval_id": "OWNER_DECISION_2026-08-21"},
+    {"role": "INCIDENT_OWNER", "approved_actor_binding": "OWNER_SUBJECT", "subject_ref": null, "assignment_approval_id": "OWNER_DECISION_2026-08-21"},
+    {"role": "PRIVACY_DATA_OWNER", "approved_actor_binding": "OWNER_SUBJECT", "subject_ref": null, "assignment_approval_id": "OWNER_DECISION_2026-08-21"},
+    {"role": "KILL_SWITCH_OPERATOR", "approved_actor_binding": "OWNER_SUBJECT", "subject_ref": null, "assignment_approval_id": "OWNER_DECISION_2026-08-21"},
+    {"role": "SECURITY_ENVIRONMENT_OWNER", "approved_actor_binding": "OWNER_SUBJECT", "subject_ref": null, "assignment_approval_id": "OWNER_DECISION_2026-08-21"},
+    {"role": "QUALIFIED_LEGAL_REVIEWER", "approved_actor_binding": "EXTERNAL_ATTORNEY_A17_SUBJECT", "subject_ref": null, "assignment_approval_id": "OWNER_RECORDED_ATTORNEY_EVIDENCE_2026-08-21"}
   ],
   "constraints": {
     "opportunity_reviewer_must_differ_from_independent_second": true,
     "project_owner_must_differ_from_qualified_legal_reviewer": true,
     "personally_identifying_values_prohibited": true
   },
-  "approval_ids": [],
+  "identity_values_still_required": [
+    "identity_provider_revision",
+    "OWNER_SUBJECT opaque IdP subject or approved digest",
+    "PRIMARY_A_SUBJECT opaque IdP subject or approved digest",
+    "EXTERNAL_ATTORNEY_A17_SUBJECT approved subject digest or counsel-record identifier",
+    "effective_at",
+    "expires_at"
+  ],
+  "approval_ids": ["OWNER_DECISION_2026-08-21"],
   "configuration_hash": null
 }

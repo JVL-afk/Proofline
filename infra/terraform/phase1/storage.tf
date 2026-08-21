@@ -39,11 +39,34 @@ resource "aws_s3_bucket_lifecycle_configuration" "captures" {
     filter {}
     expiration { days = var.capture_retention_days }
     noncurrent_version_expiration {
-      noncurrent_days = var.capture_retention_days
+      noncurrent_days = 30
     }
   }
 
   depends_on = [aws_s3_bucket_versioning.captures]
+}
+
+data "aws_iam_policy_document" "captures_bucket" {
+  statement {
+    sid    = "DenyInsecureTransport"
+    effect = "Deny"
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    actions   = ["s3:*"]
+    resources = [aws_s3_bucket.captures.arn, "${aws_s3_bucket.captures.arn}/*"]
+    condition {
+      test     = "Bool"
+      variable = "aws:SecureTransport"
+      values   = ["false"]
+    }
+  }
+}
+
+resource "aws_s3_bucket_policy" "captures" {
+  bucket = aws_s3_bucket.captures.id
+  policy = data.aws_iam_policy_document.captures_bucket.json
 }
 
 resource "aws_s3_bucket" "audit" {
@@ -72,6 +95,19 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "audit" {
       kms_master_key_id = aws_kms_key.logs.arn
     }
   }
+}
+
+resource "aws_s3_bucket_lifecycle_configuration" "audit" {
+  bucket = aws_s3_bucket.audit.id
+  rule {
+    id     = "restricted-security-audit-retention"
+    status = "Enabled"
+    filter {}
+    expiration { days = 365 }
+    noncurrent_version_expiration { noncurrent_days = 30 }
+  }
+
+  depends_on = [aws_s3_bucket_versioning.audit]
 }
 
 data "aws_iam_policy_document" "audit_bucket" {

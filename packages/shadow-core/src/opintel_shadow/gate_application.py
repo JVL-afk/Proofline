@@ -348,7 +348,7 @@ class LiveResearchGateService:
             ),
             created_at=self._clock.now(),
             data_class=artifact.data_class,
-            artifact_ref=artifact.artifact_ref,
+            artifact_ref_hash=stable_hash(artifact.artifact_ref),
             retention_policy_id=policy.id,
             eligible_at=eligible_at,
             deleted_at=self._clock.now(),

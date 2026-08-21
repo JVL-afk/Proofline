@@ -188,6 +188,8 @@ def _source(
         access_method=SourceAccessMethod.PUBLIC_HTTP_GET_HEAD,
         terms_review_state=TermsReviewState.APPROVED,
         terms_review_id="fixture-terms-review",
+        per_host_review_state="APPROVED",
+        per_host_review_record_hash="fixture-per-host-review-hash",
         robots_treatment="required_fail_closed",
         max_logical_fetches=120,
         max_total_attempts=360,
@@ -388,8 +390,10 @@ def test_data_policy_structurally_prohibits_every_person_contact_projection(
     clock: MutableClock,
 ) -> None:
     policy = _data_policy(clock)
-    assert policy.restricted_captures_immutable
-    assert policy.incidental_public_person_data_capture_only
+    assert policy.ephemeral_raw_fetch_only
+    assert policy.durable_minimized_capture_only
+    assert not policy.unrestricted_raw_capture_allowed
+    assert policy.unsafe_minimization_requires_quarantine
     assert not policy.person_contact_domain_extraction_allowed
     assert not policy.person_contact_indexing_allowed
     assert not policy.person_contact_search_allowed
@@ -986,6 +990,8 @@ def test_deletion_requires_expiry_and_emits_content_free_tombstone(
     assert not artifact_store.exists(WORKSPACE_ID, artifact.artifact_ref)
     assert audit.content_deleted and audit.superseded_artifact
     assert audit.tombstone_ref.startswith("tombstone:")
+    assert audit.artifact_ref_hash == stable_hash(artifact.artifact_ref)
+    assert artifact.artifact_ref not in audit.model_dump_json()
     assert "synthetic page" not in audit.model_dump_json()
 
 

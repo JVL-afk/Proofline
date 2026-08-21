@@ -1,0 +1,69 @@
+{
+  "record_type": "A17_ATTORNEY_PROVIDED_RESULT",
+  "version": "2026-08-21.1",
+  "state": "APPROVE_WITH_CONTROLS",
+  "evidence_classification": "ATTORNEY_PROVIDED_LEGAL_REVIEW_EVIDENCE",
+  "attorney_identity_binding": "EXTERNAL_ATTORNEY_A17_SUBJECT_PENDING_APPROVED_DIGEST",
+  "attorney_follow_up_available": false,
+  "recorded_at": "2026-08-21T14:01:10+03:00",
+  "effective_at": null,
+  "review_trigger_instead_of_fixed_expiry": true,
+  "applicability_conclusion": {
+    "classification": "CURRENT_FACT_BOUND_COUNSEL_CONCLUSION",
+    "conclusion": "Not applicable to the organization today based on the small-business exemption and the facts supplied to counsel.",
+    "facts_supplied_to_counsel": ["one employee", "USD 0 receipts"],
+    "attorney_statement": "The supplied facts fall below applicable SBA small-business standards.",
+    "prohibited_generalization": "TDPSA_NEVER_APPLIES",
+    "mandatory_re_review": "organization size, revenue, or business structure materially changes"
+  },
+  "required_modifications": [
+    {
+      "control": "INGEST_REDACTION_OR_FIELD_LIMITED_CAPTURE",
+      "attorney_conclusion": "Downstream non-extraction alone is insufficient; implement ingest redaction/minimization or field-limited capture."
+    },
+    {
+      "control": "CHAPTER_521_SAFEGUARDS",
+      "attorney_conclusion": "Chapter 521 safeguards attach to qualifying information actually maintained."
+    },
+    {
+      "control": "DESTRUCTION_CONTROLS",
+      "attorney_conclusion": "Additional safeguards and destruction controls are required."
+    },
+    {
+      "control": "BREACH_RESPONSE_PROCEDURES",
+      "attorney_conclusion": "Breach-response procedures are required."
+    }
+  ],
+  "data_broker_conclusion": {
+    "state": "NOT_APPLICABLE_UNDER_STATED_PHASE1_MODEL",
+    "mandatory_re_review_before": [
+      "personal/contact extraction",
+      "enrichment",
+      "resale",
+      "third-party personal-data sourcing"
+    ]
+  },
+  "source_conclusion": {
+    "state": "APPROVED_WITH_PER_HOST_REVIEW",
+    "blanket_source_approval": false,
+    "material_prohibition_or_unresolved_material_risk": "SOURCE_BLOCKED"
+  },
+  "mandatory_legal_re_review_triggers": [
+    "person/contact extraction",
+    "enrichment",
+    "people or email databases",
+    "third-party personal-data sourcing",
+    "sale or transfer of personal data",
+    "outbound outreach",
+    "organization size or revenue changes material to the exemption conclusion",
+    "other material processing change specified by counsel"
+  ],
+  "attestation": {
+    "source": "qualified attorney identified by the project owner",
+    "recording_provenance": "PROJECT_OWNER_TRANSCRIPTION_OF_COMPLETED_COUNSEL_REVIEW",
+    "codex_legal_opinion_substituted": false,
+    "reviewer_subject_ref": null,
+    "reviewer_credential_record_ref": null
+  },
+  "configuration_hash": null
+}

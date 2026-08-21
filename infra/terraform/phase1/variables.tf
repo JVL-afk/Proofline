@@ -83,18 +83,20 @@ variable "worker_desired_count" {
 }
 
 variable "capture_retention_days" {
-  description = "Exact final A-08 restricted-capture retention; no default is permitted."
+  description = "Exact A-08 successful minimized-capture retention."
   type        = number
+  default     = 90
 
   validation {
-    condition     = var.capture_retention_days > 0
-    error_message = "A final positive capture retention is required."
+    condition     = var.capture_retention_days == 90
+    error_message = "Phase 1 minimized captures have an exact 90-day primary retention."
   }
 }
 
 variable "backup_retention_days" {
   description = "Exact approved RDS backup retention, capped at the approved 30-day overhang."
   type        = number
+  default     = 30
 
   validation {
     condition     = var.backup_retention_days >= 1 && var.backup_retention_days <= 30

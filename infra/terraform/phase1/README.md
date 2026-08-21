@@ -21,6 +21,10 @@ Supply outside Git:
 - explicit AWS charge authorization bounded to USD 250;
 - approved plan/apply actors and an expiring apply approval.
 
+A-08 now fixes minimized-capture retention at 90 days and encrypted backup overhang at no more than
+30 days; the example uses 90 and 30. Terraform still requires the exact account, immutable image,
+identity principals, backend, price review, and authorization inputs before a plan against AWS.
+
 ## Exact execution procedure
 
 Run from this directory only after every prerequisite is recorded:

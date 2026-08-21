@@ -141,8 +141,10 @@ class DataHandlingPolicyRevision(GateRecordBase):
     effective_at: datetime
     expires_at: datetime
     data_classes: tuple[GovernedDataClass, ...] = tuple(GovernedDataClass)
-    restricted_captures_immutable: Literal[True] = True
-    incidental_public_person_data_capture_only: Literal[True] = True
+    ephemeral_raw_fetch_only: Literal[True] = True
+    durable_minimized_capture_only: Literal[True] = True
+    unrestricted_raw_capture_allowed: Literal[False] = False
+    unsafe_minimization_requires_quarantine: Literal[True] = True
     person_contact_domain_extraction_allowed: Literal[False] = False
     person_contact_indexing_allowed: Literal[False] = False
     person_contact_search_allowed: Literal[False] = False
@@ -222,6 +224,8 @@ class SourceInstance(FrozenModel):
     authenticated: Literal[False] = False
     terms_review_state: TermsReviewState
     terms_review_id: str
+    per_host_review_state: Literal["APPROVED"]
+    per_host_review_record_hash: str
     robots_treatment: RobotsTreatment
     max_logical_fetches: int
     max_total_attempts: int
@@ -254,6 +258,8 @@ class SourceInstance(FrozenModel):
             raise ValueError("source budgets must be explicitly positive")
         if self.max_total_attempts < self.max_logical_fetches:
             raise ValueError("source attempt cap cannot be below logical fetch cap")
+        if not self.per_host_review_record_hash:
+            raise ValueError("exact source requires a per-host review record hash")
         return self
 
 
@@ -538,7 +544,7 @@ class LegalHold(FrozenModel):
 class DeletionAuditRecord(GateRecordBase):
     record_kind: Literal["deletion_audit"] = "deletion_audit"
     data_class: GovernedDataClass
-    artifact_ref: str
+    artifact_ref_hash: str
     retention_policy_id: UUID
     eligible_at: datetime
     deleted_at: datetime

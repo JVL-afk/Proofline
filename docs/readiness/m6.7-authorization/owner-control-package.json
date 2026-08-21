@@ -1,6 +1,6 @@
 {
   "record_type": "M67_PHASE1_OWNER_CONTROL_PACKAGE",
-  "version": "2026-08-21.1",
+  "version": "2026-08-21.2",
   "predecessor_commit": "519b92d02461c14ecaecfa522997abfcd7185622",
   "scope": {
     "candidate_frame_maximum": 100,
@@ -53,9 +53,9 @@
     "browser": "DISABLED",
     "person_contact_processing": "NOT_AUTHORIZED",
     "delivery": "UNAVAILABLE",
-    "a08": "OWNER_PROVISIONALLY_APPROVED_PENDING_LEGAL_REVIEW",
-    "a09": "EXACT_SOURCE_INSTANCES_NOT_APPROVED",
-    "a17": "BLOCKED_PENDING_QUALIFIED_LEGAL_REVIEW",
+    "a08": "APPROVED_POLICY_NOT_LIVE_EFFECTIVE",
+    "a09": "APPROVED_WITH_PER_HOST_REVIEW_EXACT_INSTANCES_NOT_APPROVED",
+    "a17": "APPROVE_WITH_CONTROLS",
     "real_business_discovery": "NOT_AUTHORIZED",
     "real_public_research": "NOT_AUTHORIZED"
   },

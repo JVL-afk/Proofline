@@ -4,6 +4,5 @@ operator_principal_arns                  = ["REPLACE_WITH_APPROVED_SHORT_LIVED_P
 kill_switch_operator_principal_arn       = "REPLACE_WITH_APPROVED_KILL_OPERATOR_ARN"
 worker_desired_count                     = 0
 
-# Required only after final A-08 approval; no repository default is permitted:
-# capture_retention_days = REPLACE_WITH_FINAL_APPROVED_INTEGER
-# backup_retention_days  = REPLACE_WITH_FINAL_APPROVED_INTEGER_NOT_ABOVE_30
+capture_retention_days = 90
+backup_retention_days  = 30

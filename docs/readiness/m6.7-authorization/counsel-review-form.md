@@ -1,14 +1,15 @@
 # M6.7 Phase 1 A-17 Counsel Review Form
 
-**State:** `BLOCKED_PENDING_QUALIFIED_LEGAL_REVIEW`
+**State:** `COMPLETED_RESULT_RECORDED_AS_APPROVE_WITH_CONTROLS`
 **Jurisdiction:** `US-TX`
 **Scope:** 24 Commercial HVAC businesses; B2B inbound lead-response analysis; company-level public
 research only; no person/contact projection or communication
-**Legal conclusions recorded:** None
+**Legal conclusions recorded:** Attorney-provided evidence is preserved verbatim in
+`a17-attorney-result-2026-08-21.json`; statutory provenance verification is separate.
 
-This form requests qualified legal review. Repository analysis and project-owner preferences are not
-legal advice or approval. Counsel must validate the authority register and its currency as of the
-review effective date.
+This was the intake form for the now-completed qualified legal review. The attorney is unavailable
+for follow-up. Missing identity-provider binding is not filled by Codex, and Codex does not rewrite
+or strengthen the attorney's conclusions.
 
 ## Questions
 

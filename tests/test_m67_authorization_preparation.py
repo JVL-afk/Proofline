@@ -34,9 +34,9 @@ def test_exact_human_environment_and_policy_blockers_are_visible() -> None:
     assert "ROLE_SUBJECT_REQUIRED:INDEPENDENT_SECOND_REVIEWER" in blockers
     assert "ROLE_SUBJECT_REQUIRED:QUALIFIED_LEGAL_REVIEWER" in blockers
     assert "ACTUAL_ENVIRONMENT_NOT_DEPLOYED_OR_ATTESTED" in blockers
-    assert "A08_FINAL_RETENTION_APPROVAL_REQUIRED" in blockers
+    assert "A08_FINAL_RETENTION_APPROVAL_REQUIRED" not in blockers
     assert "A09_EXACT_DISCOVERY_SOURCE_APPROVAL_REQUIRED" in blockers
-    assert "A17_QUALIFIED_LEGAL_APPROVAL_REQUIRED" in blockers
+    assert "A17_QUALIFIED_LEGAL_APPROVAL_REQUIRED" not in blockers
     assert "ADR_0071_ACCEPTANCE_REQUIRED" in blockers
     assert "OWNER_DISCOVERY_RELEASE_SIGNATURE_REQUIRED" in blockers
 

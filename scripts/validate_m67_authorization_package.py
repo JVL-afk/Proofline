@@ -16,7 +16,11 @@ SEED_TEMPLATE = (
 PROVISIONING_SPEC = ROOT / "infra/aws/phase1/provisioning-spec.json"
 DEPLOYMENT_EVIDENCE = ROOT / "infra/aws/phase1/deployed-environment-evidence.template.json"
 ROLE_ASSIGNMENTS = ROOT / "docs/readiness/m6.7-authorization/role-assignments.template.json"
-A17_REVIEW = ROOT / "docs/readiness/m6.7-authorization/a17-qualified-review.template.json"
+A17_REVIEW = ROOT / "docs/readiness/m6.7-authorization/a17-attorney-result-2026-08-21.json"
+STATUTORY_PROVENANCE = (
+    ROOT / "docs/readiness/m6.7-authorization/texas-statutory-provenance-2026-08-21.json"
+)
+RETENTION_POLICY = ROOT / "docs/readiness/m6.7-authorization/phase1-retention-policy-v1.json"
 DISCOVERY_SIGNATURE = ROOT / "docs/readiness/m6.7-authorization/discovery-signature.template.json"
 TERRAFORM_ROOT = ROOT / "infra/terraform/phase1"
 
@@ -231,6 +235,31 @@ def validate_role_assignments(value: dict[str, Any]) -> None:
     _require(value.get("record_type") == "M67_OPERATIONAL_ROLE_ASSIGNMENTS", "wrong role type")
     assignments = cast(list[dict[str, Any]], value.get("assignments"))
     _require([item.get("role") for item in assignments] == list(ROLE_NAMES), "role order drift")
+    _require(
+        value.get("state") == "APPROVED_PENDING_IDENTITY_BINDING",
+        "role decisions must remain pending identity binding",
+    )
+    bindings = {str(item["role"]): item.get("approved_actor_binding") for item in assignments}
+    owner_roles = {
+        "PROJECT_OWNER",
+        "OPPORTUNITY_REVIEWER",
+        "INCIDENT_OWNER",
+        "PRIVACY_DATA_OWNER",
+        "KILL_SWITCH_OPERATOR",
+        "SECURITY_ENVIRONMENT_OWNER",
+    }
+    _require(
+        all(bindings[role] == "OWNER_SUBJECT" for role in owner_roles),
+        "owner role decision drift",
+    )
+    _require(
+        bindings["INDEPENDENT_SECOND_REVIEWER"] == "PRIMARY_A_SUBJECT",
+        "independent reviewer decision drift",
+    )
+    _require(
+        bindings["QUALIFIED_LEGAL_REVIEWER"] == "EXTERNAL_ATTORNEY_A17_SUBJECT",
+        "legal reviewer decision drift",
+    )
     by_role = {str(item["role"]): item.get("subject_ref") for item in assignments}
     primary = by_role["OPPORTUNITY_REVIEWER"]
     second = by_role["INDEPENDENT_SECOND_REVIEWER"]
@@ -243,20 +272,76 @@ def validate_role_assignments(value: dict[str, Any]) -> None:
 
 
 def validate_a17_template(value: dict[str, Any]) -> None:
-    _require(value.get("record_type") == "A17_QUALIFIED_LEGAL_REVIEW", "wrong A-17 type")
-    issues = cast(list[dict[str, Any]], value.get("issues"))
+    _require(value.get("record_type") == "A17_ATTORNEY_PROVIDED_RESULT", "wrong A-17 type")
+    _require(value.get("state") == "APPROVE_WITH_CONTROLS", "A-17 conclusion drift")
+    applicability = cast(dict[str, Any], value.get("applicability_conclusion"))
     _require(
-        [item.get("issue_id") for item in issues]
-        == [f"A17-Q{number:02d}" for number in range(1, 15)],
-        "A-17 issue inventory drift",
+        applicability.get("classification") == "CURRENT_FACT_BOUND_COUNSEL_CONCLUSION",
+        "A-17 must remain fact-bound",
     )
-    if value.get("state") == "APPROVED":
-        _require(bool(value.get("reviewer_subject_ref")), "approved A-17 requires reviewer")
-        _require(bool(value.get("reviewer_attestation")), "approved A-17 requires attestation")
-        for issue in issues:
-            _require(bool(issue.get("conclusion")), "approved A-17 requires every conclusion")
-            _require(bool(issue.get("authority")), "approved A-17 requires supporting authority")
-            _require(issue.get("state") != "UNRESOLVED", "approved A-17 has unresolved issue")
+    _require(
+        applicability.get("prohibited_generalization") == "TDPSA_NEVER_APPLIES",
+        "A-17 prohibited generalization missing",
+    )
+    controls = cast(list[dict[str, Any]], value.get("required_modifications"))
+    _require(
+        [item.get("control") for item in controls]
+        == [
+            "INGEST_REDACTION_OR_FIELD_LIMITED_CAPTURE",
+            "CHAPTER_521_SAFEGUARDS",
+            "DESTRUCTION_CONTROLS",
+            "BREACH_RESPONSE_PROCEDURES",
+        ],
+        "attorney-required control drift",
+    )
+    source = cast(dict[str, Any], value.get("source_conclusion"))
+    _require(source.get("state") == "APPROVED_WITH_PER_HOST_REVIEW", "source conclusion drift")
+    _require(source.get("blanket_source_approval") is False, "blanket source approval prohibited")
+    attestation = cast(dict[str, Any], value.get("attestation"))
+    _require(attestation.get("codex_legal_opinion_substituted") is False, "legal substitution")
+
+
+def validate_statutory_provenance(value: dict[str, Any]) -> None:
+    _require(
+        value.get("record_type") == "TEXAS_PRIMARY_STATUTORY_PROVENANCE",
+        "wrong statutory provenance type",
+    )
+    authorities = cast(list[dict[str, Any]], value.get("authorities"))
+    by_id = {item.get("authority_id"): item for item in authorities}
+    for authority_id in (
+        "TX-BC-521.002",
+        "TX-BC-521.052-A",
+        "TX-BC-521.052-B",
+        "TX-BC-521.053-B",
+        "TX-BC-521.053-I",
+        "TX-BC-541.002-A",
+        "TX-BC-541.107",
+        "TX-BC-510.001-4",
+        "TX-BC-510.002",
+        "TX-BC-510.003",
+    ):
+        item = by_id.get(authority_id)
+        _require(item is not None, f"missing statutory authority: {authority_id}")
+        _require(item.get("verification") == "STATUTORILY_VERIFIED", "authority unverified")
+        _require(
+            str(item.get("official_url", "")).startswith(
+                "https://statutes.capitol.texas.gov/Docs/BC/pdf/BC."
+            ),
+            "statutory authority must use official Texas source",
+        )
+
+
+def validate_retention_policy(value: dict[str, Any]) -> None:
+    _require(value.get("state") == "APPROVED_POLICY_NOT_LIVE_EFFECTIVE", "A-08 state drift")
+    rules = cast(list[dict[str, Any]], value.get("rules"))
+    _require(len(rules) == 12, "A-08 requires twelve exact data classes")
+    _require(
+        next(item for item in rules if item["data_class"] == "EVIDENCE_EXCERPT_LOCATOR")["days"]
+        == 90,
+        "evidence retention drift",
+    )
+    _require(value.get("tombstone_source_url_allowed") is False, "tombstone URL prohibited")
+    _require(value.get("live_capture_authority_granted") is False, "A-08 cannot authorize capture")
 
 
 def validate_discovery_signature(value: dict[str, Any]) -> None:
@@ -311,6 +396,22 @@ def validate_terraform_package() -> None:
         "manage_master_user_password         = true" in terraform_text,
         "AWS-managed DB password required",
     )
+    for control in (
+        "aws_s3_bucket_public_access_block",
+        "aws_s3_bucket_server_side_encryption_configuration",
+        "aws_kms_key",
+        "enable_log_file_validation    = true",
+        "readonlyRootFilesystem = true",
+        "enable_execute_command             = false",
+        "publicly_accessible                 = false",
+        "deletion_protection                 = true",
+        "capture_retention_days == 90",
+        "noncurrent_days = 30",
+    ):
+        _require(
+            control in terraform_text, f"required Terraform security control missing: {control}"
+        )
+    _require("skip_final_snapshot                 = true" in terraform_text, "RDS retention drift")
     _require(not list(TERRAFORM_ROOT.glob("*.tfstate*")), "Terraform state must not be tracked")
     _require(not list(TERRAFORM_ROOT.glob("*.tfplan*")), "Terraform plan must not be tracked")
 
@@ -356,11 +457,14 @@ def discovery_readiness_blockers(
     if seed.get("state") != "FROZEN" or not seed.get("candidates"):
         blockers.append("EXACT_PROVENANCE_BACKED_OWNER_SEED_MANIFEST_REQUIRED")
     authority = cast(dict[str, Any], owner["authority"])
-    if authority.get("a08") != "APPROVED":
+    if authority.get("a08") != "APPROVED_POLICY_NOT_LIVE_EFFECTIVE":
         blockers.append("A08_FINAL_RETENTION_APPROVAL_REQUIRED")
     if authority.get("a09") != "APPROVED":
         blockers.append("A09_EXACT_DISCOVERY_SOURCE_APPROVAL_REQUIRED")
-    if authority.get("a17") != "APPROVED" or a17_review.get("state") != "APPROVED":
+    if (
+        authority.get("a17") != "APPROVE_WITH_CONTROLS"
+        or a17_review.get("state") != "APPROVE_WITH_CONTROLS"
+    ):
         blockers.append("A17_QUALIFIED_LEGAL_APPROVAL_REQUIRED")
     blockers.extend(
         (
@@ -385,12 +489,16 @@ def validate_package() -> dict[str, Any]:
     deployment = _load(DEPLOYMENT_EVIDENCE)
     role_assignments = _load(ROLE_ASSIGNMENTS)
     a17_review = _load(A17_REVIEW)
+    statutory_provenance = _load(STATUTORY_PROVENANCE)
+    retention_policy = _load(RETENTION_POLICY)
     discovery_signature = _load(DISCOVERY_SIGNATURE)
     validate_owner_package(owner)
     validate_seed_manifest(seed)
     validate_provisioning_spec(provisioning)
     validate_role_assignments(role_assignments)
     validate_a17_template(a17_review)
+    validate_statutory_provenance(statutory_provenance)
+    validate_retention_policy(retention_policy)
     validate_discovery_signature(discovery_signature)
     validate_terraform_package()
     blockers = discovery_readiness_blockers(owner, seed, deployment, role_assignments, a17_review)

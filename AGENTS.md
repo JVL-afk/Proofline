@@ -4,8 +4,10 @@
 
 Milestone M6.7C is closed at `8cc38bd19cc45ae3712d6a106b982e3faf75d431`. The final Phase 1
 authorization package is documentation only. Owner scope, workload ceilings and the USD 250/AI
-USD 0 caps are recorded, but retention remains provisional, exact sources/environment/roles remain
-unapproved, A-17 remains blocked, and every real-data permission remains `NOT_AUTHORIZED`. M6.6B-9
+USD 0 caps are recorded. A-08 is approved but not live-effective, attorney-provided A-17 is
+`APPROVE_WITH_CONTROLS`, and role actors are approved pending opaque identity binding. Exact
+sources/environment/identity values remain unapproved, ADR-0071 remains proposed, and every
+real-data permission remains `NOT_AUTHORIZED`. M6.6B-9
 remains closed with no qualified binding, no route activation, and no canonical mutation. Read
 `GREENFIELD_ARCHITECTURE.md`, `docs/milestones/M6.5.md`, `docs/milestones/M6.6A.md`,
 `docs/milestones/M6.6B-2.md`, `docs/milestones/M6.6B-3.md`,
@@ -28,6 +30,12 @@ ADR-0075 accepts Terraform for Phase 1 provisioning. Its provider lock and local
 configuration grant no AWS, discovery, research, or slot authority. No plan/apply is authorized
 without the missing account/backend inputs, exact roles, final data/legal decisions, AWS charge
 authorization, short-lived credentials, and separately reviewed plan.
+
+The project owner recorded attorney-provided `A-17 = APPROVE_WITH_CONTROLS` evidence and approved
+the minimized-capture A-08 successor policy. These records do not authorize live work. ADR-0071
+remains proposed until actual environment/storage evidence and opaque identity bindings exist.
+Counsel's conclusion is fact-bound and must not be generalized; every exact first-party host still
+requires its own review. Raw page bodies are ephemeral inputs, not ordinary durable snapshots.
 
 M1-M6.5, M6.6A, and the closed M6.6B-2 package remain authoritative and frozen. The M6.6B-3
 authorization was consumed after exactly five synthetic certification calls and must not be reused.
