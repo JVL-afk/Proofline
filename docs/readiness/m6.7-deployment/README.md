@@ -1,5 +1,11 @@
 # M6.7 authenticated Terraform plan handoff
 
+The protected Terraform-state bootstrap was applied and independently observed on 2026-08-21.
+`bootstrap-deployed-evidence-2026-08-21.json` binds the exact approved plan, AWS observations,
+policy hashes, remote-backend migration, and pseudonymous owner-actor reconciliation. This deployed
+state boundary grants no discovery, research, Slot 1, person/contact, AI, browser, or delivery
+authority.
+
 M6.7H stops at an authenticated saved plan and review package. Terraform apply, AWS resource
 creation, business discovery, and public research remain separate authorities.
 

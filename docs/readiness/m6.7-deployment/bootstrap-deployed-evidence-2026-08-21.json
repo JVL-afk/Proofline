@@ -1,0 +1,71 @@
+{
+  "record_type": "M67_BOOTSTRAP_DEPLOYED_EVIDENCE",
+  "version": "2026-08-21.1",
+  "state": "OBSERVED_AND_VERIFIED",
+  "observed_at": "2026-08-21T17:47:11.7813289Z",
+  "account_id": "785072247535",
+  "partition": "aws",
+  "region": "us-east-2",
+  "approved_plan_sha256": "b2e00f19cfdacfbb53cdb25a439e7342be10fa20f401a77fa303e78ba33911f9",
+  "approved_configuration_sha256": "1d57f58b76a9b3dbcfc072e38939bf6e4cafbc41e92263f1c52b08924cfdd027",
+  "approved_provider_lock_sha256": "b0f95a645ac5a5db24949e074c48758bb1a1f867ef73148e174a1e1ae1e76c9f",
+  "apply_result_sha256": "f759cc59be0d39a5a9911b78ad9dacc804ebdf87cc5df04bd506f6ff4b44450c",
+  "apply_result": { "create": 18, "change": 0, "replace": 0, "destroy": 0 },
+  "resources": {
+    "state_bucket": "m67-phase1-tfstate-785072247535-us-east-2",
+    "audit_bucket": "m67-phase1-tfstate-785072247535-us-east-2-audit",
+    "state_kms_key_arn": "arn:aws:kms:us-east-2:785072247535:key/544f984e-0785-4365-bff4-f82c9b085493",
+    "kms_alias_arn": "arn:aws:kms:us-east-2:785072247535:alias/m67-phase1-terraform-state",
+    "state_plan_role_arn": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-plan",
+    "state_apply_role_arn": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "cloudtrail_arn": "arn:aws:cloudtrail:us-east-2:785072247535:trail/m67-phase1-terraform-state"
+  },
+  "observed_controls": {
+    "state_and_audit_bucket_versioning": true,
+    "state_and_audit_public_access_blocked": true,
+    "bucket_policies_not_public": true,
+    "tls_only_bucket_policies": true,
+    "state_customer_managed_kms_encryption": true,
+    "audit_bucket_encryption": true,
+    "kms_enabled_and_rotating": true,
+    "cloudtrail_logging": true,
+    "cloudtrail_log_file_validation": true,
+    "state_object_data_events": true,
+    "state_plan_and_apply_roles_exist": true,
+    "unexpected_resources_created": 0,
+    "unrelated_resources_changed": 0,
+    "ai_browser_sender_delivery_or_business_access_infrastructure": 0
+  },
+  "policy_hashes": {
+    "state_bucket_policy_sha256": "eb97af70bc36b45f4985bb5b5f82794626e6070d03eb13f66673c92198e3f364",
+    "audit_bucket_policy_sha256": "889ecf8a8699813366f52f3c73cd1d1b18672ddcf526209c4bfabcd4f10e92c8",
+    "state_plan_iam_policy_sha256": "7f04abdbdcbe2a4d6b524d3e932b01aa090d38dd1e9c9684819be1fbcf5ad601",
+    "state_apply_iam_policy_sha256": "7e41c8dfe89839356f26e4565236f343415ba27188221875df62037a760bad4c",
+    "kms_default_policy_sha256": "36ecbcef5db23bade28795c1407b05dc3741d1e9943d869b8a6d13c8b15a3f38"
+  },
+  "backend_migration": {
+    "state": "MIGRATED_AND_VERIFIED",
+    "bucket": "m67-phase1-tfstate-785072247535-us-east-2",
+    "key": "m67/bootstrap/terraform.tfstate",
+    "kms_encrypted": true,
+    "version_id_observed": true,
+    "use_lockfile": true,
+    "post_migration_plan": "NO_CHANGES",
+    "obsolete_local_resource_state_removed": true,
+    "migration_record_sha256": "9d05996773013608430f75f87dada30e3eb4ac4279659aed953380445b0c9b46"
+  },
+  "owner_actor_reconciliation": {
+    "actor_ref": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981",
+    "state": "RECONCILED_FOR_BOOTSTRAP_AND_DEPLOYMENT_PREPARATION",
+    "caller_authority_ref": "sha256:c4ed4c42c1fe52dfbdf8ebf9183069ef1b15b1baa764125bf9c4b4dc46699615",
+    "bootstrap_iam_role_ref": "sha256:6d21fb6963c2f97dd9b44592815f65f81acf9e0ed599c59faf0768a68f0ac2a3",
+    "human_readable_session_recorded": false,
+    "primary_a_reconciled": false,
+    "primary_a_state": "PENDING_INDEPENDENT_AUTHENTICATION"
+  },
+  "live_permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED"
+  }
+}

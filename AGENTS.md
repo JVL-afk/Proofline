@@ -2,6 +2,15 @@
 
 ## Active milestone
 
+The exact approved M6.7 Phase 1 Terraform-state bootstrap plan was applied in AWS account
+`785072247535`, region `us-east-2`, then independently observed. Its 18 creates, protected S3/KMS
+state boundary, state plan/apply roles, and CloudTrail state-object audit controls are recorded in
+`docs/readiness/m6.7-deployment/bootstrap-deployed-evidence-2026-08-21.json`. Bootstrap state was
+migrated to `m67/bootstrap/terraform.tfstate`; obsolete local resource state was removed. The exact
+worker ECR repository does not exist, so no worker build or Phase 1 application plan may proceed
+until a separate registry-only plan is approved and applied. All live-data permissions remain
+`NOT_AUTHORIZED`.
+
 M6.7 owner approvals are consolidated: discretionary defaults are recorded once, three actor
 pseudonyms are generated with private reconciliation material outside Git, and only the AWS
 account/organization fact plus short-lived SSO entry point remain owner-supplied infrastructure
