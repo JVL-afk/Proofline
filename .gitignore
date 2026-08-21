@@ -34,6 +34,10 @@ coverage/
 .terraform/
 *.tfstate
 *.tfstate.*
+*.tfplan
+*.tfplan.json
+backend.hcl
+terraform.tfvars
 crash.log
 .minio/
 local-data/

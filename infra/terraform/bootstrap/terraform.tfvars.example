@@ -1,0 +1,4 @@
+expected_state_account_id = "REPLACE_WITH_12_DIGIT_STATE_ACCOUNT_ID"
+state_bucket_name         = "REPLACE_WITH_GLOBALLY_UNIQUE_STATE_BUCKET"
+plan_principal_arns       = ["REPLACE_WITH_APPROVED_SHORT_LIVED_PLAN_PRINCIPAL_ARN"]
+apply_principal_arns      = ["REPLACE_WITH_APPROVED_SHORT_LIVED_APPLY_PRINCIPAL_ARN"]

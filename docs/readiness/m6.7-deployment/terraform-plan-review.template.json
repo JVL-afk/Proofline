@@ -1,0 +1,35 @@
+{
+  "schema_version": "m67-terraform-plan-review-v1",
+  "state": "BLOCKED_PENDING_AUTHENTICATED_PLAN",
+  "plan_created_at": null,
+  "plan_sha256": null,
+  "plan_json_sha256": null,
+  "configuration_sha256": null,
+  "provider_lock_sha256": null,
+  "terraform_version": "1.15.9",
+  "providers": { "registry.terraform.io/hashicorp/aws": "6.53.0" },
+  "target": { "account_id": null, "region": "us-east-2" },
+  "changes": { "create": null, "update": null, "replace": null, "destroy": null },
+  "security_review": {
+    "network_egress": null,
+    "iam_grants": null,
+    "encryption": null,
+    "storage_lifecycle": null,
+    "backup_behavior": null,
+    "kill_switch": null,
+    "prohibited_infrastructure_present": null
+  },
+  "cost": {
+    "evidence_source": null,
+    "estimated_phase1_usd": null,
+    "approved_ceiling_usd": 250,
+    "within_ceiling": null,
+    "ai_budget_usd": 0
+  },
+  "warnings": [],
+  "apply_readiness": "NOT_READY",
+  "live_permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED"
+  }
+}
