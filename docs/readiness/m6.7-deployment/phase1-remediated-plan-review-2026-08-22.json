@@ -1,0 +1,196 @@
+{
+  "record_type": "M67_PHASE1_REMEDIATED_TERRAFORM_PLAN_REVIEW",
+  "version": "2026-08-22.1",
+  "state": "READY_FOR_PHASE1_APPLY_AUTHORIZATION",
+  "required_owner_event": "APPROVE_PHASE1_APPLY",
+  "observation_timestamp": "2026-08-22T08:36:49Z",
+  "target": {
+    "account_id": "785072247535",
+    "partition": "aws",
+    "region": "us-east-2"
+  },
+  "planning_identity": {
+    "role_arn": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "opaque_role_id": "AROA3NSPT2LXSPIOU3SPE",
+    "protected_state_role": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-plan",
+    "nested_state_assumption": "PASS"
+  },
+  "apply_identity": {
+    "role_arn": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "opaque_role_id": "AROA3NSPT2LXRWVAGYILQ",
+    "protected_state_role": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "nested_state_assumption": "PASS",
+    "required_service_dependency_permissions": "DEPLOYED_AND_SIMULATED_ALLOWED"
+  },
+  "source": {
+    "terraform_configuration_commit": "c6882ad532154ad631c385fb59211ad8541dd293",
+    "worker_source_commit": "4cdc6a1fe6e02f43e375ef356efc14f5485af34d",
+    "egress_control_revision": "ADR-0076"
+  },
+  "worker_image": {
+    "immutable_reference": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:8af8123b618e5d5024b6d715cd7956a52a79df41e4b5d201c4dc5f993ee3edf5",
+    "sbom_format": "CycloneDX 1.6",
+    "sbom_sha256": "b6e76527ed5ff2c52c53b4405b2dd972cc2ee7b3ed0d244eb1c637b83d107b59",
+    "trivy_scan_sha256": "c63573ef9a34db1da28b8bd860b7c271fb79efecff0f7413a0dd9f85bc9795cc",
+    "trivy_vulnerabilities": 0,
+    "trivy_secrets": 0,
+    "ecr_scan_status": "COMPLETE",
+    "ecr_findings": 0
+  },
+  "toolchain": {
+    "terraform_version": "1.15.9",
+    "aws_provider_version": "6.53.0"
+  },
+  "hashes": {
+    "saved_plan_sha256": "1498b7b3ce6377d975b0c434ab6c91d4b0dbd4409cc6b49689a822b44c555894",
+    "plan_json_sha256": "9412fdbd31aac41dcf80bca1575fa7163274e2901c0e3ebadf0bcd771c5f993a",
+    "configuration_sha256": "433cff06b855f26dde6dc34d6a026f55762025f2e9671ef1cacf469865ee95ae",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "terraform_security_scan_sha256": "d9ad4627c3cf40def84e28324ea2b4d8401f7c9c8e8e53a945bf1e9cff4bc519"
+  },
+  "changes": {
+    "create": 83,
+    "change": 0,
+    "replace": 0,
+    "destroy": 0,
+    "bootstrap_changes": 0,
+    "registry_changes": 0
+  },
+  "planned_resource_type_counts": {
+    "aws_budgets_budget": 1,
+    "aws_cloudtrail": 1,
+    "aws_cloudwatch_log_group": 1,
+    "aws_cloudwatch_metric_alarm": 2,
+    "aws_db_instance": 1,
+    "aws_db_subnet_group": 1,
+    "aws_ecs_cluster": 1,
+    "aws_ecs_service": 2,
+    "aws_ecs_task_definition": 2,
+    "aws_eip": 1,
+    "aws_iam_role": 4,
+    "aws_iam_role_policy": 3,
+    "aws_iam_role_policy_attachment": 1,
+    "aws_iam_service_linked_role": 3,
+    "aws_internet_gateway": 1,
+    "aws_kms_alias": 3,
+    "aws_kms_key": 3,
+    "aws_nat_gateway": 1,
+    "aws_route_table": 2,
+    "aws_route_table_association": 3,
+    "aws_s3_bucket": 2,
+    "aws_s3_bucket_lifecycle_configuration": 2,
+    "aws_s3_bucket_ownership_controls": 1,
+    "aws_s3_bucket_policy": 2,
+    "aws_s3_bucket_public_access_block": 2,
+    "aws_s3_bucket_server_side_encryption_configuration": 2,
+    "aws_s3_bucket_versioning": 2,
+    "aws_security_group": 4,
+    "aws_service_discovery_private_dns_namespace": 1,
+    "aws_service_discovery_service": 1,
+    "aws_sns_topic": 1,
+    "aws_sns_topic_policy": 1,
+    "aws_ssm_parameter": 1,
+    "aws_subnet": 3,
+    "aws_vpc": 1,
+    "aws_vpc_endpoint": 6,
+    "aws_vpc_security_group_egress_rule": 10,
+    "aws_vpc_security_group_ingress_rule": 4
+  },
+  "remediation_closure": {
+    "WORKLOAD_PLAN_ROLE": "DEPLOYED_AND_USED",
+    "WORKLOAD_APPLY_ROLE": "DEPLOYED_AND_READY",
+    "POSTGRES_PRODUCTION_ADAPTER": "VALIDATED",
+    "READ_ONLY_FARGATE_RUNTIME": "VALIDATED",
+    "ARBITRARY_WORKER_INTERNET_EGRESS": "DENIED",
+    "CONTROLLED_EXACT_HOST_RESEARCH_EGRESS": "VALIDATED"
+  },
+  "runtime_controls": {
+    "postgresql_engine_version": "18.3",
+    "postgresql_instance_class": "db.t4g.micro",
+    "postgresql_gp3_availability_observed": true,
+    "worker_readonly_root_filesystem": true,
+    "authoritative_container_filesystem_state": false,
+    "worker_desired_count": 0,
+    "controlled_egress_desired_count": 0,
+    "browser_infrastructure": false,
+    "ai_credentials_or_routes": false,
+    "sender_or_delivery_infrastructure": false,
+    "person_or_contact_store": false,
+    "public_application_ingress": false
+  },
+  "egress_controls": {
+    "worker_direct_public_http_https": false,
+    "worker_dns_destination": "10.67.0.2/32",
+    "worker_public_path": "CONTROLLED_EGRESS_TASK_TCP_8080_ONLY",
+    "gateway_public_ports": [80, 443],
+    "gateway_exact_host_policy_revision": "NOT_AUTHORIZED",
+    "gateway_allowed_hosts_at_deployment": [],
+    "redirect_reauthorization": true,
+    "ssrf_private_reserved_metadata_block": true,
+    "aws_service_access": "PRIVATE_VPC_ENDPOINTS",
+    "security_groups_are_not_treated_as_domain_policy": true
+  },
+  "security_scan": {
+    "finding_count": 11,
+    "critical": 2,
+    "medium": 2,
+    "low": 7,
+    "blocking_findings": 0,
+    "critical_findings": [
+      "AWS-0104_CONTROLLED_GATEWAY_HTTP_EGRESS",
+      "AWS-0104_CONTROLLED_GATEWAY_HTTPS_EGRESS"
+    ],
+    "critical_disposition": "EXPECTED_ADR_0076_APPLICATION_AWARE_EGRESS_BOUNDARY_NOT_SUPPRESSED",
+    "residual_nonblocking_findings": [
+      "RDS_PERFORMANCE_INSIGHTS_DISABLED",
+      "VPC_FLOW_LOGS_DISABLED_GATEWAY_APPLICATION_AUDIT_IS_AUTHORITATIVE",
+      "CLOUDTRAIL_SINGLE_REGION_PHASE1_SCOPE",
+      "CLOUDTRAIL_NOT_DUPLICATED_TO_CLOUDWATCH_LOGS",
+      "S3_SERVER_ACCESS_LOGGING_REPLACED_BY_CLOUDTRAIL_DATA_EVENTS",
+      "SECURITY_GROUP_REFERENCE_SCANNER_WARNINGS"
+    ]
+  },
+  "validation": {
+    "deterministic_tests_passed": 390,
+    "deterministic_tests_skipped": 1,
+    "skipped_test": "OPT_IN_POSTGRES_PARITY_REQUIRES_OPINTEL_TEST_POSTGRES_URL",
+    "postgresql_18_4_parity_opt_in_run": "PASS",
+    "repository_check": "PASS",
+    "ruff_check": "PASS",
+    "ruff_format_check": "PASS",
+    "strict_mypy": "PASS_160_SOURCE_FILES",
+    "python_compileall": "PASS",
+    "credential_value_audit": "PASS_3_PROVIDER_VALUES_ABSENT_FROM_TRACKED_FILES_AND_REACHABLE_GIT_BLOBS",
+    "terraform_fmt": "PASS",
+    "terraform_bootstrap_validate": "PASS",
+    "terraform_phase1_validate": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "cost_evidence": {
+    "currency": "USD",
+    "pricing_observed_at": "2026-08-22T08:28:45Z",
+    "monthly_baseline_estimate": "139.00",
+    "conservative_phase1_total_estimate": "150.00",
+    "phase1_total_hard_ceiling": "250.00",
+    "within_ceiling": true,
+    "components": {
+      "nat_gateway_hourly_monthly": "32.85",
+      "five_interface_endpoints_two_az_monthly": "73.00",
+      "rds_t4g_micro_compute_monthly": "11.68",
+      "rds_gp3_20gb_estimate": "2.30",
+      "three_application_kms_keys_monthly": "3.00",
+      "ecs_idle_desired_zero": "0.00",
+      "bounded_fargate_usage_allowance": "1.00",
+      "s3_cloudtrail_cloudwatch_sns_backup_allowance": "10.00",
+      "bootstrap_and_registry_allowance": "5.00"
+    },
+    "usage_uncertainty": "Requests, logs, data transfer, backup overage, tax, and pilot duration vary; AWS Budget provides alerts rather than a cryptographic spend stop."
+  },
+  "permissions": {
+    "PHASE1_APPLICATION_APPLY": "NOT_AUTHORIZED",
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED"
+  },
+  "owner_signature": null
+}

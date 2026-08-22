@@ -2,20 +2,21 @@
 
 ## Active milestone
 
-ADR-0075 workload-plan/workload-apply identities were applied under the exact owner approval and
-independently observed in account `785072247535`, region `us-east-2`. PostgreSQL 18 lifecycle parity,
-fail-closed SSM suspension, read-only task configuration, and ADR-0076 isolated exact-host egress are
-implemented locally. ADR-0076 requires three narrowly scoped in-place inline-policy updates for VPC
-endpoints and private service discovery. The exact plan in
-`docs/readiness/m6.7-deployment/workload-egress-policy-plan-review-2026-08-22.json` is 0 creates,
-3 changes, 0 replacements, and 0 destroys, and was applied under the exact owner approval.
+ADR-0075 workload-plan/workload-apply identities, their private-endpoint/service-discovery successor
+permissions, protected state-role trust, and final ECS/RDS/Cloud Map service-dependency permissions
+were each applied under separate exact owner approvals and independently observed in AWS account
+`785072247535`, region `us-east-2`. PostgreSQL 18 lifecycle parity, fail-closed SSM suspension,
+read-only task configuration, and ADR-0076 isolated exact-host egress are validated. The final
+service-dependency evidence is in
+`docs/readiness/m6.7-deployment/workload-service-dependency-deployed-evidence-2026-08-22.json`.
 
-The successor inline-policy plan was applied exactly (0 creates, 3 in-place changes, 0 destroys).
-A subsequent non-mutating identity test proved the workload-plan role still cannot assume the
-protected state-plan role because the state-role trust relationship predates the workload roles.
-The exact two-trust-policy successor plan is recorded in
-`docs/readiness/m6.7-deployment/workload-state-trust-plan-review-2026-08-22.json`; it is not applied.
-Do not apply it without the owner's exact hash-bound `APPROVE_WORKLOAD_STATE_TRUST_APPLY` statement.
+The successor authenticated Phase 1 application plan in
+`docs/readiness/m6.7-deployment/phase1-remediated-plan-review-2026-08-22.json` is exactly
+`READY_FOR_PHASE1_APPLY_AUTHORIZATION`: 83 creates, 0 changes, 0 replacements, and 0 destroys. It
+was generated using the deployed workload-plan identity and binds the clean immutable successor
+worker image. Do not apply it without the owner's exact hash-bound `APPROVE_PHASE1_APPLY` statement.
+Application apply remains separate from discovery, research, person/contact, Slot 1, and
+communication authority; all remain unauthorized.
 
 The exact worker-registry plan was applied and independently verified, and the immutable Phase 1
 worker successor image is stored in the approved ECR repository at digest
@@ -23,10 +24,9 @@ worker successor image is stored in the approved ECR repository at digest
 CycloneDX/Trivy/provider evidence is in
 `docs/readiness/m6.7-deployment/worker-image-successor-evidence-2026-08-22.json`. The historical
 authenticated Phase 1 application plan proposes 58 creates and zero changes, replacements, or
-destroys, but it is **not** ready for apply authorization and remains historical evidence. The
-predecessor worker image must be superseded after the production-runtime changes, and a successor
-application plan must be generated using the deployed workload-plan identity. The immutable review is
-in `docs/readiness/m6.7-deployment/phase1-plan-review-2026-08-22.json`. Do not apply that plan.
+destroys, but it is **not** ready for apply authorization and remains historical evidence. It was
+superseded by the 83-create remediated plan above. Its immutable review is in
+`docs/readiness/m6.7-deployment/phase1-plan-review-2026-08-22.json`; never apply the historical plan.
 All discovery, research, person/contact, slot, AI, and delivery permissions remain unauthorized.
 
 The exact approved M6.7 Phase 1 Terraform-state bootstrap plan was applied in AWS account

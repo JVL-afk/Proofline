@@ -6,8 +6,15 @@ policy hashes, remote-backend migration, and pseudonymous owner-actor reconcilia
 state boundary grants no discovery, research, Slot 1, person/contact, AI, browser, or delivery
 authority.
 
-M6.7H stops at an authenticated saved plan and review package. Terraform apply, AWS resource
-creation, business discovery, and public research remain separate authorities.
+The production-runtime, PostgreSQL, read-only-container, workload-identity, protected-state trust,
+and controlled exact-host egress remediations are now complete. The successor application plan in
+`phase1-remediated-plan-review-2026-08-22.json` was generated under the deployed workload-plan role
+and is `READY_FOR_PHASE1_APPLY_AUTHORIZATION`: 83 creates, zero changes, zero replacements, and zero
+destroys. It is not applied. The application apply, discovery, research, and Slot 1 authorities
+remain separate and `NOT_AUTHORIZED`.
+
+The deployment-preparation state stops at an authenticated saved plan and review package. Phase 1
+Terraform apply, business discovery, and public research remain separate authorities.
 
 ## Minimum inputs for the plan
 
