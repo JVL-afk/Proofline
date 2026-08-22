@@ -51,3 +51,10 @@ The plan/apply package contains no discovery, research, person/contact, AI, brow
 delivery authorization. The service defaults to zero running tasks. After apply, record actual AWS
 control-plane observations in the deployed-environment evidence record; do not copy planned values
 as observations.
+
+Restricted-capture and audit bucket names are exact deterministic outputs of the shared
+`../modules/phase1-identifiers` module. The application resources and the separately bounded
+workload-apply IAM policy consume those same outputs, and Terraform check blocks assert that each
+planned bucket ARN equals its IAM ARN. Cloud Map uses its native namespace/service behavior; AWS
+does not expose a `servicediscovery.amazonaws.com` service-linked-role template, so this root must
+not declare or depend on one.

@@ -4,6 +4,15 @@ locals {
   phase1_state_apply_role_arn = "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/m67-phase1-terraform-state-apply"
 }
 
+module "phase1_identifiers" {
+  source = "../modules/phase1-identifiers"
+
+  account_id  = data.aws_caller_identity.current.account_id
+  aws_region  = var.aws_region
+  name_prefix = local.workload_name_prefix
+  partition   = data.aws_partition.current.partition
+}
+
 data "aws_iam_policy_document" "workload_plan_assume" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -247,9 +256,15 @@ data "aws_iam_policy_document" "workload_apply_data_observability" {
       "s3:PutEncryptionConfiguration",
     ]
     resources = [
-      "arn:${data.aws_partition.current.partition}:s3:::m67-phase1-captures-${data.aws_caller_identity.current.account_id}-${var.aws_region}",
-      "arn:${data.aws_partition.current.partition}:s3:::m67-phase1-audit-${data.aws_caller_identity.current.account_id}-${var.aws_region}",
+      module.phase1_identifiers.capture_bucket_arn,
+      module.phase1_identifiers.audit_bucket_arn,
     ]
+  }
+
+  statement {
+    sid       = "TagExactPhase1Budget"
+    actions   = ["budgets:TagResource"]
+    resources = ["arn:${data.aws_partition.current.partition}:budgets::${data.aws_caller_identity.current.account_id}:budget/${local.workload_name_prefix}-monthly-hard-ceiling"]
   }
 
   statement {
@@ -336,7 +351,6 @@ data "aws_iam_policy_document" "workload_apply_iam" {
     resources = [
       "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS*",
       "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/rds.amazonaws.com/AWSServiceRoleForRDS*",
-      "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/servicediscovery.amazonaws.com/AWSServiceRoleForAmazonRoute53AutoNaming*",
     ]
     condition {
       test     = "StringEquals"
@@ -344,9 +358,17 @@ data "aws_iam_policy_document" "workload_apply_iam" {
       values = [
         "ecs.amazonaws.com",
         "rds.amazonaws.com",
-        "servicediscovery.amazonaws.com",
       ]
     }
+  }
+
+  statement {
+    sid     = "TagExactServiceLinkedRoles"
+    actions = ["iam:TagRole"]
+    resources = [
+      "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+      "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/rds.amazonaws.com/AWSServiceRoleForRDS",
+    ]
   }
 
   statement {
@@ -355,7 +377,6 @@ data "aws_iam_policy_document" "workload_apply_iam" {
     resources = [
       "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS*",
       "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/rds.amazonaws.com/AWSServiceRoleForRDS*",
-      "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/servicediscovery.amazonaws.com/AWSServiceRoleForAmazonRoute53AutoNaming*",
     ]
   }
 

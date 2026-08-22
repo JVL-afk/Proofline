@@ -21,6 +21,14 @@ must not be retried. No ECS service, task, database, capture/audit bucket, or bu
 kill switch remains `TRIPPED`. Environment acceptance is blocked pending a reviewed remediation
 and new successor authorization. Discovery, research, and Slot 1 remain `NOT_AUTHORIZED`.
 
+The pre-remediation read-only reconciliation is frozen in
+`phase1-partial-state-inventory-2026-08-22.json`: 56 managed objects were present in both state and
+AWS, 27 objects from the failed plan were absent, and there were no unexpected managed objects or
+remote losses. The four narrow source corrections use one shared deterministic S3 identifier
+module, exact budget/service-linked-role tag permissions, and native Cloud Map behavior without a
+fabricated service-linked role. Corrected source is not deployed evidence and cannot reuse the
+consumed application approval.
+
 The deployment-preparation state stops at an authenticated saved plan and review package. Phase 1
 Terraform apply, business discovery, and public research remain separate authorities.
 

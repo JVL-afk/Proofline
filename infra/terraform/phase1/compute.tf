@@ -20,10 +20,6 @@ resource "aws_iam_service_linked_role" "rds" {
   aws_service_name = "rds.amazonaws.com"
 }
 
-resource "aws_iam_service_linked_role" "service_discovery" {
-  aws_service_name = "servicediscovery.amazonaws.com"
-}
-
 data "aws_iam_policy_document" "ecs_assume" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -185,8 +181,6 @@ resource "aws_ecs_service" "worker" {
 resource "aws_service_discovery_private_dns_namespace" "phase1" {
   name = "m67.internal"
   vpc  = aws_vpc.phase1.id
-
-  depends_on = [aws_iam_service_linked_role.service_discovery]
 }
 
 resource "aws_service_discovery_service" "egress" {

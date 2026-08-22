@@ -5,6 +5,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 BOOTSTRAP = ROOT / "infra" / "terraform" / "bootstrap"
+PHASE1 = ROOT / "infra" / "terraform" / "phase1"
+IDENTIFIERS = ROOT / "infra" / "terraform" / "modules" / "phase1-identifiers"
 
 
 def test_bootstrap_is_separate_and_protects_remote_state() -> None:
@@ -82,3 +84,39 @@ def test_workload_plan_and_apply_identities_are_separate_and_bounded() -> None:
     assert "role/m67-phase1-*" in access
     assert "REAL_BUSINESS_DISCOVERY" not in access
     assert "REAL_PUBLIC_RESEARCH" not in access
+
+
+def test_phase1_bucket_names_and_workload_iam_share_one_identifier_module() -> None:
+    identifiers = (IDENTIFIERS / "main.tf").read_text(encoding="utf-8")
+    outputs = (IDENTIFIERS / "outputs.tf").read_text(encoding="utf-8")
+    phase1_provider = (PHASE1 / "providers.tf").read_text(encoding="utf-8")
+    storage = (PHASE1 / "storage.tf").read_text(encoding="utf-8")
+    workload_access = (BOOTSTRAP / "workload_access.tf").read_text(encoding="utf-8")
+
+    assert "restricted-captures" in identifiers
+    assert 'sha256("${var.account_id}:${var.aws_region}:${var.name_prefix}' in identifiers
+    assert 'output "capture_bucket_arn"' in outputs
+    assert 'output "audit_bucket_arn"' in outputs
+    assert 'source = "../modules/phase1-identifiers"' in phase1_provider
+    assert 'source = "../modules/phase1-identifiers"' in workload_access
+    assert "bucket = module.phase1_identifiers.capture_bucket_name" in storage
+    assert "bucket = module.phase1_identifiers.audit_bucket_name" in storage
+    assert "module.phase1_identifiers.capture_bucket_arn" in workload_access
+    assert "module.phase1_identifiers.audit_bucket_arn" in workload_access
+    assert "IAM_CAPTURE_BUCKET_ARN must equal PLANNED_CAPTURE_BUCKET_ARN" in storage
+    assert "IAM_AUDIT_BUCKET_ARN must equal PLANNED_AUDIT_BUCKET_ARN" in storage
+    assert "bucket_prefix" not in storage
+
+
+def test_partial_apply_provider_permissions_remain_exact_and_cloud_map_has_no_fake_role() -> None:
+    access = (BOOTSTRAP / "workload_access.tf").read_text(encoding="utf-8")
+    compute = (PHASE1 / "compute.tf").read_text(encoding="utf-8")
+
+    assert 'actions   = ["budgets:TagResource"]' in access
+    assert "budget/${local.workload_name_prefix}-monthly-hard-ceiling" in access
+    assert 'actions = ["iam:TagRole"]' in access
+    assert "role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS" in access
+    assert "role/aws-service-role/rds.amazonaws.com/AWSServiceRoleForRDS" in access
+    assert "servicediscovery.amazonaws.com" not in access
+    assert 'resource "aws_iam_service_linked_role" "service_discovery"' not in compute
+    assert "aws_iam_service_linked_role.service_discovery" not in compute

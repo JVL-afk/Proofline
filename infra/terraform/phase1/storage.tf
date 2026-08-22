@@ -1,5 +1,12 @@
 resource "aws_s3_bucket" "captures" {
-  bucket_prefix = "${var.name_prefix}-restricted-captures-"
+  bucket = module.phase1_identifiers.capture_bucket_name
+}
+
+check "capture_bucket_iam_identity" {
+  assert {
+    condition     = aws_s3_bucket.captures.arn == module.phase1_identifiers.capture_bucket_arn
+    error_message = "IAM_CAPTURE_BUCKET_ARN must equal PLANNED_CAPTURE_BUCKET_ARN."
+  }
 }
 
 resource "aws_s3_bucket_public_access_block" "captures" {
@@ -70,7 +77,14 @@ resource "aws_s3_bucket_policy" "captures" {
 }
 
 resource "aws_s3_bucket" "audit" {
-  bucket_prefix = "${var.name_prefix}-audit-"
+  bucket = module.phase1_identifiers.audit_bucket_name
+}
+
+check "audit_bucket_iam_identity" {
+  assert {
+    condition     = aws_s3_bucket.audit.arn == module.phase1_identifiers.audit_bucket_arn
+    error_message = "IAM_AUDIT_BUCKET_ARN must equal PLANNED_AUDIT_BUCKET_ARN."
+  }
 }
 
 resource "aws_s3_bucket_public_access_block" "audit" {

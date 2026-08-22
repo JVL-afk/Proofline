@@ -15,3 +15,12 @@ provider "aws" {
 data "aws_caller_identity" "current" {}
 
 data "aws_partition" "current" {}
+
+module "phase1_identifiers" {
+  source = "../modules/phase1-identifiers"
+
+  account_id  = data.aws_caller_identity.current.account_id
+  aws_region  = var.aws_region
+  name_prefix = var.name_prefix
+  partition   = data.aws_partition.current.partition
+}

@@ -18,17 +18,22 @@ retry that predecessor plan. ADR-0075 now records the demonstrated saved-plan co
 The successor authenticated Phase 1 application plan in
 `docs/readiness/m6.7-deployment/phase1-remediated-plan-successor-review-2026-08-22.json` was approved
 and attempted under the bounded workload/state apply identities. Its pre-apply hashes and counts
-passed, but the apply stopped after partial creation. The exact S3 names in the workload-apply
-policy did not match the hashed names in the application configuration, provider-required
-`budgets:TagResource` and service-linked-role `iam:TagRole` permissions were absent, and AWS has no
-service-linked-role template for the explicit `servicediscovery.amazonaws.com` resource. The
-immutable partial-state record is
-`docs/readiness/m6.7-deployment/phase1-successor-apply-attempt-2026-08-22.json`. The saved plan and
-approval are consumed; do not retry them. No ECS service/task, RDS instance, capture/audit bucket,
-or budget exists; the kill switch remains `TRIPPED`. Environment acceptance is blocked until the
-configuration and exact bounded policies are remediated, replanned from the observed partial state,
-and separately approved. Discovery, research, person/contact, Slot 1, and communication authority
-remain unauthorized.
+passed, but the apply stopped after partial creation. The immutable failure record is
+`docs/readiness/m6.7-deployment/phase1-successor-apply-attempt-2026-08-22.json`; the saved plan and
+approval are consumed and must never be retried. A read-only workload-plan/state-plan refresh found
+all 56 managed state objects in AWS, 27 planned objects absent, zero unexpected managed objects,
+and only expected AWS-created VPC/endpoint side effects. The exact inventory is
+`docs/readiness/m6.7-deployment/phase1-partial-state-inventory-2026-08-22.json`.
+
+The four demonstrated defects are corrected in source but not applied: one shared deterministic
+identifier module now supplies both exact S3 bucket names and bounded IAM ARNs;
+`budgets:TagResource` is restricted to the exact Phase 1 budget; `iam:TagRole` is restricted to the
+exact ECS/RDS service-linked roles; and the invalid Cloud Map service-linked-role resource and
+dependency are removed. These source changes grant no AWS authority. Generate and review a
+separate IAM-control plan plus a Phase 1 successor plan from the observed partial state; neither may
+be applied without a new exact hash-bound owner authorization. No ECS service/task, RDS instance,
+capture/audit bucket, or budget exists; the kill switch remains `TRIPPED`. Discovery, research,
+person/contact, Slot 1, and communication authority remain unauthorized.
 
 The exact worker-registry plan was applied and independently verified, and the immutable Phase 1
 worker successor image is stored in the approved ECR repository at digest

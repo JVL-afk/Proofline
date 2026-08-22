@@ -91,6 +91,15 @@ successful apply must commit the resulting state. It does not give the workload-
 application mutation authority. A backend-identity change produces a successor saved plan and a new
 hash-bound apply approval; an earlier approval cannot be reused.
 
+The 2026-08-22 partial Phase 1 apply demonstrated two additional provider/platform constraints.
+S3 names used by the application root and the bounded workload-apply policy must come from one
+shared deterministic identifier module; provider-generated `bucket_prefix` suffixes cannot be
+independently reproduced in a separate IAM root. Provider create operations may also issue
+resource-tagging calls, which are authorized only for the exact Phase 1 budget and the exact ECS/RDS
+service-linked roles. AWS rejected an explicit `servicediscovery.amazonaws.com` service-linked-role
+resource because no such service-linked-role template is available. Cloud Map namespace and service
+resources therefore use their native AWS behavior and no fabricated replacement role or dependency.
+
 Terraform apply never authorizes discovery, research, a worker run, person/contact processing, AI,
 browser activity, or delivery. No infrastructure command is authorized until exact AWS charge
 authorization, credentials, backend values, roles, final retention inputs, and environment approvals
