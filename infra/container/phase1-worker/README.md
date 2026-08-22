@@ -21,8 +21,9 @@ The production Dockerfile pins the Linux/amd64 Python 3.13 slim-bookworm platfor
 `sha256:0f16c5d35fe6464ee471792ab3bb9116f911b65b3fbf10120c98d2bdc6332f48`.
 Its dependency stage exports only the `opintel-research-worker` runtime graph from `uv.lock` and
 installs it with package hashes enforced. The runtime stage copies only the M0/research source
-trees required by that worker, removes unused build-oriented packages inherited from the base, and
-runs as uid/gid 65532. The root `.dockerignore` is an allowlist:
+trees required by that worker and runs as uid/gid 65532. It removes runtime package-installation
+tooling and its vendored dependencies after verifying the locked environment. The root
+`.dockerignore` is an allowlist:
 local data, Git metadata, environment files, tests, documentation, and other workspace material do
 not enter the build context.
 
