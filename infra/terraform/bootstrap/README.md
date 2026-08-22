@@ -1,9 +1,16 @@
 # Phase 1 Terraform Backend Bootstrap
 
-This is a separate state-administration root. It creates only the protected S3/KMS backend,
-least-privilege state roles, and the dedicated CloudTrail data-event audit path required by
-ADR-0075. It creates no Phase 1 workload, worker, business access, AI, browser, delivery, or
-application resource.
+This is a separate state-and-access administration root. It creates only the protected S3/KMS
+backend, least-privilege state roles, separately gated workload plan/apply roles, and the dedicated
+CloudTrail data-event audit path required by ADR-0075. It creates no Phase 1 workload, worker,
+business access, AI, browser, delivery, or application resource.
+
+The workload plan role has read-only refresh permissions and can reach the protected state only by
+assuming the exact state-plan role. It has no application mutation permission. The workload apply
+role has the explicit Phase 1 service actions needed by a separately approved saved plan and can
+reach state only through the exact state-apply role. Neither role inherits AdministratorAccess.
+Creation of these identities is a separate IAM-control apply and does not authorize the Phase 1
+application plan.
 
 For the bounded 24-company pilot, state and workload may use the same dedicated AWS account. The
 required separation is an IAM/resource/approval boundary rather than a second-account requirement:

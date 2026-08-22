@@ -52,3 +52,33 @@ def test_local_plan_and_backend_values_are_ignored() -> None:
     ignore = (ROOT / ".gitignore").read_text(encoding="utf-8")
     for pattern in ("*.tfplan", "*.tfplan.json", "backend.hcl", "terraform.tfvars"):
         assert pattern in ignore
+
+
+def test_workload_plan_and_apply_identities_are_separate_and_bounded() -> None:
+    access = (BOOTSTRAP / "workload_access.tf").read_text(encoding="utf-8")
+    assert 'resource "aws_iam_role" "workload_plan"' in access
+    assert 'resource "aws_iam_role" "workload_apply"' in access
+    assert "m67-phase1-terraform-state-plan" in access
+    assert "m67-phase1-terraform-state-apply" in access
+    assert "max_session_duration = 14400" in access
+    assert "max_session_duration = 3600" in access
+    assert "AdministratorAccess" not in access
+    assert "PowerUserAccess" not in access
+    assert 'actions   = ["sts:AssumeRole"]' in access
+
+    read_document = access.split('data "aws_iam_policy_document" "workload_read"', maxsplit=1)[
+        1
+    ].split('resource "aws_iam_role_policy" "workload_plan"', maxsplit=1)[0]
+    for mutating_action in (
+        "CreateBucket",
+        "CreateDBInstance",
+        "CreateService",
+        "CreateVpc",
+        "PutRolePolicy",
+        "RegisterTaskDefinition",
+    ):
+        assert mutating_action not in read_document
+
+    assert "role/m67-phase1-*" in access
+    assert "REAL_BUSINESS_DISCOVERY" not in access
+    assert "REAL_PUBLIC_RESEARCH" not in access
