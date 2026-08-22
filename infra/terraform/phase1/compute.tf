@@ -12,6 +12,18 @@ resource "aws_ecs_cluster" "phase1" {
   }
 }
 
+resource "aws_iam_service_linked_role" "ecs" {
+  aws_service_name = "ecs.amazonaws.com"
+}
+
+resource "aws_iam_service_linked_role" "rds" {
+  aws_service_name = "rds.amazonaws.com"
+}
+
+resource "aws_iam_service_linked_role" "service_discovery" {
+  aws_service_name = "servicediscovery.amazonaws.com"
+}
+
 data "aws_iam_policy_document" "ecs_assume" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -166,11 +178,15 @@ resource "aws_ecs_service" "worker" {
     subnets          = aws_subnet.private[*].id
     security_groups  = [aws_security_group.worker.id]
   }
+
+  depends_on = [aws_iam_service_linked_role.ecs]
 }
 
 resource "aws_service_discovery_private_dns_namespace" "phase1" {
   name = "m67.internal"
   vpc  = aws_vpc.phase1.id
+
+  depends_on = [aws_iam_service_linked_role.service_discovery]
 }
 
 resource "aws_service_discovery_service" "egress" {
@@ -237,4 +253,6 @@ resource "aws_ecs_service" "egress" {
   service_registries {
     registry_arn = aws_service_discovery_service.egress.arn
   }
+
+  depends_on = [aws_iam_service_linked_role.ecs]
 }

@@ -72,7 +72,7 @@ resource "aws_route_table_association" "private" {
 
 resource "aws_security_group" "worker" {
   name        = "${var.name_prefix}-worker"
-  description = "No ingress; bounded public HTTP egress for the isolated research worker"
+  description = "No ingress and no direct public internet egress"
   vpc_id      = aws_vpc.phase1.id
   tags        = { Name = "${var.name_prefix}-worker" }
 }
@@ -120,7 +120,7 @@ resource "aws_vpc_security_group_egress_rule" "worker_to_database" {
 
 resource "aws_vpc_security_group_egress_rule" "worker_dns_udp" {
   security_group_id = aws_security_group.worker.id
-  cidr_ipv4         = var.vpc_cidr
+  cidr_ipv4         = "${cidrhost(var.vpc_cidr, 2)}/32"
   from_port         = 53
   to_port           = 53
   ip_protocol       = "udp"
@@ -129,7 +129,7 @@ resource "aws_vpc_security_group_egress_rule" "worker_dns_udp" {
 
 resource "aws_vpc_security_group_egress_rule" "worker_dns_tcp" {
   security_group_id = aws_security_group.worker.id
-  cidr_ipv4         = var.vpc_cidr
+  cidr_ipv4         = "${cidrhost(var.vpc_cidr, 2)}/32"
   from_port         = 53
   to_port           = 53
   ip_protocol       = "tcp"
@@ -165,7 +165,7 @@ resource "aws_vpc_security_group_egress_rule" "gateway_http" {
 
 resource "aws_vpc_security_group_egress_rule" "gateway_dns_udp" {
   security_group_id = aws_security_group.controlled_egress.id
-  cidr_ipv4         = var.vpc_cidr
+  cidr_ipv4         = "${cidrhost(var.vpc_cidr, 2)}/32"
   from_port         = 53
   to_port           = 53
   ip_protocol       = "udp"
@@ -174,7 +174,7 @@ resource "aws_vpc_security_group_egress_rule" "gateway_dns_udp" {
 
 resource "aws_vpc_security_group_egress_rule" "gateway_dns_tcp" {
   security_group_id = aws_security_group.controlled_egress.id
-  cidr_ipv4         = var.vpc_cidr
+  cidr_ipv4         = "${cidrhost(var.vpc_cidr, 2)}/32"
   from_port         = 53
   to_port           = 53
   ip_protocol       = "tcp"

@@ -1,9 +1,9 @@
 # ADR-0076: Phase 1 controlled research egress
 
-- Status: Accepted
-- Date: 2026-08-22
-- Decision owners: Project owner / security-environment owner
-- Scope: M6.7 Phase 1 production runtime
+- **Status:** Accepted
+- **Date:** 2026-08-22
+- **Decision owners:** Project owner / security-environment owner
+- **Scope:** M6.7 Phase 1 production runtime
 
 ## Context
 
@@ -11,6 +11,21 @@ The research worker must eventually reach changing, CDN-backed first-party publi
 IP allowlists are neither correct nor durable. Security groups cannot express an exact-host policy,
 and application URL validation alone does not remove the worker's arbitrary-internet capability.
 The worker must also reach AWS control and storage services without using a general public path.
+
+## Decision drivers
+
+- Deny general arbitrary-internet egress from the research worker ENI.
+- Enforce exact-host authorization for dynamic public HTTPS destinations.
+- Preserve M1 URL, DNS, redirect, SSRF, method, rate, size, and timeout controls.
+- Keep AWS service traffic separate from research-internet traffic.
+- Remain inside the approved Phase 1 cost and concurrency envelope.
+
+## Considered options
+
+1. Application-only URL validation with unrestricted worker HTTPS egress.
+2. Static destination-IP security-group allowlists.
+3. A separate application-aware controlled-egress task with exact-host policy.
+4. A third-party managed secure-web gateway.
 
 ## Decision
 
@@ -48,7 +63,18 @@ zero before later, separate research and slot authorization.
 - Interface endpoints add recurring cost but keep required AWS service traffic off the research
   internet path.
 
-## Reconsider when
+## Validation
+
+- Synthetic tests cover exact-host admission, denied unknown hosts, private/reserved addresses,
+  redirect reauthorization, DNS rebinding, request bounds, and inert hostile content.
+- Terraform tests prove the worker has no direct public HTTP/HTTPS route and reaches the gateway
+  only on its private service port.
+- Infrastructure scanning retains the gateway's intentional public HTTP/HTTPS finding and maps it
+  to this accepted boundary; the finding is not suppressed.
+- The gateway starts only with a non-empty, revision-bound released host policy and has no
+  application, storage, AI, browser, delivery, or sender credentials.
+
+## Revisit triggers
 
 Reconsider if AWS offers a lower-cost, exact-domain egress control that supports dynamic public DNS,
 TLS validation, auditability and the same fail-closed redirect/SSRF guarantees, or if the Phase 1

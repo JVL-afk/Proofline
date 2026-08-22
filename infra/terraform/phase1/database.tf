@@ -28,4 +28,6 @@ resource "aws_db_instance" "phase1" {
   skip_final_snapshot                 = true
   auto_minor_version_upgrade          = false
   apply_immediately                   = false
+
+  depends_on = [aws_iam_service_linked_role.rds]
 }

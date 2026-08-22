@@ -49,6 +49,7 @@ data "aws_iam_policy_document" "workload_read" {
     sid = "RefreshApprovedPhase1Services"
     actions = [
       "budgets:Describe*",
+      "budgets:ViewBudget",
       "cloudtrail:DescribeTrails",
       "cloudtrail:GetTrail",
       "cloudtrail:GetTrailStatus",
@@ -79,8 +80,10 @@ data "aws_iam_policy_document" "workload_read" {
       "rds:Describe*",
       "rds:ListTagsForResource",
       "servicediscovery:GetNamespace",
+      "servicediscovery:GetOperation",
       "servicediscovery:GetService",
       "servicediscovery:ListNamespaces",
+      "servicediscovery:ListOperations",
       "servicediscovery:ListServices",
       "servicediscovery:ListTagsForResource",
       "s3:GetBucket*",
@@ -323,6 +326,43 @@ data "aws_iam_policy_document" "workload_apply_iam" {
       "iam:UpdateRoleDescription",
     ]
     resources = ["arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/m67-phase1-*"]
+  }
+
+  statement {
+    sid = "CreateExactServiceLinkedRoles"
+    actions = [
+      "iam:CreateServiceLinkedRole",
+    ]
+    resources = [
+      "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS*",
+      "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/rds.amazonaws.com/AWSServiceRoleForRDS*",
+      "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/servicediscovery.amazonaws.com/AWSServiceRoleForAmazonRoute53AutoNaming*",
+    ]
+    condition {
+      test     = "StringEquals"
+      variable = "iam:AWSServiceName"
+      values = [
+        "ecs.amazonaws.com",
+        "rds.amazonaws.com",
+        "servicediscovery.amazonaws.com",
+      ]
+    }
+  }
+
+  statement {
+    sid     = "DeleteExactServiceLinkedRoles"
+    actions = ["iam:DeleteServiceLinkedRole"]
+    resources = [
+      "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS*",
+      "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/rds.amazonaws.com/AWSServiceRoleForRDS*",
+      "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/servicediscovery.amazonaws.com/AWSServiceRoleForAmazonRoute53AutoNaming*",
+    ]
+  }
+
+  statement {
+    sid       = "ObserveServiceLinkedRoleDeletion"
+    actions   = ["iam:GetServiceLinkedRoleDeletionStatus"]
+    resources = ["*"]
   }
 }
 
