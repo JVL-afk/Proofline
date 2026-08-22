@@ -1,0 +1,148 @@
+{
+  "record_type": "M67_PHASE1_TERRAFORM_PLAN_REVIEW",
+  "version": "2026-08-22.1",
+  "state": "PHASE1_PLAN_BLOCKED_PENDING_CONTROL_REMEDIATION",
+  "required_owner_event": null,
+  "observation_timestamp": "2026-08-22T06:14:30Z",
+  "target": {
+    "account_id": "785072247535",
+    "partition": "aws",
+    "region": "us-east-2"
+  },
+  "source": {
+    "terraform_configuration_commit": "88898c3d23bebb7290f929c0e5c096296b30a452",
+    "worker_image_source_commit": "7d1ed1ac13ea71d0977549cd56207c8926f4cf52",
+    "worker_image_reference": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:a373c46a3a1e53a2868ff7cc16c8c424834688fbbe72e4054be415c3b654ed0f"
+  },
+  "versions": {
+    "terraform": "1.15.9",
+    "aws_provider": "6.53.0",
+    "postgres_engine": "18.3",
+    "container_platform": "LINUX_X86_64"
+  },
+  "backend": {
+    "state_bucket": "m67-phase1-tfstate-785072247535-us-east-2",
+    "state_key": "m67/phase1/terraform.tfstate",
+    "locking": "S3_NATIVE_LOCKFILE",
+    "kms_key_arn": "arn:aws:kms:us-east-2:785072247535:key/544f984e-0785-4365-bff4-f82c9b085493",
+    "local_production_state_authoritative": false
+  },
+  "hashes": {
+    "saved_plan_sha256": "8a5abef6f6dd99ba303280e3901d68210941210173ca75d5eb9550ec7bbf548c",
+    "plan_json_sha256": "e716832ddd927eb21fa61899385ba8bfb3c6c076d4f97bbee926159d26e8144e",
+    "configuration_sha256": "eea319a98f6f67abc05505740d4f232740e6b6b18f2de79815e79feab42244aa",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f"
+  },
+  "changes": {
+    "create": 58,
+    "change": 0,
+    "replace": 0,
+    "destroy": 0,
+    "unexpected_bootstrap_or_registry_changes": 0,
+    "unrelated_resources": 0
+  },
+  "managed_resource_type_counts": {
+    "aws_budgets_budget": 1,
+    "aws_cloudtrail": 1,
+    "aws_cloudwatch_log_group": 1,
+    "aws_cloudwatch_metric_alarm": 2,
+    "aws_db_instance": 1,
+    "aws_db_subnet_group": 1,
+    "aws_ecs_cluster": 1,
+    "aws_ecs_service": 1,
+    "aws_ecs_task_definition": 1,
+    "aws_eip": 1,
+    "aws_iam_role": 4,
+    "aws_iam_role_policy": 2,
+    "aws_iam_role_policy_attachment": 1,
+    "aws_internet_gateway": 1,
+    "aws_kms_alias": 3,
+    "aws_kms_key": 3,
+    "aws_nat_gateway": 1,
+    "aws_route_table": 2,
+    "aws_route_table_association": 3,
+    "aws_s3_bucket": 2,
+    "aws_s3_bucket_lifecycle_configuration": 2,
+    "aws_s3_bucket_ownership_controls": 1,
+    "aws_s3_bucket_policy": 2,
+    "aws_s3_bucket_public_access_block": 2,
+    "aws_s3_bucket_server_side_encryption_configuration": 2,
+    "aws_s3_bucket_versioning": 2,
+    "aws_security_group": 2,
+    "aws_sns_topic": 1,
+    "aws_sns_topic_policy": 1,
+    "aws_ssm_parameter": 1,
+    "aws_subnet": 3,
+    "aws_vpc": 1,
+    "aws_vpc_security_group_egress_rule": 4,
+    "aws_vpc_security_group_ingress_rule": 1
+  },
+  "security_controls_present": {
+    "public_application_ingress": false,
+    "worker_desired_count": 0,
+    "immutable_worker_digest": true,
+    "private_rds": true,
+    "rds_encrypted": true,
+    "restricted_capture_storage_encrypted": true,
+    "capture_and_audit_buckets_publicly_blocked": true,
+    "cloudtrail_log_validation": true,
+    "kms_service_policies_explicit": true,
+    "kill_switch_default": "TRIPPED",
+    "ai_browser_sender_delivery_or_person_contact_infrastructure": false
+  },
+  "security_scan": {
+    "tool": "Trivy",
+    "tool_version": "0.72.0",
+    "high_findings": 0,
+    "critical_findings": 2,
+    "findings": [
+      "AWS-0104_WORKER_HTTP_EGRESS_0_0_0_0_0",
+      "AWS-0104_WORKER_HTTPS_EGRESS_0_0_0_0_0"
+    ],
+    "risk_acceptance": null
+  },
+  "cost": {
+    "estimate_basis": "ONE_MONTH_MAXIMUM_PILOT_WINDOW_WITH_ZERO_IDLE_WORKER_TASKS",
+    "nat_gateway_and_public_ipv4_baseline_usd": "36.50",
+    "rds_t4g_micro_compute_usd": "11.68",
+    "rds_gp3_20gb_usd": "2.30",
+    "phase1_customer_managed_kms_keys_usd": "3.00",
+    "already_deployed_bootstrap_and_registry_kms_keys_usd": "2.00",
+    "rds_managed_secret_usd": "0.40",
+    "fargate_idle_usd": "0.00",
+    "fargate_runtime_per_worker_hour_usd_estimate": "0.025",
+    "s3_ecr_cloudtrail_logs_backups_requests_and_transfer": "USAGE_DEPENDENT",
+    "conservative_phase1_total_allowance_usd": "75.00",
+    "phase1_total_hard_ceiling_usd": "250.00",
+    "within_hard_ceiling": true,
+    "tax_support_and_human_review_time_included": false,
+    "pricing_uncertainty": "USAGE, DATA TRANSFER, LOG VOLUME, TAX, SUPPORT, AND PILOT DURATION"
+  },
+  "blocking_findings": [
+    {
+      "code": "WORKLOAD_PLAN_APPLY_IDENTITIES_ABSENT",
+      "category": "POST_DEPLOYMENT_IDENTITY_CONTROL",
+      "reason": "ADR-0075 requires separate workload-plan and workload-apply roles; the plan has neither and was produced with the administrative bootstrap session."
+    },
+    {
+      "code": "WORKER_RUNTIME_NOT_PHASE1_COMPATIBLE",
+      "category": "MISSING_IMPLEMENTATION",
+      "reason": "The immutable worker accepts only development/test and sqlite URLs, while the task has a read-only root filesystem and the plan provisions PostgreSQL without a compatible worker configuration or driver."
+    },
+    {
+      "code": "EXACT_HOST_EGRESS_NOT_INFRASTRUCTURE_ENFORCED",
+      "category": "MISSING_IMPLEMENTATION_OR_EXPLICIT_RISK_DECISION",
+      "reason": "The worker security group permits HTTP/HTTPS to 0.0.0.0/0. Application exact-host checks remain necessary but do not satisfy the documented exact-host egress-control evidence by themselves; Trivy reports two critical AWS-0104 findings."
+    }
+  ],
+  "approval": {
+    "ready_for_phase1_apply_authorization": false,
+    "approve_phase1_apply_statement": null,
+    "phase1_apply_authorized": false
+  },
+  "live_permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED"
+  }
+}

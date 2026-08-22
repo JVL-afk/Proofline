@@ -2,6 +2,17 @@
 
 ## Active milestone
 
+The exact worker-registry plan was applied and independently verified, and the immutable Phase 1
+worker image is now stored in the approved ECR repository at digest
+`sha256:a373c46a3a1e53a2868ff7cc16c8c424834688fbbe72e4054be415c3b654ed0f`. The final
+authenticated Phase 1 application plan proposes 58 creates and zero changes, replacements, or
+destroys, but it is **not** ready for apply authorization. ADR-0075 workload-plan/workload-apply
+identities are absent, the current worker is local-SQLite/development-only and incompatible with
+the planned PostgreSQL/read-only Fargate runtime, and two critical unrestricted-egress findings
+remain without an accepted exact-host enforcement design or risk decision. The immutable review is
+in `docs/readiness/m6.7-deployment/phase1-plan-review-2026-08-22.json`. Do not apply that plan.
+All discovery, research, person/contact, slot, AI, and delivery permissions remain unauthorized.
+
 The exact approved M6.7 Phase 1 Terraform-state bootstrap plan was applied in AWS account
 `785072247535`, region `us-east-2`, then independently observed. Its 18 creates, protected S3/KMS
 state boundary, state plan/apply roles, and CloudTrail state-object audit controls are recorded in
