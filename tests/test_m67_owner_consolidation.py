@@ -215,3 +215,62 @@ def test_plan_record_derives_hashes_and_blocks_destroy(tmp_path: Path) -> None:
     assert record["changes"]["destroy"] == 1
     assert "UNEXPECTED_DESTROY_BLOCKS_APPLY" in record["warnings"]
     assert record["real_business_discovery"] == "NOT_AUTHORIZED"
+
+
+def test_plan_record_allows_read_only_terraform_data_sources(tmp_path: Path) -> None:
+    configuration = tmp_path / "config"
+    configuration.mkdir()
+    (configuration / "main.tf").write_text('data "aws_partition" "current" {}\n', encoding="utf-8")
+    (configuration / ".terraform.lock.hcl").write_text("locked\n", encoding="utf-8")
+    plan_binary = tmp_path / "plan.tfplan"
+    plan_binary.write_bytes(b"synthetic-plan")
+    plan_json = tmp_path / "plan.json"
+    plan_json.write_text(
+        json.dumps(
+            {
+                "resource_changes": [
+                    {
+                        "address": "data.aws_iam_policy_document.example",
+                        "mode": "data",
+                        "type": "aws_iam_policy_document",
+                        "change": {"actions": ["read"]},
+                    },
+                    {
+                        "address": "aws_s3_bucket.example",
+                        "mode": "managed",
+                        "type": "aws_s3_bucket",
+                        "change": {"actions": ["create"]},
+                    },
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    output = tmp_path / "review.json"
+    subprocess.run(
+        [
+            sys.executable,
+            str(ROOT / "scripts/create_m67_terraform_plan_record.py"),
+            "--plan-binary",
+            str(plan_binary),
+            "--plan-json",
+            str(plan_json),
+            "--configuration-root",
+            str(configuration),
+            "--plan-kind",
+            "PHASE1",
+            "--account-id",
+            "123456789012",
+            "--authenticated-role",
+            "synthetic-role",
+            "--estimated-cost-usd",
+            "1",
+            "--output",
+            str(output),
+        ],
+        check=True,
+    )
+    record = load(output)
+    assert record["state"] == "READY_FOR_OWNER_APPLY_DECISION"
+    assert record["changes"]["create"] == 1
+    assert record["prohibited_resources"] == []

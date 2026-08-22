@@ -86,6 +86,7 @@ def build_record(
     resources: list[dict[str, object]] = []
     prohibited: list[str] = []
     for item in changes:
+        resource_mode = str(item.get("mode", "managed"))
         resource_type = str(item.get("type"))
         actions = cast(list[str], cast(dict[str, Any], item.get("change", {})).get("actions", []))
         action_set = set(actions)
@@ -99,11 +100,12 @@ def build_record(
             counts["replace"] += 1
         elif action_set == {"no-op"}:
             counts["no_op"] += 1
-        if resource_type not in ALLOWED_RESOURCE_TYPES:
+        if resource_mode == "managed" and resource_type not in ALLOWED_RESOURCE_TYPES:
             prohibited.append(str(item.get("address")))
         resources.append(
             {
                 "address": item.get("address"),
+                "mode": resource_mode,
                 "type": resource_type,
                 "actions": actions,
             }
