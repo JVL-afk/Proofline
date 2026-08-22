@@ -216,7 +216,7 @@ resource "aws_ecs_task_definition" "egress" {
 
   container_definitions = jsonencode([{
     name                   = "controlled-egress"
-    image                  = var.worker_image_uri
+    image                  = var.controlled_egress_image_uri
     essential              = true
     entryPoint             = ["python", "-m", "opintel_research_worker.egress_main"]
     readonlyRootFilesystem = true

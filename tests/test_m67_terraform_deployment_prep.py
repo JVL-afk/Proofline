@@ -124,6 +124,24 @@ def test_partial_apply_provider_permissions_remain_exact_and_cloud_map_has_no_fa
     assert "failure_threshold = 1" in compute
 
 
+def test_research_worker_image_revision_cannot_replace_controlled_egress_image() -> None:
+    variables = (PHASE1 / "variables.tf").read_text(encoding="utf-8")
+    compute = (PHASE1 / "compute.tf").read_text(encoding="utf-8")
+
+    assert 'variable "worker_image_uri"' in variables
+    assert 'variable "controlled_egress_image_uri"' in variables
+    worker_definition = compute.split('resource "aws_ecs_task_definition" "worker"', maxsplit=1)[
+        1
+    ].split('resource "aws_ecs_service" "worker"', maxsplit=1)[0]
+    egress_definition = compute.split('resource "aws_ecs_task_definition" "egress"', maxsplit=1)[
+        1
+    ].split('resource "aws_ecs_service" "egress"', maxsplit=1)[0]
+    assert "image     = var.worker_image_uri" in worker_definition
+    assert "controlled_egress_image_uri" not in worker_definition
+    assert "image                  = var.controlled_egress_image_uri" in egress_definition
+    assert "var.worker_image_uri" not in egress_definition
+
+
 def test_final_iam_remediation_is_exact_and_bounded() -> None:
     access = (BOOTSTRAP / "workload_access.tf").read_text(encoding="utf-8")
     variables = (BOOTSTRAP / "variables.tf").read_text(encoding="utf-8")

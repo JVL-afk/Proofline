@@ -1,5 +1,6 @@
 expected_aws_account_id                  = "REPLACE_WITH_12_DIGIT_ACCOUNT_ID"
 worker_image_uri                         = "REPLACE_WITH_ECR_URI@sha256:DIGEST"
+controlled_egress_image_uri              = "REPLACE_WITH_SEPARATELY_FROZEN_EGRESS_ECR_URI@sha256:DIGEST"
 operator_principal_arns                  = ["REPLACE_WITH_APPROVED_SHORT_LIVED_PRINCIPAL_ARN"]
 kill_switch_operator_principal_arn       = "REPLACE_WITH_APPROVED_KILL_OPERATOR_ARN"
 worker_desired_count                     = 0

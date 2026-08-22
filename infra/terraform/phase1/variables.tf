@@ -62,12 +62,22 @@ variable "availability_zones" {
 }
 
 variable "worker_image_uri" {
-  description = "Immutable ECR image URI including an sha256 digest."
+  description = "Immutable ECR image URI for the research worker, including a sha256 digest."
   type        = string
 
   validation {
     condition     = can(regex("^[^[:space:]]+@sha256:[0-9a-f]{64}$", var.worker_image_uri))
     error_message = "worker_image_uri must use an immutable sha256 digest."
+  }
+}
+
+variable "controlled_egress_image_uri" {
+  description = "Separately frozen immutable ECR image URI for the controlled-egress runtime."
+  type        = string
+
+  validation {
+    condition     = can(regex("^[^[:space:]]+@sha256:[0-9a-f]{64}$", var.controlled_egress_image_uri))
+    error_message = "controlled_egress_image_uri must use an immutable sha256 digest."
   }
 }
 
