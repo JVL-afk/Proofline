@@ -120,6 +120,8 @@ def test_partial_apply_provider_permissions_remain_exact_and_cloud_map_has_no_fa
     assert "servicediscovery.amazonaws.com" not in access
     assert 'resource "aws_iam_service_linked_role" "service_discovery"' not in compute
     assert "aws_iam_service_linked_role.service_discovery" not in compute
+    assert "health_check_custom_config" in compute
+    assert "failure_threshold = 1" in compute
 
 
 def test_final_iam_remediation_is_exact_and_bounded() -> None:

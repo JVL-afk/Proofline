@@ -193,7 +193,12 @@ resource "aws_service_discovery_service" "egress" {
     }
     routing_policy = "MULTIVALUE"
   }
-  health_check_custom_config {}
+  # AWS Cloud Map requires the custom-health object at service creation time
+  # for ECS to publish task/container health. The deprecated threshold field is
+  # still the provider's explicit representation and AWS fixes its value at 1.
+  health_check_custom_config {
+    failure_threshold = 1
+  }
 }
 
 resource "aws_ecs_task_definition" "egress" {
