@@ -2,14 +2,22 @@
 
 ## Active milestone
 
+ADR-0075 workload-plan/workload-apply identities were applied under the exact owner approval and
+independently observed in account `785072247535`, region `us-east-2`. PostgreSQL 18 lifecycle parity,
+fail-closed SSM suspension, read-only task configuration, and ADR-0076 isolated exact-host egress are
+implemented locally. ADR-0076 requires three narrowly scoped in-place inline-policy updates for VPC
+endpoints and private service discovery. The exact plan in
+`docs/readiness/m6.7-deployment/workload-egress-policy-plan-review-2026-08-22.json` is 0 creates,
+3 changes, 0 replacements, and 0 destroys. It is not applied; do not apply it without the owner's
+exact hash-bound `APPROVE_WORKLOAD_IDENTITY_SUCCESSOR_APPLY` statement.
+
 The exact worker-registry plan was applied and independently verified, and the immutable Phase 1
 worker image is now stored in the approved ECR repository at digest
 `sha256:a373c46a3a1e53a2868ff7cc16c8c424834688fbbe72e4054be415c3b654ed0f`. The final
 authenticated Phase 1 application plan proposes 58 creates and zero changes, replacements, or
-destroys, but it is **not** ready for apply authorization. ADR-0075 workload-plan/workload-apply
-identities are absent, the current worker is local-SQLite/development-only and incompatible with
-the planned PostgreSQL/read-only Fargate runtime, and two critical unrestricted-egress findings
-remain without an accepted exact-host enforcement design or risk decision. The immutable review is
+destroys, but it is **not** ready for apply authorization and remains historical evidence. The
+predecessor worker image must be superseded after the production-runtime changes, and a successor
+application plan must be generated using the deployed workload-plan identity. The immutable review is
 in `docs/readiness/m6.7-deployment/phase1-plan-review-2026-08-22.json`. Do not apply that plan.
 All discovery, research, person/contact, slot, AI, and delivery permissions remain unauthorized.
 
@@ -18,10 +26,7 @@ The exact approved M6.7 Phase 1 Terraform-state bootstrap plan was applied in AW
 state boundary, state plan/apply roles, and CloudTrail state-object audit controls are recorded in
 `docs/readiness/m6.7-deployment/bootstrap-deployed-evidence-2026-08-21.json`. Bootstrap state was
 migrated to `m67/bootstrap/terraform.tfstate`; obsolete local resource state was removed. The exact
-worker ECR repository does not exist, so no worker build or Phase 1 application plan may proceed
-until the exact registry-only plan recorded in
-`docs/readiness/m6.7-deployment/worker-registry-plan-review-2026-08-21.json` is approved and applied.
-That plan is not authorized merely because it is ready. All live-data permissions remain
+worker ECR repository is deployed and independently verified. All live-data permissions remain
 `NOT_AUTHORIZED`.
 
 M6.7 owner approvals are consolidated: discretionary defaults are recorded once, three actor

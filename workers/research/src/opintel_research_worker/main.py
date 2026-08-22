@@ -13,7 +13,9 @@ from opintel_research import (
     ResearchWorkflowRunner,
     SocketResolver,
 )
+from opintel_research.ports import HttpTransport
 from opintel_research_local import (
+    ControlledEgressTransport,
     DisabledBrowserFallback,
     IsolatedBrowserFallback,
     SafeHttpFetcher,
@@ -25,11 +27,22 @@ from opintel_research_local import (
     get_research_worker_settings,
 )
 
+from opintel_research_worker.kill_switch import AwsSsmStopSignal
+
 
 def build_runner() -> ResearchWorkflowRunner:
     settings = get_research_worker_settings()
+    transport: HttpTransport
+    if settings.app_env == "phase1":
+        if settings.controlled_egress_url is None or settings.egress_policy_revision is None:
+            raise RuntimeError("phase1 controlled egress configuration is incomplete")
+        transport = ControlledEgressTransport(
+            settings.controlled_egress_url, settings.egress_policy_revision
+        )
+    else:
+        transport = StdlibPinnedTransport()
     clock = SystemClock()
-    repository = SqlAlchemyResearchRepository(settings.database_url)
+    repository = SqlAlchemyResearchRepository(settings.resolved_database_url())
     repository.initialize()
     browser = (
         IsolatedBrowserFallback(
@@ -43,7 +56,7 @@ def build_runner() -> ResearchWorkflowRunner:
         repository=repository,
         fetcher=SafeHttpFetcher(
             PublicUrlPolicy(SocketResolver()),
-            StdlibPinnedTransport(),
+            transport,
             clock,
             live_enabled=settings.research_live_enabled,
         ),
@@ -53,6 +66,11 @@ def build_runner() -> ResearchWorkflowRunner:
         identifiers=UuidFactory(),
         sleeper=SystemSleeper(),
         lease_duration=timedelta(seconds=settings.worker_lease_seconds),
+        stop_signal=(
+            AwsSsmStopSignal(settings.kill_switch_parameter or "", settings.aws_region)
+            if settings.app_env == "phase1"
+            else None
+        ),
     )
 
 

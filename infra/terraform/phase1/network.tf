@@ -77,22 +77,45 @@ resource "aws_security_group" "worker" {
   tags        = { Name = "${var.name_prefix}-worker" }
 }
 
-resource "aws_vpc_security_group_egress_rule" "worker_https" {
-  security_group_id = aws_security_group.worker.id
-  cidr_ipv4         = "0.0.0.0/0"
-  from_port         = 443
-  to_port           = 443
-  ip_protocol       = "tcp"
-  description       = "HTTPS through the dedicated NAT; application exact-host policy still applies"
+resource "aws_security_group" "controlled_egress" {
+  name        = "${var.name_prefix}-controlled-egress"
+  description = "Application-aware exact-host public research boundary"
+  vpc_id      = aws_vpc.phase1.id
+  tags        = { Name = "${var.name_prefix}-controlled-egress" }
 }
 
-resource "aws_vpc_security_group_egress_rule" "worker_http" {
-  security_group_id = aws_security_group.worker.id
-  cidr_ipv4         = "0.0.0.0/0"
-  from_port         = 80
-  to_port           = 80
-  ip_protocol       = "tcp"
-  description       = "HTTP redirect/bootstrap through dedicated NAT; source policy remains exact-host"
+resource "aws_security_group" "endpoints" {
+  name        = "${var.name_prefix}-aws-endpoints"
+  description = "Private AWS service endpoints used by Phase 1 tasks"
+  vpc_id      = aws_vpc.phase1.id
+  tags        = { Name = "${var.name_prefix}-aws-endpoints" }
+}
+
+resource "aws_vpc_security_group_egress_rule" "worker_to_gateway" {
+  security_group_id            = aws_security_group.worker.id
+  referenced_security_group_id = aws_security_group.controlled_egress.id
+  from_port                    = 8080
+  to_port                      = 8080
+  ip_protocol                  = "tcp"
+  description                  = "Only the controlled exact-host gateway may perform public research"
+}
+
+resource "aws_vpc_security_group_egress_rule" "worker_to_endpoints" {
+  security_group_id            = aws_security_group.worker.id
+  referenced_security_group_id = aws_security_group.endpoints.id
+  from_port                    = 443
+  to_port                      = 443
+  ip_protocol                  = "tcp"
+  description                  = "Private AWS API endpoints only"
+}
+
+resource "aws_vpc_security_group_egress_rule" "worker_to_database" {
+  security_group_id            = aws_security_group.worker.id
+  referenced_security_group_id = aws_security_group.database.id
+  from_port                    = 5432
+  to_port                      = 5432
+  ip_protocol                  = "tcp"
+  description                  = "Private PostgreSQL only"
 }
 
 resource "aws_vpc_security_group_egress_rule" "worker_dns_udp" {
@@ -111,6 +134,99 @@ resource "aws_vpc_security_group_egress_rule" "worker_dns_tcp" {
   to_port           = 53
   ip_protocol       = "tcp"
   description       = "VPC resolver DNS fallback"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "gateway_from_worker" {
+  security_group_id            = aws_security_group.controlled_egress.id
+  referenced_security_group_id = aws_security_group.worker.id
+  from_port                    = 8080
+  to_port                      = 8080
+  ip_protocol                  = "tcp"
+  description                  = "Research worker requests only"
+}
+
+resource "aws_vpc_security_group_egress_rule" "gateway_https" {
+  security_group_id = aws_security_group.controlled_egress.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 443
+  to_port           = 443
+  ip_protocol       = "tcp"
+  description       = "Public TLS only after exact-host and public-IP authorization"
+}
+
+resource "aws_vpc_security_group_egress_rule" "gateway_http" {
+  security_group_id = aws_security_group.controlled_egress.id
+  cidr_ipv4         = "0.0.0.0/0"
+  from_port         = 80
+  to_port           = 80
+  ip_protocol       = "tcp"
+  description       = "Public HTTP only after exact-host and public-IP authorization"
+}
+
+resource "aws_vpc_security_group_egress_rule" "gateway_dns_udp" {
+  security_group_id = aws_security_group.controlled_egress.id
+  cidr_ipv4         = var.vpc_cidr
+  from_port         = 53
+  to_port           = 53
+  ip_protocol       = "udp"
+  description       = "VPC resolver DNS"
+}
+
+resource "aws_vpc_security_group_egress_rule" "gateway_dns_tcp" {
+  security_group_id = aws_security_group.controlled_egress.id
+  cidr_ipv4         = var.vpc_cidr
+  from_port         = 53
+  to_port           = 53
+  ip_protocol       = "tcp"
+  description       = "VPC resolver DNS fallback"
+}
+
+resource "aws_vpc_security_group_egress_rule" "gateway_to_endpoints" {
+  security_group_id            = aws_security_group.controlled_egress.id
+  referenced_security_group_id = aws_security_group.endpoints.id
+  from_port                    = 443
+  to_port                      = 443
+  ip_protocol                  = "tcp"
+  description                  = "Private AWS API endpoints only"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "endpoints_from_worker" {
+  security_group_id            = aws_security_group.endpoints.id
+  referenced_security_group_id = aws_security_group.worker.id
+  from_port                    = 443
+  to_port                      = 443
+  ip_protocol                  = "tcp"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "endpoints_from_gateway" {
+  security_group_id            = aws_security_group.endpoints.id
+  referenced_security_group_id = aws_security_group.controlled_egress.id
+  from_port                    = 443
+  to_port                      = 443
+  ip_protocol                  = "tcp"
+}
+
+locals {
+  interface_endpoint_services = toset(["ecr.api", "ecr.dkr", "logs", "secretsmanager", "ssm"])
+}
+
+resource "aws_vpc_endpoint" "interface" {
+  for_each            = local.interface_endpoint_services
+  vpc_id              = aws_vpc.phase1.id
+  service_name        = "com.amazonaws.${var.aws_region}.${each.value}"
+  vpc_endpoint_type   = "Interface"
+  private_dns_enabled = true
+  subnet_ids          = aws_subnet.private[*].id
+  security_group_ids  = [aws_security_group.endpoints.id]
+  tags                = { Name = "${var.name_prefix}-${replace(each.value, ".", "-")}" }
+}
+
+resource "aws_vpc_endpoint" "s3" {
+  vpc_id            = aws_vpc.phase1.id
+  service_name      = "com.amazonaws.${var.aws_region}.s3"
+  vpc_endpoint_type = "Gateway"
+  route_table_ids   = [aws_route_table.private.id]
+  tags              = { Name = "${var.name_prefix}-s3" }
 }
 
 resource "aws_security_group" "database" {

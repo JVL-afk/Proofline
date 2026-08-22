@@ -110,3 +110,11 @@ booking, or network dependency.
 
 M6.7C adds no direct dependency. Its gate layer reuses the existing M1 URL policy and locked
 SQLAlchemy/Pydantic workspace dependencies. The fake resolver and transport use no network library.
+
+M6.7 Phase 1 production-runtime remediation adds `psycopg` 3.2.x, owned by `research-local`, as
+SQLAlchemy's PostgreSQL 18 driver. Critical lifecycle parity is exercised against an ephemeral local
+PostgreSQL server; SQLite remains the local/test adapter and is rejected in Phase 1 configuration.
+The research worker adds `boto3` 1.x solely for an authenticated, fail-closed read of the exact SSM
+kill-switch parameter through a private VPC endpoint. It does not provide business-web transport,
+discovery, AI, browser, or delivery capability. Both resolutions are frozen in `uv.lock`, included
+in the worker SBOM, and covered by deterministic adapter tests plus the successor image scan.

@@ -3,9 +3,11 @@ from __future__ import annotations
 import gzip
 import hashlib
 import json
+import threading
 from collections.abc import Sequence
 from dataclasses import dataclass
 from datetime import timedelta
+from http.server import ThreadingHTTPServer
 from types import SimpleNamespace
 from uuid import UUID
 
@@ -27,6 +29,7 @@ from opintel_research.domain import (
 )
 from opintel_research.url_policy import normalize_public_url
 from opintel_research_local import DisabledBrowserFallback, IsolatedBrowserFallback, SafeHttpFetcher
+from opintel_research_local.egress import ControlledEgressTransport, build_gateway_handler
 from opintel_research_local.persistence import SqlAlchemyResearchRepository
 from opintel_research_local.settings import ResearchWorkerSettings
 
@@ -486,3 +489,58 @@ def test_workspace_authorization_hides_research_resources(
     other_workspace = UUID("00000000-0000-4000-8000-000000000099")
     assert research_repository.get_business(other_workspace, UUID(business["id"])) is None
     assert research_repository.get_run(other_workspace, UUID(started["id"])) is None
+
+
+def test_phase1_requires_explicit_postgresql_and_local_remains_sqlite() -> None:
+    local = ResearchWorkerSettings(app_env="test", database_url="sqlite:///:memory:")
+    assert local.database_url == "sqlite:///:memory:"
+
+    production = ResearchWorkerSettings(
+        app_env="phase1",
+        database_host="database.internal",
+        database_password="synthetic-secret",
+        controlled_egress_url="http://egress.internal:8080",
+        egress_policy_revision="synthetic-policy-v1",
+        kill_switch_parameter="/synthetic/kill-switch",
+    )
+    assert production.resolved_database_url().startswith("postgresql+psycopg://")
+
+    with pytest.raises(ValueError, match="PostgreSQL host"):
+        ResearchWorkerSettings(app_env="phase1", database_url="sqlite:///:memory:")
+    with pytest.raises(ValueError, match="local/test research"):
+        ResearchWorkerSettings(
+            app_env="test",
+            database_url="postgresql+psycopg://phase1@database.internal/opintel_phase1",
+        )
+
+
+def test_controlled_egress_gateway_enforces_exact_host_and_policy_revision() -> None:
+    transport = SequenceTransport(
+        {"https://example.com/": [html_response(b"<html>synthetic</html>")]}
+    )
+    handler = build_gateway_handler(
+        frozenset({"example.com"}),
+        "synthetic-policy-v1",
+        transport=transport,  # type: ignore[arg-type]
+        policy=PublicUrlPolicy(StaticResolver()),
+    )
+    server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        gateway = ControlledEgressTransport(
+            f"http://127.0.0.1:{server.server_port}", "synthetic-policy-v1"
+        )
+        allowed = PublicUrlPolicy(StaticResolver()).validate("https://example.com/", "example.com")
+        response = gateway.request(allowed, 1, 1024)
+        assert response.body == b"<html>synthetic</html>"
+
+        denied = PublicUrlPolicy(StaticResolver()).validate(
+            "https://unauthorized.example/", "unauthorized.example"
+        )
+        with pytest.raises(FetchError, match="controlled_egress_denied"):
+            gateway.request(denied, 1, 1024)
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)

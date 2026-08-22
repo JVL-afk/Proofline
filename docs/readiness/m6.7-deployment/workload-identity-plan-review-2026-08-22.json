@@ -1,0 +1,92 @@
+{
+  "record_type": "M67_WORKLOAD_IDENTITY_TERRAFORM_PLAN_REVIEW",
+  "version": "2026-08-22.1",
+  "state": "READY_FOR_WORKLOAD_IDENTITY_APPLY_AUTHORIZATION",
+  "required_owner_event": "APPROVE_WORKLOAD_IDENTITY_APPLY",
+  "observation_timestamp": "2026-08-22T06:36:50Z",
+  "target": {
+    "account_id": "785072247535",
+    "partition": "aws",
+    "region": "us-east-2"
+  },
+  "source_git_commit": "3d95b7337763e8ec0b4b5a49c6da23f264ba014a",
+  "versions": {
+    "terraform": "1.15.9",
+    "aws_provider": "6.53.0"
+  },
+  "hashes": {
+    "saved_plan_sha256": "ce716f029c785314bccbb4c586818247c1c8561891cde4896bb47fc4b136a511",
+    "plan_json_sha256": "ab9477c8785d879fcd2b8c35b0d71113f504d2bd1d98d7113d443b4cfbdc0abd",
+    "configuration_sha256": "4b405c2ca8777e3e15a8b8f426a1b3a35cfb527dd4ffcd10f0ae0a61102a80a3",
+    "provider_lock_sha256": "b0f95a645ac5a5db24949e074c48758bb1a1f867ef73148e174a1e1ae1e76c9f",
+    "trusted_principal_role_digest_sha256": "6d21fb6963c2f97dd9b44592815f65f81acf9e0ed599c59faf0768a68f0ac2a3",
+    "plan_trust_policy_sha256": "4c5ac78dcb9375e9731221187d5cf96dc97caa0ccce085fe978c99041f27f908",
+    "apply_trust_policy_sha256": "4c5ac78dcb9375e9731221187d5cf96dc97caa0ccce085fe978c99041f27f908",
+    "plan_read_policy_sha256": "2afd33e2482f24f2d6d1a8b62b43bc09945dbdf322cce5e1c4c50da750ca9979",
+    "apply_read_policy_sha256": "2afd33e2482f24f2d6d1a8b62b43bc09945dbdf322cce5e1c4c50da750ca9979",
+    "apply_network_compute_policy_sha256": "b3872ba8e7b460933357ca00937444f219b20fdb9ba966dcc6929ce5b75e938c",
+    "apply_data_observability_policy_sha256": "7a75f89b1c1c0285d433865719dc2e6b337c8d78a719f4b0d1605806ab9aae1b",
+    "apply_iam_policy_sha256": "184aeb66c21a0d639ae31db34402451ac26675abb80700c5aeb2244e3b58217f"
+  },
+  "changes": {
+    "create": 7,
+    "change": 0,
+    "replace": 0,
+    "destroy": 0
+  },
+  "managed_resources": [
+    "aws_iam_role.workload_apply",
+    "aws_iam_role.workload_plan",
+    "aws_iam_role_policy.workload_apply_data_observability",
+    "aws_iam_role_policy.workload_apply_iam",
+    "aws_iam_role_policy.workload_apply_network_compute",
+    "aws_iam_role_policy.workload_apply_read",
+    "aws_iam_role_policy.workload_plan"
+  ],
+  "identity_controls": {
+    "workload_plan_role_name": "m67-phase1-terraform-workload-plan",
+    "workload_apply_role_name": "m67-phase1-terraform-workload-apply",
+    "workload_plan_session_maximum_seconds": 14400,
+    "workload_apply_session_maximum_seconds": 3600,
+    "plan_state_access": "ASSUME_EXACT_M67_PHASE1_TERRAFORM_STATE_PLAN_ROLE",
+    "apply_state_access": "ASSUME_EXACT_M67_PHASE1_TERRAFORM_STATE_APPLY_ROLE",
+    "plan_mutating_actions": 0,
+    "administrator_access_attached": false,
+    "power_user_access_attached": false,
+    "application_resources_in_plan": false,
+    "bootstrap_or_registry_changes_in_plan": false
+  },
+  "validation": {
+    "terraform_validate": "PASS",
+    "focused_tests": "4_PASS",
+    "repository_validation": "PASS",
+    "aws_access_analyzer_errors": 0,
+    "aws_access_analyzer_warnings": 0,
+    "aws_access_analyzer_suggestions": [
+      "REDUNDANT_ACTION_S3_GET_BUCKET_PUBLIC_ACCESS_BLOCK_COVERED_BY_S3_GET_BUCKET_WILDCARD"
+    ],
+    "new_trivy_findings_in_workload_identity_configuration": 0,
+    "preexisting_bootstrap_trivy_findings": [
+      "AWS-0015_BOOTSTRAP_CLOUDTRAIL_LOGS_NOT_CMK_ENCRYPTED",
+      "AWS-0132_BOOTSTRAP_AUDIT_BUCKET_USES_SSE_S3"
+    ]
+  },
+  "cost": {
+    "iam_role_and_inline_policy_monthly_cost_usd": "0.00",
+    "phase1_total_hard_ceiling_usd": "250.00",
+    "estimate_is_apply_authority": false
+  },
+  "remaining_phase1_blockers": [
+    "POSTGRES_PRODUCTION_ADAPTER_NOT_VALIDATED",
+    "READ_ONLY_FARGATE_RUNTIME_NOT_VALIDATED",
+    "ARBITRARY_WORKER_INTERNET_EGRESS_NOT_DENIED",
+    "CONTROLLED_EXACT_HOST_RESEARCH_EGRESS_NOT_VALIDATED"
+  ],
+  "live_permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "PHASE1_APPLICATION_APPLY": "NOT_AUTHORIZED"
+  },
+  "owner_signature": null
+}

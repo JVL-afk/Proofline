@@ -34,6 +34,7 @@ from sqlalchemy import (
     create_engine,
     event,
     select,
+    text,
     update,
 )
 from sqlalchemy.exc import IntegrityError
@@ -64,6 +65,12 @@ def _json(value: object) -> str:
 
 class Base(DeclarativeBase):
     pass
+
+
+class SchemaRevisionRow(Base):
+    __tablename__ = "research_schema_revisions"
+    revision: Mapped[str] = mapped_column(String(80), primary_key=True)
+    applied_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 
 
 class BusinessRow(Base):
@@ -226,7 +233,21 @@ class SqlAlchemyResearchRepository:
         cursor.close()
 
     def initialize(self) -> None:
-        Base.metadata.create_all(self.engine)
+        with self.engine.begin() as connection:
+            if self.engine.dialect.name == "postgresql":
+                connection.execute(text("SELECT pg_advisory_xact_lock(670001)"))
+            Base.metadata.create_all(connection)
+            existing = connection.execute(
+                select(SchemaRevisionRow.revision).where(
+                    SchemaRevisionRow.revision == "research-schema@1"
+                )
+            ).scalar_one_or_none()
+            if existing is None:
+                connection.execute(
+                    SchemaRevisionRow.__table__.insert().values(  # type: ignore[attr-defined]
+                        revision="research-schema@1", applied_at=datetime.now(UTC)
+                    )
+                )
 
     def create_business(self, business: Business) -> Business:
         data = asdict(business)
@@ -275,12 +296,15 @@ class SqlAlchemyResearchRepository:
 
     def claim_run(self, now: datetime, lease: timedelta) -> ResearchRun | None:
         with self._sessions.begin() as session:
-            row = session.scalar(
+            statement = (
                 select(RunRow)
                 .where(RunRow.status == ResearchRunStatus.PENDING)
                 .order_by(RunRow.created_at)
                 .limit(1)
             )
+            if self.engine.dialect.name == "postgresql":
+                statement = statement.with_for_update(skip_locked=True)
+            row = session.scalar(statement)
             if row is None:
                 return None
             result = session.execute(

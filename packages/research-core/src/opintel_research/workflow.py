@@ -27,6 +27,7 @@ from opintel_research.ports import (
     PublicFetcher,
     ResearchRepository,
     Sleeper,
+    StopSignal,
 )
 from opintel_research.url_policy import normalize_public_url
 
@@ -42,6 +43,7 @@ class ResearchWorkflowRunner:
         identifiers: IdentifierFactory,
         sleeper: Sleeper,
         lease_duration: timedelta = timedelta(seconds=60),
+        stop_signal: StopSignal | None = None,
     ) -> None:
         self._repository = repository
         self._fetcher = fetcher
@@ -51,6 +53,7 @@ class ResearchWorkflowRunner:
         self._identifiers = identifiers
         self._sleeper = sleeper
         self._lease = lease_duration
+        self._stop_signal = stop_signal
 
     def recover_stale(self) -> int:
         return self._repository.recover_stale_runs(self._clock.now())
@@ -73,6 +76,9 @@ class ResearchWorkflowRunner:
         policy = run.policy
 
         while queue and pages_attempted < policy.max_pages:
+            if self._stop_signal is not None and self._stop_signal.is_active():
+                first_error = first_error or "kill_switch_active"
+                break
             if (self._clock.now() - started).total_seconds() >= policy.max_duration_seconds:
                 first_error = first_error or "crawl_duration_exceeded"
                 break
@@ -122,6 +128,9 @@ class ResearchWorkflowRunner:
             document = None
             final_error: FetchError | UrlPolicyError | None = None
             for attempt_number in range(1, policy.max_attempts + 1):
+                if self._stop_signal is not None and self._stop_signal.is_active():
+                    final_error = FetchError("kill_switch_active", "research is suspended")
+                    break
                 attempt_started = self._clock.now()
                 if policy.per_domain_delay_seconds and (pages_attempted > 1 or attempt_number > 1):
                     self._sleeper.sleep(policy.per_domain_delay_seconds)

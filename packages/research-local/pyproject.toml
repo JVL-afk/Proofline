@@ -7,6 +7,7 @@ dependencies = [
   "opintel-m0-core",
   "opintel-research-core",
   "pydantic-settings>=2.10,<3",
+  "psycopg[binary]>=3.2,<3.3",
   "sqlalchemy>=2.0,<2.1",
 ]
 
