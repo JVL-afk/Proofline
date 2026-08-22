@@ -140,7 +140,11 @@ def test_final_iam_remediation_is_exact_and_bounded() -> None:
     assert '"secretsmanager:TagResource"' in access
     assert "secret:rds!db-*" in access
     assert 'actions   = ["cloudtrail:PutEventSelectors"]' in access
+    assert 'actions   = ["cloudtrail:GetEventSelectors"]' in access
     assert "trail/${local.workload_name_prefix}-audit" in access
+    assert '"kms:Decrypt"' in access
+    assert '"kms:GenerateDataKey"' in access
+    assert 'values   = ["secretsmanager.${var.aws_region}.amazonaws.com"]' in access
     assert '"s3:GetAccelerateConfiguration"' in access
     assert '"s3:GetReplicationConfiguration"' in access
     assert "module.phase1_identifiers.capture_bucket_arn" in access

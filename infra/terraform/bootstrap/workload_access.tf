@@ -133,6 +133,12 @@ data "aws_iam_policy_document" "workload_read" {
     actions   = ["budgets:ListTagsForResource"]
     resources = ["arn:${data.aws_partition.current.partition}:budgets::${data.aws_caller_identity.current.account_id}:budget/${local.workload_name_prefix}-monthly-hard-ceiling"]
   }
+
+  statement {
+    sid       = "ReadExactPhase1TrailSelectors"
+    actions   = ["cloudtrail:GetEventSelectors"]
+    resources = ["arn:${data.aws_partition.current.partition}:cloudtrail:${var.aws_region}:${data.aws_caller_identity.current.account_id}:trail/${local.workload_name_prefix}-audit"]
+  }
 }
 
 resource "aws_iam_role_policy" "workload_plan" {
@@ -290,6 +296,21 @@ data "aws_iam_policy_document" "workload_apply_data_observability" {
       "secretsmanager:TagResource",
     ]
     resources = ["arn:${data.aws_partition.current.partition}:secretsmanager:${var.aws_region}:${data.aws_caller_identity.current.account_id}:secret:rds!db-*"]
+  }
+
+  statement {
+    sid = "UseExactDatabaseKeyForRdsManagedSecret"
+    actions = [
+      "kms:Decrypt",
+      "kms:GenerateDataKey",
+    ]
+    resources = [var.phase1_database_kms_key_arn]
+
+    condition {
+      test     = "StringEquals"
+      variable = "kms:ViaService"
+      values   = ["secretsmanager.${var.aws_region}.amazonaws.com"]
+    }
   }
 
   statement {
