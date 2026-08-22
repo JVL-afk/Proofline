@@ -43,6 +43,10 @@ COPY packages/research-core/src /app/research-core
 COPY packages/research-local/src /app/research-local
 COPY workers/research/src /app/research-worker
 
+# The upstream Python runtime includes build-oriented packages that this worker does not use.
+# Remove them rather than carrying independently reported runtime vulnerabilities.
+RUN python -m pip uninstall --yes setuptools msgpack \
+    && python -m pip check
+
 USER 65532:65532
 ENTRYPOINT ["python", "-m", "opintel_research_worker.main"]
-
