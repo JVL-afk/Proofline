@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import time
 from datetime import timedelta
 
@@ -29,6 +30,7 @@ from opintel_research_local import (
 
 from opintel_research_worker.kill_switch import AwsSsmStopSignal
 from opintel_research_worker.minimization import ProductionPhaseOneCaptureMinimizer
+from opintel_research_worker.synthetic_validation import run_deployed_synthetic_validation
 
 
 def build_runner() -> ResearchWorkflowRunner:
@@ -79,6 +81,14 @@ def build_runner() -> ResearchWorkflowRunner:
 def run() -> None:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     settings = get_research_worker_settings()
+    validation_mode = os.environ.get("OPINTEL_SYNTHETIC_VALIDATION_MODE")
+    if validation_mode is not None:
+        run_deployed_synthetic_validation(
+            settings,
+            validation_mode,
+            os.environ.get("OPINTEL_SYNTHETIC_VALIDATION_ID", ""),
+        )
+        return
     runner = build_runner()
     recovered = runner.recover_stale()
     logging.info(json.dumps({"event": "research_worker.started", "recovered_runs": recovered}))
