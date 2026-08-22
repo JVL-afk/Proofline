@@ -142,6 +142,22 @@ def test_research_worker_image_revision_cannot_replace_controlled_egress_image()
     assert "var.worker_image_uri" not in egress_definition
 
 
+def test_worker_uses_s3_gateway_prefix_list_without_public_https_egress() -> None:
+    network = (PHASE1 / "network.tf").read_text(encoding="utf-8")
+
+    worker_s3 = network.split(
+        'resource "aws_vpc_security_group_egress_rule" "worker_to_s3_gateway"', maxsplit=1
+    )[1].split('resource "aws_vpc_security_group_egress_rule" "worker_to_database"', maxsplit=1)[0]
+    assert "prefix_list_id    = aws_vpc_endpoint.s3.prefix_list_id" in worker_s3
+    assert "from_port         = 443" in worker_s3
+    assert "to_port           = 443" in worker_s3
+    assert 'ip_protocol       = "tcp"' in worker_s3
+    assert 'cidr_ipv4         = "0.0.0.0/0"' not in worker_s3
+
+    worker_rules = network.split('resource "aws_security_group" "controlled_egress"', maxsplit=1)[0]
+    assert 'cidr_ipv4         = "0.0.0.0/0"' not in worker_rules
+
+
 def test_kill_switch_policy_is_stable_across_worker_task_revisions() -> None:
     observability = (PHASE1 / "observability.tf").read_text(encoding="utf-8")
 

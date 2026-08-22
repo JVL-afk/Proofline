@@ -1,0 +1,105 @@
+{
+  "record_type": "M67_PHASE1_PRIVATE_ECR_PULL_ROOT_CAUSE",
+  "version": "2026-08-22.1",
+  "state": "ROOT_CAUSE_CONFIRMED",
+  "root_cause": "WORKER_SECURITY_GROUP_MISSING_S3_GATEWAY_PREFIX_LIST_HTTPS_EGRESS",
+  "failed_task": "arn:aws:ecs:us-east-2:785072247535:task/m67-phase1-research/e234b4a55cb645d79c2b3d8bdf5de5f0",
+  "observations": {
+    "failed_destination_ipv4": "3.5.89.56",
+    "failed_destination_port": 443,
+    "aws_managed_prefix_list_id": "pl-7ba54012",
+    "aws_managed_prefix_list_name": "com.amazonaws.us-east-2.s3",
+    "matching_prefix": "3.5.88.0/22",
+    "ecr_authorization_vpc_endpoint_id": "vpce-02bb2f07f41f20314",
+    "ecr_authorization_source_ip": "10.67.11.132",
+    "ecr_authorization_cloudtrail_event_id": "15eb9873-4db0-3eae-b44d-eadc2aaded8d",
+    "ecr_authorization_private_path_result": "PASS",
+    "worker_s3_prefix_list_egress_before_remediation": "ABSENT",
+    "task_subnet_route_table": "rtb-06894942694b9773d",
+    "s3_gateway_endpoint_id": "vpce-0befcf2164095c3bb",
+    "s3_gateway_route_present": true,
+    "s3_endpoint_policy_permits_get": true
+  },
+  "excluded_causes": {
+    "vpc_mismatch": false,
+    "task_subnet_route_missing": false,
+    "vpc_dns_support_disabled": false,
+    "vpc_dns_hostnames_disabled": false,
+    "custom_dhcp_dns": false,
+    "ecr_api_private_endpoint_unavailable": false,
+    "ecr_dkr_private_endpoint_unavailable": false,
+    "endpoint_ingress_443_missing": false,
+    "network_acl_denial": false,
+    "ipv6_mismatch": false,
+    "execution_role_ecr_permissions_missing": false,
+    "endpoint_policy_denial": false
+  },
+  "execution_role": {
+    "arn": "arn:aws:iam::785072247535:role/m67-phase1-ecs-execution",
+    "policy": "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
+    "required_actions_present": [
+      "ecr:GetAuthorizationToken",
+      "ecr:BatchCheckLayerAvailability",
+      "ecr:GetDownloadUrlForLayer",
+      "ecr:BatchGetImage"
+    ]
+  },
+  "endpoint_inventory": {
+    "ecr_api": {
+      "id": "vpce-02bb2f07f41f20314",
+      "type": "Interface",
+      "state": "available",
+      "private_dns": true,
+      "subnets": [
+        "subnet-034f75c751e849ba8",
+        "subnet-0ed12f24100baf801"
+      ]
+    },
+    "ecr_dkr": {
+      "id": "vpce-08eee02bb3dbe5c42",
+      "type": "Interface",
+      "state": "available",
+      "private_dns": true,
+      "subnets": [
+        "subnet-034f75c751e849ba8",
+        "subnet-0ed12f24100baf801"
+      ]
+    },
+    "s3": {
+      "id": "vpce-0befcf2164095c3bb",
+      "type": "Gateway",
+      "state": "available",
+      "route_tables": [
+        "rtb-06894942694b9773d"
+      ]
+    },
+    "logs": {
+      "id": "vpce-0158ec3a1fbe99b3d",
+      "type": "Interface",
+      "state": "available",
+      "private_dns": true
+    },
+    "secrets_manager": {
+      "id": "vpce-0b19b0b0e5ee5a993",
+      "type": "Interface",
+      "state": "available",
+      "private_dns": true
+    }
+  },
+  "remediation": {
+    "terraform_resource": "aws_vpc_security_group_egress_rule.worker_to_s3_gateway",
+    "source_security_group": "sg-05543bd7e420818bf",
+    "destination": "aws_vpc_endpoint.s3.prefix_list_id",
+    "protocol": "tcp",
+    "port": 443,
+    "public_https_egress_added": false,
+    "controlled_research_egress_changed": false
+  },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}

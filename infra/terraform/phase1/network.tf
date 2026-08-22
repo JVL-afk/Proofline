@@ -109,6 +109,15 @@ resource "aws_vpc_security_group_egress_rule" "worker_to_endpoints" {
   description                  = "Private AWS API endpoints only"
 }
 
+resource "aws_vpc_security_group_egress_rule" "worker_to_s3_gateway" {
+  security_group_id = aws_security_group.worker.id
+  prefix_list_id    = aws_vpc_endpoint.s3.prefix_list_id
+  from_port         = 443
+  to_port           = 443
+  ip_protocol       = "tcp"
+  description       = "S3 gateway endpoint only for ECR layers and approved Phase 1 storage"
+}
+
 resource "aws_vpc_security_group_egress_rule" "worker_to_database" {
   security_group_id            = aws_security_group.worker.id
   referenced_security_group_id = aws_security_group.database.id
