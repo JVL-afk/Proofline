@@ -135,7 +135,8 @@ def test_final_iam_remediation_is_exact_and_conditioned() -> None:
     assert 'variable = "kms:ViaService"' in access
     assert 'values   = ["rds.${var.aws_region}.amazonaws.com"]' in access
     assert 'actions   = ["budgets:ListTagsForResource"]' in access
-    assert 'actions = ["s3:GetAccelerateConfiguration"]' in access
+    assert '"s3:GetAccelerateConfiguration"' in access
+    assert '"s3:GetReplicationConfiguration"' in access
     assert "module.phase1_identifiers.capture_bucket_arn" in access
     assert "module.phase1_identifiers.audit_bucket_arn" in access
     assert 'variable "phase1_vpc_id"' in variables

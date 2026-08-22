@@ -117,8 +117,11 @@ data "aws_iam_policy_document" "workload_read" {
   }
 
   statement {
-    sid     = "ReadExactPhase1BucketAcceleration"
-    actions = ["s3:GetAccelerateConfiguration"]
+    sid = "ReadExactPhase1BucketConfiguration"
+    actions = [
+      "s3:GetAccelerateConfiguration",
+      "s3:GetReplicationConfiguration",
+    ]
     resources = [
       module.phase1_identifiers.capture_bucket_arn,
       module.phase1_identifiers.audit_bucket_arn,
