@@ -1,0 +1,114 @@
+{
+  "record_type": "M67_PHASE1_FINAL_IAM_REMEDIATION_PLAN_REVIEW",
+  "version": "2026-08-22.1",
+  "state": "READY_FOR_FINAL_IAM_REMEDIATION_APPLY_AUTHORIZATION",
+  "required_owner_event": "APPROVE_FINAL_IAM_REMEDIATION_APPLY",
+  "observed_at": "2026-08-22T11:11:53Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "authority": "SHORT_LIVED_SSO_BOOTSTRAP_AUTHORITY"
+  },
+  "source": {
+    "remediation_commit": "d96e36d8db5cc48b15da44bd2f6497a67a92cb08",
+    "partial_state_evidence_revision": "M67_PHASE1_PARTIAL_REMEDIATION_DEPLOYED_EVIDENCE::2026-08-22.1",
+    "worker_image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:8af8123b618e5d5024b6d715cd7956a52a79df41e4b5d201c4dc5f993ee3edf5",
+    "controlled_egress_revision": "ADR-0076"
+  },
+  "toolchain": {
+    "terraform": "1.15.9",
+    "aws_provider": "6.53.0",
+    "node": "24.15.0",
+    "npm": "11.12.1",
+    "python": "3.13.3"
+  },
+  "hashes": {
+    "saved_plan_sha256": "408fcae197d1d12f5617eeca009d289317d997d5a62202ea1a12f6c5c9f38060",
+    "plan_json_sha256": "8190b1f6598569e1860d3217dcfadc810b771acbf2362a0af1ec1bb40664ab52",
+    "configuration_sha256": "d9dd7e560acb12adfd989642353fbe0854fb46ba09d55c123c7a3494f7ea73a7",
+    "provider_lock_sha256": "b0f95a645ac5a5db24949e074c48758bb1a1f867ef73148e174a1e1ae1e76c9f"
+  },
+  "changes": {
+    "create": 0,
+    "change": 4,
+    "replace": 0,
+    "destroy": 0,
+    "managed_resources": [
+      "aws_iam_role_policy.workload_apply_data_observability",
+      "aws_iam_role_policy.workload_apply_network_compute",
+      "aws_iam_role_policy.workload_apply_read",
+      "aws_iam_role_policy.workload_plan"
+    ]
+  },
+  "exact_scope": {
+    "route53_create_hosted_zone": {
+      "action": "route53:CreateHostedZone",
+      "resource": "*",
+      "condition": "route53:VPCs == VPCId=vpc-0fb1cf5ea04162821,VPCRegion=us-east-2",
+      "reason_resource_wildcard": "AWS IAM does not define a resource type for CreateHostedZone; the exact VPC condition bounds the approved private namespace path."
+    },
+    "rds_kms_grant": {
+      "action": "kms:CreateGrant",
+      "resource": "arn:aws:kms:us-east-2:785072247535:key/fa278885-700d-430b-bf76-1f169e3cd6d9",
+      "conditions": [
+        "kms:GrantIsForAWSResource == true",
+        "kms:ViaService == rds.us-east-2.amazonaws.com"
+      ]
+    },
+    "budget_tag_read": {
+      "action": "budgets:ListTagsForResource",
+      "resource": "arn:aws:budgets::785072247535:budget/m67-phase1-monthly-hard-ceiling"
+    },
+    "bucket_acceleration_read": {
+      "action": "s3:GetAccelerateConfiguration",
+      "resources": [
+        "arn:aws:s3:::m67-phase1-restricted-captures-f314f0df7f63484aae5afb9af8",
+        "arn:aws:s3:::m67-phase1-audit-459ad1a7cc4da135aeabd70211"
+      ]
+    },
+    "application_resources": 0,
+    "state_reconciliation_operations": 0
+  },
+  "validation": {
+    "terraform_validate": "PASS",
+    "terraform_format": "PASS",
+    "aws_access_analyzer_security_findings": 0,
+    "aws_access_analyzer_errors": 0,
+    "aws_access_analyzer_preexisting_redundancy_suggestions": 2,
+    "repository_check": "PASS",
+    "ruff": "PASS",
+    "format_check": "PASS",
+    "strict_mypy": "PASS_160_SOURCE_FILES",
+    "deterministic_tests": "PASS_393",
+    "deterministic_tests_skipped": "1_OPT_IN_POSTGRES_PARITY",
+    "python_compileall": "PASS",
+    "credential_value_audit": "PASS_3_PROVIDER_VALUES_ABSENT",
+    "git_diff_check": "PASS"
+  },
+  "safety_state": {
+    "kill_switch": "TRIPPED",
+    "ecs_cluster": "ABSENT",
+    "ecs_desired_tasks": 0,
+    "ecs_running_tasks": 0,
+    "rds_instances": 0,
+    "cloud_map_namespaces": 0,
+    "real_business_access": 0,
+    "network_research_calls": 0,
+    "external_communications": 0
+  },
+  "cost": {
+    "iam_remediation_incremental_monthly_usd": "0.00",
+    "current_partial_monthly_estimate_usd": "117.50",
+    "completed_bounded_phase1_estimate_usd": "150.00",
+    "phase1_total_hard_ceiling_usd": "250.00",
+    "remaining_estimated_headroom_usd": "100.00"
+  },
+  "owner_signature": null,
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}
