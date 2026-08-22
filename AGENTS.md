@@ -12,8 +12,10 @@ endpoints and private service discovery. The exact plan in
 exact hash-bound `APPROVE_WORKLOAD_IDENTITY_SUCCESSOR_APPLY` statement.
 
 The exact worker-registry plan was applied and independently verified, and the immutable Phase 1
-worker image is now stored in the approved ECR repository at digest
-`sha256:a373c46a3a1e53a2868ff7cc16c8c424834688fbbe72e4054be415c3b654ed0f`. The final
+worker successor image is stored in the approved ECR repository at digest
+`sha256:8af8123b618e5d5024b6d715cd7956a52a79df41e4b5d201c4dc5f993ee3edf5`; its
+CycloneDX/Trivy/provider evidence is in
+`docs/readiness/m6.7-deployment/worker-image-successor-evidence-2026-08-22.json`. The historical
 authenticated Phase 1 application plan proposes 58 creates and zero changes, replacements, or
 destroys, but it is **not** ready for apply authorization and remains historical evidence. The
 predecessor worker image must be superseded after the production-runtime changes, and a successor

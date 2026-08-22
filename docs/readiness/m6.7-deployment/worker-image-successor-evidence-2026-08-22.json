@@ -1,0 +1,75 @@
+{
+  "record_type": "M67_PHASE1_WORKER_IMAGE_SUCCESSOR_EVIDENCE",
+  "version": "1",
+  "state": "BUILT_SCANNED_PUSHED_AND_OBSERVED",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "source_commit": "4cdc6a1fe6e02f43e375ef356efc14f5485af34d",
+  "predecessor": {
+    "source_commit": "7d1ed1ac13ea71d0977549cd56207c8926f4cf52",
+    "image_digest": "sha256:a373c46a3a1e53a2868ff7cc16c8c424834688fbbe72e4054be415c3b654ed0f",
+    "reason_for_successor": "PostgreSQL production runtime, SSM kill switch, and isolated controlled-egress implementation"
+  },
+  "base_image": {
+    "reference": "docker.io/library/python:3.13-alpine3.22",
+    "platform": "linux/amd64",
+    "platform_manifest_digest": "sha256:7f7ee17311e0273954ffe76a7b84a2d8c8ecf16f9992e780e4d46c86175df431"
+  },
+  "build": {
+    "tool": "buildah",
+    "tool_version": "1.33.7",
+    "storage_driver": "vfs",
+    "dockerfile_sha256": "2db431e839a94b903b0e6f82b15fd26866f3e950032d3b52a52b40026c3b1619",
+    "local_archive_sha256": "6679cb1a4dcbca4f7dafe4c0617b87eaa237d796f1c6f16e5272e4e8374871fa",
+    "runtime_user": "65532:65532",
+    "runtime_import_test": "PASS",
+    "nonroot_application_write_test": "PASS_DENIED",
+    "terraform_readonly_root_filesystem": true,
+    "authoritative_container_filesystem_state": false,
+    "explicit_writable_ephemeral_paths": []
+  },
+  "dependencies": {
+    "lock_source": "uv.lock",
+    "component_count": 48,
+    "dependency_inventory_sha256": "71d582b25cf80e671776f83042ef25c851800f561126d5870928af63c9f01fc4",
+    "sbom_format": "CycloneDX 1.6",
+    "sbom_sha256": "b6e76527ed5ff2c52c53b4405b2dd972cc2ee7b3ed0d244eb1c637b83d107b59"
+  },
+  "security_scan": {
+    "tool": "Trivy",
+    "tool_version": "0.72.0",
+    "full_scan_sha256": "c63573ef9a34db1da28b8bd860b7c271fb79efecff0f7413a0dd9f85bc9795cc",
+    "policy_scan_sha256": "4d8e14a15d17d3bc31f4d37d7cd8f3bba3b8b99046e9d064692e84e8fb6a27f7",
+    "known_vulnerability_count": 0,
+    "high_or_critical_count": 0,
+    "secret_finding_count": 0,
+    "blocking_findings": 0,
+    "provider_scan_status": "COMPLETE",
+    "provider_scan_finding_count": 0,
+    "provider_scan_completed_at": "2026-08-22T07:28:38Z"
+  },
+  "registry": {
+    "repository_arn": "arn:aws:ecr:us-east-2:785072247535:repository/m67-phase1-worker",
+    "repository_uri": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
+    "tag": "git-4cdc6a1fe6e0",
+    "image_digest": "sha256:8af8123b618e5d5024b6d715cd7956a52a79df41e4b5d201c4dc5f993ee3edf5",
+    "immutable_reference": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:8af8123b618e5d5024b6d715cd7956a52a79df41e4b5d201c4dc5f993ee3edf5",
+    "compressed_size_bytes": 54904862,
+    "pushed_at": "2026-08-22T07:28:31.135Z",
+    "tag_immutability": true,
+    "scan_on_push": true,
+    "kms_encryption": true
+  },
+  "capability_absence": {
+    "ai_credentials_or_routes": false,
+    "browser_runtime": false,
+    "sender_or_delivery_capability": false,
+    "sqlite_production_fallback": false
+  },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "PHASE1_APPLICATION_APPLY": "NOT_AUTHORIZED"
+  }
+}
