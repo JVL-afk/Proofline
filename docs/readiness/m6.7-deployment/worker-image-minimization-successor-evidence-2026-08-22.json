@@ -1,0 +1,69 @@
+{
+  "record_type": "M67_PHASE1_WORKER_IMAGE_MINIMIZATION_SUCCESSOR_EVIDENCE",
+  "version": "1",
+  "state": "BUILT_SCANNED_PUSHED_AND_OBSERVED",
+  "observed_at": "2026-08-22T16:02:39.9492966Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "source_commit": "6c62d41ab1dfa7ef627e9fd9e5207d2fe9bef858",
+  "minimization_implementation_commit": "965db517bff80d9cc2c71e91d4a6ece1f4d43724",
+  "predecessor_image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:8af8123b618e5d5024b6d715cd7956a52a79df41e4b5d201c4dc5f993ee3edf5",
+  "base_image": {
+    "reference": "docker.io/library/python:3.13-alpine3.22",
+    "platform": "linux/amd64",
+    "platform_manifest_digest": "sha256:7f7ee17311e0273954ffe76a7b84a2d8c8ecf16f9992e780e4d46c86175df431"
+  },
+  "build": {
+    "tool": "buildah",
+    "tool_version": "1.33.7",
+    "dockerfile_sha256": "41fbd83810d67193f8256030b7058f179c3c17c8a5c65636ccd1df0b29a68697",
+    "dependency_lock_sha256": "0fa05efe0335378fd1b3e2a36e68732a512373971b25e2511a78f76971a4354d",
+    "local_archive_sha256": "f1afb045be9950e35a579920156432ab2f191d88273ed9533302b62bb1896dc4",
+    "runtime_import": "PASS",
+    "runtime_user": "65532:65532",
+    "nonroot_application_write": "PASS_DENIED",
+    "authoritative_container_filesystem_state": false
+  },
+  "dependencies": {
+    "component_count": 48,
+    "sbom_format": "CycloneDX 1.6",
+    "sbom_sha256": "c3e90b139ecb79b55a8fa2f3c10f6812ccf42eee0a5a97f181653fe4f47136b0"
+  },
+  "security_scan": {
+    "tool": "Trivy",
+    "tool_version": "0.72.0",
+    "full_scan_sha256": "1857a4a74a1ab69763b3cb369447ee560d6ceca9044434dc163fe14ccde40566",
+    "policy_scan_sha256": "57991ff8598db8336efdd9e9a625a5c781f279e5980858aa35c636edfe3558dc",
+    "known_vulnerability_count": 0,
+    "high_or_critical_count": 0,
+    "secret_finding_count": 0,
+    "blocking_findings": 0,
+    "provider_scan_status": "COMPLETE",
+    "provider_scan_finding_count": 0,
+    "provider_scan_completed_at": "2026-08-22T16:02:21Z"
+  },
+  "registry": {
+    "repository_arn": "arn:aws:ecr:us-east-2:785072247535:repository/m67-phase1-worker",
+    "repository_uri": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
+    "tag": "git-6c62d41ab1df",
+    "image_digest": "sha256:6dd4ce5509b47ee272c5f0dc9e58dc73cacbf63f89afc09134d9c997db382a45",
+    "immutable_reference": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:6dd4ce5509b47ee272c5f0dc9e58dc73cacbf63f89afc09134d9c997db382a45",
+    "compressed_size_bytes": 55235007,
+    "pushed_at": "2026-08-22T16:02:14.051Z",
+    "publisher_role": "arn:aws:iam::785072247535:role/m67-phase1-worker-image-publisher"
+  },
+  "validation": {
+    "complete_deterministic_tests": 401,
+    "postgresql_version": "18.3",
+    "postgresql_minimized_persistence": "PASS",
+    "raw_content_columns": 0,
+    "prohibited_value_hits": 0
+  },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}
