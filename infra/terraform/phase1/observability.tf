@@ -115,6 +115,70 @@ resource "aws_iam_role" "operator" {
   max_session_duration = 14400
 }
 
+data "aws_iam_policy_document" "environment_validation" {
+  statement {
+    sid       = "RunExactSyntheticValidationTask"
+    actions   = ["ecs:RunTask"]
+    resources = ["arn:${data.aws_partition.current.partition}:ecs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:task-definition/${var.name_prefix}-research-worker:*"]
+
+    condition {
+      test     = "ArnEquals"
+      variable = "ecs:cluster"
+      values   = [aws_ecs_cluster.phase1.arn]
+    }
+  }
+
+  statement {
+    sid       = "ObserveOrStopExactSyntheticValidationTask"
+    actions   = ["ecs:DescribeTasks", "ecs:StopTask"]
+    resources = ["arn:${data.aws_partition.current.partition}:ecs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:task/${var.name_prefix}-research/*"]
+  }
+
+  statement {
+    sid     = "PassExactSyntheticValidationRoles"
+    actions = ["iam:PassRole"]
+    resources = [
+      aws_iam_role.execution.arn,
+      aws_iam_role.worker.arn,
+    ]
+
+    condition {
+      test     = "StringEquals"
+      variable = "iam:PassedToService"
+      values   = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+
+  statement {
+    sid     = "RestoreExactSyntheticValidationDatabase"
+    actions = ["rds:RestoreDBInstanceToPointInTime"]
+    resources = [
+      aws_db_instance.phase1.arn,
+      "arn:${data.aws_partition.current.partition}:rds:${var.aws_region}:${data.aws_caller_identity.current.account_id}:db:${var.name_prefix}-restore-validation-*",
+    ]
+  }
+
+  statement {
+    sid     = "TagOrDeleteExactSyntheticValidationDatabase"
+    actions = ["rds:AddTagsToResource", "rds:DeleteDBInstance"]
+    resources = [
+      "arn:${data.aws_partition.current.partition}:rds:${var.aws_region}:${data.aws_caller_identity.current.account_id}:db:${var.name_prefix}-restore-validation-*"
+    ]
+  }
+
+  statement {
+    sid       = "ObservePhase1DatabaseValidation"
+    actions   = ["rds:DescribeDBInstances", "rds:ListTagsForResource"]
+    resources = ["*"]
+  }
+}
+
+resource "aws_iam_role_policy" "environment_validation" {
+  name   = "${var.name_prefix}-environment-validation"
+  role   = aws_iam_role.operator.id
+  policy = data.aws_iam_policy_document.environment_validation.json
+}
+
 data "aws_iam_policy_document" "kill_operator_assume" {
   statement {
     actions = ["sts:AssumeRole"]

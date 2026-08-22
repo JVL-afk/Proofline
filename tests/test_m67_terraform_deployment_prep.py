@@ -153,6 +153,27 @@ def test_kill_switch_policy_is_stable_across_worker_task_revisions() -> None:
     assert 'actions = ["ecs:UpdateService", "ecs:DescribeServices"]' in kill_policy
 
 
+def test_environment_validation_operator_is_bounded_to_synthetic_resources() -> None:
+    observability = (PHASE1 / "observability.tf").read_text(encoding="utf-8")
+    policy = observability.split(
+        'data "aws_iam_policy_document" "environment_validation"', maxsplit=1
+    )[1].split('resource "aws_iam_role_policy" "environment_validation"', maxsplit=1)[0]
+
+    assert 'actions   = ["ecs:RunTask"]' in policy
+    assert "task-definition/${var.name_prefix}-research-worker:*" in policy
+    assert 'variable = "ecs:cluster"' in policy
+    assert 'actions = ["iam:PassRole"]' in policy
+    assert "aws_iam_role.execution.arn" in policy
+    assert "aws_iam_role.worker.arn" in policy
+    assert 'variable = "iam:PassedToService"' in policy
+    assert 'actions = ["rds:RestoreDBInstanceToPointInTime"]' in policy
+    assert "db:${var.name_prefix}-restore-validation-*" in policy
+    assert 'actions = ["rds:AddTagsToResource", "rds:DeleteDBInstance"]' in policy
+    assert '"ecs:*"' not in policy
+    assert '"rds:*"' not in policy
+    assert '"iam:*"' not in policy
+
+
 def test_final_iam_remediation_is_exact_and_bounded() -> None:
     access = (BOOTSTRAP / "workload_access.tf").read_text(encoding="utf-8")
     variables = (BOOTSTRAP / "variables.tf").read_text(encoding="utf-8")
