@@ -1,0 +1,14 @@
+**
+!pyproject.toml
+!uv.lock
+!packages/
+!packages/**
+!services/
+!services/**
+!workers/
+!workers/**
+!infra/
+!infra/container/
+!infra/container/phase1-worker/
+!infra/container/phase1-worker/Dockerfile
+

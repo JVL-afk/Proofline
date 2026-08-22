@@ -1,0 +1,52 @@
+{
+  "record_type": "M67_WORKER_REGISTRY_DEPLOYED_EVIDENCE",
+  "state": "OBSERVED_AND_VERIFIED",
+  "observed_at": "2026-08-22T05:31:57.8230288Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "approved_plan_sha256": "03781a266da268b8dbed7dac08e85acb85b0f2116342e81dce49f533d0933aad",
+  "apply_result_sha256": "a7a1a9cd0c0e9439809651fd4a015683f9780c45130f8bf0e53017cc679b35ed",
+  "resources": {
+    "repository_arn": "arn:aws:ecr:us-east-2:785072247535:repository/m67-phase1-worker",
+    "repository_uri": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
+    "kms_key_arn": "arn:aws:kms:us-east-2:785072247535:key/6f7d200c-b3ea-4aeb-96b0-56178c11396f",
+    "kms_alias_arn": "arn:aws:kms:us-east-2:785072247535:alias/m67-phase1-worker-registry",
+    "publisher_role_arn": "arn:aws:iam::785072247535:role/m67-phase1-worker-image-publisher"
+  },
+  "controls": {
+    "repository_exists": true,
+    "private_repository": true,
+    "tag_immutable": true,
+    "scan_on_push": true,
+    "kms_encryption": true,
+    "kms_enabled": true,
+    "kms_rotation": true,
+    "lifecycle_untagged_only": true,
+    "publisher_exact_repository": true,
+    "token_wildcard_only": true,
+    "publisher_session_one_hour": true
+  },
+  "policy_hashes": {
+    "publisher_policy_sha256": "3f7197a80d48632d4db434577b7204d25e6466ef36b2a6a50ea666764621507a",
+    "kms_default_policy_sha256": "36ecbcef5db23bade28795c1407b05dc3741d1e9943d869b8a6d13c8b15a3f38",
+    "lifecycle_policy_sha256": "b87e4c4feed739995c0802d3b1664283e861635783e64f4e798fc7437bf46e5a"
+  },
+  "registry_state": {
+    "remote_key": "m67/registry/terraform.tfstate",
+    "kms_encrypted": true,
+    "version_id_present": true
+  },
+  "scope": {
+    "managed_resources_created": 6,
+    "unexpected_resources_created": 0,
+    "workload_application_resources_created": 0,
+    "business_access_resources_created": 0
+  },
+  "permissions": {
+    "real_business_discovery": "NOT_AUTHORIZED",
+    "real_public_research": "NOT_AUTHORIZED",
+    "slot_1": "NOT_AUTHORIZED",
+    "phase1_apply": "NOT_AUTHORIZED"
+  }
+}
+
