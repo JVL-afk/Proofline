@@ -23,9 +23,9 @@ Its dependency stage exports only the `opintel-research-worker` runtime graph fr
 installs it with package hashes enforced. The runtime stage copies only the M0/research source
 trees required by that worker and runs as uid/gid 65532. It removes runtime package-installation
 tooling and its vendored dependencies after verifying the locked environment. The OpenSSL runtime
-libraries are pinned to Alpine revision `3.5.7-r0`, which contains the fix required by the frozen
-image scan. The root
-`.dockerignore` is an allowlist:
+libraries are pinned to Alpine revision `3.5.7-r0`, and `xz-libs` is pinned to `5.8.3-r0`; these
+revisions contain the fixes required by the frozen image scan. The root `.dockerignore` is an
+allowlist:
 local data, Git metadata, environment files, tests, documentation, and other workspace material do
 not enter the build context.
 

@@ -48,6 +48,7 @@ COPY workers/research/src /app/research-worker
 RUN apk add --no-cache --upgrade \
         libcrypto3=3.5.7-r0 \
         libssl3=3.5.7-r0 \
+        xz-libs=5.8.3-r0 \
     && python -m pip check \
     && rm -rf \
         /usr/local/bin/pip \
