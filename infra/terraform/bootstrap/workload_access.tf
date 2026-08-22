@@ -195,7 +195,7 @@ data "aws_iam_policy_document" "workload_apply_network_compute" {
     resources = ["*"]
 
     condition {
-      test     = "ForAllValues:StringEquals"
+      test     = "StringEquals"
       variable = "route53:VPCs"
       values   = ["VPCId=${var.phase1_vpc_id},VPCRegion=${var.aws_region}"]
     }
