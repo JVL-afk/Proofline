@@ -1,0 +1,67 @@
+{
+  "record_type": "M67_PHASE1_WORKER_IMAGE_EVIDENCE",
+  "version": "1",
+  "state": "BUILT_SCANNED_PUSHED_AND_OBSERVED",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "source_commit": "7d1ed1ac13ea71d0977549cd56207c8926f4cf52",
+  "source_tree_clean": true,
+  "base_image": {
+    "reference": "docker.io/library/python:3.13-alpine3.22",
+    "platform": "linux/amd64",
+    "platform_manifest_digest": "sha256:7f7ee17311e0273954ffe76a7b84a2d8c8ecf16f9992e780e4d46c86175df431"
+  },
+  "build": {
+    "tool": "buildah",
+    "tool_version": "1.33.7",
+    "squashed_runtime": true,
+    "configuration_sha256": "d34f4210cd07d1fb471b787c2c98bdb8507ffdf02457cb8bf8278c2b1c3db0ba",
+    "build_log_sha256": "a6827b6c0a5666ecbc258146717769ec8d79f32c91bfb9441e893513ee7b54ee",
+    "build_inspect_sha256": "352cf04fa92c30ac44e4c0ff2d3c8653608f36d58dc156ce81adcd62361676e6",
+    "local_archive_sha256": "14f6c412aebaf29fcdae5ed9752d71902c0ceaf920ed4fa5488c7a838b974d60",
+    "runtime_user": "65532:65532",
+    "runtime_import_test": "PASS",
+    "prohibited_runtime_dependency_test": "PASS"
+  },
+  "dependencies": {
+    "uv_version": "0.11.32",
+    "lock_source": "uv.lock",
+    "dependency_inventory_sha256": "de6815890ed1171147255147506c4bef32467ba71c177acd7485dab40e4af1dc",
+    "sbom_format": "CycloneDX 1.6",
+    "sbom_sha256": "9d34c2a0c2e11def1f7951205ebd34fbcfee4832fb14cda5bdc68e5c1e026c51"
+  },
+  "security_scan": {
+    "tool": "Trivy",
+    "tool_version": "0.72.0",
+    "full_scan_sha256": "ffe4e05a0d4edbc21cc0768b74bde2555c3a7f262bc567c625867e31caa920d1",
+    "policy_scan_sha256": "e9d7ae621ff34913e1462d1b5ceb43e2ff43b8fbc5e27ea06d2fe3253c9db5af",
+    "known_vulnerability_count": 0,
+    "high_or_critical_count": 0,
+    "secret_finding_count": 0,
+    "blocking_findings": 0,
+    "provider_scan_status": "COMPLETE",
+    "provider_scan_finding_count": 0,
+    "provider_scan_completed_at": "2026-08-22T05:57:10Z"
+  },
+  "registry": {
+    "repository_arn": "arn:aws:ecr:us-east-2:785072247535:repository/m67-phase1-worker",
+    "repository_uri": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
+    "tag": "git-7d1ed1ac13ea",
+    "image_digest": "sha256:a373c46a3a1e53a2868ff7cc16c8c424834688fbbe72e4054be415c3b654ed0f",
+    "immutable_reference": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:a373c46a3a1e53a2868ff7cc16c8c424834688fbbe72e4054be415c3b654ed0f",
+    "compressed_size_bytes": 28225452,
+    "pushed_at": "2026-08-22T05:57:02.014Z",
+    "tag_immutability": true,
+    "scan_on_push": true,
+    "kms_encryption": true
+  },
+  "builder_identity_ref": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981",
+  "publisher_role_arn": "arn:aws:iam::785072247535:role/m67-phase1-worker-image-publisher",
+  "live_authority_granted": false,
+  "permissions": {
+    "real_business_discovery": "NOT_AUTHORIZED",
+    "real_public_research": "NOT_AUTHORIZED",
+    "slot_1": "NOT_AUTHORIZED",
+    "phase1_apply": "NOT_AUTHORIZED"
+  }
+}
