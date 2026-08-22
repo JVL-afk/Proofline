@@ -1,0 +1,24 @@
+{
+  "record_type": "M67_PHASE1_CLOUD_MAP_HEALTH_PREAPPLY_BACKEND_REJECTION",
+  "version": "2026-08-22.1",
+  "state": "REJECTED_BEFORE_APPLY_BACKEND_IDENTITY_MISMATCH",
+  "observed_at": "2026-08-22T13:28:18.5120283Z",
+  "authorization_event": "APPROVE_FINAL_PHASE1_APPLY_WITH_CLOUD_MAP_HEALTH_REPLACEMENT",
+  "approved_plan_sha256": "5d90106767f2554ed9c74bea004934ef0236ad822f3ece09ae3c3ab61700e7bb",
+  "approved_plan_json_sha256": "e63a4cbbecf12cbfd1c3847ff004c4bbcf00d81793ab2614278472decd8516ad",
+  "expected_backend_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+  "observed_embedded_backend_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-plan",
+  "reason": "The saved plan was generated while the local backend used the protected state-plan role. The owner required the protected state-apply backend immediately before apply, so the fail-closed pre-apply gate rejected the binary.",
+  "apply_attempted": false,
+  "aws_mutations": 0,
+  "authorization_consumed": false,
+  "authorization_may_be_reused": false,
+  "successor_required": true,
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}
