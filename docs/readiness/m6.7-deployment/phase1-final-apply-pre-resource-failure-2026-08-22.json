@@ -1,0 +1,52 @@
+{
+  "record_type": "M67_PHASE1_FINAL_APPLY_PRE_RESOURCE_FAILURE",
+  "version": "2026-08-22.1",
+  "state": "STOPPED_PRE_RESOURCE_BACKEND_IDENTITY_MISMATCH",
+  "attempted_at": "2026-08-22T11:55:00Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "consumed_authorization": {
+    "event": "APPROVE_FINAL_PHASE1_APPLY",
+    "saved_plan_sha256": "67cafb34483e13902e53063d69b1a80df552346c32a5ab7ed6165f8ad699ab0c",
+    "plan_json_sha256": "f450f9d7b6d71bac6b3031ddc63f13a8f435b6703d236232824fbd41910fcbb4",
+    "configuration_sha256": "8023b7fa21b3534bb410570f9c14636b0fe70d352e2a11eef995f9881eccb83e",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f"
+  },
+  "execution": {
+    "provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "attempted_embedded_backend_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-plan",
+    "required_backend_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "failure_phase": "SAVED_PLAN_BACKEND_INITIALIZATION",
+    "provider_resource_calls_started": false,
+    "resource_operations": {
+      "create": 0,
+      "change": 0,
+      "replace": 0,
+      "destroy": 0
+    },
+    "blind_retry_performed": false
+  },
+  "post_failure_observation": {
+    "terraform_state_serial": 11,
+    "terraform_state_lineage": "a0037ec5-6d65-c191-5d31-184de98cfb03",
+    "terraform_state_sha256": "f879546f1fddb3719ab8e3d0d4b840725dabbca8c4d944a36773ecdf59866e90",
+    "kill_switch": "TRIPPED",
+    "ecs_services": 0,
+    "ecs_tasks": 0,
+    "rds_instances": 0
+  },
+  "disposition": {
+    "authorization": "CONSUMED_BY_FAILED_PRE_RESOURCE_ATTEMPT",
+    "saved_plan": "DO_NOT_RETRY",
+    "required_next_step": "HASH_BOUND_SUCCESSOR_PLAN_WITH_PROTECTED_STATE_APPLY_BACKEND"
+  },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}

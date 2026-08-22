@@ -1,0 +1,74 @@
+{
+  "record_type": "M67_PHASE1_FINAL_BACKEND_SUCCESSOR_PLAN_REVIEW",
+  "version": "2026-08-22.1",
+  "state": "READY_FOR_FINAL_PHASE1_BACKEND_SUCCESSOR_APPLY_AUTHORIZATION",
+  "required_owner_event": "APPROVE_FINAL_PHASE1_BACKEND_SUCCESSOR_APPLY",
+  "observed_at": "2026-08-22T12:00:51.5784022Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "supersedes_consumed_plan": {
+    "saved_plan_sha256": "67cafb34483e13902e53063d69b1a80df552346c32a5ab7ed6165f8ad699ab0c",
+    "reason": "The predecessor saved plan embedded the protected state-plan backend and could not be applied by the workload-apply identity.",
+    "predecessor_resource_operations": 0
+  },
+  "identity_boundary": {
+    "provider_plan_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "provider_apply_identity_required": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "protected_backend_apply_profile": "m67-phase1-state-apply-backend",
+    "protected_backend_apply_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "static_credentials": false
+  },
+  "source": {
+    "repository_head_at_plan": "8f1276899e2ef9b3fe0950c21c08aae89b0d8932",
+    "phase1_configuration_commit": "3d67979dab59f3e2160f48ecb8837381745c39d6",
+    "final_iam_remediation_commit": "18fda5004a45405b1db0c57850099a20cfcc1033",
+    "worker_image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:8af8123b618e5d5024b6d715cd7956a52a79df41e4b5d201c4dc5f993ee3edf5",
+    "controlled_egress_revision": "ADR-0076"
+  },
+  "hashes": {
+    "saved_plan_sha256": "c283b5cce0078e10f714eb0db6f3fea4af308f7c477a956109643a28c0e3f178",
+    "plan_json_sha256": "d178fd13af593e59952eeaf952b066c2241936692960c852d983284d752984f6",
+    "configuration_sha256": "8023b7fa21b3534bb410570f9c14636b0fe70d352e2a11eef995f9881eccb83e",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "reconciled_state_sha256": "f879546f1fddb3719ab8e3d0d4b840725dabbca8c4d944a36773ecdf59866e90"
+  },
+  "reconciled_state": {
+    "revision": "M67_PHASE1_RECONCILED_STATE_AFTER_PRE_RESOURCE_FAILURE::2026-08-22.1",
+    "terraform_state_serial": 11,
+    "terraform_state_lineage": "a0037ec5-6d65-c191-5d31-184de98cfb03",
+    "remote_mutation_from_failed_attempt": false
+  },
+  "changes": {
+    "create": 23,
+    "change": 0,
+    "replace": 0,
+    "destroy": 0,
+    "unexpected_replace": 0,
+    "unexpected_destroy": 0,
+    "semantically_identical_to_consumed_plan": true
+  },
+  "cost": {
+    "bounded_phase1_total_estimate_usd": "150.00",
+    "phase1_total_hard_ceiling_usd": "250.00",
+    "within_ceiling": true
+  },
+  "safety": {
+    "kill_switch": "TRIPPED",
+    "ecs_services": 0,
+    "ecs_tasks": 0,
+    "rds_instances": 0,
+    "real_business_access": 0,
+    "external_communications": 0
+  },
+  "owner_signature": null,
+  "permissions": {
+    "PHASE1_APPLICATION_APPLY": "NOT_AUTHORIZED",
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}
