@@ -1,0 +1,63 @@
+{
+  "record_type": "M67_PHASE1_SYNTHETIC_RESTORE_KMS_POLICY_BLOCKER",
+  "version": "2026-08-22.1",
+  "state": "BLOCKED_PENDING_EXACT_OPERATOR_KMS_POLICY_REMEDIATION",
+  "failed_action": "rds:RestoreDBInstanceToPointInTime",
+  "aws_error": "KMSKeyNotAccessibleFault",
+  "caller": "arn:aws:sts::785072247535:assumed-role/m67-phase1-operator/m67-env-pitr-restore",
+  "database_kms_key": "arn:aws:kms:us-east-2:785072247535:key/fa278885-700d-430b-bf76-1f169e3cd6d9",
+  "database_kms_key_observation": {
+    "exists": true,
+    "enabled": true,
+    "key_manager": "CUSTOMER",
+    "key_usage": "ENCRYPT_DECRYPT",
+    "key_policy_delegates_account_permissions_to_iam": true
+  },
+  "restore_target": "m67-phase1-restore-validation-20260822-1",
+  "restore_target_created": false,
+  "root_cause": "BOUNDED_ENVIRONMENT_VALIDATION_OPERATOR_LACKS_RDS_CMK_DESCRIBE_AND_GRANT_AUTHORITY",
+  "primary_authority": {
+    "publisher": "Amazon Web Services",
+    "title": "Encrypting Amazon RDS resources",
+    "url": "https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Overview.Encryption.Keys.html",
+    "retrieved_at": "2026-08-22",
+    "proposition": "A caller creating an encrypted RDS resource with a customer managed key needs kms:CreateGrant and kms:DescribeKey; kms:CreateGrant can be constrained by kms:ViaService and kms:GrantIsForAWSResource."
+  },
+  "remediation": {
+    "policy": "m67-phase1-environment-validation",
+    "resource": "arn:aws:kms:us-east-2:785072247535:key/fa278885-700d-430b-bf76-1f169e3cd6d9",
+    "actions_added": [
+      "kms:DescribeKey",
+      "kms:CreateGrant"
+    ],
+    "create_grant_conditions": {
+      "kms:GrantIsForAWSResource": true,
+      "kms:ViaService": "rds.us-east-2.amazonaws.com"
+    },
+    "kms_administration_added": false,
+    "wildcard_resources_added": false,
+    "cryptographic_data_plane_actions_added": []
+  },
+  "completed_validations": {
+    "PRIVATE_ECR_S3_PULL_PATH": "PASS",
+    "KILL_SWITCH_BLOCK_V1": "PASS",
+    "MINIMIZATION_PERSISTENCE_V1": "PASS"
+  },
+  "pending_validations": {
+    "RESTORE_INSPECTION_V1": "NOT_STARTED",
+    "A_04": "BLOCKED_PENDING_SYNTHETIC_RESTORE_VALIDATION",
+    "A_08": "BLOCKED_PENDING_DEPLOYED_RESTORE_INSPECTION",
+    "ADR_0071": "PROPOSED_BLOCKED_PENDING_A04_A08"
+  },
+  "safe_state": {
+    "kill_switch": "TRIPPED",
+    "restore_target_absent": true,
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED",
+    "AI": "NOT_AUTHORIZED",
+    "BROWSER": "NOT_AUTHORIZED"
+  }
+}

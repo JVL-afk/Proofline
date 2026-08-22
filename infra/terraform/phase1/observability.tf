@@ -160,6 +160,30 @@ data "aws_iam_policy_document" "environment_validation" {
   }
 
   statement {
+    sid       = "DescribeExactSyntheticRestoreDatabaseKey"
+    actions   = ["kms:DescribeKey"]
+    resources = [aws_kms_key.database.arn]
+  }
+
+  statement {
+    sid       = "CreateExactSyntheticRestoreDatabaseGrant"
+    actions   = ["kms:CreateGrant"]
+    resources = [aws_kms_key.database.arn]
+
+    condition {
+      test     = "Bool"
+      variable = "kms:GrantIsForAWSResource"
+      values   = ["true"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "kms:ViaService"
+      values   = ["rds.${var.aws_region}.amazonaws.com"]
+    }
+  }
+
+  statement {
     sid     = "TagOrDeleteExactSyntheticValidationDatabase"
     actions = ["rds:AddTagsToResource", "rds:DeleteDBInstance"]
     resources = [

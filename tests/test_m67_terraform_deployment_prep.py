@@ -185,10 +185,19 @@ def test_environment_validation_operator_is_bounded_to_synthetic_resources() -> 
     assert 'actions = ["rds:RestoreDBInstanceToPointInTime"]' in policy
     assert "db:${var.name_prefix}-restore-validation-*" in policy
     assert "aws_db_subnet_group.phase1.arn" in policy
+    assert 'sid       = "DescribeExactSyntheticRestoreDatabaseKey"' in policy
+    assert 'actions   = ["kms:DescribeKey"]' in policy
+    assert 'sid       = "CreateExactSyntheticRestoreDatabaseGrant"' in policy
+    assert 'actions   = ["kms:CreateGrant"]' in policy
+    assert "resources = [aws_kms_key.database.arn]" in policy
+    assert 'variable = "kms:GrantIsForAWSResource"' in policy
+    assert 'variable = "kms:ViaService"' in policy
+    assert 'values   = ["rds.${var.aws_region}.amazonaws.com"]' in policy
     assert 'actions = ["rds:AddTagsToResource", "rds:DeleteDBInstance"]' in policy
     assert '"ecs:*"' not in policy
     assert '"rds:*"' not in policy
     assert '"iam:*"' not in policy
+    assert '"kms:*"' not in policy
 
 
 def test_final_iam_remediation_is_exact_and_bounded() -> None:
