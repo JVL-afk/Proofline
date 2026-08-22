@@ -1,0 +1,63 @@
+{
+  "record_type": "M67_PHASE1_POST_APPLY_IAM_REMEDIATION_DEPLOYED_EVIDENCE",
+  "version": "2026-08-22.1",
+  "state": "DEPLOYED_AND_VERIFIED",
+  "applied_at": "2026-08-22T12:37:30.9598868Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "consumed_authorization": {
+    "event": "APPROVE_POST_APPLY_IAM_REMEDIATION_APPLY",
+    "saved_plan_sha256": "4354c51c4bac44cf6470e8bb38b8376e35e51136e3b4d0f52f7e2de075dedee0",
+    "plan_json_sha256": "ada073d32bb03b380cb394aea77037921e2675ec92892f56152644894435d2fe",
+    "configuration_sha256": "c320975b36c49822e1f41932a514fb28d05ac9d5784a901b0760c46f53257a07",
+    "provider_lock_sha256": "b0f95a645ac5a5db24949e074c48758bb1a1f867ef73148e174a1e1ae1e76c9f",
+    "remediation_commit": "79efaa40fdbe5566f921cfba0a88c060aa402db5"
+  },
+  "apply_result": {
+    "create": 0,
+    "change": 2,
+    "replace": 0,
+    "destroy": 0
+  },
+  "deployed_policy_evidence": {
+    "network_compute_policy_sha256": "512840682fb669a7b83a595cb2ee6e46ad562b90ef6ab40f31174865fd8931a1",
+    "data_observability_policy_sha256": "dbfa9441bce68bbedd99e12efc83bd29090833d5bc831aea403c09a979dad053",
+    "route53_create_hosted_zone": "PRESENT_WITHOUT_UNSUPPORTED_VPCS_CONDITION",
+    "rds_managed_secret_prefix": "arn:aws:secretsmanager:us-east-2:785072247535:secret:rds!db-*",
+    "cloudtrail_event_selector_resource": "arn:aws:cloudtrail:us-east-2:785072247535:trail/m67-phase1-audit",
+    "iam_access_analyzer_findings": 0
+  },
+  "cloudtrail_state_reconciliation": {
+    "remote_arn": "arn:aws:cloudtrail:us-east-2:785072247535:trail/m67-phase1-audit",
+    "remote_valid": true,
+    "remote_logging": true,
+    "remote_log_file_validation": true,
+    "remote_kms_key": "arn:aws:kms:us-east-2:785072247535:key/46846953-d093-4a94-a131-507ec2d0962a",
+    "remote_capture_data_selector_before_successor": false,
+    "stale_taint_cleared": true,
+    "state_entry_removed_and_same_arn_reimported": true,
+    "remote_mutation_from_reconciliation": false,
+    "state_before_reimport_sha256": "9d810358414b6e218a61b2dc6b1f0e05e82c6491fb89bf9668e322b791f061d0",
+    "state_after_reimport_sha256": "9b4a1f23cb5726e148feb0ee4afc6528ac884028901ecfa7ef41949e6441a434",
+    "state_after_reimport_serial": 16,
+    "imported_event_selectors": [],
+    "next_plan_requires_in_place_selector_update": true
+  },
+  "safety": {
+    "kill_switch": "TRIPPED",
+    "ecs_services": 0,
+    "ecs_tasks": 0,
+    "rds_instances": 0,
+    "real_business_access": 0,
+    "external_communications": 0
+  },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}
