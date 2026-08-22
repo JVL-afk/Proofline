@@ -8,8 +8,14 @@ fail-closed SSM suspension, read-only task configuration, and ADR-0076 isolated 
 implemented locally. ADR-0076 requires three narrowly scoped in-place inline-policy updates for VPC
 endpoints and private service discovery. The exact plan in
 `docs/readiness/m6.7-deployment/workload-egress-policy-plan-review-2026-08-22.json` is 0 creates,
-3 changes, 0 replacements, and 0 destroys. It is not applied; do not apply it without the owner's
-exact hash-bound `APPROVE_WORKLOAD_IDENTITY_SUCCESSOR_APPLY` statement.
+3 changes, 0 replacements, and 0 destroys, and was applied under the exact owner approval.
+
+The successor inline-policy plan was applied exactly (0 creates, 3 in-place changes, 0 destroys).
+A subsequent non-mutating identity test proved the workload-plan role still cannot assume the
+protected state-plan role because the state-role trust relationship predates the workload roles.
+The exact two-trust-policy successor plan is recorded in
+`docs/readiness/m6.7-deployment/workload-state-trust-plan-review-2026-08-22.json`; it is not applied.
+Do not apply it without the owner's exact hash-bound `APPROVE_WORKLOAD_STATE_TRUST_APPLY` statement.
 
 The exact worker-registry plan was applied and independently verified, and the immutable Phase 1
 worker successor image is stored in the approved ECR repository at digest

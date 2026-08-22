@@ -1,0 +1,54 @@
+{
+  "record_type": "M67_WORKLOAD_STATE_TRUST_SUCCESSOR_PLAN_REVIEW",
+  "version": "2026-08-22.1",
+  "state": "READY_FOR_WORKLOAD_STATE_TRUST_APPLY_AUTHORIZATION",
+  "required_owner_event": "APPROVE_WORKLOAD_STATE_TRUST_APPLY",
+  "observation_timestamp": "2026-08-22T07:36:50Z",
+  "target": {
+    "account_id": "785072247535",
+    "partition": "aws",
+    "region": "us-east-2"
+  },
+  "source_git_commit": "512adf54714b85c72ab3cf0cf8fb6e68f1e227a8",
+  "hashes": {
+    "saved_plan_sha256": "2ac0506422aa9db2b06cba02be92bfd076b9272cf61144595c8ac4d51f2a303f",
+    "plan_json_sha256": "cfd5ce42ede71d701605421289efd4d71aa74a79efec609a4df064533655b241",
+    "configuration_sha256": "5f19a3a11b26db7768b8849445a4003985825a3ef00f11a3ecbce33ec59d8dae",
+    "provider_lock_sha256": "b0f95a645ac5a5db24949e074c48758bb1a1f867ef73148e174a1e1ae1e76c9f"
+  },
+  "changes": {
+    "create": 0,
+    "change": 2,
+    "replace": 0,
+    "destroy": 0
+  },
+  "managed_resources": [
+    "aws_iam_role.state_apply",
+    "aws_iam_role.state_plan"
+  ],
+  "scope": {
+    "state_plan_trust_addition": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "state_apply_trust_addition": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "existing_bootstrap_principal_preserved": true,
+    "permission_policy_changes": 0,
+    "application_resources": 0,
+    "registry_resources": 0,
+    "reason": "Close the observed denied workload-plan to state-plan and workload-apply to state-apply trust edges required by ADR-0075"
+  },
+  "observed_predecessor_failure": {
+    "test": "WORKLOAD_PLAN_ASSUME_STATE_PLAN",
+    "result": "ACCESS_DENIED",
+    "secret_material_recorded": false
+  },
+  "cost": {
+    "monthly_cost_usd": "0.00",
+    "phase1_total_hard_ceiling_usd": "250.00"
+  },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "PHASE1_APPLICATION_APPLY": "NOT_AUTHORIZED"
+  },
+  "owner_signature": null
+}
