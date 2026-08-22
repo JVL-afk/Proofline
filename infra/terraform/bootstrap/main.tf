@@ -1,7 +1,9 @@
 locals {
-  state_bucket_name = "m67-phase1-tfstate-${var.expected_state_account_id}-${var.aws_region}"
-  state_key         = "m67/phase1/terraform.tfstate"
-  state_lock_key    = "${local.state_key}.tflock"
+  state_bucket_name       = "m67-phase1-tfstate-${var.expected_state_account_id}-${var.aws_region}"
+  state_key               = "m67/phase1/terraform.tfstate"
+  state_lock_key          = "${local.state_key}.tflock"
+  workload_plan_role_arn  = "arn:${data.aws_partition.current.partition}:iam::${var.expected_state_account_id}:role/m67-phase1-terraform-workload-plan"
+  workload_apply_role_arn = "arn:${data.aws_partition.current.partition}:iam::${var.expected_state_account_id}:role/m67-phase1-terraform-workload-apply"
   state_resources = [
     "${aws_s3_bucket.state.arn}/${local.state_key}",
     "${aws_s3_bucket.state.arn}/${local.state_lock_key}",
@@ -192,7 +194,7 @@ data "aws_iam_policy_document" "plan_assume" {
     actions = ["sts:AssumeRole"]
     principals {
       type        = "AWS"
-      identifiers = var.plan_principal_arns
+      identifiers = setunion(var.plan_principal_arns, [local.workload_plan_role_arn])
     }
   }
 }
@@ -202,7 +204,7 @@ data "aws_iam_policy_document" "apply_assume" {
     actions = ["sts:AssumeRole"]
     principals {
       type        = "AWS"
-      identifiers = var.apply_principal_arns
+      identifiers = setunion(var.apply_principal_arns, [local.workload_apply_role_arn])
     }
   }
 }
