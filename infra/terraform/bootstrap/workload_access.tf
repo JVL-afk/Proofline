@@ -78,6 +78,11 @@ data "aws_iam_policy_document" "workload_read" {
       "logs:ListTagsForResource",
       "rds:Describe*",
       "rds:ListTagsForResource",
+      "servicediscovery:GetNamespace",
+      "servicediscovery:GetService",
+      "servicediscovery:ListNamespaces",
+      "servicediscovery:ListServices",
+      "servicediscovery:ListTagsForResource",
       "s3:GetBucket*",
       "s3:GetEncryptionConfiguration",
       "s3:GetLifecycleConfiguration",
@@ -135,6 +140,7 @@ data "aws_iam_policy_document" "workload_apply_network_compute" {
       "ec2:CreateSubnet",
       "ec2:CreateTags",
       "ec2:CreateVpc",
+      "ec2:CreateVpcEndpoint",
       "ec2:DeleteInternetGateway",
       "ec2:DeleteNatGateway",
       "ec2:DeleteRoute",
@@ -143,10 +149,12 @@ data "aws_iam_policy_document" "workload_apply_network_compute" {
       "ec2:DeleteSubnet",
       "ec2:DeleteTags",
       "ec2:DeleteVpc",
+      "ec2:DeleteVpcEndpoints",
       "ec2:DetachInternetGateway",
       "ec2:DisassociateRouteTable",
       "ec2:ModifySubnetAttribute",
       "ec2:ModifyVpcAttribute",
+      "ec2:ModifyVpcEndpoint",
       "ec2:ReleaseAddress",
       "ec2:RevokeSecurityGroupEgress",
       "ec2:RevokeSecurityGroupIngress",
@@ -167,6 +175,20 @@ data "aws_iam_policy_document" "workload_apply_network_compute" {
       "ecs:UntagResource",
       "ecs:UpdateClusterSettings",
       "ecs:UpdateService",
+    ]
+    resources = ["*"]
+  }
+
+  statement {
+    sid = "Phase1PrivateServiceDiscoveryLifecycle"
+    actions = [
+      "servicediscovery:CreatePrivateDnsNamespace",
+      "servicediscovery:CreateService",
+      "servicediscovery:DeleteNamespace",
+      "servicediscovery:DeleteService",
+      "servicediscovery:TagResource",
+      "servicediscovery:UntagResource",
+      "servicediscovery:UpdateService",
     ]
     resources = ["*"]
   }
