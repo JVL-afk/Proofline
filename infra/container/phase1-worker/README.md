@@ -20,8 +20,10 @@ After AWS SSO and the appropriate reviewed Terraform authority exist, the automa
 The production Dockerfile pins the Linux/amd64 Python 3.13 Alpine 3.22 platform manifest at
 `sha256:7f7ee17311e0273954ffe76a7b84a2d8c8ecf16f9992e780e4d46c86175df431`.
 Its dependency stage exports only the `opintel-research-worker` runtime graph from `uv.lock` and
-installs it with package hashes enforced. The runtime stage copies only the M0/research source
-trees required by that worker and runs as uid/gid 65532. It removes runtime package-installation
+installs it with package hashes enforced. The runtime stage copies the M0/research source trees and
+the deterministic opportunity/audit/demo/outreach/shadow core sources required by the existing
+Phase 1 minimizer; it copies no local adapters or application routes. It runs as uid/gid 65532 and
+removes runtime package-installation
 tooling and its vendored dependencies after verifying the locked environment. The OpenSSL runtime
 libraries are pinned to Alpine revision `3.5.7-r0`, and `xz-libs` is pinned to `5.8.3-r0`; these
 revisions contain the fixes required by the frozen image scan. The root `.dockerignore` is an

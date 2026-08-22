@@ -35,12 +35,17 @@ LABEL org.opencontainers.image.source="opportunity-intelligence-platform" \
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PYTHONPATH=/app/m0-core:/app/research-core:/app/research-local:/app/research-worker
+    PYTHONPATH=/app/m0-core:/app/research-core:/app/research-local:/app/opportunity-core:/app/audit-core:/app/demo-core:/app/outreach-core:/app/shadow-core:/app/research-worker
 
 COPY --from=dependencies /runtime /usr/local
 COPY packages/m0-core/src /app/m0-core
 COPY packages/research-core/src /app/research-core
 COPY packages/research-local/src /app/research-local
+COPY packages/opportunity-core/src /app/opportunity-core
+COPY packages/audit-core/src /app/audit-core
+COPY packages/demo-core/src /app/demo-core
+COPY packages/outreach-core/src /app/outreach-core
+COPY packages/shadow-core/src /app/shadow-core
 COPY workers/research/src /app/research-worker
 
 # The upstream Python runtime includes pip and its vendored build/network packages. The worker does
