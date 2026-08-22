@@ -81,7 +81,7 @@ data "aws_iam_policy_document" "workload_read" {
       "s3:GetBucket*",
       "s3:GetEncryptionConfiguration",
       "s3:GetLifecycleConfiguration",
-      "s3:GetPublicAccessBlock",
+      "s3:GetBucketPublicAccessBlock",
       "s3:ListAllMyBuckets",
       "s3:ListBucket",
       "secretsmanager:DescribeSecret",
@@ -213,7 +213,7 @@ data "aws_iam_policy_document" "workload_apply_data_observability" {
       "s3:CreateBucket",
       "s3:DeleteBucket",
       "s3:DeleteBucketPolicy",
-      "s3:PutBucketLifecycleConfiguration",
+      "s3:PutLifecycleConfiguration",
       "s3:PutBucketOwnershipControls",
       "s3:PutBucketPolicy",
       "s3:PutBucketPublicAccessBlock",
@@ -245,8 +245,6 @@ data "aws_iam_policy_document" "workload_apply_data_observability" {
   statement {
     sid = "Phase1ObservabilityLifecycle"
     actions = [
-      "budgets:CreateBudget",
-      "budgets:DeleteBudget",
       "budgets:ModifyBudget",
       "cloudtrail:AddTags",
       "cloudtrail:CreateTrail",
