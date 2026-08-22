@@ -1,0 +1,68 @@
+{
+  "record_type": "M67_PHASE1_MINIMIZATION_RUNTIME_DEPLOYED_EVIDENCE",
+  "version": "2026-08-22.1",
+  "state": "APPLIED_OBSERVED_NO_TERRAFORM_DRIFT",
+  "observed_at": "2026-08-22T16:41:07.5299664Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "authorization": {
+    "authorization_type": "APPROVE_MINIMIZATION_RUNTIME_DEPLOYMENT",
+    "saved_plan_sha256": "c7abde734c93c090b74d22eeaf77db50a3a1df365fd5222f3524bda8cdf9b84c",
+    "plan_json_sha256": "4333f74adf7e177652cf43e0fc9adf70710f4a8f30be1ca443399ac4ad5321da",
+    "configuration_sha256": "f6cb8f1912a0ad9d2574b9db571d0bcb1e28faa0cd665bbfaba98640aca1594d",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "review_record_sha256": "9d971653ceeb454ab4c4761eaebae5457c7186fa52e1fbcd5ac369ecd2dc1373"
+  },
+  "apply": {
+    "provider_apply_role_arn": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "backend_apply_role_arn": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "terraform_result": {
+      "add": 1,
+      "change": 1,
+      "destroy": 1
+    },
+    "semantic_result": {
+      "new_infrastructure_creates": 0,
+      "in_place_changes": 1,
+      "expected_task_definition_replacements": 1,
+      "unexpected_replacements": 0,
+      "standalone_destroys": 0
+    }
+  },
+  "observed_runtime": {
+    "task_definition_arn": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-research-worker:2",
+    "task_definition_status": "ACTIVE",
+    "worker_image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:6dd4ce5509b47ee272c5f0dc9e58dc73cacbf63f89afc09134d9c997db382a45",
+    "runtime_user": "65532",
+    "readonly_root_filesystem": true,
+    "live_research_enabled": false,
+    "browser_enabled": false,
+    "egress_policy_revision": "NOT_AUTHORIZED",
+    "research_worker_desired_running_pending": "0/0/0",
+    "controlled_egress_desired_running_pending": "0/0/0",
+    "controlled_egress_image_unchanged": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:8af8123b618e5d5024b6d715cd7956a52a79df41e4b5d201c4dc5f993ee3edf5",
+    "kill_switch": "TRIPPED"
+  },
+  "state_reconciliation": {
+    "terraform_state_serial": 21,
+    "terraform_managed_instances": 82,
+    "terraform_data_instances": 12,
+    "post_apply_plan": "NO_CHANGES",
+    "remote_resource_loss": 0,
+    "unexpected_managed_resources": 0
+  },
+  "decisions": {
+    "A-03": "READY_FOR_OWNER_ACCEPTANCE_CARRIED_FORWARD",
+    "A-04": "BLOCKED_PENDING_SYNTHETIC_RESTORE_VALIDATION",
+    "A-07": "READY_FOR_OWNER_ACCEPTANCE_CARRIED_FORWARD",
+    "A-08": "BLOCKED_PENDING_DEPLOYED_SYNTHETIC_MINIMIZATION_VALIDATION",
+    "ADR-0071": "PROPOSED_BLOCKED_PENDING_A04_A08"
+  },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}
