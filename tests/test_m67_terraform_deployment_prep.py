@@ -142,6 +142,17 @@ def test_research_worker_image_revision_cannot_replace_controlled_egress_image()
     assert "var.worker_image_uri" not in egress_definition
 
 
+def test_kill_switch_policy_is_stable_across_worker_task_revisions() -> None:
+    observability = (PHASE1 / "observability.tf").read_text(encoding="utf-8")
+
+    kill_policy = observability.split('data "aws_iam_policy_document" "kill_operator"', maxsplit=1)[
+        1
+    ].split('resource "aws_iam_role_policy" "kill_operator"', maxsplit=1)[0]
+    assert "aws_ecs_service.worker.id" not in kill_policy
+    assert "service/${var.name_prefix}-research/${var.name_prefix}-research-worker" in kill_policy
+    assert 'actions = ["ecs:UpdateService", "ecs:DescribeServices"]' in kill_policy
+
+
 def test_final_iam_remediation_is_exact_and_bounded() -> None:
     access = (BOOTSTRAP / "workload_access.tf").read_text(encoding="utf-8")
     variables = (BOOTSTRAP / "variables.tf").read_text(encoding="utf-8")

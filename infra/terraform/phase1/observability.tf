@@ -137,8 +137,12 @@ data "aws_iam_policy_document" "kill_operator" {
     resources = [aws_ssm_parameter.kill_switch.arn]
   }
   statement {
-    actions   = ["ecs:UpdateService", "ecs:DescribeServices"]
-    resources = [aws_ecs_service.worker.id]
+    actions = ["ecs:UpdateService", "ecs:DescribeServices"]
+    # Keep the policy stable across task-definition revisions. The service ARN
+    # is deterministic and does not depend on the service's pending update.
+    resources = [
+      "arn:${data.aws_partition.current.partition}:ecs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:service/${var.name_prefix}-research/${var.name_prefix}-research-worker"
+    ]
   }
 }
 
