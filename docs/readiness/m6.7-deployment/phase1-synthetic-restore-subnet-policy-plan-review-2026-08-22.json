@@ -1,0 +1,71 @@
+{
+  "record_type": "M67_PHASE1_SYNTHETIC_RESTORE_SUBNET_POLICY_PLAN_REVIEW",
+  "version": "2026-08-22.1",
+  "state": "READY_FOR_SYNTHETIC_RESTORE_POLICY_REMEDIATION_AUTHORIZATION",
+  "required_owner_event": "APPROVE_SYNTHETIC_RESTORE_POLICY_REMEDIATION_APPLY",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "provider_plan_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "provider_apply_identity_required": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "backend_apply_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply"
+  },
+  "source": {
+    "remediation_commit": "fa5218dc4dc99eb1fcca97a5afd398cb760113eb",
+    "blocker_evidence_sha256": "79d527b51398cc552e36ae5e625520281594da2241fec4f33938c01c308bb8b2",
+    "worker_image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:dd7b1bb05267c43026b4f52f2b2cec915b005b49000fa9b126621a634f9c1327"
+  },
+  "hashes": {
+    "saved_plan_sha256": "c05473ea637510abf6a334910117db1c2ae513ee24f593a41cef977dc633ad46",
+    "plan_json_sha256": "f1b3fe986e424cf928c1689046c028b3a2d75dde08d789236c6fdaf869aee214",
+    "configuration_sha256": "666946768716150e13ae2a543587c663009c7c56871fc3ae174f0d928d9ec842",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f"
+  },
+  "changes": {
+    "create": 0,
+    "change": 1,
+    "replace": 0,
+    "destroy": 0,
+    "unexpected_replace": 0,
+    "unexpected_destroy": 0,
+    "resource": "aws_iam_role_policy.environment_validation"
+  },
+  "exact_change": {
+    "policy": "m67-phase1-environment-validation",
+    "statement": "RestoreExactSyntheticValidationDatabase",
+    "action": "rds:RestoreDBInstanceToPointInTime",
+    "resource_added": "arn:aws:rds:us-east-2:785072247535:subgrp:m67-phase1-database",
+    "other_actions_added": [],
+    "wildcard_resources_added": false
+  },
+  "cost": {
+    "remediation_incremental_usd": "0.00",
+    "bounded_phase1_plus_validation_estimate_usd": "160.00",
+    "hard_ceiling_usd": "250.00",
+    "within_ceiling": true
+  },
+  "validation": {
+    "deterministic_tests": "PASS_407_SKIP_2_OPT_IN_POSTGRES",
+    "ruff": "PASS",
+    "format": "PASS_246_FILES",
+    "strict_mypy": "PASS_162_SOURCE_FILES",
+    "terraform_fmt": "PASS",
+    "terraform_validate": "PASS_WITH_EXISTING_CLOUD_MAP_PROVIDER_DEPRECATION_WARNING",
+    "repository_check": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "safe_state": {
+    "private_ecr_s3_pull": "PASS",
+    "KILL_SWITCH_BLOCK_V1": "PASS",
+    "MINIMIZATION_PERSISTENCE_V1": "PASS",
+    "RESTORE_INSPECTION_V1": "BLOCKED_NOT_STARTED",
+    "kill_switch": "TRIPPED",
+    "restore_target_absent": true,
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  },
+  "owner_signature": null
+}
