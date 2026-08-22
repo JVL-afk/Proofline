@@ -10,11 +10,16 @@ The production-runtime, PostgreSQL, read-only-container, workload-identity, prot
 and controlled exact-host egress remediations are complete. The first remediated plan's apply
 stopped before any resource call because its saved backend identity was read-only; the immutable
 attempt record preserves that result. The corrected successor in
-`phase1-remediated-plan-successor-review-2026-08-22.json` uses workload-plan for provider reads and
-the protected state-apply role for its embedded backend. It is
-`READY_FOR_PHASE1_APPLY_AUTHORIZATION`: 83 creates, zero changes, zero replacements, and zero
-destroys, with managed changes semantically identical to the predecessor. It is not applied. The
-application apply, discovery, research, and Slot 1 authorities remain separate and `NOT_AUTHORIZED`.
+`phase1-remediated-plan-successor-review-2026-08-22.json` passed its exact pre-apply gate and was
+applied under the separately approved workload/state apply identities. It stopped after partial
+creation because the bounded apply policy and application configuration disagreed on exact S3
+names and provider-required tag operations, and because AWS exposes no Cloud Map service-linked
+role template for the explicit resource in the configuration. The independently observed partial
+state and fail-closed disposition are recorded in
+`phase1-successor-apply-attempt-2026-08-22.json`. That saved plan and its approval are consumed and
+must not be retried. No ECS service, task, database, capture/audit bucket, or budget exists, and the
+kill switch remains `TRIPPED`. Environment acceptance is blocked pending a reviewed remediation
+and new successor authorization. Discovery, research, and Slot 1 remain `NOT_AUTHORIZED`.
 
 The deployment-preparation state stops at an authenticated saved plan and review package. Phase 1
 Terraform apply, business discovery, and public research remain separate authorities.

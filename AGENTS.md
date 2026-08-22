@@ -16,14 +16,19 @@ result are recorded in `docs/readiness/m6.7-deployment/phase1-apply-attempt-2026
 retry that predecessor plan. ADR-0075 now records the demonstrated saved-plan constraint.
 
 The successor authenticated Phase 1 application plan in
-`docs/readiness/m6.7-deployment/phase1-remediated-plan-successor-review-2026-08-22.json` is exactly
-`READY_FOR_PHASE1_APPLY_AUTHORIZATION`: 83 creates, 0 changes, 0 replacements, and 0 destroys. Its
-AWS provider plan used the deployed workload-plan identity, its embedded backend uses the protected
-state-apply identity required to persist an apply, and its managed changes are byte-semantically
-identical to the reviewed predecessor. It binds the same clean immutable successor worker image.
-Do not apply it without the owner's exact hash-bound `APPROVE_PHASE1_APPLY_SUCCESSOR` statement.
-Application apply remains separate from discovery, research, person/contact, Slot 1, and
-communication authority; all remain unauthorized.
+`docs/readiness/m6.7-deployment/phase1-remediated-plan-successor-review-2026-08-22.json` was approved
+and attempted under the bounded workload/state apply identities. Its pre-apply hashes and counts
+passed, but the apply stopped after partial creation. The exact S3 names in the workload-apply
+policy did not match the hashed names in the application configuration, provider-required
+`budgets:TagResource` and service-linked-role `iam:TagRole` permissions were absent, and AWS has no
+service-linked-role template for the explicit `servicediscovery.amazonaws.com` resource. The
+immutable partial-state record is
+`docs/readiness/m6.7-deployment/phase1-successor-apply-attempt-2026-08-22.json`. The saved plan and
+approval are consumed; do not retry them. No ECS service/task, RDS instance, capture/audit bucket,
+or budget exists; the kill switch remains `TRIPPED`. Environment acceptance is blocked until the
+configuration and exact bounded policies are remediated, replanned from the observed partial state,
+and separately approved. Discovery, research, person/contact, Slot 1, and communication authority
+remain unauthorized.
 
 The exact worker-registry plan was applied and independently verified, and the immutable Phase 1
 worker successor image is stored in the approved ECR repository at digest

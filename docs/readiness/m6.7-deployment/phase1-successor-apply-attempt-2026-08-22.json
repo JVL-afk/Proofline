@@ -1,0 +1,110 @@
+{
+  "record_type": "M67_PHASE1_SUCCESSOR_APPLY_ATTEMPT",
+  "version": "2026-08-22.1",
+  "state": "PARTIAL_APPLY_STOPPED_CONTROL_POLICY_MISMATCH",
+  "attempted_at": "2026-08-22T09:01:00Z",
+  "observed_at": "2026-08-22T09:05:21Z",
+  "approval": {
+    "event": "APPROVE_PHASE1_APPLY_SUCCESSOR",
+    "saved_plan_sha256": "bd6e461090390408ac69709e6341e8b95ae3ff61308c4d96cc6f927f89301fa3",
+    "plan_json_sha256": "12410924bd4f3a0603e6ffbeb0a6f50489d393510e01114f7cf1aad55d1a0201",
+    "configuration_sha256": "433cff06b855f26dde6dc34d6a026f55762025f2e9671ef1cacf469865ee95ae",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "managed_change_semantic_sha256": "7dee5aeb92fb944df57c842bf2c30c62cf59085dfce3344e2bca23eb8e376ec5",
+    "approved_changes": {
+      "create": 83,
+      "change": 0,
+      "replace": 0,
+      "destroy": 0
+    }
+  },
+  "execution": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "provider_apply_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "backend_apply_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "pre_apply_gate": "PASS",
+    "blind_retry_performed": false,
+    "apply_completed": false
+  },
+  "failure": {
+    "classification": "CONTROL_POLICY_AND_CONFIGURATION_MISMATCH",
+    "failures": [
+      {
+        "resource": "aws_s3_bucket.captures",
+        "cause": "The workload-apply policy authorizes account/region-derived bucket names, while the reviewed application configuration derives a hashed capture-bucket name.",
+        "denied_action": "s3:CreateBucket"
+      },
+      {
+        "resource": "aws_s3_bucket.audit",
+        "cause": "The workload-apply policy authorizes account/region-derived bucket names, while the reviewed application configuration derives a hashed audit-bucket name.",
+        "denied_action": "s3:CreateBucket"
+      },
+      {
+        "resource": "aws_budgets_budget.phase1",
+        "cause": "The workload-apply policy omits the tag action required by the provider when creating the tagged budget.",
+        "denied_action": "budgets:TagResource"
+      },
+      {
+        "resource": "aws_iam_service_linked_role.ecs",
+        "cause": "The workload-apply policy permits tagging Phase 1 named roles but not the exact ECS service-linked role.",
+        "denied_action": "iam:TagRole"
+      },
+      {
+        "resource": "aws_iam_service_linked_role.rds",
+        "cause": "The workload-apply policy permits tagging Phase 1 named roles but not the exact RDS service-linked role.",
+        "denied_action": "iam:TagRole"
+      },
+      {
+        "resource": "aws_iam_service_linked_role.service_discovery",
+        "cause": "AWS has no service-linked-role template for servicediscovery.amazonaws.com; the explicit resource is not deployable.",
+        "denied_action": null
+      }
+    ]
+  },
+  "partial_state": {
+    "terraform_state_serial": 4,
+    "terraform_state_sha256": "6280496e95e2fc6e86a2dc5e533061c16d2fba32151d09a63d9f7603d2ed240e",
+    "state_resources_total_including_data_sources": 63,
+    "managed_resources_recorded": 56,
+    "vpc_id": "vpc-0fb1cf5ea04162821",
+    "ecs_cluster_arn": "arn:aws:ecs:us-east-2:785072247535:cluster/m67-phase1-research",
+    "nat_gateway_id": "nat-00f28099d3aa4655a",
+    "kill_switch": {
+      "name": "/m67-phase1/kill-switch",
+      "value": "TRIPPED",
+      "version": 1
+    }
+  },
+  "independent_observation": {
+    "ecs_services": 0,
+    "ecs_tasks": 0,
+    "rds_instances": 0,
+    "capture_or_audit_buckets": 0,
+    "phase1_budget_present": false,
+    "real_business_access_observed": 0,
+    "external_communications_observed": 0
+  },
+  "disposition": {
+    "saved_plan": "CONSUMED_BY_PARTIAL_FAILED_APPLY_DO_NOT_RETRY",
+    "approval": "CONSUMED_BY_PARTIAL_FAILED_APPLY",
+    "environment_acceptance_readiness": "BLOCKED",
+    "required_remediation": [
+      "Align exact S3 bucket names in the workload-apply policy with the reviewed application configuration.",
+      "Add only the exact provider-required budget and service-linked-role tagging permissions.",
+      "Remove the invalid explicit Cloud Map service-linked-role resource and dependency.",
+      "Generate a refreshed plan against the observed partial state and obtain a new exact hash-bound apply authorization."
+    ],
+    "cleanup_authorized": false
+  },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED"
+  }
+}
