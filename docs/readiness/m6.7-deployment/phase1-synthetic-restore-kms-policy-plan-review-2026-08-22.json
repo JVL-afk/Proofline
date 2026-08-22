@@ -1,0 +1,86 @@
+{
+  "record_type": "M67_PHASE1_SYNTHETIC_RESTORE_KMS_POLICY_PLAN_REVIEW",
+  "version": "2026-08-22.1",
+  "state": "READY_FOR_SYNTHETIC_RESTORE_KMS_POLICY_REMEDIATION_AUTHORIZATION",
+  "required_owner_event": "APPROVE_SYNTHETIC_RESTORE_KMS_POLICY_REMEDIATION_APPLY",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "provider_plan_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "provider_apply_identity_required": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "backend_apply_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply"
+  },
+  "source": {
+    "remediation_commit": "b41934d50c858488eefd29223aa8e7207c00f47b",
+    "blocker_evidence_sha256": "b6f265310742e606454ea2bd6d7dae96253081f3e8a277b2be1d2762a62834d4",
+    "worker_image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:dd7b1bb05267c43026b4f52f2b2cec915b005b49000fa9b126621a634f9c1327"
+  },
+  "hashes": {
+    "saved_plan_sha256": "2aa021222a331af5857786faf9c081f7692767b4109b37f76e71de65c09cb07b",
+    "plan_json_sha256": "ca630d849835da813685fe74468d7749e41aa30a726534e71d9004b38ab59d61",
+    "configuration_sha256": "0438afbde371250478b253a7cf68f3a1df2558f837494add041e99b74a513f93",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f"
+  },
+  "changes": {
+    "create": 0,
+    "change": 1,
+    "replace": 0,
+    "destroy": 0,
+    "unexpected_replace": 0,
+    "unexpected_destroy": 0,
+    "resource": "aws_iam_role_policy.environment_validation"
+  },
+  "exact_change": {
+    "policy": "m67-phase1-environment-validation",
+    "key_resource": "arn:aws:kms:us-east-2:785072247535:key/fa278885-700d-430b-bf76-1f169e3cd6d9",
+    "statements_added": [
+      {
+        "sid": "DescribeExactSyntheticRestoreDatabaseKey",
+        "actions": ["kms:DescribeKey"]
+      },
+      {
+        "sid": "CreateExactSyntheticRestoreDatabaseGrant",
+        "actions": ["kms:CreateGrant"],
+        "conditions": {
+          "kms:GrantIsForAWSResource": true,
+          "kms:ViaService": "rds.us-east-2.amazonaws.com"
+        }
+      }
+    ],
+    "kms_administration_added": false,
+    "cryptographic_data_plane_actions_added": [],
+    "wildcard_resources_added": false
+  },
+  "cost": {
+    "remediation_incremental_usd": "0.00",
+    "bounded_phase1_plus_validation_estimate_usd": "160.00",
+    "hard_ceiling_usd": "250.00",
+    "within_ceiling": true
+  },
+  "validation": {
+    "deterministic_tests": "PASS_407_SKIP_2_OPT_IN_POSTGRES",
+    "ruff": "PASS",
+    "format": "PASS_246_FILES",
+    "canonical_strict_mypy": "PASS_162_SOURCE_FILES",
+    "terraform_fmt": "PASS",
+    "terraform_validate": "PASS_WITH_EXISTING_CLOUD_MAP_PROVIDER_DEPRECATION_WARNING",
+    "repository_check": "PASS",
+    "git_diff_check": "PASS",
+    "broader_noncanonical_script_mypy": "PRE_EXISTING_6_ERRORS_OUTSIDE_CANONICAL_SCOPE"
+  },
+  "safe_state": {
+    "KILL_SWITCH_BLOCK_V1": "PASS_NOT_RERUN",
+    "MINIMIZATION_PERSISTENCE_V1": "PASS_NOT_RERUN",
+    "RESTORE_INSPECTION_V1": "BLOCKED_NOT_STARTED",
+    "kill_switch": "TRIPPED",
+    "restore_target_absent": true,
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED",
+    "AI": "NOT_AUTHORIZED",
+    "BROWSER": "NOT_AUTHORIZED"
+  },
+  "owner_signature": null
+}
