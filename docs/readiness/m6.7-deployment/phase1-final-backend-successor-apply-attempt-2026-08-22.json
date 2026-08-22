@@ -1,0 +1,69 @@
+{
+  "record_type": "M67_PHASE1_FINAL_BACKEND_SUCCESSOR_APPLY_ATTEMPT",
+  "version": "2026-08-22.1",
+  "state": "BLOCKED_PENDING_POST_APPLY_IAM_REMEDIATION",
+  "attempted_at": "2026-08-22T12:03:00Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "consumed_authorization": {
+    "event": "APPROVE_FINAL_PHASE1_BACKEND_SUCCESSOR_APPLY",
+    "saved_plan_sha256": "c283b5cce0078e10f714eb0db6f3fea4af308f7c477a956109643a28c0e3f178",
+    "plan_json_sha256": "d178fd13af593e59952eeaf952b066c2241936692960c852d983284d752984f6",
+    "configuration_sha256": "8023b7fa21b3534bb410570f9c14636b0fe70d352e2a11eef995f9881eccb83e",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f"
+  },
+  "execution": {
+    "provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "protected_backend_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "approved_creates_started": true,
+    "blind_retry_performed": false,
+    "unexpected_replace": 0,
+    "unexpected_destroy": 0
+  },
+  "observed_failures": [
+    {
+      "resource": "aws_service_discovery_private_dns_namespace.phase1",
+      "denied_action": "route53:CreateHostedZone",
+      "cause": "The route53:VPCs condition is not honored for the Cloud Map private-namespace CreateHostedZone call path."
+    },
+    {
+      "resource": "aws_db_instance.phase1",
+      "denied_action": "secretsmanager:CreateSecret",
+      "cause": "RDS managed-master-password creation requires the caller to authorize creation of the service-managed rds!db secret."
+    },
+    {
+      "resource": "aws_cloudtrail.phase1",
+      "denied_action": "cloudtrail:PutEventSelectors",
+      "cause": "Trail creation succeeded, but the exact event-selector mutation was not present in the workload-apply policy."
+    }
+  ],
+  "post_attempt_state": {
+    "revision": "M67_PHASE1_POST_BACKEND_SUCCESSOR_PARTIAL_STATE::2026-08-22.1",
+    "terraform_state_serial": 13,
+    "terraform_state_lineage": "a0037ec5-6d65-c191-5d31-184de98cfb03",
+    "terraform_state_sha256": "9dc10de8910e608bf808430bb633056568e602dafd08aec96adf2eed63e618bb",
+    "managed_resources": 65,
+    "managed_instances": 71,
+    "kill_switch": "TRIPPED",
+    "ecs_services": 0,
+    "ecs_tasks": 0,
+    "rds_instances": 0,
+    "cloudtrail_exists": true,
+    "cloudtrail_custom_event_selectors": false
+  },
+  "disposition": {
+    "authorization": "CONSUMED_BY_PARTIAL_APPLY",
+    "saved_plan": "DO_NOT_RETRY",
+    "successfully_created_resources": "PRESERVE",
+    "required_next_step": "EXACT_TWO_POLICY_IAM_REMEDIATION"
+  },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "record_type": "M67_PHASE1_POST_APPLY_IAM_REMEDIATION_PLAN_REVIEW",
+  "version": "2026-08-22.1",
+  "state": "READY_FOR_POST_APPLY_IAM_REMEDIATION_AUTHORIZATION",
+  "required_owner_event": "APPROVE_POST_APPLY_IAM_REMEDIATION_APPLY",
+  "observed_at": "2026-08-22T12:15:26.2138521Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "authority": "SHORT_LIVED_SSO_BOOTSTRAP_AUTHORITY"
+  },
+  "source": {
+    "remediation_commit": "79efaa40fdbe5566f921cfba0a88c060aa402db5",
+    "partial_state_revision": "M67_PHASE1_POST_BACKEND_SUCCESSOR_PARTIAL_STATE::2026-08-22.1",
+    "partial_state_sha256": "9dc10de8910e608bf808430bb633056568e602dafd08aec96adf2eed63e618bb",
+    "worker_image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:8af8123b618e5d5024b6d715cd7956a52a79df41e4b5d201c4dc5f993ee3edf5",
+    "controlled_egress_revision": "ADR-0076"
+  },
+  "hashes": {
+    "saved_plan_sha256": "4354c51c4bac44cf6470e8bb38b8376e35e51136e3b4d0f52f7e2de075dedee0",
+    "plan_json_sha256": "ada073d32bb03b380cb394aea77037921e2675ec92892f56152644894435d2fe",
+    "configuration_sha256": "c320975b36c49822e1f41932a514fb28d05ac9d5784a901b0760c46f53257a07",
+    "provider_lock_sha256": "b0f95a645ac5a5db24949e074c48758bb1a1f867ef73148e174a1e1ae1e76c9f",
+    "network_compute_policy_sha256": "cbe6c1d8c92b0da472bf649db64cca04c8875de68ba60f81e57b129d881a93b8",
+    "data_observability_policy_sha256": "845c9aa0100d4aa367ba08d6e146a66e04e08dce64e7ba07789dfecb37a9652e"
+  },
+  "changes": {
+    "create": 0,
+    "change": 2,
+    "replace": 0,
+    "destroy": 0,
+    "managed_resources": [
+      "aws_iam_role_policy.workload_apply_data_observability",
+      "aws_iam_role_policy.workload_apply_network_compute"
+    ]
+  },
+  "exact_scope": {
+    "route53_private_namespace": {
+      "action": "route53:CreateHostedZone",
+      "resource": "*",
+      "reason": "AWS Route 53 does not provide a pre-creation hosted-zone ARN, and the previously attempted route53:VPCs condition was rejected on the Cloud Map call path. Authority remains confined to the audited workload-apply role and exact reviewed Terraform apply."
+    },
+    "rds_managed_secret": {
+      "actions": [
+        "secretsmanager:CreateSecret",
+        "secretsmanager:TagResource"
+      ],
+      "resource": "arn:aws:secretsmanager:us-east-2:785072247535:secret:rds!db-*"
+    },
+    "cloudtrail_event_selectors": {
+      "action": "cloudtrail:PutEventSelectors",
+      "resource": "arn:aws:cloudtrail:us-east-2:785072247535:trail/m67-phase1-audit"
+    }
+  },
+  "validation": {
+    "terraform_validate": "PASS",
+    "terraform_format": "PASS",
+    "iam_access_analyzer_findings": 0,
+    "repository_check": "PASS",
+    "ruff": "PASS",
+    "format_check": "PASS",
+    "strict_mypy": "PASS_160_SOURCE_FILES",
+    "deterministic_tests": "PASS_393",
+    "deterministic_tests_skipped": "1_OPT_IN_POSTGRES_PARITY",
+    "python_compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "cost": {
+    "iam_remediation_incremental_usd": "0.00",
+    "bounded_phase1_total_estimate_usd": "150.00",
+    "phase1_total_hard_ceiling_usd": "250.00",
+    "within_ceiling": true
+  },
+  "owner_signature": null,
+  "permissions": {
+    "PHASE1_APPLICATION_APPLY": "NOT_AUTHORIZED",
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}
