@@ -122,19 +122,25 @@ def test_partial_apply_provider_permissions_remain_exact_and_cloud_map_has_no_fa
     assert "aws_iam_service_linked_role.service_discovery" not in compute
 
 
-def test_final_iam_remediation_is_exact_and_conditioned() -> None:
+def test_final_iam_remediation_is_exact_and_bounded() -> None:
     access = (BOOTSTRAP / "workload_access.tf").read_text(encoding="utf-8")
     variables = (BOOTSTRAP / "variables.tf").read_text(encoding="utf-8")
 
     assert 'actions   = ["route53:CreateHostedZone"]' in access
-    assert 'variable = "route53:VPCs"' in access
-    assert 'values   = ["VPCId=${var.phase1_vpc_id},VPCRegion=${var.aws_region}"]' in access
+    # CreateHostedZone has no resource-level ARN before creation and the
+    # route53:VPCs condition is not honored for this Cloud Map call path.
+    assert 'variable = "route53:VPCs"' not in access
     assert 'actions   = ["kms:CreateGrant"]' in access
     assert "resources = [var.phase1_database_kms_key_arn]" in access
     assert 'variable = "kms:GrantIsForAWSResource"' in access
     assert 'variable = "kms:ViaService"' in access
     assert 'values   = ["rds.${var.aws_region}.amazonaws.com"]' in access
     assert 'actions   = ["budgets:ListTagsForResource"]' in access
+    assert '"secretsmanager:CreateSecret"' in access
+    assert '"secretsmanager:TagResource"' in access
+    assert "secret:rds!db-*" in access
+    assert 'actions   = ["cloudtrail:PutEventSelectors"]' in access
+    assert "trail/${local.workload_name_prefix}-audit" in access
     assert '"s3:GetAccelerateConfiguration"' in access
     assert '"s3:GetReplicationConfiguration"' in access
     assert "module.phase1_identifiers.capture_bucket_arn" in access

@@ -196,12 +196,6 @@ data "aws_iam_policy_document" "workload_apply_network_compute" {
     sid       = "CreateExactPhase1PrivateHostedZone"
     actions   = ["route53:CreateHostedZone"]
     resources = ["*"]
-
-    condition {
-      test     = "StringEquals"
-      variable = "route53:VPCs"
-      values   = ["VPCId=${var.phase1_vpc_id},VPCRegion=${var.aws_region}"]
-    }
   }
 
   statement {
@@ -290,6 +284,15 @@ data "aws_iam_policy_document" "workload_apply_data_observability" {
   }
 
   statement {
+    sid = "CreateRdsManagedMasterSecret"
+    actions = [
+      "secretsmanager:CreateSecret",
+      "secretsmanager:TagResource",
+    ]
+    resources = ["arn:${data.aws_partition.current.partition}:secretsmanager:${var.aws_region}:${data.aws_caller_identity.current.account_id}:secret:rds!db-*"]
+  }
+
+  statement {
     sid = "Phase1S3Lifecycle"
     actions = [
       "s3:CreateBucket",
@@ -363,6 +366,12 @@ data "aws_iam_policy_document" "workload_apply_data_observability" {
       "ssm:RemoveTagsFromResource",
     ]
     resources = ["*"]
+  }
+
+  statement {
+    sid       = "ConfigureExactPhase1TrailSelectors"
+    actions   = ["cloudtrail:PutEventSelectors"]
+    resources = ["arn:${data.aws_partition.current.partition}:cloudtrail:${var.aws_region}:${data.aws_caller_identity.current.account_id}:trail/${local.workload_name_prefix}-audit"]
   }
 }
 
