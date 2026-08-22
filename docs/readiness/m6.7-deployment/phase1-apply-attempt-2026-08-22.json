@@ -1,0 +1,41 @@
+{
+  "record_type": "M67_PHASE1_APPLY_ATTEMPT",
+  "version": "2026-08-22.1",
+  "state": "STOPPED_PRE_RESOURCE_BACKEND_IDENTITY_MISMATCH",
+  "attempted_at": "2026-08-22T08:43:00Z",
+  "approval": {
+    "event": "APPROVE_PHASE1_APPLY",
+    "saved_plan_sha256": "1498b7b3ce6377d975b0c434ab6c91d4b0dbd4409cc6b49689a822b44c555894",
+    "plan_json_sha256": "9412fdbd31aac41dcf80bca1575fa7163274e2901c0e3ebadf0bcd771c5f993a",
+    "configuration_sha256": "433cff06b855f26dde6dc34d6a026f55762025f2e9671ef1cacf469865ee95ae",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f"
+  },
+  "execution_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+  "failure": {
+    "phase": "SAVED_PLAN_BACKEND_INITIALIZATION",
+    "attempted_embedded_backend_role": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-plan",
+    "reason": "The saved plan embedded the plan-time state-plan backend role; workload-apply correctly cannot assume that role.",
+    "provider_resource_calls_started": false,
+    "terraform_state_changed": false,
+    "phase1_resources_created": 0,
+    "phase1_resources_changed": 0,
+    "phase1_resources_destroyed": 0,
+    "blind_retry_performed": false
+  },
+  "independent_observation": {
+    "phase1_ecs_clusters": 0,
+    "phase1_rds_instances": 0,
+    "phase1_tagged_vpcs": 0
+  },
+  "disposition": {
+    "original_saved_plan": "SUPERSEDED_DO_NOT_APPLY",
+    "original_approval": "CONSUMED_BY_FAILED_PRE_RESOURCE_ATTEMPT",
+    "required_correction": "SUCCESSOR_PLAN_WITH_STATE_APPLY_BACKEND_AND_NEW_HASH_BOUND_APPROVAL"
+  },
+  "permissions": {
+    "PHASE1_APPLICATION_APPLY": "NOT_AUTHORIZED",
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED"
+  }
+}

@@ -37,6 +37,7 @@ coverage/
 *.tfplan
 *.tfplan.json
 backend.hcl
+backend.*.hcl
 terraform.tfvars
 crash.log
 .minio/

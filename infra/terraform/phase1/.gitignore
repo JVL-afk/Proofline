@@ -3,5 +3,6 @@
 *.tfstate.*
 *.tfplan
 backend.hcl
+backend.*.hcl
 terraform.tfvars
 deployed-environment-evidence.json

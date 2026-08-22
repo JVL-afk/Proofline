@@ -71,6 +71,26 @@ Planning and applying are distinct approval events:
    role. Apply consumes only the reviewed saved plan.
 5. Outputs are observed again through AWS control-plane evidence before A-03/A-04/A-07 approval.
 
+Terraform embeds the active backend configuration in a saved plan. Consequently, a saved plan
+created with the read-only state-plan role cannot later be applied using the state-apply role merely
+by re-running `terraform init`: Terraform restores the embedded plan-time backend and the apply
+fails before resource creation. Preserve role separation as follows:
+
+- speculative refresh and non-apply planning may use the state-plan role;
+- an approval-bound saved application plan uses the workload-plan role for AWS provider reads and
+  the protected state-apply role for its embedded backend;
+- applying that saved plan uses the workload-apply role for AWS provider mutations and the same
+  protected state-apply backend identity;
+- backend and provider identities are separately observed, and neither role may assume or inherit
+  the other's workload privileges;
+- the local backend profile contains role configuration only, uses short-lived SSO authority, stays
+  outside Git, and contains no credential values.
+
+This narrow exception gives the final saved-plan process write-capable state access because a
+successful apply must commit the resulting state. It does not give the workload-plan role
+application mutation authority. A backend-identity change produces a successor saved plan and a new
+hash-bound apply approval; an earlier approval cannot be reused.
+
 Terraform apply never authorizes discovery, research, a worker run, person/contact processing, AI,
 browser activity, or delivery. No infrastructure command is authorized until exact AWS charge
 authorization, credentials, backend values, roles, final retention inputs, and environment approvals

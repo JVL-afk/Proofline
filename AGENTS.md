@@ -10,11 +10,18 @@ read-only task configuration, and ADR-0076 isolated exact-host egress are valida
 service-dependency evidence is in
 `docs/readiness/m6.7-deployment/workload-service-dependency-deployed-evidence-2026-08-22.json`.
 
+The first remediated Phase 1 apply stopped before resource creation because Terraform embedded its
+plan-time state-plan backend identity in the saved plan. The consumed approval and zero-resource
+result are recorded in `docs/readiness/m6.7-deployment/phase1-apply-attempt-2026-08-22.json`; never
+retry that predecessor plan. ADR-0075 now records the demonstrated saved-plan constraint.
+
 The successor authenticated Phase 1 application plan in
-`docs/readiness/m6.7-deployment/phase1-remediated-plan-review-2026-08-22.json` is exactly
-`READY_FOR_PHASE1_APPLY_AUTHORIZATION`: 83 creates, 0 changes, 0 replacements, and 0 destroys. It
-was generated using the deployed workload-plan identity and binds the clean immutable successor
-worker image. Do not apply it without the owner's exact hash-bound `APPROVE_PHASE1_APPLY` statement.
+`docs/readiness/m6.7-deployment/phase1-remediated-plan-successor-review-2026-08-22.json` is exactly
+`READY_FOR_PHASE1_APPLY_AUTHORIZATION`: 83 creates, 0 changes, 0 replacements, and 0 destroys. Its
+AWS provider plan used the deployed workload-plan identity, its embedded backend uses the protected
+state-apply identity required to persist an apply, and its managed changes are byte-semantically
+identical to the reviewed predecessor. It binds the same clean immutable successor worker image.
+Do not apply it without the owner's exact hash-bound `APPROVE_PHASE1_APPLY_SUCCESSOR` statement.
 Application apply remains separate from discovery, research, person/contact, Slot 1, and
 communication authority; all remain unauthorized.
 

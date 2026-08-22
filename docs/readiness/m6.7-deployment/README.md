@@ -7,11 +7,14 @@ state boundary grants no discovery, research, Slot 1, person/contact, AI, browse
 authority.
 
 The production-runtime, PostgreSQL, read-only-container, workload-identity, protected-state trust,
-and controlled exact-host egress remediations are now complete. The successor application plan in
-`phase1-remediated-plan-review-2026-08-22.json` was generated under the deployed workload-plan role
-and is `READY_FOR_PHASE1_APPLY_AUTHORIZATION`: 83 creates, zero changes, zero replacements, and zero
-destroys. It is not applied. The application apply, discovery, research, and Slot 1 authorities
-remain separate and `NOT_AUTHORIZED`.
+and controlled exact-host egress remediations are complete. The first remediated plan's apply
+stopped before any resource call because its saved backend identity was read-only; the immutable
+attempt record preserves that result. The corrected successor in
+`phase1-remediated-plan-successor-review-2026-08-22.json` uses workload-plan for provider reads and
+the protected state-apply role for its embedded backend. It is
+`READY_FOR_PHASE1_APPLY_AUTHORIZATION`: 83 creates, zero changes, zero replacements, and zero
+destroys, with managed changes semantically identical to the predecessor. It is not applied. The
+application apply, discovery, research, and Slot 1 authorities remain separate and `NOT_AUTHORIZED`.
 
 The deployment-preparation state stops at an authenticated saved plan and review package. Phase 1
 Terraform apply, business discovery, and public research remain separate authorities.
