@@ -6,20 +6,21 @@ policy hashes, remote-backend migration, and pseudonymous owner-actor reconcilia
 state boundary grants no discovery, research, Slot 1, person/contact, AI, browser, or delivery
 authority.
 
-The production-runtime, PostgreSQL, read-only-container, workload-identity, protected-state trust,
-and controlled exact-host egress remediations are complete. The first remediated plan's apply
-stopped before any resource call because its saved backend identity was read-only; the immutable
-attempt record preserves that result. The corrected successor in
-`phase1-remediated-plan-successor-review-2026-08-22.json` passed its exact pre-apply gate and was
-applied under the separately approved workload/state apply identities. It stopped after partial
-creation because the bounded apply policy and application configuration disagreed on exact S3
-names and provider-required tag operations, and because AWS exposes no Cloud Map service-linked
-role template for the explicit resource in the configuration. The independently observed partial
-state and fail-closed disposition are recorded in
-`phase1-successor-apply-attempt-2026-08-22.json`. That saved plan and its approval are consumed and
-must not be retried. No ECS service, task, database, capture/audit bucket, or budget exists, and the
-kill switch remains `TRIPPED`. Environment acceptance is blocked pending a reviewed remediation
-and new successor authorization. Discovery, research, and Slot 1 remain `NOT_AUTHORIZED`.
+The approved backend-corrected Cloud Map health successor was applied and independently observed.
+Terraform now accounts for 82 managed instances and reports no drift. The private PostgreSQL
+instance, capture/audit buckets, two zero-count ECS services, controlled-egress boundary, KMS keys,
+CloudTrail, alarms, SNS topic, and USD 250 budget exist. The Cloud Map successor has ECS custom
+health with threshold one and no registered instance. The immutable observation is recorded in
+`phase1-cloud-map-health-backend-successor-deployed-evidence-2026-08-22.json`.
+
+Environment acceptance remains fail-closed for a newly demonstrated production integration gap.
+The deployed worker's research workflow persists `PageSnapshot.content` to PostgreSQL without
+invoking the counsel-required deterministic minimizer. The minimizer and retention model pass their
+component tests, but this is not live-effectiveness evidence. The exact assessment and separately
+represented A-03/A-04/A-07/A-08/ADR-0071 states are recorded in
+`phase1-post-deployment-environment-assessment-2026-08-22.json`. No task was started and no restore
+resource was created after the gap was confirmed. The kill switch remains `TRIPPED`; all discovery,
+research, person/contact, Slot 1, and communication permissions remain `NOT_AUTHORIZED`.
 
 The pre-remediation read-only reconciliation is frozen in
 `phase1-partial-state-inventory-2026-08-22.json`: 56 managed objects were present in both state and

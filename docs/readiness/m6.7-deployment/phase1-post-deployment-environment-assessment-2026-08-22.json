@@ -1,0 +1,109 @@
+{
+  "record_type": "M67_PHASE1_POST_DEPLOYMENT_ENVIRONMENT_ASSESSMENT",
+  "version": "2026-08-22.1",
+  "state": "BLOCKED_PRODUCTION_MINIMIZATION_NOT_INTEGRATED",
+  "assessed_at": "2026-08-22T13:57:29.2013468Z",
+  "deployed_evidence_ref": "M67_PHASE1_CLOUD_MAP_HEALTH_BACKEND_SUCCESSOR_DEPLOYED_EVIDENCE::2026-08-22.1",
+  "blocking_control": "EPHEMERAL_RAW_FETCH_TO_DETERMINISTIC_MINIMIZATION_TO_DURABLE_MINIMIZED_CAPTURE",
+  "finding": {
+    "severity": "HARD_SAFETY_BLOCKER",
+    "classification": "MISSING_PRODUCTION_INTEGRATION",
+    "summary": "The deterministic minimizer is implemented and tested but is not invoked by the deployed production research workflow before persistence.",
+    "code_evidence": [
+      "workers/research/src/opintel_research_worker/main.py::build_runner uses ResearchWorkflowRunner directly",
+      "packages/research-core/src/opintel_research/workflow.py::_snapshot retains FetchedDocument.content",
+      "packages/research-local/src/opintel_research_local/persistence.py::_snapshot_row persists PageSnapshot.content",
+      "packages/shadow-core/src/opintel_shadow/compliance_application.py::PhaseOneMinimizer is not referenced by the production worker path"
+    ],
+    "risk": "If live research were later enabled, unrestricted raw page bodies could become durable PostgreSQL snapshot content before counsel-required minimization.",
+    "current_containment": [
+      "worker desired/running/pending tasks are 0/0/0",
+      "controlled-egress desired/running/pending tasks are 0/0/0",
+      "kill switch is TRIPPED",
+      "OPINTEL_RESEARCH_LIVE_ENABLED is false",
+      "OPINTEL_EGRESS_POLICY_REVISION is NOT_AUTHORIZED",
+      "controlled-egress exact-host allowlist is empty",
+      "all real-data and communication permissions are NOT_AUTHORIZED"
+    ]
+  },
+  "validation": {
+    "repository_foundation": "PASS",
+    "python_compileall": "PASS",
+    "git_diff_check_before_evidence_write": "PASS",
+    "ruff_check": "PASS",
+    "ruff_format_check": "PASS",
+    "strict_mypy": "PASS_160_SOURCE_FILES",
+    "deterministic_tests": "393_PASS_1_SKIP",
+    "skipped_test": "PostgreSQL parity requires a network-reachable synthetic PostgreSQL endpoint; deployed RDS is private and no task execution mutation is authorized.",
+    "terraform_validate": "PASS_WITH_PROVIDER_DEPRECATION_WARNING",
+    "terraform_post_apply_plan": "NO_CHANGES",
+    "iam_access_analyzer": "PASS_NO_ERROR_OR_SECURITY_WARNING",
+    "credential_audit": "PASS_VIA_REPOSITORY_VALIDATION",
+    "real_business_network_calls": 0
+  },
+  "deployed_control_tests": {
+    "kill_switch": {
+      "state": "STRUCTURAL_AND_PERMISSION_EVIDENCE_PASS_ACTIVE_TASK_TEST_NOT_RUN",
+      "ssm_value": "TRIPPED",
+      "ordinary_operator_ecs_update": "IMPLICIT_DENY",
+      "ordinary_operator_ssm_update": "IMPLICIT_DENY",
+      "dedicated_kill_operator_ecs_update": "ALLOWED_EXACT_RESOURCE_POLICY",
+      "dedicated_kill_operator_ssm_update": "ALLOWED_EXACT_RESOURCE_POLICY",
+      "active_task_test_requires_new_aws_task_mutation": true
+    },
+    "backup_restore": {
+      "state": "PITR_CONFIGURED_ACTUAL_RESTORE_NOT_RUN",
+      "rds_backup_retention_days": 30,
+      "latest_restorable_time_observed": true,
+      "actual_restore_requires_new_aws_resource_creation_and_later_deletion": true
+    },
+    "minimization_retention_destruction": {
+      "state": "BLOCKED_NOT_IN_PRODUCTION_PERSISTENCE_PATH",
+      "deterministic_component_tests": "PASS",
+      "s3_lifecycle_configuration": "PASS",
+      "production_runtime_integration": "FAIL"
+    }
+  },
+  "decision_assessment": [
+    {
+      "decision": "A-03",
+      "state": "READY_FOR_OWNER_ACCEPTANCE",
+      "reason": "Dedicated account, region, VPC boundary, and immutable deployed inventory are observed."
+    },
+    {
+      "decision": "A-04",
+      "state": "BLOCKED_PENDING_SYNTHETIC_RESTORE_VALIDATION",
+      "reason": "Encryption, private reachability, backups, and PITR are observed; an actual isolated restore has not been authorized or executed."
+    },
+    {
+      "decision": "A-07",
+      "state": "READY_FOR_OWNER_ACCEPTANCE",
+      "reason": "Owner authority is pseudonymously reconciled and state, workload plan/apply, operator, worker, and kill-switch roles are separately observed. PRIMARY_A reconciliation remains a later discovery-release prerequisite."
+    },
+    {
+      "decision": "A-08",
+      "state": "BLOCKED_PRODUCTION_MINIMIZATION_NOT_INTEGRATED",
+      "reason": "The approved policy is not live-effective while raw PageSnapshot content can reach production PostgreSQL persistence."
+    },
+    {
+      "decision": "ADR-0071",
+      "state": "PROPOSED_BLOCKED_PENDING_A04_A08",
+      "reason": "The environment exists, but restore evidence and the mandatory production minimization boundary are incomplete."
+    }
+  ],
+  "required_next_work": [
+    "Integrate deterministic PhaseOne minimization/quarantine before any production persistence of fetched page content.",
+    "Prove raw bodies cannot enter PostgreSQL, S3, logs, review artifacts, or derived stores in the production worker path.",
+    "Build and deploy a new immutable worker successor with SBOM and clean vulnerability/secret scans.",
+    "Generate and separately authorize the resulting exact ECS task-definition infrastructure update.",
+    "After remediation, authorize a bounded synthetic ECS execution and isolated RDS point-in-time restore/delete validation."
+  ],
+  "readiness_state": "NOT_READY_FOR_CONSOLIDATED_ENVIRONMENT_ACCEPTANCE",
+  "live_permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}

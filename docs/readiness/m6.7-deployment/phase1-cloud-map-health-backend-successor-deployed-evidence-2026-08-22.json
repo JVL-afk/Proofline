@@ -1,0 +1,140 @@
+{
+  "record_type": "M67_PHASE1_CLOUD_MAP_HEALTH_BACKEND_SUCCESSOR_DEPLOYED_EVIDENCE",
+  "version": "2026-08-22.1",
+  "state": "APPLIED_OBSERVED_NO_TERRAFORM_DRIFT",
+  "observed_at": "2026-08-22T13:57:29.2013468Z",
+  "account_id": "785072247535",
+  "partition": "aws",
+  "region": "us-east-2",
+  "authorization": {
+    "authorization_type": "APPROVE_FINAL_PHASE1_APPLY_WITH_CLOUD_MAP_HEALTH_BACKEND_SUCCESSOR",
+    "saved_plan_sha256": "13e772a20d17cc1269821f710740d75360387a0254b9af6fd9b493be7d96a9f7",
+    "plan_json_sha256": "7f02d087f5ee566f326708523f47485905fc2b85e118d66f35d8e73352837548",
+    "configuration_sha256": "9ab094aeba604acc7997540de2e8b09cd5a89967b7a425b4ed7b06c6ee62b083",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "managed_change_semantic_sha256": "c954b40df37bdb241705de8852604dc2c56c117ce953403ed9f0f5859567d765",
+    "repository_source_commit": "c0b6ac6f50499b8f6776c4918e14f85155ab9094",
+    "configuration_source_commit": "ac600af6ca4e542988ca3ec3ad8257c1b972ec0b"
+  },
+  "apply": {
+    "provider_apply_role_arn": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "backend_apply_role_arn": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "terraform_result": {"add": 9, "change": 0, "destroy": 1},
+    "semantic_result": {
+      "new_creates": 8,
+      "in_place_changes": 0,
+      "expected_replacements": 1,
+      "unexpected_replacements": 0,
+      "standalone_destroys": 0
+    },
+    "replacement": {
+      "terraform_address": "aws_service_discovery_service.egress",
+      "predecessor_service_id": "srv-6ypgx6ow5mbdg5tz",
+      "registered_instances_before_apply": 0,
+      "ecs_desired_running_pending_before_apply": "0/0/0",
+      "reason": "add create-time-only ECS-managed HealthCheckCustomConfig"
+    }
+  },
+  "observed_environment": {
+    "terraform_managed_instances": 82,
+    "post_apply_plan": "NO_CHANGES",
+    "unexpected_remote_loss": 0,
+    "unexpected_managed_resources": 0,
+    "vpc_id": "vpc-0fb1cf5ea04162821",
+    "private_subnet_ids": ["subnet-034f75c751e849ba8", "subnet-0ed12f24100baf801"],
+    "ecs_cluster_arn": "arn:aws:ecs:us-east-2:785072247535:cluster/m67-phase1-research",
+    "ecs_services": 2,
+    "ecs_desired_running_pending": "0/0/0",
+    "rds_instance_arn": "arn:aws:rds:us-east-2:785072247535:db:m67-phase1-postgres",
+    "rds_engine_version": "18.3",
+    "rds_publicly_accessible": false,
+    "rds_storage_encrypted": true,
+    "rds_backup_retention_days": 30,
+    "capture_bucket_arn": "arn:aws:s3:::m67-phase1-restricted-captures-f314f0df7f63484aae5afb9af8",
+    "audit_bucket_arn": "arn:aws:s3:::m67-phase1-audit-459ad1a7cc4da135aeabd70211",
+    "cloudtrail_arn": "arn:aws:cloudtrail:us-east-2:785072247535:trail/m67-phase1-audit",
+    "cloudtrail_logging": true,
+    "budget_name": "m67-phase1-monthly-hard-ceiling",
+    "budget_limit_usd": "250.0"
+  },
+  "cloud_map_replacement_observation": {
+    "service_id": "srv-6ypgx6ow5mbdg5tz",
+    "service_arn": "arn:aws:servicediscovery:us-east-2:785072247535:service/srv-6ypgx6ow5mbdg5tz",
+    "namespace_id": "ns-n64djdv4ewejadj5",
+    "namespace_name": "m67.internal",
+    "dns_record_type": "A",
+    "dns_ttl_seconds": 10,
+    "routing_policy": "MULTIVALUE",
+    "health_check_custom_config_present": true,
+    "failure_threshold": 1,
+    "registered_instances_after_apply": 0,
+    "ecs_registry_bound_to_observed_service": true,
+    "predecessor_incarnation_absent": true,
+    "note": "AWS reused the service identifier; the new creation timestamp, creator token, and custom-health configuration distinguish the successor incarnation."
+  },
+  "storage_and_encryption": {
+    "capture_sse_kms": true,
+    "audit_sse_kms": true,
+    "capture_versioning": true,
+    "audit_versioning": true,
+    "capture_public_access_blocked": true,
+    "audit_public_access_blocked": true,
+    "capture_tls_only_policy": true,
+    "audit_tls_only_policy": true,
+    "capture_lifecycle_days": 90,
+    "audit_lifecycle_days": 365,
+    "kms_keys_enabled": 3,
+    "kms_keys_rotation_enabled": 3
+  },
+  "runtime_and_egress": {
+    "worker_image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:8af8123b618e5d5024b6d715cd7956a52a79df41e4b5d201c4dc5f993ee3edf5",
+    "worker_read_only_root": true,
+    "worker_user": "65532",
+    "worker_public_ip": false,
+    "worker_general_internet_egress_rule_present": false,
+    "worker_to_controlled_egress_only": true,
+    "controlled_egress_allowed_hosts": [],
+    "egress_policy_revision": "NOT_AUTHORIZED",
+    "research_live_enabled": false,
+    "browser_enabled": false,
+    "public_application_ingress": false
+  },
+  "identity": {
+    "owner_actor_ref": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981",
+    "owner_caller_authority_ref": "sha256:c4ed4c42c1fe52dfbdf8ebf9183069ef1b15b1baa764125bf9c4b4dc46699615",
+    "owner_actor_reconciliation": "RECONCILED_TO_DEPLOYED_SSO_AUTHORITY",
+    "human_readable_session_recorded": false,
+    "primary_a_reconciliation": "PENDING_INDEPENDENT_AUTHENTICATION"
+  },
+  "policy_hashes": {
+    "captures_kms_policy_sha256": "36ecbcef5db23bade28795c1407b05dc3741d1e9943d869b8a6d13c8b15a3f38",
+    "database_kms_policy_sha256": "36ecbcef5db23bade28795c1407b05dc3741d1e9943d869b8a6d13c8b15a3f38",
+    "logs_kms_policy_sha256": "b9ad641e23d3e1e081a9cc151b1140e2bb989f4a7f42af73276fda456dfac773",
+    "worker_policy_sha256": "e61da7f250531a93b566112770fa5272141f718506329161cbb9f4088553716a",
+    "kill_switch_policy_sha256": "661495097d6b3ab42cf443fb44273126a0d68aae5ec17d4938da322146cdcea2",
+    "execution_secret_policy_sha256": "ce0c8f410e5df0eff2af1828815a9ce8b4fb1e5a10682a025673dc0a07eb3c88",
+    "workload_read_policy_sha256": "c8b3331c203ce298ce02e8cd26822bcd2d1ac2f0227f17d4f73348b3cc5056eb",
+    "workload_apply_data_observability_policy_sha256": "258b4f03cc8a09135605bf1317d1ac415e1e620c8d470589032678b3779c6ea4",
+    "workload_apply_iam_policy_sha256": "640276eedb1951e0eb0fae6aedd2f57824e9bf1b0dea3ba2a0b6b6cadfae2172",
+    "workload_apply_network_compute_policy_sha256": "512840682fb669a7b83a595cb2ee6e46ad562b90ef6ab40f31174865fd8931a1"
+  },
+  "iam_access_analyzer": {
+    "policies_with_error_or_security_warning": 0,
+    "non_blocking_suggestions": 2,
+    "suggestion": "REDUNDANT_ACTION in the identical workload-read policy attached to plan and apply roles"
+  },
+  "cost_evidence": {
+    "provider_reported_actual_usd": "0.013",
+    "provider_values_estimated_or_delayed": true,
+    "approved_hard_ceiling_usd": "250",
+    "conservative_bounded_phase1_estimate_usd": "150",
+    "ceiling_preserved": true
+  },
+  "live_permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}
