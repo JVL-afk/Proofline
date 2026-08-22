@@ -1,0 +1,207 @@
+{
+  "record_type": "M67_PHASE1_SYNTHETIC_ENVIRONMENT_VALIDATION_AUTHORIZATION_PACKAGE",
+  "version": "2026-08-22.1",
+  "state": "READY_FOR_SYNTHETIC_ENVIRONMENT_VALIDATION_AUTHORIZATION",
+  "required_owner_event": "APPROVE_PHASE1_SYNTHETIC_ENVIRONMENT_VALIDATION",
+  "prepared_at": "2026-08-22T16:42:14.2107665Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "terraform_deployment": {
+    "provider_plan_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "provider_apply_identity_required": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "backend_apply_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "configuration_source_commit": "d647b9ab6951a904e494add4ea0e19ca2bd546a1",
+    "saved_plan_sha256": "8d2dc8f2c1d53aa87dc956e4a67ca0a23bcfad4b747ee22b07f550e11bf38a37",
+    "plan_json_sha256": "8da5aa9ad80f342f20c66c9a6ed9d3205ba259dec0e0524fc668c0ab81568433",
+    "configuration_sha256": "c4a5d910d977517d8f549dfab25da1d640eee4568791601481c1491cbd75e0de",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "terraform_cli_counts": {
+      "add": 2,
+      "change": 1,
+      "destroy": 1
+    },
+    "semantic_changes": {
+      "new_environment_validation_operator_policies": 1,
+      "new_other_infrastructure": 0,
+      "in_place_ecs_service_updates": 1,
+      "expected_worker_task_definition_replacements": 1,
+      "unexpected_replacements": 0,
+      "standalone_destroys": 0,
+      "controlled_egress_changes": 0
+    },
+    "expected_post_apply_task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-research-worker:3"
+  },
+  "source": {
+    "worker_source_commit": "192f323f43151e6096503730eca27841a4811ceb",
+    "worker_image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:dd7b1bb05267c43026b4f52f2b2cec915b005b49000fa9b126621a634f9c1327",
+    "worker_image_evidence_sha256": "23dfcbc6ffc8c0cee10ee1356aaff9de2d3ee18642779d8b44f41e42a4b3964d",
+    "current_deployed_state_revision": "M67_PHASE1_MINIMIZATION_RUNTIME_DEPLOYED_EVIDENCE::2026-08-22.1",
+    "current_deployed_state_sha256": "f53c998253928cc1431987746fc28d6408a2899e3a2e0a206e1a2ee9cd98c437",
+    "controlled_egress_revision": "ADR-0076"
+  },
+  "operator_policy": {
+    "role": "arn:aws:iam::785072247535:role/m67-phase1-operator",
+    "policy_name": "m67-phase1-environment-validation",
+    "policy_sha256": "bad16460cfd8d2900f13e0b4b17d9551aa8b893d4d8a15523c9f6c6ee8177c42",
+    "iam_access_analyzer": "PASS_NO_FINDINGS",
+    "run_task_family": "m67-phase1-research-worker:*",
+    "cluster": "arn:aws:ecs:us-east-2:785072247535:cluster/m67-phase1-research",
+    "passed_roles": [
+      "arn:aws:iam::785072247535:role/m67-phase1-ecs-execution",
+      "arn:aws:iam::785072247535:role/m67-phase1-research-worker"
+    ],
+    "restore_source": "arn:aws:rds:us-east-2:785072247535:db:m67-phase1-postgres",
+    "restore_target_pattern": "arn:aws:rds:us-east-2:785072247535:db:m67-phase1-restore-validation-*"
+  },
+  "synthetic_task_boundary": {
+    "launch_type": "FARGATE",
+    "platform_version": "1.4.0",
+    "task_count_per_action": 1,
+    "assign_public_ip": "DISABLED",
+    "subnets": [
+      "subnet-034f75c751e849ba8",
+      "subnet-0ed12f24100baf801"
+    ],
+    "security_groups": [
+      "sg-05543bd7e420818bf"
+    ],
+    "container": "research-worker",
+    "enable_execute_command": false,
+    "desired_service_count_change": 0,
+    "live_research_enabled": false,
+    "browser_enabled": false,
+    "egress_policy_revision": "NOT_AUTHORIZED",
+    "fixture_source": "IMAGE_CONTAINED_EXACT_SOURCE_COMMIT",
+    "fixture_network_calls": 0
+  },
+  "authorized_sequence_if_signed": [
+    {
+      "order": 1,
+      "action": "APPLY_EXACT_TERRAFORM_PLAN",
+      "postcondition": "revision 3 binds exact image, both ECS services remain desired/running/pending 0/0/0"
+    },
+    {
+      "order": 2,
+      "action": "RUN_ONE_SYNTHETIC_TASK_WITH_KILL_SWITCH_TRIPPED",
+      "mode": "KILL_SWITCH_BLOCK_V1",
+      "validation_id": "m67-env-kill-block-20260822-v1",
+      "started_by": "m67-env-kill-block-20260822-v1",
+      "required_result": "fetch_called=false, snapshot_count=0, run_status=failed, error=kill_switch_active"
+    },
+    {
+      "order": 3,
+      "action": "TEMPORARILY_SET_EXACT_KILL_SWITCH_TO_RUN",
+      "role": "arn:aws:iam::785072247535:role/m67-phase1-kill-switch-operator",
+      "parameter": "/m67-phase1/kill-switch",
+      "precondition": "value=TRIPPED and both ECS services 0/0/0",
+      "value": "RUN"
+    },
+    {
+      "order": 4,
+      "action": "RUN_ONE_SYNTHETIC_MINIMIZATION_TASK",
+      "mode": "MINIMIZATION_PERSISTENCE_V1",
+      "validation_id": "m67-env-minimized-20260822-v1",
+      "started_by": "m67-env-minimized-20260822-v1",
+      "required_result": "one successful minimized PostgreSQL snapshot, required evidence retained, prohibited contact values absent"
+    },
+    {
+      "order": 5,
+      "action": "RESTORE_EXACT_KILL_SWITCH_TO_TRIPPED_IN_FINALLY",
+      "role": "arn:aws:iam::785072247535:role/m67-phase1-kill-switch-operator",
+      "parameter": "/m67-phase1/kill-switch",
+      "value": "TRIPPED"
+    },
+    {
+      "order": 6,
+      "action": "WAIT_FOR_PITR_TO_INCLUDE_SUCCESSFUL_SYNTHETIC_RECORD",
+      "condition": "LatestRestorableTime is at or after the successful synthetic task completion time"
+    },
+    {
+      "order": 7,
+      "action": "RESTORE_ONE_ISOLATED_SYNTHETIC_PITR_DATABASE",
+      "source_db": "m67-phase1-postgres",
+      "target_db": "m67-phase1-restore-validation-20260822-1",
+      "restore_point": "USE_LATEST_RESTORABLE_TIME_AFTER_ORDER_6_CONDITION",
+      "db_instance_class": "db.t4g.micro",
+      "storage_type": "gp3",
+      "allocated_storage_gib": 20,
+      "db_subnet_group": "m67-phase1-database",
+      "vpc_security_groups": [
+        "sg-0c11a395b588bba66"
+      ],
+      "publicly_accessible": false,
+      "multi_az": false,
+      "deletion_protection": false,
+      "kms_key": "arn:aws:kms:us-east-2:785072247535:key/fa278885-700d-430b-bf76-1f169e3cd6d9"
+    },
+    {
+      "order": 8,
+      "action": "RUN_ONE_RESTORE_INSPECTION_TASK",
+      "mode": "RESTORE_INSPECTION_V1",
+      "validation_id": "m67-env-minimized-20260822-v1",
+      "started_by": "m67-env-restore-inspection-20260822-v1",
+      "database_host_override": "SYSTEM_OBSERVED_ENDPOINT_OF_EXACT_ORDER_7_TARGET",
+      "kill_switch_required": "TRIPPED",
+      "required_result": "restored record remains minimized and prohibited contact values remain absent"
+    },
+    {
+      "order": 9,
+      "action": "DELETE_EXACT_SYNTHETIC_RESTORE_DATABASE",
+      "target_db": "m67-phase1-restore-validation-20260822-1",
+      "skip_final_snapshot": true,
+      "postcondition": "target absent; source database unchanged"
+    }
+  ],
+  "mandatory_abort_and_cleanup": {
+    "on_any_task_or_restore_failure": [
+      "set /m67-phase1/kill-switch to TRIPPED",
+      "stop only a still-running task created by this authorization",
+      "delete only m67-phase1-restore-validation-20260822-1 if it was created and is safe to delete",
+      "preserve immutable failure evidence"
+    ],
+    "may_not_start_service": true,
+    "may_not_change_desired_count": true,
+    "may_not_access_real_business": true
+  },
+  "post_execution_observations": [
+    "PostgreSQL minimized row and evidence hashes",
+    "capture bucket contains no raw fixture",
+    "CloudWatch contains no prohibited fixture values",
+    "no durable container filesystem exists",
+    "PITR restore is encrypted/private/isolated",
+    "restored row remains minimized",
+    "kill switch ends TRIPPED",
+    "both ECS services end 0/0/0",
+    "Terraform converges with NO_CHANGES"
+  ],
+  "cost": {
+    "existing_bounded_phase1_estimate_usd": "150.00",
+    "temporary_validation_reserve_usd": "10.00",
+    "maximum_estimated_total_usd": "160.00",
+    "hard_ceiling_usd": "250.00",
+    "remaining_headroom_usd": "90.00",
+    "within_ceiling": true
+  },
+  "validation": {
+    "deterministic_tests": "PASS_406_SKIP_2_OPT_IN_POSTGRES",
+    "ruff": "PASS",
+    "format": "PASS_246_FILES",
+    "strict_mypy": "PASS_162_SOURCE_FILES",
+    "terraform_validate": "PASS_WITH_EXISTING_CLOUD_MAP_PROVIDER_DEPRECATION_WARNING",
+    "iam_access_analyzer": "PASS_NO_FINDINGS",
+    "image_vulnerabilities": 0,
+    "image_secrets": 0,
+    "ecr_provider_findings": 0
+  },
+  "owner_signature": null,
+  "permissions": {
+    "SYNTHETIC_ENVIRONMENT_VALIDATION": "NOT_AUTHORIZED",
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}
