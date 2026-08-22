@@ -1,0 +1,106 @@
+{
+  "record_type": "M67_PHASE1_FINAL_KMS_TRAIL_READ_REMEDIATION_PLAN_REVIEW",
+  "version": "2026-08-22.1",
+  "state": "READY_FOR_FINAL_KMS_TRAIL_IAM_REMEDIATION_AUTHORIZATION",
+  "required_owner_event": "APPROVE_FINAL_KMS_TRAIL_IAM_REMEDIATION_APPLY",
+  "observed_at": "2026-08-22T13:00:46.3915761Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "source": {
+    "remediation_commit": "c2a44febb2f2f8d5572d599bf69687f36e3d63e2",
+    "partial_apply_evidence_revision": "M67_PHASE1_FINAL_POST_IAM_SUCCESSOR_APPLY_ATTEMPT::2026-08-22.1",
+    "partial_apply_evidence_sha256": "45edf25ff13f761c4f11620d36ffbe11b4eee1bc0f56ff4f0f83eee6275c167b",
+    "terraform_state_serial": 18,
+    "terraform_state_sha256": "7f875744929f964f27759693033d3fbd51d956764be0c9bdd52d85bae046a241"
+  },
+  "hashes": {
+    "saved_plan_sha256": "025efee286c520761c5f45c1e26fe634f7a412a89ed84aa5501f273ab1dd5105",
+    "plan_json_sha256": "1f36764871c959d1a7b83d47cd29e1ee57b5819d81057bff5f8a7d6980c98936",
+    "configuration_sha256": "9161790c4b44ea82617b49279e6d3b417a8f710a5466e32fe531e5724facc15b",
+    "provider_lock_sha256": "b0f95a645ac5a5db24949e074c48758bb1a1f867ef73148e174a1e1ae1e76c9f"
+  },
+  "changes": {
+    "create": 0,
+    "change": 3,
+    "replace": 0,
+    "destroy": 0,
+    "resources": [
+      "aws_iam_role_policy.workload_apply_data_observability",
+      "aws_iam_role_policy.workload_apply_read",
+      "aws_iam_role_policy.workload_plan"
+    ]
+  },
+  "exact_scope": {
+    "rds_managed_secret_kms_use": {
+      "actions": [
+        "kms:Decrypt",
+        "kms:GenerateDataKey"
+      ],
+      "resource": "arn:aws:kms:us-east-2:785072247535:key/fa278885-700d-430b-bf76-1f169e3cd6d9",
+      "condition": {
+        "StringEquals": {
+          "kms:ViaService": "secretsmanager.us-east-2.amazonaws.com"
+        }
+      },
+      "key_administration_added": false
+    },
+    "cloudtrail_selector_read": {
+      "action": "cloudtrail:GetEventSelectors",
+      "resource": "arn:aws:cloudtrail:us-east-2:785072247535:trail/m67-phase1-audit",
+      "principals": [
+        "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+        "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply"
+      ]
+    }
+  },
+  "validation": {
+    "terraform_format": "PASS",
+    "terraform_validate": "PASS",
+    "targeted_tests": "PASS_7",
+    "deterministic_tests": "PASS_393",
+    "deterministic_tests_skipped": "1_OPT_IN_POSTGRES_PARITY",
+    "node_version": "24.15.0",
+    "npm_version": "11.12.1",
+    "npm_clean_install": "PASS",
+    "ruff": "PASS",
+    "format_check": "PASS_242_FILES",
+    "strict_mypy": "PASS_160_SOURCE_FILES",
+    "repository_check": "PASS",
+    "python_compileall": "PASS",
+    "git_diff_check": "PASS",
+    "iam_access_analyzer": {
+      "security_errors": 0,
+      "new_statement_findings": 0,
+      "preexisting_suggestions": 2,
+      "preexisting_suggestion": "REDUNDANT_ACTION for overlapping s3:GetBucket* and s3:GetBucketPublicAccessBlock in the shared read policy; unrelated to this remediation and not a privilege expansion."
+    }
+  },
+  "cost": {
+    "new_recurring_cost_usd": "0.00",
+    "bounded_phase1_total_estimate_usd": "150.00",
+    "phase1_total_hard_ceiling_usd": "250.00",
+    "remaining_estimated_headroom_usd": "100.00",
+    "within_ceiling": true
+  },
+  "safety": {
+    "kill_switch": "TRIPPED",
+    "ecs_worker_tasks": 0,
+    "rds_instances": 0,
+    "unexpected_replacements": 0,
+    "unexpected_destroys": 0,
+    "real_business_access": 0,
+    "external_communications": 0
+  },
+  "owner_signature": null,
+  "permissions": {
+    "FINAL_KMS_TRAIL_IAM_REMEDIATION_APPLY": "NOT_AUTHORIZED",
+    "PHASE1_APPLICATION_APPLY_RETRY": "NOT_AUTHORIZED",
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}
