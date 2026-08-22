@@ -32,6 +32,7 @@ from opintel_research_local import DisabledBrowserFallback, IsolatedBrowserFallb
 from opintel_research_local.egress import ControlledEgressTransport, build_gateway_handler
 from opintel_research_local.persistence import SqlAlchemyResearchRepository
 from opintel_research_local.settings import ResearchWorkerSettings
+from opintel_research_worker.minimization import ProductionPhaseOneCaptureMinimizer
 
 PUBLIC_IP = "93.184.216.34"
 
@@ -96,7 +97,7 @@ class RecordingBrowser:
         self.calls.append((url, permitted_host))
         content = (
             b"<html><head><title>Rendered public page</title></head>"
-            b"<body>Rendered text</body></html>"
+            b"<body>Example Heating service information</body></html>"
         )
         return FetchedDocument(
             source_url=url,
@@ -166,6 +167,7 @@ def build_runner(
             clock=clock,
             identifiers=UuidFactory(),
             sleeper=sleeper,
+            capture_minimizer=ProductionPhaseOneCaptureMinimizer(),
         ),
         sleeper,
     )
@@ -204,18 +206,21 @@ def test_successful_bounded_research_traceability_and_extraction(
     root = next(item for item in pages if item["depth"] == 0)
     snapshot = client.get(root["links"]["snapshot"], headers=auth_headers).json()
     material = client.get(root["links"]["material"], headers=auth_headers).json()
-    assert snapshot["content_sha256"] == hashlib.sha256(HOME).hexdigest()
-    assert snapshot["snapshot_version"] == f"sha256:{hashlib.sha256(HOME).hexdigest()}"
+    assert snapshot["source_content_sha256"] == hashlib.sha256(HOME).hexdigest()
+    assert snapshot["content_sha256"] != snapshot["source_content_sha256"]
+    assert snapshot["snapshot_version"].startswith("minimized-sha256:")
     assert snapshot["research_run_id"] == started["id"]
     assert snapshot["operation_id"] == started["operation_id"]
     assert snapshot["trace_id"] == started["trace_id"]
     assert material["title"] == "Example Heating"
     assert material["headings"][0][1] == "Heating and cooling services"
-    assert material["forms"][0][1] == "post"
+    assert material["forms"] == []
     assert material["buttons"][0] == ["submit", "Request service"]
-    assert {item[0] for item in material["contacts"]} == {"email", "phone"}
-    assert material["structured_data"]
-    assert ["WordPress 7", "meta-generator"] in material["technology_signals"]
+    assert material["contacts"] == []
+    assert material["structured_data"] == []
+    assert material["technology_signals"] == []
+    assert "service@example.com" not in material["visible_text"]
+    assert "512" not in material["visible_text"]
 
     evidence = client.get(run["links"]["evidence"], headers=auth_headers).json()
     assert evidence
@@ -471,12 +476,14 @@ def test_browser_fallback_is_used_only_for_insufficient_http_content(
         clock=clock,
         identifiers=UuidFactory(),
         sleeper=AdvancingSleeper(clock, []),
+        capture_minimizer=ProductionPhaseOneCaptureMinimizer(),
     )
     assert runner.run_once() is True
     assert browser.calls == [("https://example.com/", "example.com")]
     pages = client.get(f"/api/v1/research-runs/{started['id']}/pages", headers=auth_headers).json()
     material = client.get(pages[0]["links"]["material"], headers=auth_headers).json()
-    assert material["title"] == "Rendered public page"
+    assert material["title"] is None
+    assert "Example Heating service information" in material["visible_text"]
 
 
 def test_workspace_authorization_hides_research_resources(

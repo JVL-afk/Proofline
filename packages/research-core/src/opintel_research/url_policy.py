@@ -7,7 +7,11 @@ import socket
 import unicodedata
 from urllib.parse import quote, urlsplit, urlunsplit
 
-from opintel_research.domain import UrlPolicyError, ValidatedUrl
+from opintel_research.domain import (
+    UrlPolicyError,
+    ValidatedUrl,
+    contains_prohibited_contact_value,
+)
 from opintel_research.ports import Resolver
 
 _ALLOWED_PORTS = {"http": 80, "https": 443}
@@ -39,7 +43,10 @@ def normalize_public_url(value: str) -> str:
     path = quote(path, safe="/%:@!$&'()*+,;=-._~")
     netloc = host
     query = quote(parsed.query, safe="=&;%:@!$'()*+,/?-._~")
-    return urlunsplit((scheme, netloc, path, query, ""))
+    normalized = urlunsplit((scheme, netloc, path, query, ""))
+    if contains_prohibited_contact_value(normalized):
+        raise UrlPolicyError("URL contains prohibited contact data")
+    return normalized
 
 
 class SocketResolver:

@@ -11,10 +11,13 @@ from uuid import UUID
 
 from opintel_research.domain import (
     Business,
+    CaptureDisposition,
+    CaptureQuarantine,
     CrawlPolicy,
+    DurablePageBundle,
     ExtractedMaterial,
     FetchAttempt,
-    PageSnapshot,
+    MinimizedPageSnapshot,
     PageStatus,
     ResearchEvidence,
     ResearchPage,
@@ -27,12 +30,12 @@ from sqlalchemy import (
     ForeignKey,
     Index,
     Integer,
-    LargeBinary,
     String,
     Text,
     UniqueConstraint,
     create_engine,
     event,
+    inspect,
     select,
     text,
     update,
@@ -140,15 +143,38 @@ class SnapshotRow(Base):
     source_url: Mapped[str] = mapped_column(String(2048))
     canonical_url: Mapped[str] = mapped_column(String(2048), index=True)
     final_url: Mapped[str] = mapped_column(String(2048))
-    snapshot_version: Mapped[str] = mapped_column(String(80))
+    snapshot_version: Mapped[str] = mapped_column(String(96))
     captured_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), index=True)
+    source_content_sha256: Mapped[str] = mapped_column(String(64))
     content_sha256: Mapped[str] = mapped_column(String(64))
     content_type: Mapped[str] = mapped_column(String(100))
     charset: Mapped[str] = mapped_column(String(40))
     status_code: Mapped[int] = mapped_column(Integer)
     content_length: Mapped[int] = mapped_column(Integer)
-    response_headers_json: Mapped[str] = mapped_column(Text)
-    content: Mapped[bytes] = mapped_column(LargeBinary)
+    minimized_text: Mapped[str] = mapped_column(Text)
+    minimizer_version: Mapped[str] = mapped_column(String(80))
+    minimization_event_sha256: Mapped[str] = mapped_column(String(64))
+    removed_email_count: Mapped[int] = mapped_column(Integer)
+    removed_phone_count: Mapped[int] = mapped_column(Integer)
+    removed_structured_contact_blocks: Mapped[int] = mapped_column(Integer)
+    required_evidence_markers_json: Mapped[str] = mapped_column(Text)
+    disposition: Mapped[str] = mapped_column(String(40))
+
+
+class CaptureQuarantineRow(Base):
+    __tablename__ = "research_capture_quarantines"
+    page_id: Mapped[str] = mapped_column(ForeignKey("research_pages.id"), primary_key=True)
+    workspace_id: Mapped[str] = mapped_column(String(36), index=True)
+    business_id: Mapped[str] = mapped_column(String(36), index=True)
+    research_run_id: Mapped[str] = mapped_column(String(36), index=True)
+    source_uri: Mapped[str] = mapped_column(String(2048))
+    captured_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    raw_content_sha256: Mapped[str] = mapped_column(String(64))
+    required_evidence_markers_json: Mapped[str] = mapped_column(Text)
+    quarantine_reasons_json: Mapped[str] = mapped_column(Text)
+    minimizer_version: Mapped[str] = mapped_column(String(80))
+    minimization_event_sha256: Mapped[str] = mapped_column(String(64))
+    disposition: Mapped[str] = mapped_column(String(40))
 
 
 class MaterialRow(Base):
@@ -202,7 +228,7 @@ class EvidenceRow(Base):
     trace_id: Mapped[str] = mapped_column(String(36), index=True)
     page_id: Mapped[str] = mapped_column(ForeignKey("research_pages.id"), index=True)
     snapshot_id: Mapped[str] = mapped_column(ForeignKey("page_snapshots.id"), index=True)
-    snapshot_version: Mapped[str] = mapped_column(String(80))
+    snapshot_version: Mapped[str] = mapped_column(String(96))
     source_uri: Mapped[str] = mapped_column(String(2048))
     captured_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     content_sha256: Mapped[str] = mapped_column(String(64))
@@ -236,16 +262,23 @@ class SqlAlchemyResearchRepository:
         with self.engine.begin() as connection:
             if self.engine.dialect.name == "postgresql":
                 connection.execute(text("SELECT pg_advisory_xact_lock(670001)"))
+            inspector = inspect(connection)
+            if "page_snapshots" in inspector.get_table_names():
+                columns = {item["name"] for item in inspector.get_columns("page_snapshots")}
+                if "content" in columns or "minimized_text" not in columns:
+                    raise RuntimeError(
+                        "legacy raw snapshot schema is prohibited; migrate to minimized schema"
+                    )
             Base.metadata.create_all(connection)
             existing = connection.execute(
                 select(SchemaRevisionRow.revision).where(
-                    SchemaRevisionRow.revision == "research-schema@1"
+                    SchemaRevisionRow.revision == "research-schema@2-minimized"
                 )
             ).scalar_one_or_none()
             if existing is None:
                 connection.execute(
                     SchemaRevisionRow.__table__.insert().values(  # type: ignore[attr-defined]
-                        revision="research-schema@1", applied_at=datetime.now(UTC)
+                        revision="research-schema@2-minimized", applied_at=datetime.now(UTC)
                     )
                 )
 
@@ -370,10 +403,13 @@ class SqlAlchemyResearchRepository:
     def save_page_bundle(
         self,
         page: ResearchPage,
-        snapshot: PageSnapshot,
-        material: ExtractedMaterial,
-        evidence: list[ResearchEvidence],
+        bundle: DurablePageBundle,
     ) -> None:
+        if not isinstance(bundle, DurablePageBundle):
+            raise TypeError("persistence accepts only a durable minimized page bundle")
+        snapshot = bundle.snapshot
+        material = bundle.material
+        evidence = bundle.evidence
         with self._sessions.begin() as session:
             existing_page = session.scalar(
                 select(PageRow.id).where(
@@ -390,6 +426,43 @@ class SqlAlchemyResearchRepository:
             session.add(self._page_row(page))
             session.flush()
             session.add_all(self._evidence_row(item) for item in evidence)
+
+    def save_quarantined_page(
+        self, page: ResearchPage, quarantine: CaptureQuarantine, attempt: FetchAttempt
+    ) -> None:
+        if not isinstance(quarantine, CaptureQuarantine):
+            raise TypeError("quarantine persistence requires a content-free quarantine record")
+        with self._sessions.begin() as session:
+            existing_page = session.scalar(
+                select(PageRow.id).where(
+                    PageRow.research_run_id == _id(page.research_run_id),
+                    PageRow.normalized_url == page.normalized_url,
+                )
+            )
+            if existing_page is not None:
+                return
+            session.add(self._page_row(page))
+            session.flush()
+            session.add(
+                CaptureQuarantineRow(
+                    page_id=_id(page.id),
+                    workspace_id=_id(page.workspace_id),
+                    business_id=_id(page.business_id),
+                    research_run_id=_id(page.research_run_id),
+                    source_uri=quarantine.source_uri,
+                    captured_at=quarantine.captured_at,
+                    raw_content_sha256=quarantine.raw_content_sha256,
+                    required_evidence_markers_json=_json(quarantine.required_evidence_markers),
+                    quarantine_reasons_json=_json(quarantine.quarantine_reasons),
+                    minimizer_version=quarantine.minimizer_version,
+                    minimization_event_sha256=quarantine.minimization_event_sha256,
+                    disposition=quarantine.disposition.value,
+                )
+            )
+            data = asdict(attempt)
+            data["id"] = _id(attempt.id)
+            data["research_run_id"] = _id(attempt.research_run_id)
+            session.add(FetchAttemptRow(**data))
 
     def save_failed_page(self, page: ResearchPage, attempt: FetchAttempt) -> None:
         data = asdict(attempt)
@@ -409,7 +482,7 @@ class SqlAlchemyResearchRepository:
 
     def find_cached_snapshot(
         self, workspace_id: UUID, business_id: UUID, normalized_url: str, not_before: datetime
-    ) -> tuple[PageSnapshot, ExtractedMaterial] | None:
+    ) -> tuple[MinimizedPageSnapshot, ExtractedMaterial] | None:
         with self._sessions() as session:
             row = session.scalar(
                 select(SnapshotRow)
@@ -476,7 +549,7 @@ class SqlAlchemyResearchRepository:
             )
             return self._page(row) if row else None
 
-    def get_snapshot(self, workspace_id: UUID, snapshot_id: UUID) -> PageSnapshot | None:
+    def get_snapshot(self, workspace_id: UUID, snapshot_id: UUID) -> MinimizedPageSnapshot | None:
         with self._sessions() as session:
             row = session.scalar(
                 select(SnapshotRow).where(
@@ -597,7 +670,9 @@ class SqlAlchemyResearchRepository:
         )
 
     @staticmethod
-    def _snapshot_row(value: PageSnapshot) -> SnapshotRow:
+    def _snapshot_row(value: MinimizedPageSnapshot) -> SnapshotRow:
+        if not isinstance(value, MinimizedPageSnapshot):
+            raise TypeError("raw PageSnapshot cannot be persisted")
         return SnapshotRow(
             id=_id(value.id),
             workspace_id=_id(value.workspace_id),
@@ -610,18 +685,25 @@ class SqlAlchemyResearchRepository:
             final_url=value.final_url,
             snapshot_version=value.snapshot_version,
             captured_at=value.captured_at,
+            source_content_sha256=value.source_content_sha256,
             content_sha256=value.content_sha256,
             content_type=value.content_type,
             charset=value.charset,
             status_code=value.status_code,
             content_length=value.content_length,
-            response_headers_json=_json(value.response_headers),
-            content=value.content,
+            minimized_text=value.minimized_text,
+            minimizer_version=value.minimizer_version,
+            minimization_event_sha256=value.minimization_event_sha256,
+            removed_email_count=value.removed_email_count,
+            removed_phone_count=value.removed_phone_count,
+            removed_structured_contact_blocks=value.removed_structured_contact_blocks,
+            required_evidence_markers_json=_json(value.required_evidence_markers),
+            disposition=value.disposition.value,
         )
 
     @staticmethod
-    def _snapshot(row: SnapshotRow) -> PageSnapshot:
-        return PageSnapshot(
+    def _snapshot(row: SnapshotRow) -> MinimizedPageSnapshot:
+        return MinimizedPageSnapshot(
             id=UUID(row.id),
             workspace_id=UUID(row.workspace_id),
             business_id=UUID(row.business_id),
@@ -633,13 +715,20 @@ class SqlAlchemyResearchRepository:
             final_url=row.final_url,
             snapshot_version=row.snapshot_version,
             captured_at=_aware(row.captured_at),
+            source_content_sha256=row.source_content_sha256,
             content_sha256=row.content_sha256,
             content_type=row.content_type,
             charset=row.charset,
             status_code=row.status_code,
             content_length=row.content_length,
-            response_headers=tuple(tuple(item) for item in json.loads(row.response_headers_json)),
-            content=row.content,
+            minimized_text=row.minimized_text,
+            minimizer_version=row.minimizer_version,
+            minimization_event_sha256=row.minimization_event_sha256,
+            removed_email_count=row.removed_email_count,
+            removed_phone_count=row.removed_phone_count,
+            removed_structured_contact_blocks=row.removed_structured_contact_blocks,
+            required_evidence_markers=tuple(json.loads(row.required_evidence_markers_json)),
+            disposition=CaptureDisposition(row.disposition),
         )
 
     @staticmethod

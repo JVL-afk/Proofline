@@ -118,3 +118,9 @@ The research worker adds `boto3` 1.x solely for an authenticated, fail-closed re
 kill-switch parameter through a private VPC endpoint. It does not provide business-web transport,
 discovery, AI, browser, or delivery capability. Both resolutions are frozen in `uv.lock`, included
 in the worker SBOM, and covered by deterministic adapter tests plus the successor image scan.
+
+The Phase 1 research-worker composition root also directly depends on the existing workspace-only
+`opintel-shadow-core` package. It reuses the counsel-required deterministic minimizer through a
+narrow `CaptureMinimizer` port; `research-core` remains independent of the M6.7 bounded context.
+This adds no third-party package, transport, credential, AI, browser, or delivery capability. The
+boundary is covered by hostile raw-input, quarantine, durable-sink, and adapter parity tests.

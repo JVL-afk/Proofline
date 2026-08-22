@@ -25,8 +25,9 @@ from opintel_opportunity_local import (
     SqlAlchemyOpportunityRepository,
 )
 from opintel_research.domain import (
+    DurablePageBundle,
     ExtractedMaterial,
-    PageSnapshot,
+    MinimizedPageSnapshot,
     PageStatus,
     ResearchEvidence,
     ResearchPage,
@@ -64,7 +65,7 @@ def seed_research_evidence(
     material_id = uuid4()
     content = " ".join(fragments).encode()
     digest = hashlib.sha256(content).hexdigest()
-    snapshot = PageSnapshot(
+    snapshot = MinimizedPageSnapshot(
         id=snapshot_id,
         workspace_id=workspace_id,
         business_id=business_id,
@@ -76,13 +77,19 @@ def seed_research_evidence(
         final_url="https://example.com/",
         snapshot_version=f"sha256:{digest}",
         captured_at=clock.now(),
+        source_content_sha256=digest,
         content_sha256=digest,
         content_type="text/html",
         charset="utf-8",
         status_code=200,
         content_length=len(content),
-        response_headers=(),
-        content=content,
+        minimized_text=" ".join(fragments),
+        minimizer_version="m2-controlled-fixture@1",
+        minimization_event_sha256=digest,
+        removed_email_count=0,
+        removed_phone_count=0,
+        removed_structured_contact_blocks=0,
+        required_evidence_markers=tuple(fragments),
     )
     material = ExtractedMaterial(
         id=material_id,
@@ -137,7 +144,10 @@ def seed_research_evidence(
         )
         for index, fragment in enumerate(fragments)
     ]
-    repository.save_page_bundle(page, snapshot, material, evidence)
+    repository.save_page_bundle(
+        page,
+        DurablePageBundle(snapshot=snapshot, material=material, evidence=tuple(evidence)),
+    )
     return business, run
 
 

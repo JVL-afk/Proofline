@@ -1,0 +1,53 @@
+{
+  "evidence_id": "M67_PHASE1_PRODUCTION_MINIMIZATION_POSTGRES_PREFLIGHT::2026-08-22.1",
+  "observed_at": "2026-08-22T14:33:59.6281387Z",
+  "source_parent_commit": "d5b79b7f2d249efa587e063b712e9ee94b0cf175",
+  "input_classification": "SYNTHETIC_ONLY",
+  "real_business_access_count": 0,
+  "postgresql": {
+    "server_version": "18.3",
+    "distribution_url": "https://get.enterprisedb.com/postgresql/postgresql-18.3-1-windows-x64-binaries.zip",
+    "distribution_sha256": "4da1a93cbc69e99936616d53c34466f79e4295fc56134ce4a395e88351213d60",
+    "bind_address": "127.0.0.1",
+    "temporary_instance_stopped_after_test": true
+  },
+  "test": {
+    "node": "tests/test_m67_production_minimization.py::test_postgresql_adapter_preserves_the_same_minimized_invariant",
+    "result": "PASS",
+    "snapshot_count": 1,
+    "evidence_count": 3,
+    "source_content_sha256": "2df9b25acf8df1bb93564f495fda39b9e50374dcecf9398a2e221688e60be862",
+    "minimized_content_sha256": "34ec5e7ed1b8ced42d8a8a70d84fc42fc283ad59c9eec331c79e0d1ccb62f4a1",
+    "minimization_event_sha256": "7c81c48ff75bd63b3b04e056a37e4893aeed7b2658cb2087c7cf7aa06ec935be",
+    "removed_email_count": 2,
+    "removed_phone_count": 3,
+    "removed_structured_contact_blocks": 2,
+    "raw_content_columns": 0,
+    "prohibited_value_hits": 0
+  },
+  "critical_lifecycle_parity": {
+    "node": "tests/test_m67_postgres_parity.py::test_sqlite_and_postgres_preserve_critical_lifecycle_semantics",
+    "result": "PASS",
+    "semantics": [
+      "idempotency",
+      "claim_and_lease",
+      "attempt_recording",
+      "completion_transition"
+    ]
+  },
+  "complete_deterministic_validation": {
+    "postgresql_tests_enabled": true,
+    "passed": 401,
+    "failed": 0,
+    "skipped": 0
+  },
+  "conclusion": "POSTGRES_PRODUCTION_PERSISTENCE_PATH_STORES_MINIMIZED_CAPTURE_ONLY",
+  "deployed_runtime_validation_required": true,
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}

@@ -757,6 +757,7 @@ dependencies = [
     { name = "boto3" },
     { name = "opintel-research-core" },
     { name = "opintel-research-local" },
+    { name = "opintel-shadow-core" },
 ]
 
 [package.metadata]
@@ -764,6 +765,7 @@ requires-dist = [
     { name = "boto3", specifier = ">=1.40,<2" },
     { name = "opintel-research-core", editable = "packages/research-core" },
     { name = "opintel-research-local", editable = "packages/research-local" },
+    { name = "opintel-shadow-core", editable = "packages/shadow-core" },
 ]
 
 [[package]]

@@ -12,7 +12,7 @@ from opintel_research.domain import (
     CrawlPolicy,
     ExtractedMaterial,
     FetchAttempt,
-    PageSnapshot,
+    MinimizedPageSnapshot,
     ResearchEvidence,
     ResearchNotFoundError,
     ResearchPage,
@@ -98,7 +98,7 @@ class ResearchApplicationService:
         self.get_run(principal, run_id)
         return self._repository.list_attempts(principal.workspace_id, run_id)
 
-    def get_snapshot(self, principal: Principal, snapshot_id: UUID) -> PageSnapshot:
+    def get_snapshot(self, principal: Principal, snapshot_id: UUID) -> MinimizedPageSnapshot:
         value = self._repository.get_snapshot(principal.workspace_id, snapshot_id)
         if value is None:
             raise ResearchNotFoundError()

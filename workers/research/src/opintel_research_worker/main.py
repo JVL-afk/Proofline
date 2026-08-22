@@ -28,6 +28,7 @@ from opintel_research_local import (
 )
 
 from opintel_research_worker.kill_switch import AwsSsmStopSignal
+from opintel_research_worker.minimization import ProductionPhaseOneCaptureMinimizer
 
 
 def build_runner() -> ResearchWorkflowRunner:
@@ -65,6 +66,7 @@ def build_runner() -> ResearchWorkflowRunner:
         clock=clock,
         identifiers=UuidFactory(),
         sleeper=SystemSleeper(),
+        capture_minimizer=ProductionPhaseOneCaptureMinimizer(),
         lease_duration=timedelta(seconds=settings.worker_lease_seconds),
         stop_signal=(
             AwsSsmStopSignal(settings.kill_switch_parameter or "", settings.aws_region)

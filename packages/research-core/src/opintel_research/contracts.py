@@ -13,7 +13,7 @@ from opintel_research.domain import (
     CrawlPolicy,
     ExtractedMaterial,
     FetchAttempt,
-    PageSnapshot,
+    MinimizedPageSnapshot,
     ResearchEvidence,
     ResearchPage,
     ResearchRun,
@@ -179,22 +179,28 @@ class SnapshotView(BaseModel):
     snapshot_version: str
     captured_at: datetime
     content_sha256: str
+    source_content_sha256: str
     content_type: str
     charset: str
     status_code: int
     content_length: int
-    response_headers: dict[str, str]
+    minimizer_version: str
+    minimization_event_sha256: str
+    removed_email_count: int
+    removed_phone_count: int
+    removed_structured_contact_blocks: int
+    required_evidence_markers: list[str]
+    disposition: str
 
     @classmethod
-    def from_domain(cls, value: PageSnapshot) -> SnapshotView:
-        return cls(
-            **{
-                field: getattr(value, field)
-                for field in cls.model_fields
-                if field != "response_headers"
-            },
-            response_headers=dict(value.response_headers),
-        )
+    def from_domain(cls, value: MinimizedPageSnapshot) -> SnapshotView:
+        data = {
+            field: getattr(value, field)
+            for field in cls.model_fields
+            if field != "required_evidence_markers"
+        }
+        data["required_evidence_markers"] = list(value.required_evidence_markers)
+        return cls(**data)
 
 
 class MaterialView(BaseModel):

@@ -6,13 +6,19 @@ import hashlib
 from collections import deque
 from datetime import timedelta
 from urllib.parse import urlsplit
+from uuid import UUID
 
 from opintel_m0.ports import Clock, IdentifierFactory
 
 from opintel_research.domain import (
     BrowserFallbackUnavailable,
+    CaptureQuarantine,
+    DurableMinimizedCapture,
+    DurablePageBundle,
+    ExtractedMaterial,
     FetchAttempt,
     FetchError,
+    MinimizedPageSnapshot,
     PageSnapshot,
     PageStatus,
     ResearchEvidence,
@@ -20,9 +26,11 @@ from opintel_research.domain import (
     ResearchRun,
     ResearchRunStatus,
     UrlPolicyError,
+    contains_prohibited_contact_value,
 )
 from opintel_research.ports import (
     BrowserFallback,
+    CaptureMinimizer,
     HtmlExtractor,
     PublicFetcher,
     ResearchRepository,
@@ -42,6 +50,7 @@ class ResearchWorkflowRunner:
         clock: Clock,
         identifiers: IdentifierFactory,
         sleeper: Sleeper,
+        capture_minimizer: CaptureMinimizer,
         lease_duration: timedelta = timedelta(seconds=60),
         stop_signal: StopSignal | None = None,
     ) -> None:
@@ -52,6 +61,7 @@ class ResearchWorkflowRunner:
         self._clock = clock
         self._identifiers = identifiers
         self._sleeper = sleeper
+        self._capture_minimizer = capture_minimizer
         self._lease = lease_duration
         self._stop_signal = stop_signal
 
@@ -66,6 +76,9 @@ class ResearchWorkflowRunner:
         return True
 
     def _execute(self, run: ResearchRun) -> None:
+        business = self._repository.get_business(run.workspace_id, run.business_id)
+        if business is None:
+            raise RuntimeError("research business is missing")
         queue: deque[tuple[str, int]] = deque([(run.start_url, 0)])
         visited: set[str] = set()
         pages_attempted = 0
@@ -119,7 +132,9 @@ class ResearchWorkflowRunner:
                     fetched_at=self._clock.now(),
                 )
                 evidence = self._evidence(run, page, snapshot, material)
-                self._repository.save_page_bundle(page, snapshot, material, evidence)
+                self._repository.save_page_bundle(
+                    page, DurablePageBundle(snapshot, material, tuple(evidence))
+                )
                 pages_succeeded += 1
                 total_bytes += snapshot.content_length
                 self._enqueue_links(queue, material.links, depth, run)
@@ -204,23 +219,62 @@ class ResearchWorkflowRunner:
             if total_bytes + len(document.content) > policy.max_total_bytes:
                 first_error = first_error or "crawl_byte_budget_exceeded"
                 break
-            snapshot = self._snapshot(run, document)
-            material = self._extractor.extract(snapshot, self._identifiers.new(), self._clock.now())
+            raw_snapshot = self._snapshot(run, document)
+            raw_material = self._extractor.extract(
+                raw_snapshot, self._identifiers.new(), self._clock.now()
+            )
             if (
                 policy.browser_fallback_enabled
-                and len(material.visible_text) < 40
-                and "html" in snapshot.content_type
+                and len(raw_material.visible_text) < 40
+                and "html" in raw_snapshot.content_type
             ):
                 try:
                     rendered = self._browser.render(normalized, run.permitted_host)
-                    snapshot = self._snapshot(run, rendered)
-                    material = self._extractor.extract(
-                        snapshot, self._identifiers.new(), self._clock.now()
+                    raw_snapshot = self._snapshot(run, rendered)
+                    raw_material = self._extractor.extract(
+                        raw_snapshot, self._identifiers.new(), self._clock.now()
                     )
                 except BrowserFallbackUnavailable:
                     pass
+
+            minimized = self._minimize(raw_snapshot, business.name, raw_material.visible_text)
+            if isinstance(minimized, CaptureQuarantine):
+                now = self._clock.now()
+                first_error = first_error or "minimization_quarantine"
+                self._repository.save_quarantined_page(
+                    ResearchPage(
+                        id=self._identifiers.new(),
+                        workspace_id=run.workspace_id,
+                        business_id=run.business_id,
+                        research_run_id=run.id,
+                        requested_url=requested_url,
+                        normalized_url=normalized,
+                        depth=depth,
+                        status=PageStatus.FAILED,
+                        snapshot_id=None,
+                        material_id=None,
+                        fetched_at=now,
+                        error_code="minimization_quarantine",
+                    ),
+                    minimized,
+                    FetchAttempt(
+                        id=self._identifiers.new(),
+                        research_run_id=run.id,
+                        normalized_url=normalized,
+                        attempt_number=0,
+                        started_at=now,
+                        completed_at=now,
+                        outcome="quarantined",
+                        error_code="minimization_quarantine",
+                    ),
+                )
+                continue
+
+            snapshot = self._durable_snapshot(raw_snapshot, minimized)
+            material = self._durable_material(raw_material, snapshot)
+            evidence = self._evidence(run, page_id := self._identifiers.new(), snapshot, material)
             page = ResearchPage(
-                id=self._identifiers.new(),
+                id=page_id,
                 workspace_id=run.workspace_id,
                 business_id=run.business_id,
                 research_run_id=run.id,
@@ -233,11 +287,11 @@ class ResearchWorkflowRunner:
                 fetched_at=snapshot.captured_at,
             )
             self._repository.save_page_bundle(
-                page, snapshot, material, self._evidence(run, page, snapshot, material)
+                page, DurablePageBundle(snapshot, material, tuple(evidence))
             )
             pages_succeeded += 1
             total_bytes += snapshot.content_length
-            self._enqueue_links(queue, material.links, depth, run)
+            self._enqueue_links(queue, raw_material.links, depth, run)
 
         if pages_succeeded == 0:
             status = ResearchRunStatus.FAILED
@@ -282,8 +336,97 @@ class ResearchWorkflowRunner:
             content=document.content,
         )
 
+    def _minimize(
+        self, snapshot: PageSnapshot, business_name: str, observed_visible_text: str
+    ) -> DurableMinimizedCapture | CaptureQuarantine:
+        try:
+            return self._capture_minimizer.minimize(snapshot, business_name, observed_visible_text)
+        except Exception:
+            raw_hash = hashlib.sha256(snapshot.content).hexdigest()
+            event = hashlib.sha256(
+                f"{raw_hash}|MINIMIZATION_FAILED|phase1-minimizer@1".encode()
+            ).hexdigest()
+            return CaptureQuarantine(
+                source_uri=snapshot.final_url,
+                captured_at=snapshot.captured_at,
+                raw_content_sha256=raw_hash,
+                required_evidence_markers=(),
+                quarantine_reasons=("MINIMIZATION_FAILED",),
+                minimizer_version="phase1-minimizer@1",
+                minimization_event_sha256=event,
+            )
+
+    @staticmethod
+    def _durable_snapshot(
+        raw: PageSnapshot, capture: DurableMinimizedCapture
+    ) -> MinimizedPageSnapshot:
+        minimized = capture.minimized_text
+        return MinimizedPageSnapshot(
+            id=raw.id,
+            workspace_id=raw.workspace_id,
+            business_id=raw.business_id,
+            research_run_id=raw.research_run_id,
+            operation_id=raw.operation_id,
+            trace_id=raw.trace_id,
+            source_url=raw.source_url,
+            canonical_url=raw.canonical_url,
+            final_url=raw.final_url,
+            snapshot_version=f"minimized-sha256:{capture.minimized_content_sha256}",
+            captured_at=raw.captured_at,
+            source_content_sha256=capture.raw_content_sha256,
+            content_sha256=capture.minimized_content_sha256,
+            content_type="text/plain",
+            charset="utf-8",
+            status_code=raw.status_code,
+            content_length=len(minimized.encode("utf-8")),
+            minimized_text=minimized,
+            minimizer_version=capture.minimizer_version,
+            minimization_event_sha256=capture.minimization_event_sha256,
+            removed_email_count=capture.removed_email_count,
+            removed_phone_count=capture.removed_phone_count,
+            removed_structured_contact_blocks=capture.removed_structured_contact_blocks,
+            required_evidence_markers=capture.required_evidence_markers,
+        )
+
+    @staticmethod
+    def _durable_material(
+        raw: ExtractedMaterial, snapshot: MinimizedPageSnapshot
+    ) -> ExtractedMaterial:
+        minimized = snapshot.minimized_text
+
+        def safe(value: str | None) -> bool:
+            return bool(
+                value and value in minimized and not contains_prohibited_contact_value(value)
+            )
+
+        title = raw.title if safe(raw.title) else None
+        headings = tuple(item for item in raw.headings if safe(item[1]))
+        buttons = tuple(item for item in raw.buttons if safe(item[1]))
+        return ExtractedMaterial(
+            id=raw.id,
+            snapshot_id=snapshot.id,
+            extractor_name="phase1_minimized_projection",
+            extractor_version="1",
+            title=title,
+            metadata=(),
+            headings=headings,
+            visible_text=minimized,
+            links=(),
+            forms=(),
+            buttons=buttons,
+            contacts=(),
+            structured_data=(),
+            technology_signals=(),
+            prompt_injection_suspected=raw.prompt_injection_suspected,
+            created_at=raw.created_at,
+        )
+
     def _evidence(
-        self, run: ResearchRun, page: ResearchPage, snapshot: PageSnapshot, material: object
+        self,
+        run: ResearchRun,
+        page: ResearchPage | UUID,
+        snapshot: MinimizedPageSnapshot,
+        material: object,
     ) -> list[ResearchEvidence]:
         from opintel_research.domain import ExtractedMaterial
 
@@ -302,7 +445,7 @@ class ResearchWorkflowRunner:
                 research_run_id=run.id,
                 operation_id=run.operation_id,
                 trace_id=run.trace_id,
-                page_id=page.id,
+                page_id=page if isinstance(page, UUID) else page.id,
                 snapshot_id=snapshot.id,
                 snapshot_version=snapshot.snapshot_version,
                 source_uri=snapshot.final_url,
