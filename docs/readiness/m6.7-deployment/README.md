@@ -29,6 +29,14 @@ module, exact budget/service-linked-role tag permissions, and native Cloud Map b
 fabricated service-linked role. Corrected source is not deployed evidence and cannot reuse the
 consumed application approval.
 
+The exact two-policy control plan is ready only for a separate remediation authorization and is
+recorded in `phase1-partial-control-remediation-plan-review-2026-08-22.json`. The subsequent
+read-only application review found the existing ECS and RDS service-linked roles tainted in state
+and therefore proposed two replacements. That review is frozen as
+`phase1-partial-successor-plan-blocked-2026-08-22.json` and must not be applied. The remote roles are
+present and must be preserved. Exact IAM-plan authorization plus explicit two-address state
+reconciliation must precede a new apply-capable successor plan.
+
 The deployment-preparation state stops at an authenticated saved plan and review package. Phase 1
 Terraform apply, business discovery, and public research remain separate authorities.
 

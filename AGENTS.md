@@ -35,6 +35,16 @@ be applied without a new exact hash-bound owner authorization. No ECS service/ta
 capture/audit bucket, or budget exists; the kill switch remains `TRIPPED`. Discovery, research,
 person/contact, Slot 1, and communication authority remain unauthorized.
 
+The two-policy IAM remediation plan is reviewed in
+`docs/readiness/m6.7-deployment/phase1-partial-control-remediation-plan-review-2026-08-22.json` and
+is not applied. It proposes 0 creates, 2 in-place policy updates, 0 replacements, and 0 destroys.
+The read-only Phase 1 successor review then exposed both existing ECS/RDS service-linked-role state
+instances as tainted; its 26 creates, 0 updates, 2 replacements, and 0 destroys are recorded in
+`phase1-partial-successor-plan-blocked-2026-08-22.json`. Do not apply that review plan. Per the
+owner's rule, the two proposed replacements are a blocker. A new exact authorization is required to
+apply the IAM-control plan and reconcile only those two tainted state instances before an
+apply-capable successor can be generated with the state-apply backend.
+
 The exact worker-registry plan was applied and independently verified, and the immutable Phase 1
 worker successor image is stored in the approved ECR repository at digest
 `sha256:8af8123b618e5d5024b6d715cd7956a52a79df41e4b5d201c4dc5f993ee3edf5`; its

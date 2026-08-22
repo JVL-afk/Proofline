@@ -1,0 +1,104 @@
+{
+  "record_type": "M67_PHASE1_PARTIAL_SUCCESSOR_PLAN_REVIEW",
+  "version": "2026-08-22.1",
+  "state": "BLOCKED_TAINTED_SERVICE_LINKED_ROLE_REPLACEMENTS",
+  "apply_readiness": "NOT_READY",
+  "saved_plan_disposition": "REVIEW_ONLY_DO_NOT_APPLY",
+  "observed_at": "2026-08-22T09:36:39Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "identity_boundary": {
+    "provider_plan_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "backend_plan_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-plan",
+    "provider_mutation_authority": false,
+    "backend_mutation_authority": false
+  },
+  "source": {
+    "remediation_commit": "3d67979dab59f3e2160f48ecb8837381745c39d6",
+    "partial_state_inventory_revision": "2026-08-22.1",
+    "partial_state_inventory_sha256": "46bd8fb38633c25cd3d696fad8a7b6539975365a6ca11e391123056407babd93",
+    "controlled_egress_revision": "ADR-0076",
+    "worker_image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:8af8123b618e5d5024b6d715cd7956a52a79df41e4b5d201c4dc5f993ee3edf5"
+  },
+  "hashes": {
+    "saved_plan_sha256": "4530f133ed79a24d8bd590ea412ef47ad000b7e8d14de72931c496fcaa316b02",
+    "plan_json_sha256": "59059903411f8c5b23734951030f4b5c8b8b87dd02c5c1b94880812efb9cc8ba",
+    "configuration_sha256": "8023b7fa21b3534bb410570f9c14636b0fe70d352e2a11eef995f9881eccb83e",
+    "configuration_bundle_sha256": "f6ac52b2cc6e79c56bb6613b6506538424f8296cd7c5dfb990c42cccde2890be",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f"
+  },
+  "changes": {
+    "create": 26,
+    "change": 0,
+    "replace": 2,
+    "destroy": 0,
+    "replacement_resources": [
+      "aws_iam_service_linked_role.ecs",
+      "aws_iam_service_linked_role.rds"
+    ],
+    "replacement_reason": "Both resources are tainted in Terraform state after their create-time provider tag calls were denied. The remote roles exist and must be preserved."
+  },
+  "deterministic_storage": {
+    "capture_bucket_name": "m67-phase1-restricted-captures-f314f0df7f63484aae5afb9af8",
+    "capture_bucket_arn": "arn:aws:s3:::m67-phase1-restricted-captures-f314f0df7f63484aae5afb9af8",
+    "audit_bucket_name": "m67-phase1-audit-459ad1a7cc4da135aeabd70211",
+    "audit_bucket_arn": "arn:aws:s3:::m67-phase1-audit-459ad1a7cc4da135aeabd70211",
+    "single_source_module": "infra/terraform/modules/phase1-identifiers",
+    "plan_time_check_result": "KNOWN_AFTER_APPLY_WITH_STATIC_SHARED_REFERENCE_TESTS_PASSING"
+  },
+  "cost_evidence": {
+    "currency": "USD",
+    "pricing_observed_at": "2026-08-22",
+    "aws_price_list_versions": {
+      "amazon_ec2": "20260821020257",
+      "amazon_vpc": "20260724154225",
+      "aws_kms": "20250828153913"
+    },
+    "current_partial_daily_estimate": "3.70",
+    "current_partial_monthly_estimate": "112.50",
+    "current_partial_plus_bootstrap_registry_monthly_allowance": "117.50",
+    "completed_phase1_monthly_baseline_estimate": "142.65",
+    "conservative_completed_phase1_total_estimate": "150.00",
+    "phase1_total_hard_ceiling": "250.00",
+    "within_ceiling": true,
+    "components": {
+      "nat_gateway_hourly": "0.045",
+      "nat_gateway_monthly_730h": "32.85",
+      "ten_interface_endpoint_az_hours_monthly_730h": "73.00",
+      "one_in_use_public_ipv4_monthly_730h": "3.65",
+      "three_application_kms_keys_monthly": "3.00",
+      "bootstrap_and_registry_allowance_monthly": "5.00"
+    },
+    "actual_billing_data": "UNAVAILABLE_COST_EXPLORER_DATA_NOT_YET_INGESTED",
+    "usage_uncertainty": "Data processing, logs, storage, requests, tax, and elapsed pilot duration remain usage-dependent."
+  },
+  "validation": {
+    "all_56_state_managed_objects_confirmed_in_aws": true,
+    "unexpected_managed_objects": 0,
+    "terraform_validate": "PASS",
+    "terraform_format": "PASS",
+    "repository_checks": "PASS",
+    "tests": "392_PASS_1_OPT_IN_POSTGRES_SKIP",
+    "credential_value_audit": "PASS",
+    "kill_switch": "TRIPPED",
+    "ecs_services": 0,
+    "ecs_tasks": 0
+  },
+  "blockers": [
+    "Apply the separately reviewed two-policy IAM control plan under a new exact owner authorization.",
+    "Reconcile only the two tainted service-linked-role state instances after independently rechecking that both remote roles exist.",
+    "Regenerate the final application saved plan with the protected state-apply backend identity required by ADR-0075."
+  ],
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED"
+  }
+}
