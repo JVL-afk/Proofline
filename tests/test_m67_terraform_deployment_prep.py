@@ -120,3 +120,27 @@ def test_partial_apply_provider_permissions_remain_exact_and_cloud_map_has_no_fa
     assert "servicediscovery.amazonaws.com" not in access
     assert 'resource "aws_iam_service_linked_role" "service_discovery"' not in compute
     assert "aws_iam_service_linked_role.service_discovery" not in compute
+
+
+def test_final_iam_remediation_is_exact_and_conditioned() -> None:
+    access = (BOOTSTRAP / "workload_access.tf").read_text(encoding="utf-8")
+    variables = (BOOTSTRAP / "variables.tf").read_text(encoding="utf-8")
+
+    assert 'actions   = ["route53:CreateHostedZone"]' in access
+    assert 'variable = "route53:VPCs"' in access
+    assert 'values   = ["VPCId=${var.phase1_vpc_id},VPCRegion=${var.aws_region}"]' in access
+    assert 'actions   = ["kms:CreateGrant"]' in access
+    assert "resources = [var.phase1_database_kms_key_arn]" in access
+    assert 'variable = "kms:GrantIsForAWSResource"' in access
+    assert 'variable = "kms:ViaService"' in access
+    assert 'values   = ["rds.${var.aws_region}.amazonaws.com"]' in access
+    assert 'actions   = ["budgets:ListTagsForResource"]' in access
+    assert 'actions = ["s3:GetAccelerateConfiguration"]' in access
+    assert "module.phase1_identifiers.capture_bucket_arn" in access
+    assert "module.phase1_identifiers.audit_bucket_arn" in access
+    assert 'variable "phase1_vpc_id"' in variables
+    assert 'variable "phase1_database_kms_key_arn"' in variables
+    assert '"route53:*"' not in access
+    assert '"kms:*"' not in access
+    assert '"s3:*"' not in access
+    assert '"budgets:*"' not in access

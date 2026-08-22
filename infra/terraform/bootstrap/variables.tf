@@ -38,3 +38,26 @@ variable "apply_principal_arns" {
     error_message = "At least one approved apply principal is required."
   }
 }
+
+variable "phase1_vpc_id" {
+  description = "Observed Phase 1 VPC used to constrain private Route 53 hosted-zone creation."
+  type        = string
+
+  validation {
+    condition     = can(regex("^vpc-[0-9a-f]+$", var.phase1_vpc_id))
+    error_message = "phase1_vpc_id must be an observed AWS VPC identifier."
+  }
+}
+
+variable "phase1_database_kms_key_arn" {
+  description = "Observed exact Phase 1 database KMS key authorized for RDS service grants."
+  type        = string
+
+  validation {
+    condition = can(regex(
+      "^arn:aws:kms:us-east-2:[0-9]{12}:key/[0-9a-f-]+$",
+      var.phase1_database_kms_key_arn,
+    ))
+    error_message = "phase1_database_kms_key_arn must identify an observed us-east-2 KMS key."
+  }
+}

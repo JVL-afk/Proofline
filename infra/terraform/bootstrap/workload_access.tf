@@ -115,6 +115,21 @@ data "aws_iam_policy_document" "workload_read" {
     ]
     resources = ["*"]
   }
+
+  statement {
+    sid     = "ReadExactPhase1BucketAcceleration"
+    actions = ["s3:GetAccelerateConfiguration"]
+    resources = [
+      module.phase1_identifiers.capture_bucket_arn,
+      module.phase1_identifiers.audit_bucket_arn,
+    ]
+  }
+
+  statement {
+    sid       = "ReadExactPhase1BudgetTags"
+    actions   = ["budgets:ListTagsForResource"]
+    resources = ["arn:${data.aws_partition.current.partition}:budgets::${data.aws_caller_identity.current.account_id}:budget/${local.workload_name_prefix}-monthly-hard-ceiling"]
+  }
 }
 
 resource "aws_iam_role_policy" "workload_plan" {
@@ -172,6 +187,18 @@ data "aws_iam_policy_document" "workload_apply_network_compute" {
       "ec2:RevokeSecurityGroupIngress",
     ]
     resources = ["*"]
+  }
+
+  statement {
+    sid       = "CreateExactPhase1PrivateHostedZone"
+    actions   = ["route53:CreateHostedZone"]
+    resources = ["*"]
+
+    condition {
+      test     = "ForAllValues:StringEquals"
+      variable = "route53:VPCs"
+      values   = ["VPCId=${var.phase1_vpc_id},VPCRegion=${var.aws_region}"]
+    }
   }
 
   statement {
@@ -239,6 +266,24 @@ data "aws_iam_policy_document" "workload_apply_data_observability" {
       "kms:UpdateKeyDescription",
     ]
     resources = ["*"]
+  }
+
+  statement {
+    sid       = "CreateRdsGrantOnExactDatabaseKey"
+    actions   = ["kms:CreateGrant"]
+    resources = [var.phase1_database_kms_key_arn]
+
+    condition {
+      test     = "Bool"
+      variable = "kms:GrantIsForAWSResource"
+      values   = ["true"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "kms:ViaService"
+      values   = ["rds.${var.aws_region}.amazonaws.com"]
+    }
   }
 
   statement {
