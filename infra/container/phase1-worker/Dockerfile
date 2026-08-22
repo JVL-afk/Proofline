@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 
-FROM docker.io/library/python@sha256:0f16c5d35fe6464ee471792ab3bb9116f911b65b3fbf10120c98d2bdc6332f48 AS dependencies
+FROM docker.io/library/python@sha256:7f7ee17311e0273954ffe76a7b84a2d8c8ecf16f9992e780e4d46c86175df431 AS dependencies
 
 ARG UV_VERSION=0.11.32
 WORKDIR /workspace
@@ -26,7 +26,7 @@ RUN python -m pip install --disable-pip-version-check --no-cache-dir "uv==${UV_V
         --prefix /runtime \
         --requirement /tmp/runtime-requirements.txt
 
-FROM docker.io/library/python@sha256:0f16c5d35fe6464ee471792ab3bb9116f911b65b3fbf10120c98d2bdc6332f48
+FROM docker.io/library/python@sha256:7f7ee17311e0273954ffe76a7b84a2d8c8ecf16f9992e780e4d46c86175df431
 
 ARG SOURCE_COMMIT
 LABEL org.opencontainers.image.source="opportunity-intelligence-platform" \
@@ -45,7 +45,10 @@ COPY workers/research/src /app/research-worker
 
 # The upstream Python runtime includes pip and its vendored build/network packages. The worker does
 # not install packages at runtime, so remove that tooling and its stale vendored metadata entirely.
-RUN python -m pip check \
+RUN apk add --no-cache --upgrade \
+        libcrypto3=3.5.7-r0 \
+        libssl3=3.5.7-r0 \
+    && python -m pip check \
     && rm -rf \
         /usr/local/bin/pip \
         /usr/local/bin/pip3 \

@@ -17,12 +17,14 @@ After AWS SSO and the appropriate reviewed Terraform authority exist, the automa
    timestamps in an immutable image evidence record;
 10. inject the immutable `repository@sha256:<digest>` into the generated Phase 1 Terraform input.
 
-The production Dockerfile pins the Linux/amd64 Python 3.13 slim-bookworm platform manifest at
-`sha256:0f16c5d35fe6464ee471792ab3bb9116f911b65b3fbf10120c98d2bdc6332f48`.
+The production Dockerfile pins the Linux/amd64 Python 3.13 Alpine 3.22 platform manifest at
+`sha256:7f7ee17311e0273954ffe76a7b84a2d8c8ecf16f9992e780e4d46c86175df431`.
 Its dependency stage exports only the `opintel-research-worker` runtime graph from `uv.lock` and
 installs it with package hashes enforced. The runtime stage copies only the M0/research source
 trees required by that worker and runs as uid/gid 65532. It removes runtime package-installation
-tooling and its vendored dependencies after verifying the locked environment. The root
+tooling and its vendored dependencies after verifying the locked environment. The OpenSSL runtime
+libraries are pinned to Alpine revision `3.5.7-r0`, which contains the fix required by the frozen
+image scan. The root
 `.dockerignore` is an allowlist:
 local data, Git metadata, environment files, tests, documentation, and other workspace material do
 not enter the build context.
