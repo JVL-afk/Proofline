@@ -1,0 +1,165 @@
+{
+  "record_type": "M67_PHASE1_FINAL_SUCCESSOR_PLAN_REVIEW",
+  "version": "2026-08-22.1",
+  "state": "READY_FOR_FINAL_PHASE1_APPLY_AUTHORIZATION",
+  "required_owner_event": "APPROVE_FINAL_PHASE1_APPLY",
+  "observed_at": "2026-08-22T11:43:06Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "identities": {
+    "provider_plan_role": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "protected_backend_plan_role": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-plan",
+    "provider_apply_role": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "protected_backend_apply_role": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply"
+  },
+  "source": {
+    "repository_head": "82de8d8fc3af3acfac3455fd8d57a17110721662",
+    "phase1_configuration_commit": "3d67979dab59f3e2160f48ecb8837381745c39d6",
+    "final_iam_remediation_commit": "18fda5004a45405b1db0c57850099a20cfcc1033",
+    "worker_source_commit": "4cdc6a1fe6e02f43e375ef356efc14f5485af34d",
+    "worker_image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:8af8123b618e5d5024b6d715cd7956a52a79df41e4b5d201c4dc5f993ee3edf5",
+    "controlled_egress_revision": "ADR-0076"
+  },
+  "hashes": {
+    "saved_plan_sha256": "67cafb34483e13902e53063d69b1a80df552346c32a5ab7ed6165f8ad699ab0c",
+    "plan_json_sha256": "f450f9d7b6d71bac6b3031ddc63f13a8f435b6703d236232824fbd41910fcbb4",
+    "configuration_sha256": "8023b7fa21b3534bb410570f9c14636b0fe70d352e2a11eef995f9881eccb83e",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "reconciled_state_sha256": "cb2045af895576d4030d61569f9b0b2590feeaae6d357af544a0faffa7682f0a"
+  },
+  "state_reconciliation": {
+    "revision": "M67_PHASE1_RECONCILED_PARTIAL_STATE::2026-08-22.1",
+    "terraform_state_serial": 11,
+    "lineage": "a0037ec5-6d65-c191-5d31-184de98cfb03",
+    "managed_resources": 60,
+    "managed_instances": 66,
+    "budget": {
+      "remote_state": "HEALTHY_LIMIT_250_USD_GOVERNANCE_TAGS_PRESENT",
+      "before_status": "tainted",
+      "after_status": "ready",
+      "attributes_equal": true,
+      "remote_mutation": false
+    },
+    "capture_bucket": {
+      "remote_state": "VALID_EMPTY_PRIVATE_EXACT_IDENTITY",
+      "before_status": "tainted",
+      "after_status": "ready",
+      "attributes_equal": true,
+      "remote_mutation": false
+    },
+    "audit_bucket": {
+      "remote_state": "VALID_EMPTY_PRIVATE_EXACT_IDENTITY",
+      "before_status": "tainted",
+      "after_status": "ready",
+      "attributes_equal": true,
+      "remote_mutation": false
+    }
+  },
+  "changes": {
+    "create": 23,
+    "change": 0,
+    "replace": 0,
+    "destroy": 0,
+    "unexpected_replace": 0,
+    "unexpected_destroy": 0,
+    "created_resources": [
+      "aws_cloudtrail.phase1",
+      "aws_cloudwatch_metric_alarm.database_cpu",
+      "aws_cloudwatch_metric_alarm.database_storage",
+      "aws_db_instance.phase1",
+      "aws_ecs_service.egress",
+      "aws_ecs_service.worker",
+      "aws_ecs_task_definition.worker",
+      "aws_iam_role_policy.execution_secret",
+      "aws_iam_role_policy.kill_operator",
+      "aws_iam_role_policy.worker",
+      "aws_s3_bucket_lifecycle_configuration.audit",
+      "aws_s3_bucket_lifecycle_configuration.captures",
+      "aws_s3_bucket_ownership_controls.captures",
+      "aws_s3_bucket_policy.audit",
+      "aws_s3_bucket_policy.captures",
+      "aws_s3_bucket_public_access_block.audit",
+      "aws_s3_bucket_public_access_block.captures",
+      "aws_s3_bucket_server_side_encryption_configuration.audit",
+      "aws_s3_bucket_server_side_encryption_configuration.captures",
+      "aws_s3_bucket_versioning.audit",
+      "aws_s3_bucket_versioning.captures",
+      "aws_service_discovery_private_dns_namespace.phase1",
+      "aws_service_discovery_service.egress"
+    ],
+    "existing_resource_replacement": 0,
+    "bootstrap_changes": 0,
+    "registry_changes": 0
+  },
+  "runtime_controls": {
+    "worker_desired_count": 0,
+    "controlled_egress_desired_count": 0,
+    "worker_image_is_digest_bound": true,
+    "worker_readonly_root_filesystem": true,
+    "worker_non_root_uid": "65532",
+    "public_application_ingress": false,
+    "worker_public_ip": false,
+    "rds_publicly_accessible": false,
+    "rds_storage_encrypted": true,
+    "rds_engine_version": "18.3",
+    "rds_backup_retention_days": 30,
+    "rds_deletion_protection": true,
+    "browser_infrastructure": false,
+    "ai_credentials_or_routes": false,
+    "sender_or_delivery_infrastructure": false,
+    "person_or_contact_store": false
+  },
+  "egress_controls": {
+    "worker_direct_public_http_https": false,
+    "worker_public_path": "CONTROLLED_EGRESS_TASK_TCP_8080_ONLY",
+    "gateway_allowed_hosts_at_deployment": [],
+    "gateway_exact_host_policy_revision": "NOT_AUTHORIZED",
+    "aws_service_access": "PRIVATE_VPC_ENDPOINTS",
+    "security_groups_are_not_exact_domain_authority": true
+  },
+  "validation": {
+    "terraform_plan_identity": "PASS_WORKLOAD_PLAN_ROLE",
+    "terraform_validate": "PASS",
+    "terraform_format": "PASS",
+    "repository_check": "PASS",
+    "ruff": "PASS",
+    "format_check": "PASS",
+    "strict_mypy": "PASS_160_SOURCE_FILES",
+    "deterministic_tests": "PASS_393",
+    "deterministic_tests_skipped": "1_OPT_IN_POSTGRES_PARITY",
+    "python_compileall": "PASS",
+    "credential_value_audit": "PASS_3_PROVIDER_VALUES_ABSENT",
+    "git_diff_check": "PASS",
+    "terraform_security_controls": "UNCHANGED_FROM_VALIDATED_ADR_0076_CONFIGURATION",
+    "blocking_security_findings": 0
+  },
+  "cost": {
+    "aws_cost_explorer_observed_estimated_month_to_date_usd": "0.004116258",
+    "cost_explorer_data_is_estimated_and_delayed": true,
+    "current_partial_monthly_estimate_usd": "117.50",
+    "completed_environment_monthly_baseline_usd": "142.65",
+    "bounded_phase1_total_estimate_usd": "150.00",
+    "phase1_total_hard_ceiling_usd": "250.00",
+    "remaining_estimated_headroom_usd": "100.00",
+    "within_ceiling": true
+  },
+  "safety": {
+    "kill_switch": "TRIPPED",
+    "ecs_services": 0,
+    "ecs_tasks": 0,
+    "rds_instances": 0,
+    "real_business_access": 0,
+    "external_communications": 0
+  },
+  "owner_signature": null,
+  "permissions": {
+    "PHASE1_APPLICATION_APPLY": "NOT_AUTHORIZED",
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}
