@@ -1,0 +1,28 @@
+{
+  "record_type": "M67_ADR_ACCEPTANCE_RECORD",
+  "decision": "ADR-0071",
+  "version": "2026-08-22.1",
+  "meaning": "REAL_SOURCE_PRIVACY_RETENTION",
+  "state": "READY_FOR_OWNER_ACCEPTANCE",
+  "evidence": [
+    {"decision": "A-03", "state": "READY_FOR_OWNER_ACCEPTANCE"},
+    {"decision": "A-04", "state": "READY_FOR_OWNER_ACCEPTANCE"},
+    {"decision": "A-07", "state": "READY_FOR_OWNER_ACCEPTANCE"},
+    {"decision": "A-08", "state": "READY_FOR_OWNER_ACCEPTANCE"},
+    {"record": "M67_PHASE1_SYNTHETIC_ENVIRONMENT_VALIDATION_COMPLETED_EVIDENCE::2026-08-22.1", "sha256": "de6d9f4173b67f93f6b509aac0702bed8c4950e271e2bca74dab38d7ae5ff3ce"}
+  ],
+  "controls": {
+    "raw_fetch": "EPHEMERAL_ONLY",
+    "durable_capture": "DETERMINISTICALLY_MINIMIZED_ONLY",
+    "unsafe_minimization": "QUARANTINE_AND_REVIEW",
+    "person_contact_projection": "STRUCTURALLY_UNAVAILABLE_AND_NOT_AUTHORIZED",
+    "browser": "NOT_AUTHORIZED",
+    "per_host_source_review": "REMAINS_REQUIRED",
+    "retention_policy": "A08_PHASE1_MINIMIZED_RETENTION_POLICY::2026-08-21.1",
+    "incident_privacy_ownership": "ASSIGNED_TO_OWNER_ACTOR",
+    "source_authorization": "NOT_GRANTED_BY_THIS_ACCEPTANCE"
+  },
+  "conclusion": "ADR-0071 implementation dependencies are satisfied for environment acceptance. Exact A-09 source approval, discovery authorization, research authorization, and slot authorization remain separate fail-closed gates.",
+  "grants_live_data_authority": false,
+  "owner_signature": null
+}

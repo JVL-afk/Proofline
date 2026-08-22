@@ -1,0 +1,24 @@
+{
+  "record_type": "M67_DECISION_RECORD",
+  "decision": "A-07",
+  "version": "2026-08-22.1",
+  "meaning": "IDENTITY_ACCESS_GOVERNANCE",
+  "state": "READY_FOR_OWNER_ACCEPTANCE",
+  "evidence": [
+    {"record": "M67_PHASE1_CLOUD_MAP_HEALTH_BACKEND_SUCCESSOR_DEPLOYED_EVIDENCE::2026-08-22.1", "sha256": "11db0095d89550b5b1df51e9f518589d697cdfbc65d6b67bbc275d60e83673c4"},
+    {"record": "M67_OPERATIONAL_ROLE_ASSIGNMENTS::2026-08-21.3", "sha256": "bcb8b9aaaa3b7bf692e32e0df9e417991cb336d7b2d6acfa67261a3e22cb3292"},
+    {"record": "M67_PHASE1_SYNTHETIC_ENVIRONMENT_VALIDATION_COMPLETED_EVIDENCE::2026-08-22.1", "sha256": "de6d9f4173b67f93f6b509aac0702bed8c4950e271e2bca74dab38d7ae5ff3ce"}
+  ],
+  "identity": {
+    "owner_actor_ref": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981",
+    "owner_actor_reconciliation": "RECONCILED_TO_DEPLOYED_SSO_AUTHORITY",
+    "primary_a_actor_ref": "m67-subject-71411f1094857b41cf4906b108936e30a7f76a65ac1d768e1957825fd1c6453d",
+    "primary_a_reconciliation": "PENDING_INDEPENDENT_AUTHENTICATION",
+    "primary_a_is_not_substituted_by_owner": true,
+    "separate_state_plan_apply_workload_operator_worker_kill_roles": true,
+    "validation_policy_access_analyzer_findings": 0
+  },
+  "conclusion": "The deployed least-privilege role boundary and OWNER_ACTOR reconciliation support environment acceptance. PRIMARY_A independent authentication remains a separate pre-discovery role-binding prerequisite.",
+  "grants_live_data_authority": false,
+  "owner_signature": null
+}

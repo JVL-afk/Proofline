@@ -1,0 +1,30 @@
+{
+  "record_type": "M67_DECISION_RECORD",
+  "decision": "A-08",
+  "version": "2026-08-22.1",
+  "meaning": "RETENTION_LIVE_EFFECTIVENESS",
+  "state": "READY_FOR_OWNER_ACCEPTANCE",
+  "policy_revision": "A08_PHASE1_MINIMIZED_RETENTION_POLICY::2026-08-21.1",
+  "evidence": [
+    {"record": "A08_PHASE1_MINIMIZED_RETENTION_POLICY::2026-08-21.1", "sha256": "2d01988952a5f0fd6933f6a30ed3c43a2c6d05e05e06f01f4e42f286c31c6714"},
+    {"record": "M67_PHASE1_MINIMIZATION_RUNTIME_DEPLOYED_EVIDENCE::2026-08-22.1", "sha256": "f53c998253928cc1431987746fc28d6408a2899e3a2e0a206e1a2ee9cd98c437"},
+    {"record": "M67_PHASE1_SYNTHETIC_ENVIRONMENT_VALIDATION_COMPLETED_EVIDENCE::2026-08-22.1", "sha256": "de6d9f4173b67f93f6b509aac0702bed8c4950e271e2bca74dab38d7ae5ff3ce"}
+  ],
+  "live_controls": {
+    "ephemeral_raw_to_deterministic_minimization_to_durable_minimized_capture": "PASS",
+    "raw_body_durable_persistence": "ABSENT",
+    "email_phone_structured_contact_minimization": "PASS",
+    "restored_content_remained_minimized": true,
+    "capture_lifecycle_days": 90,
+    "audit_lifecycle_days": 365,
+    "worker_log_retention_days": 90,
+    "backup_retention_days": 30,
+    "capture_bucket_current_objects_after_validation": 0,
+    "capture_bucket_versions_after_validation": 0,
+    "content_free_tombstone_schema": "IMPLEMENTED_AND_DETERMINISTICALLY_TESTED",
+    "destruction_methods": ["HARD_DELETE_PRIMARY_AND_DERIVED", "OBJECT_VERSION_LIFECYCLE_DELETE", "LOG_EXPIRY", "CRYPTOGRAPHIC_ERASURE", "CONTENT_FREE_TOMBSTONE"]
+  },
+  "conclusion": "The approved minimized-capture policy is live-effective for the deployed Phase 1 boundary based on production-path persistence, restore, storage lifecycle, log-retention, and destruction-control evidence.",
+  "grants_live_data_authority": false,
+  "owner_signature": null
+}

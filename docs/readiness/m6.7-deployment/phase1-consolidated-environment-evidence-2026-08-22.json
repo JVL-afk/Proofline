@@ -1,0 +1,73 @@
+{
+  "record_type": "M67_PHASE1_CONSOLIDATED_ENVIRONMENT_EVIDENCE",
+  "version": "2026-08-22.1",
+  "state": "READY_FOR_CONSOLIDATED_ENVIRONMENT_ACCEPTANCE",
+  "generated_at": "2026-08-22T19:46:01.4839910Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "environment": {
+    "terraform_post_validation_plan": "NO_CHANGES",
+    "terraform_managed_instances": 84,
+    "terraform_data_instances": 13,
+    "vpc_id": "vpc-0fb1cf5ea04162821",
+    "worker_task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-research-worker:3",
+    "worker_image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:dd7b1bb05267c43026b4f52f2b2cec915b005b49000fa9b126621a634f9c1327",
+    "source_database": "arn:aws:rds:us-east-2:785072247535:db:m67-phase1-postgres",
+    "source_database_status": "available",
+    "research_worker_desired_running_pending": "0/0/0",
+    "controlled_egress_desired_running_pending": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "synthetic_restore_target": "ABSENT"
+  },
+  "evidence": [
+    {"record": "M67_PHASE1_CLOUD_MAP_HEALTH_BACKEND_SUCCESSOR_DEPLOYED_EVIDENCE::2026-08-22.1", "sha256": "11db0095d89550b5b1df51e9f518589d697cdfbc65d6b67bbc275d60e83673c4"},
+    {"record": "M67_PHASE1_MINIMIZATION_RUNTIME_DEPLOYED_EVIDENCE::2026-08-22.1", "sha256": "f53c998253928cc1431987746fc28d6408a2899e3a2e0a206e1a2ee9cd98c437"},
+    {"record": "M67_WORKER_IMAGE_SYNTHETIC_VALIDATION_SUCCESSOR_EVIDENCE::2026-08-22.1", "sha256": "23dfcbc6ffc8c0cee10ee1356aaff9de2d3ee18642779d8b44f41e42a4b3964d"},
+    {"record": "M67_PHASE1_SYNTHETIC_ENVIRONMENT_VALIDATION_COMPLETED_EVIDENCE::2026-08-22.1", "sha256": "de6d9f4173b67f93f6b509aac0702bed8c4950e271e2bca74dab38d7ae5ff3ce"},
+    {"record": "A08_PHASE1_MINIMIZED_RETENTION_POLICY::2026-08-21.1", "sha256": "2d01988952a5f0fd6933f6a30ed3c43a2c6d05e05e06f01f4e42f286c31c6714"},
+    {"record": "M67_OPERATIONAL_ROLE_ASSIGNMENTS::2026-08-21.3", "sha256": "bcb8b9aaaa3b7bf692e32e0df9e417991cb336d7b2d6acfa67261a3e22cb3292"}
+  ],
+  "decision_records": [
+    {"decision": "A-03", "state": "READY_FOR_OWNER_ACCEPTANCE", "sha256": "350da7d85729385510a7d61a3373571ffa1ef3efe859ddd529488610d0b910b5"},
+    {"decision": "A-04", "state": "READY_FOR_OWNER_ACCEPTANCE", "sha256": "ca3d70511e498e0eddc6dfcf68c960c080c26b121d8e0078a681bcd579d57b52"},
+    {"decision": "A-07", "state": "READY_FOR_OWNER_ACCEPTANCE", "sha256": "29d7b46175895b2abce1ee4633fd02aaeadcefbc57d5078082cd66bea4cef763"},
+    {"decision": "A-08", "state": "READY_FOR_OWNER_ACCEPTANCE", "sha256": "ec8489fcf64987de4767fc202824850a745d0e2124eb20d39857ca08f870a766"},
+    {"decision": "ADR-0071", "state": "READY_FOR_OWNER_ACCEPTANCE", "sha256": "b8429209caf5743a8997f7b1030b6fe82ac7be0bc313dbdeb11dc803c9f22f89"}
+  ],
+  "control_results": {
+    "private_ecr_s3_pull": "PASS",
+    "arbitrary_worker_internet_egress": "DENIED",
+    "kill_switch_block": "PASS",
+    "production_minimization_persistence": "PASS",
+    "synthetic_pitr_restore_inspection": "PASS",
+    "synthetic_restore_cleanup": "PASS",
+    "raw_or_prohibited_value_leakage": "NONE_OBSERVED",
+    "iam_access_analyzer": "PASS_ZERO_FINDINGS",
+    "terraform_drift": "NONE",
+    "cost_ceiling": "PASS"
+  },
+  "identity": {
+    "owner_actor_ref": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981",
+    "owner_actor_reconciliation": "RECONCILED_TO_DEPLOYED_SSO_AUTHORITY",
+    "primary_a_actor_ref": "m67-subject-71411f1094857b41cf4906b108936e30a7f76a65ac1d768e1957825fd1c6453d",
+    "primary_a_reconciliation": "PENDING_INDEPENDENT_AUTHENTICATION",
+    "primary_a_remaining_effect": "BLOCKS_LATER_DISCOVERY_ROLE_BINDING_NOT_ENVIRONMENT_ACCEPTANCE"
+  },
+  "cost": {
+    "provider_reported_month_to_date_usd": "0.004116258",
+    "provider_cost_data_may_be_delayed": true,
+    "conservative_phase1_plus_validation_estimate_usd": "160.00",
+    "hard_ceiling_usd": "250.00",
+    "remaining_headroom_usd": "90.00"
+  },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED",
+    "AI": "NOT_AUTHORIZED",
+    "BROWSER": "NOT_AUTHORIZED"
+  },
+  "acceptance_effect": "OWNER_ACCEPTANCE_MAY_ACCEPT_FIVE_ENUMERATED_ENVIRONMENT_DECISIONS_ONLY; IT DOES_NOT AUTHORIZE_DISCOVERY_RESEARCH_SLOT_OR_COMMUNICATION"
+}

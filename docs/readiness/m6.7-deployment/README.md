@@ -13,14 +13,19 @@ CloudTrail, alarms, SNS topic, and USD 250 budget exist. The Cloud Map successor
 health with threshold one and no registered instance. The immutable observation is recorded in
 `phase1-cloud-map-health-backend-successor-deployed-evidence-2026-08-22.json`.
 
-Environment acceptance remains fail-closed for a newly demonstrated production integration gap.
-The deployed worker's research workflow persists `PageSnapshot.content` to PostgreSQL without
-invoking the counsel-required deterministic minimizer. The minimizer and retention model pass their
-component tests, but this is not live-effectiveness evidence. The exact assessment and separately
-represented A-03/A-04/A-07/A-08/ADR-0071 states are recorded in
-`phase1-post-deployment-environment-assessment-2026-08-22.json`. No task was started and no restore
-resource was created after the gap was confirmed. The kill switch remains `TRIPPED`; all discovery,
-research, person/contact, Slot 1, and communication permissions remain `NOT_AUTHORIZED`.
+The production minimization gap was remediated in an immutable worker successor. The private
+ECR/S3 startup path, kill-switch block, production minimization persistence, and isolated PITR
+restore inspection all passed with synthetic data. The restore target was deleted without a final
+snapshot, both ECS services returned to zero desired/running/pending tasks, the kill switch is
+`TRIPPED`, and Terraform reports `NO_CHANGES` across 84 managed instances. The completed validation
+is recorded in `phase1-synthetic-environment-validation-completed-evidence-2026-08-22.json`.
+
+A-03, A-04, A-07, A-08 live effectiveness, and ADR-0071 are separately represented and ready for
+one consolidated owner acceptance. Their immutable aggregate is
+`phase1-consolidated-environment-evidence-2026-08-22.json`; the unsigned approval object is
+`consolidated-environment-acceptance-ready-2026-08-22.json`. PRIMARY_A independent authentication
+remains a later discovery-role prerequisite. All discovery, research, person/contact, Slot 1,
+communication, AI, and browser permissions remain `NOT_AUTHORIZED`.
 
 The pre-remediation read-only reconciliation is frozen in
 `phase1-partial-state-inventory-2026-08-22.json`: 56 managed objects were present in both state and

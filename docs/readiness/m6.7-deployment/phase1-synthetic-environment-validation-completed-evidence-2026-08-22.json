@@ -1,0 +1,141 @@
+{
+  "record_type": "M67_PHASE1_SYNTHETIC_ENVIRONMENT_VALIDATION_COMPLETED_EVIDENCE",
+  "version": "2026-08-22.1",
+  "state": "PASS_CLEANED_UP",
+  "observed_at": "2026-08-22T19:46:01.4839910Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "authorization_package_sha256": "b646d489d2521c100a211b813e562c7637713c54a54949d16fed34be64490e76",
+  "kms_remediation": {
+    "authorization": "APPROVE_SYNTHETIC_RESTORE_KMS_POLICY_REMEDIATION_APPLY",
+    "saved_plan_sha256": "2aa021222a331af5857786faf9c081f7692767b4109b37f76e71de65c09cb07b",
+    "plan_json_sha256": "ca630d849835da813685fe74468d7749e41aa30a726534e71d9004b38ab59d61",
+    "configuration_sha256": "0438afbde371250478b253a7cf68f3a1df2558f837494add041e99b74a513f93",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "remediation_commit": "b41934d50c858488eefd29223aa8e7207c00f47b",
+    "terraform_result": {"create": 0, "change": 1, "replace": 0, "destroy": 0},
+    "deployed_policy_sha256": "4b8e4841857be3a4f28223cf76308b8791e04105aa9e6e18fb4c688b88c07628",
+    "iam_access_analyzer_findings": 0,
+    "exact_key": "arn:aws:kms:us-east-2:785072247535:key/fa278885-700d-430b-bf76-1f169e3cd6d9",
+    "actions": ["kms:DescribeKey", "kms:CreateGrant"],
+    "create_grant_conditions": {
+      "kms:GrantIsForAWSResource": true,
+      "kms:ViaService": "rds.us-east-2.amazonaws.com"
+    }
+  },
+  "completed_validations": {
+    "PRIVATE_ECR_S3_PULL_PATH": {
+      "state": "PASS",
+      "worker_s3_gateway_rule_id": "sgr-05b89d8e0d435a568",
+      "s3_prefix_list": "pl-7ba54012",
+      "public_worker_https_rule_present": false
+    },
+    "KILL_SWITCH_BLOCK_V1": {
+      "state": "PASS_NOT_RERUN",
+      "task_arn": "arn:aws:ecs:us-east-2:785072247535:task/m67-phase1-research/06f790bd8e8646a9a5f9b7b1f23162c9",
+      "exit_code": 0,
+      "fetch_called": false,
+      "run_status": "failed",
+      "snapshot_count": 0,
+      "evidence_count": 0
+    },
+    "MINIMIZATION_PERSISTENCE_V1": {
+      "state": "PASS_NOT_RERUN",
+      "task_arn": "arn:aws:ecs:us-east-2:785072247535:task/m67-phase1-research/e9664036332344c1aa797351e196608d",
+      "exit_code": 0,
+      "run_status": "succeeded",
+      "snapshot_count": 1,
+      "evidence_count": 3,
+      "removed_email_count": 2,
+      "removed_phone_count": 3,
+      "removed_structured_contact_blocks": 2,
+      "minimized_content_sha256": "5d832ba343548b967002a907d9dda8e96563bb93cc27e8efb0a82db5abdba0a4",
+      "minimization_event_sha256": "72a1ae81d033b55f71a5dc200544b49ef5b7d3ea2af927e2ae7afecf2b6bb0da"
+    },
+    "RESTORE_INSPECTION_V1": {
+      "state": "PASS",
+      "task_arn": "arn:aws:ecs:us-east-2:785072247535:task/m67-phase1-research/95610b6662914c028f5b28632343d07a",
+      "task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-research-worker:3",
+      "worker_image_digest": "sha256:dd7b1bb05267c43026b4f52f2b2cec915b005b49000fa9b126621a634f9c1327",
+      "exit_code": 0,
+      "fetch_called": false,
+      "run_status": "succeeded",
+      "snapshot_count": 1,
+      "evidence_count": 3,
+      "removed_email_count": 2,
+      "removed_phone_count": 3,
+      "removed_structured_contact_blocks": 2,
+      "source_content_sha256": "effa3fe8308c02f7ad89a9ef8fc8876c78ea7fd4b13f22bf0aba56245c7d0e88",
+      "minimized_content_sha256": "5d832ba343548b967002a907d9dda8e96563bb93cc27e8efb0a82db5abdba0a4",
+      "minimization_event_sha256": "72a1ae81d033b55f71a5dc200544b49ef5b7d3ea2af927e2ae7afecf2b6bb0da",
+      "prohibited_values_in_task_log": 0
+    }
+  },
+  "restore": {
+    "source": "m67-phase1-postgres",
+    "target": "m67-phase1-restore-validation-20260822-1",
+    "restore_api_event_id": "f290b230-ecb7-462b-acc6-c91be3960043",
+    "restore_api_event_at": "2026-08-22T19:17:11Z",
+    "restored_to": "2026-08-22T19:14:31Z",
+    "instance_created_at": "2026-08-22T19:19:59.859Z",
+    "database_restored_event_at": "2026-08-22T19:25:13.946Z",
+    "initial_backup_finished_at": "2026-08-22T19:34:16.694Z",
+    "available_observed_before": "2026-08-22T19:36:51.704Z",
+    "observed_restore_rto_upper_bound_minutes": 20,
+    "observed_restore_point_lag_at_api_request_minutes": 3,
+    "engine": "postgres",
+    "engine_version": "18.3",
+    "storage_encrypted": true,
+    "kms_key": "arn:aws:kms:us-east-2:785072247535:key/fa278885-700d-430b-bf76-1f169e3cd6d9",
+    "publicly_accessible": false,
+    "subnet_group": "m67-phase1-database",
+    "subnets": ["subnet-034f75c751e849ba8", "subnet-0ed12f24100baf801"],
+    "security_groups": ["sg-0c11a395b588bba66"],
+    "iam_database_authentication_enabled": true,
+    "startup_observation": "RDS reduced shared_buffers from 23081 to 11295 after a low-memory event on the bounded validation instance, restarted it, and then reached stable availability.",
+    "inspection_result": "RESTORED_MINIMIZED_RECORD_IDENTICAL_TO_VALIDATED_SOURCE_RECORD",
+    "delete_api_event_id": "96a98079-a8ff-4651-9a98-ccd4a32e803b",
+    "delete_api_event_at": "2026-08-22T19:38:38Z",
+    "final_snapshot_created": false,
+    "automated_backups_deleted": true,
+    "cleanup_state": "TARGET_ABSENT"
+  },
+  "durable_surface_checks": {
+    "postgresql_raw_content": "ABSENT_BY_PRODUCTION_INSPECTION_INVARIANT",
+    "postgresql_prohibited_person_contact_values": "ABSENT_BY_PRODUCTION_INSPECTION_INVARIANT",
+    "cloudwatch_prohibited_fixture_values": 0,
+    "restricted_capture_bucket_current_objects": 0,
+    "restricted_capture_bucket_versions": 0,
+    "container_filesystem": "TASK_STOPPED_EPHEMERAL_NON_AUTHORITATIVE_READ_ONLY_ROOT",
+    "real_business_inputs": 0,
+    "provider_ai_calls": 0
+  },
+  "final_environment": {
+    "terraform_post_validation_plan": "NO_CHANGES",
+    "terraform_managed_instances": 84,
+    "terraform_data_instances": 13,
+    "source_database_status": "available",
+    "source_database_latest_restorable_time_observed": "2026-08-22T19:39:33Z",
+    "research_worker_desired_running_pending": "0/0/0",
+    "controlled_egress_desired_running_pending": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "restore_target": "ABSENT"
+  },
+  "cost": {
+    "provider_reported_month_to_date_usd": "0.004116258",
+    "provider_cost_data_may_be_delayed": true,
+    "conservative_phase1_plus_validation_estimate_usd": "160.00",
+    "hard_ceiling_usd": "250.00",
+    "remaining_conservative_headroom_usd": "90.00",
+    "within_ceiling": true
+  },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED",
+    "AI": "NOT_AUTHORIZED",
+    "BROWSER": "NOT_AUTHORIZED"
+  }
+}
