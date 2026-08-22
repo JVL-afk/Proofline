@@ -1,0 +1,83 @@
+{
+  "record_type": "M67_PHASE1_WORKER_IMAGE_SYNTHETIC_VALIDATION_SUCCESSOR_EVIDENCE",
+  "version": "2026-08-22.1",
+  "state": "BUILT_SCANNED_PUSHED_AND_OBSERVED",
+  "observed_at": "2026-08-22T16:34:21.9568828Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "source_commit": "192f323f43151e6096503730eca27841a4811ceb",
+  "minimization_implementation_commit": "965db517bff80d9cc2c71e91d4a6ece1f4d43724",
+  "predecessor_image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:6dd4ce5509b47ee272c5f0dc9e58dc73cacbf63f89afc09134d9c997db382a45",
+  "base_image": {
+    "reference": "docker.io/library/python:3.13-alpine3.22",
+    "platform": "linux/amd64",
+    "platform_manifest_digest": "sha256:7f7ee17311e0273954ffe76a7b84a2d8c8ecf16f9992e780e4d46c86175df431"
+  },
+  "build": {
+    "tool": "buildah",
+    "tool_version": "1.33.7",
+    "dockerfile_sha256": "41fbd83810d67193f8256030b7058f179c3c17c8a5c65636ccd1df0b29a68697",
+    "dependency_lock_sha256": "0fa05efe0335378fd1b3e2a36e68732a512373971b25e2511a78f76971a4354d",
+    "local_archive_sha256": "bfdc4de781f5289ffc620c9b4c5d3c2e2ae6dc2ffd1e8901a4a7660fefc26829",
+    "runtime_import": "PASS_SYNTHETIC_VALIDATION_MODES_PRESENT",
+    "runtime_user": "65532:65532",
+    "nonroot_application_write": "PASS_DENIED",
+    "authoritative_container_filesystem_state": false
+  },
+  "synthetic_validation_boundary": {
+    "modes": [
+      "KILL_SWITCH_BLOCK_V1",
+      "MINIMIZATION_PERSISTENCE_V1",
+      "RESTORE_INSPECTION_V1"
+    ],
+    "fixture_location": "IMAGE_CONTAINED_SOURCE_COMMIT",
+    "network_transport": "NONE_SYNTHETIC_FETCHER_ONLY",
+    "live_research_required": false,
+    "browser_required": false,
+    "egress_policy_required": "NOT_AUTHORIZED",
+    "ordinary_worker_default_unchanged": true
+  },
+  "dependencies": {
+    "component_count": 48,
+    "sbom_format": "CycloneDX 1.7",
+    "sbom_sha256": "4d97c9359ff584014e5597dc3f353ff8d5a2b57eabf4bdaa11651b8db0de9b81"
+  },
+  "security_scan": {
+    "tool": "Trivy",
+    "tool_version": "0.72.0",
+    "full_scan_sha256": "9b37a366057870866b4933b5897e7165c7069aa22a62f0b7cc391fe244d9bdf2",
+    "policy_scan_sha256": "d5b69556a32c16bd9ca17efae17a1cf017c176a27230f9577b2c254c142ced58",
+    "known_vulnerability_count": 0,
+    "high_or_critical_count": 0,
+    "secret_finding_count": 0,
+    "blocking_findings": 0,
+    "provider_scan_status": "COMPLETE",
+    "provider_scan_finding_count": 0,
+    "provider_scan_completed_at": "2026-08-22T16:32:34Z"
+  },
+  "registry": {
+    "repository_arn": "arn:aws:ecr:us-east-2:785072247535:repository/m67-phase1-worker",
+    "repository_uri": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
+    "tag": "git-192f323f4315",
+    "image_digest": "sha256:dd7b1bb05267c43026b4f52f2b2cec915b005b49000fa9b126621a634f9c1327",
+    "immutable_reference": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:dd7b1bb05267c43026b4f52f2b2cec915b005b49000fa9b126621a634f9c1327",
+    "compressed_size_bytes": 55228015,
+    "pushed_at": "2026-08-22T16:32:26.532Z",
+    "publisher_role": "arn:aws:iam::785072247535:role/m67-phase1-worker-image-publisher"
+  },
+  "validation": {
+    "complete_deterministic_tests": 405,
+    "opt_in_postgres_tests_skipped_in_final_normal_suite": 2,
+    "prior_postgresql_minimized_persistence": "PASS_401_SUITE",
+    "synthetic_validation_tests": "PASS",
+    "raw_fixture_in_ecs_control_plane": false,
+    "network_free_fixture_fetcher": true
+  },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}
