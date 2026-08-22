@@ -1,0 +1,71 @@
+{
+  "record_type": "M67_PHASE1_FINAL_KMS_TRAIL_REMEDIATION_DEPLOYED_EVIDENCE",
+  "version": "2026-08-22.1",
+  "state": "DEPLOYED_AND_VERIFIED",
+  "observed_at": "2026-08-22T13:17:52.0059445Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "authorization": {
+    "event": "APPROVE_FINAL_KMS_TRAIL_IAM_REMEDIATION_APPLY",
+    "saved_plan_sha256": "025efee286c520761c5f45c1e26fe634f7a412a89ed84aa5501f273ab1dd5105",
+    "plan_json_sha256": "1f36764871c959d1a7b83d47cd29e1ee57b5819d81057bff5f8a7d6980c98936",
+    "configuration_sha256": "9161790c4b44ea82617b49279e6d3b417a8f710a5466e32fe531e5724facc15b",
+    "provider_lock_sha256": "b0f95a645ac5a5db24949e074c48758bb1a1f867ef73148e174a1e1ae1e76c9f",
+    "source_commit": "c2a44febb2f2f8d5572d599bf69687f36e3d63e2",
+    "consumed": true
+  },
+  "apply_result": {
+    "create": 0,
+    "change": 3,
+    "replace": 0,
+    "destroy": 0,
+    "status": "SUCCESS"
+  },
+  "deployed_statements": {
+    "workload_plan_trail_read": {
+      "action": "cloudtrail:GetEventSelectors",
+      "resource": "arn:aws:cloudtrail:us-east-2:785072247535:trail/m67-phase1-audit",
+      "simulation": "ALLOWED"
+    },
+    "workload_apply_trail_read": {
+      "action": "cloudtrail:GetEventSelectors",
+      "resource": "arn:aws:cloudtrail:us-east-2:785072247535:trail/m67-phase1-audit"
+    },
+    "workload_apply_rds_managed_secret_key_use": {
+      "actions": [
+        "kms:Decrypt",
+        "kms:GenerateDataKey"
+      ],
+      "resource": "arn:aws:kms:us-east-2:785072247535:key/fa278885-700d-430b-bf76-1f169e3cd6d9",
+      "condition": {
+        "StringEquals": {
+          "kms:ViaService": "secretsmanager.us-east-2.amazonaws.com"
+        }
+      },
+      "simulation": "ALLOWED"
+    }
+  },
+  "verification": {
+    "account_match": true,
+    "region_match": true,
+    "unrelated_policy_changes": 0,
+    "key_administration_added": false,
+    "public_or_wildcard_principal_added": false
+  },
+  "safety": {
+    "kill_switch": "TRIPPED",
+    "ecs_controlled_egress_desired_running_pending": "0/0/0",
+    "rds_instances": 0,
+    "real_business_access": 0,
+    "external_communications": 0
+  },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}

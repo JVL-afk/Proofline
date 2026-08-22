@@ -1,0 +1,121 @@
+{
+  "record_type": "M67_PHASE1_CLOUD_MAP_HEALTH_SUCCESSOR_PLAN_REVIEW",
+  "version": "2026-08-22.1",
+  "state": "READY_FOR_FINAL_PHASE1_APPLY_WITH_EXPLICIT_CLOUD_MAP_REPLACEMENT_AUTHORIZATION",
+  "required_owner_event": "APPROVE_FINAL_PHASE1_APPLY_WITH_CLOUD_MAP_HEALTH_REPLACEMENT",
+  "observed_at": "2026-08-22T13:17:52.0059445Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "identity_boundary": {
+    "provider_plan_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "provider_apply_identity_required": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "protected_backend_apply_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply"
+  },
+  "source": {
+    "configuration_commit": "ac600af6ca4e542988ca3ec3ad8257c1b972ec0b",
+    "iam_remediation_deployed_evidence_revision": "M67_PHASE1_FINAL_KMS_TRAIL_REMEDIATION_DEPLOYED_EVIDENCE::2026-08-22.1",
+    "iam_remediation_deployed_evidence_sha256": "17ea87ccd13813f2b4a6afdead4901b8ef92a461a54e61991f2d997269b9199c",
+    "partial_state_revision": "M67_PHASE1_CLOUD_MAP_HEALTH_RECONCILIATION::2026-08-22.1",
+    "partial_state_serial": 18,
+    "partial_state_sha256": "fde1d8b50b9346143eadde719b9cbdf9cba975e951f0867a8c1c0d0c151fe707",
+    "worker_image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:8af8123b618e5d5024b6d715cd7956a52a79df41e4b5d201c4dc5f993ee3edf5",
+    "controlled_egress_revision": "ADR-0076"
+  },
+  "hashes": {
+    "saved_plan_sha256": "5d90106767f2554ed9c74bea004934ef0236ad822f3ece09ae3c3ab61700e7bb",
+    "plan_json_sha256": "e63a4cbbecf12cbfd1c3847ff004c4bbcf00d81793ab2614278472decd8516ad",
+    "configuration_sha256": "9ab094aeba604acc7997540de2e8b09cd5a89967b7a425b4ed7b06c6ee62b083",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f"
+  },
+  "changes": {
+    "new_creates": 8,
+    "in_place_changes": 1,
+    "expected_replacements": 1,
+    "unexpected_replacements": 0,
+    "standalone_destroys": 0,
+    "unexpected_destroys": 0,
+    "terraform_cli_counts": {
+      "add": 9,
+      "change": 1,
+      "destroy": 1
+    },
+    "new_resources": [
+      "aws_cloudwatch_metric_alarm.database_cpu",
+      "aws_cloudwatch_metric_alarm.database_storage",
+      "aws_db_instance.phase1",
+      "aws_ecs_service.worker",
+      "aws_ecs_task_definition.worker",
+      "aws_iam_role_policy.execution_secret",
+      "aws_iam_role_policy.kill_operator",
+      "aws_iam_role_policy.worker"
+    ],
+    "in_place_resource": "aws_ecs_service.egress",
+    "expected_replacement_resource": "aws_service_discovery_service.egress"
+  },
+  "expected_replacement": {
+    "existing_service_id": "srv-6ypgx6ow5mbdg5tz",
+    "existing_service_arn": "arn:aws:servicediscovery:us-east-2:785072247535:service/srv-6ypgx6ow5mbdg5tz",
+    "registered_instances": 0,
+    "consumer_service_desired_running_pending": "0/0/0",
+    "remote_health_check_custom_config": "ABSENT",
+    "successor_health_check_custom_config": {
+      "failure_threshold": 1
+    },
+    "reason": "AWS authenticated observation proved the partial apply created the service without the ECS-managed custom-health configuration. AWS Cloud Map does not permit adding or changing HealthCheckCustomConfig after service creation, so replacement is required to preserve the reviewed ECS health behavior.",
+    "not_state_metadata_only": true,
+    "no_business_data_or_running_task_impact": true
+  },
+  "authority_provenance": [
+    {
+      "retrieved_at": "2026-08-22",
+      "url": "https://docs.aws.amazon.com/AmazonECS/latest/developerguide/service-discovery.html",
+      "proposition": "ECS-managed Cloud Map health is configured with HealthCheckCustomConfig."
+    },
+    {
+      "retrieved_at": "2026-08-22",
+      "url": "https://docs.aws.amazon.com/cloud-map/latest/api/API_CreateService.html",
+      "proposition": "HealthCheckCustomConfig cannot be added, updated, or deleted on an existing service."
+    }
+  ],
+  "validation": {
+    "terraform_plan_identity": "PASS_WORKLOAD_PLAN_ROLE",
+    "terraform_validate": "PASS_WITH_PROVIDER_DEPRECATION_WARNING_FOR_FIXED_FAILURE_THRESHOLD_FIELD",
+    "terraform_format": "PASS",
+    "targeted_tests": "PASS_7",
+    "deterministic_tests": "PASS_393",
+    "deterministic_tests_skipped": "1_OPT_IN_POSTGRES_PARITY",
+    "ruff": "PASS",
+    "format_check": "PASS_242_FILES",
+    "strict_mypy": "PASS_160_SOURCE_FILES",
+    "repository_check": "PASS",
+    "python_compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "cost": {
+    "cost_explorer_account_month_to_date_unblended_usd": "0.004116258",
+    "cost_explorer_estimated_and_delayed": true,
+    "bounded_phase1_total_estimate_usd": "150.00",
+    "phase1_total_hard_ceiling_usd": "250.00",
+    "remaining_estimated_headroom_usd": "100.00",
+    "within_ceiling": true
+  },
+  "safety": {
+    "kill_switch": "TRIPPED",
+    "ecs_worker_tasks": 0,
+    "ecs_controlled_egress_desired_running_pending": "0/0/0",
+    "rds_instances": 0,
+    "real_business_access": 0,
+    "external_communications": 0
+  },
+  "owner_signature": null,
+  "permissions": {
+    "PHASE1_SUCCESSOR_APPLY": "NOT_AUTHORIZED",
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}
