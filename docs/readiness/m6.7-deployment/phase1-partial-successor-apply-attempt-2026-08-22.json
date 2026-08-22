@@ -1,0 +1,103 @@
+{
+  "record_type": "M67_PHASE1_PARTIAL_SUCCESSOR_APPLY_ATTEMPT",
+  "version": "2026-08-22.1",
+  "state": "BLOCKED_PENDING_NEW_IAM_CONTROL_REMEDIATION",
+  "observed_at": "2026-08-22T10:43:39Z",
+  "authorization": {
+    "event": "APPROVE_PHASE1_PARTIAL_APPLY_SUCCESSOR",
+    "status": "CONSUMED",
+    "saved_plan_sha256": "09ca332349cfa30fd71b2fb5c75079d32ed25e0f8abdce5551e7aae903cd884d",
+    "plan_json_sha256": "7d38a11b3f97567fca1766a9f26e7a982bd0509a6dbda7508f904774cd0b86d7",
+    "configuration_sha256": "8023b7fa21b3534bb410570f9c14636b0fe70d352e2a11eef995f9881eccb83e",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "partial_state_evidence_sha256": "9c69c61fbc67f5a00f46bb731e266369bc5a441a32d07dee6056331baa052a33"
+  },
+  "execution": {
+    "provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "backend_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "result": "PARTIAL_APPLY_FAILED_CLOSED",
+    "terraform_state_serial": 8,
+    "managed_instances_before": 56,
+    "managed_instances_after": 59
+  },
+  "successful_changes": {
+    "in_place": [
+      "aws_iam_service_linked_role.ecs",
+      "aws_iam_service_linked_role.rds"
+    ],
+    "created_and_recorded": [
+      "aws_budgets_budget.phase1",
+      "aws_s3_bucket.audit",
+      "aws_s3_bucket.captures"
+    ],
+    "replacements": 0,
+    "destroys": 0
+  },
+  "blocking_failures": [
+    {
+      "resource": "aws_service_discovery_private_dns_namespace.phase1",
+      "error_class": "MISSING_WORKLOAD_APPLY_PERMISSION",
+      "missing_action": "route53:CreateHostedZone",
+      "remote_result": "NO_M67_INTERNAL_NAMESPACE_PRESENT"
+    },
+    {
+      "resource": "aws_db_instance.phase1",
+      "error_class": "DATABASE_KMS_KEY_NOT_ACCESSIBLE",
+      "observed_key": "arn:aws:kms:us-east-2:785072247535:key/fa278885-700d-430b-bf76-1f169e3cd6d9",
+      "key_state": "Enabled",
+      "key_rotation": true,
+      "required_next_step": "Determine and separately authorize the narrow caller/RDS KMS grant permissions required by CreateDBInstance."
+    },
+    {
+      "resource": "aws_budgets_budget.phase1",
+      "error_class": "MISSING_WORKLOAD_APPLY_READ_PERMISSION",
+      "missing_action": "budgets:ListTagsForResource",
+      "remote_result": "BUDGET_EXISTS_AND_IS_IN_STATE"
+    },
+    {
+      "resource": "aws_s3_bucket.captures",
+      "error_class": "MISSING_WORKLOAD_APPLY_READ_PERMISSION",
+      "missing_action": "s3:GetAccelerateConfiguration",
+      "remote_result": "PRIVATE_BUCKET_EXISTS_AND_IS_IN_STATE"
+    },
+    {
+      "resource": "aws_s3_bucket.audit",
+      "error_class": "MISSING_WORKLOAD_APPLY_READ_PERMISSION",
+      "missing_action": "s3:GetAccelerateConfiguration",
+      "remote_result": "PRIVATE_BUCKET_EXISTS_AND_IS_IN_STATE"
+    }
+  ],
+  "containment": {
+    "kill_switch": "TRIPPED",
+    "ecs_services": 0,
+    "ecs_tasks": 0,
+    "rds_instances": 0,
+    "cloud_map_namespaces": 0,
+    "capture_bucket_objects": 0,
+    "audit_bucket_objects": 0,
+    "bucket_public_access": "BLOCKED_ALL_FOUR_CONTROLS",
+    "bucket_acl": "OWNER_CANONICAL_USER_FULL_CONTROL_ONLY",
+    "bucket_current_encryption": "AWS_DEFAULT_SSE_S3_PENDING_PLANNED_KMS_CONFIGURATION",
+    "bucket_versioning": "NOT_YET_CONFIGURED",
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "real_business_access": 0,
+    "external_communications": 0
+  },
+  "cost": {
+    "current_total_monthly_estimate_usd": "117.50_PLUS_NEGLIGIBLE_EMPTY_S3_AND_BUDGET_USAGE",
+    "completed_environment_estimate_usd": "150.00",
+    "hard_ceiling_usd": "250.00",
+    "ceiling_status": "WITHIN_CEILING"
+  },
+  "post_deployment_validation": {
+    "status": "NOT_STARTED_ENVIRONMENT_INCOMPLETE",
+    "kill_switch_execution_test": "BLOCKED_NO_ECS_SERVICE",
+    "backup_restore_test": "BLOCKED_NO_RDS_INSTANCE",
+    "consolidated_environment_acceptance": "NOT_READY"
+  },
+  "required_next_authority": "A separately reviewed IAM-control successor apply is required before another Phase 1 infrastructure plan may be generated or applied."
+}

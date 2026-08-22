@@ -1,0 +1,132 @@
+{
+  "record_type": "M67_PHASE1_PARTIAL_REMEDIATION_DEPLOYED_EVIDENCE",
+  "version": "2026-08-22.1",
+  "state": "REMEDIATION_APPLIED_AND_STATE_METADATA_CORRECTED",
+  "observed_at": "2026-08-22T10:11:46Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "authorization": {
+    "event": "APPROVE_PHASE1_PARTIAL_CONTROL_REMEDIATION_APPLY",
+    "saved_plan_sha256": "23cdcaa041aab00db014aa3ac0dc8183a098ee3908d1117deb584c75129ae048",
+    "plan_json_sha256": "e0f9c1e3eaa580a20be7c8c522d5a1c691050b39c2280d52db894aef24c4b735",
+    "configuration_sha256": "4d542c871270eabe163443dfd1bf2f3aaa48f9a5204ffcb07452298bbfc1f36d",
+    "provider_lock_sha256": "b0f95a645ac5a5db24949e074c48758bb1a1f867ef73148e174a1e1ae1e76c9f",
+    "remediation_commit": "3d67979dab59f3e2160f48ecb8837381745c39d6",
+    "approved_counts": {
+      "create": 0,
+      "change": 2,
+      "replace": 0,
+      "destroy": 0
+    }
+  },
+  "apply_result": {
+    "status": "SUCCEEDED",
+    "actual_counts": {
+      "create": 0,
+      "change": 2,
+      "replace": 0,
+      "destroy": 0
+    },
+    "changed_resources": [
+      "aws_iam_role_policy.workload_apply_data_observability",
+      "aws_iam_role_policy.workload_apply_iam"
+    ],
+    "unrelated_resource_changes": 0
+  },
+  "deployed_policy_observations": [
+    {
+      "role": "m67-phase1-terraform-workload-apply",
+      "policy": "m67-phase1-terraform-data-observability",
+      "policy_document_sha256": "ed677a760c4ffc6db444e440e4e7221a67689f8df4198851a532d3ffa57e0353",
+      "capture_bucket_arn": "arn:aws:s3:::m67-phase1-restricted-captures-f314f0df7f63484aae5afb9af8",
+      "audit_bucket_arn": "arn:aws:s3:::m67-phase1-audit-459ad1a7cc4da135aeabd70211",
+      "budget_tag_resource": "arn:aws:budgets::785072247535:budget/m67-phase1-monthly-hard-ceiling",
+      "access_analyzer_findings": 0
+    },
+    {
+      "role": "m67-phase1-terraform-workload-apply",
+      "policy": "m67-phase1-terraform-iam",
+      "policy_document_sha256": "640276eedb1951e0eb0fae6aedd2f57824e9bf1b0dea3ba2a0b6b6cadfae2172",
+      "tag_role_resources": [
+        "arn:aws:iam::785072247535:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+        "arn:aws:iam::785072247535:role/aws-service-role/rds.amazonaws.com/AWSServiceRoleForRDS"
+      ],
+      "create_service_names": [
+        "ecs.amazonaws.com",
+        "rds.amazonaws.com"
+      ],
+      "obsolete_cloud_map_service_linked_role_authority": false,
+      "access_analyzer_findings": 0
+    }
+  ],
+  "service_linked_role_observations": [
+    {
+      "terraform_address": "aws_iam_service_linked_role.ecs",
+      "exists": true,
+      "arn": "arn:aws:iam::785072247535:role/aws-service-role/ecs.amazonaws.com/AWSServiceRoleForECS",
+      "role_name": "AWSServiceRoleForECS",
+      "path": "/aws-service-role/ecs.amazonaws.com/",
+      "service_principal": "ecs.amazonaws.com",
+      "trust_action": "sts:AssumeRole",
+      "attached_policy": "arn:aws:iam::aws:policy/aws-service-role/AmazonECSServiceRolePolicy",
+      "tags": [],
+      "created_at": "2026-08-22T09:01:38Z",
+      "observed_at": "2026-08-22T10:04:42Z",
+      "assessment": "VALID_REMOTE_SERVICE_LINKED_ROLE"
+    },
+    {
+      "terraform_address": "aws_iam_service_linked_role.rds",
+      "exists": true,
+      "arn": "arn:aws:iam::785072247535:role/aws-service-role/rds.amazonaws.com/AWSServiceRoleForRDS",
+      "role_name": "AWSServiceRoleForRDS",
+      "path": "/aws-service-role/rds.amazonaws.com/",
+      "service_principal": "rds.amazonaws.com",
+      "trust_action": "sts:AssumeRole",
+      "attached_policy": "arn:aws:iam::aws:policy/aws-service-role/AmazonRDSServiceRolePolicy",
+      "tags": [],
+      "created_at": "2026-08-22T09:01:38Z",
+      "observed_at": "2026-08-22T10:04:42Z",
+      "assessment": "VALID_REMOTE_SERVICE_LINKED_ROLE"
+    }
+  ],
+  "terraform_state_correction": {
+    "reason": "The failed create-time tag operations left two correctly created remote service-linked roles marked tainted in Terraform state.",
+    "operator_reference": "APPROVED_WORKLOAD_STATE_APPLY_ACTOR",
+    "backend_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "commands": [
+      "terraform untaint aws_iam_service_linked_role.ecs",
+      "terraform untaint aws_iam_service_linked_role.rds"
+    ],
+    "other_addresses_modified": 0,
+    "before": {
+      "serial": 4,
+      "lineage": "a0037ec5-6d65-c191-5d31-184de98cfb03",
+      "state_sha256": "b103c181713e42c2a670c993af5f19e57be29eaf05e9549c1e329138e5378af8",
+      "ecs_status": "tainted",
+      "rds_status": "tainted"
+    },
+    "after": {
+      "serial": 6,
+      "lineage": "a0037ec5-6d65-c191-5d31-184de98cfb03",
+      "state_sha256": "3ddf5395f35f05b142060f8e25f07952e89a2b8547f71c5e0bfb51bb1b158610",
+      "ecs_status": "ready",
+      "rds_status": "ready",
+      "managed_instances": 56
+    }
+  },
+  "safety_state": {
+    "kill_switch": "TRIPPED",
+    "kill_switch_version": 1,
+    "ecs_services": 0,
+    "ecs_tasks": 0,
+    "rds_instances": 0,
+    "capture_buckets": 0,
+    "audit_buckets": 0,
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "external_communications": 0
+  }
+}

@@ -1,0 +1,98 @@
+{
+  "record_type": "M67_PHASE1_PARTIAL_SUCCESSOR_PLAN_REVIEW",
+  "version": "2026-08-22.1",
+  "state": "READY_FOR_PHASE1_PARTIAL_APPLY_SUCCESSOR_AUTHORIZATION",
+  "observed_at": "2026-08-22T10:11:46Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "identities": {
+    "provider_plan_role": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "protected_backend_apply_role": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply"
+  },
+  "source": {
+    "repository_head": "06a2c3187a54039589fbab16bfcc8f6f43edb393",
+    "remediation_commit": "3d67979dab59f3e2160f48ecb8837381745c39d6",
+    "worker_image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:8af8123b618e5d5024b6d715cd7956a52a79df41e4b5d201c4dc5f993ee3edf5",
+    "controlled_egress_revision": "ADR-0076",
+    "partial_state_evidence_revision": "M67_PHASE1_PARTIAL_REMEDIATION_DEPLOYED_EVIDENCE::2026-08-22.1"
+  },
+  "hashes": {
+    "saved_plan_sha256": "09ca332349cfa30fd71b2fb5c75079d32ed25e0f8abdce5551e7aae903cd884d",
+    "plan_json_sha256": "7d38a11b3f97567fca1766a9f26e7a982bd0509a6dbda7508f904774cd0b86d7",
+    "configuration_sha256": "8023b7fa21b3534bb410570f9c14636b0fe70d352e2a11eef995f9881eccb83e",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "refresh_plan_sha256": "2410bfea5dee9515f33ff90a4b8713e72871fccacf05b06bac4c765102bf6bd9",
+    "refresh_plan_json_sha256": "a6b4a85f6dcc955f5be5d5f4069bad7b500dd5f21866540922ffa5871e254f41"
+  },
+  "inventory": {
+    "terraform_state_serial": 6,
+    "existing_managed_instances": 56,
+    "desired_managed_instances": 82,
+    "genuinely_absent_create_instances": 26,
+    "remote_resource_loss": 0,
+    "unexpected_managed_instances": 0,
+    "unaccounted_desired_instances": 0,
+    "refresh_observations": 20,
+    "refresh_classification": "NON_DESTRUCTIVE_REMOTE_COMPUTED_ATTRIBUTES_AND_FAILED_CREATE_TAG_ABSENCE"
+  },
+  "changes": {
+    "create": 26,
+    "change": 2,
+    "replace": 0,
+    "destroy": 0,
+    "in_place_updates": [
+      "aws_iam_service_linked_role.ecs",
+      "aws_iam_service_linked_role.rds"
+    ],
+    "in_place_update_reason": "Apply approved default governance tags now that narrowly scoped iam:TagRole is deployed.",
+    "ecs_service_linked_role_replace": 0,
+    "rds_service_linked_role_replace": 0,
+    "unexpected_replace": 0,
+    "unexpected_destroy": 0
+  },
+  "cost": {
+    "current_application_partial_daily_usd": "3.70",
+    "current_total_footprint_daily_usd": "3.86",
+    "current_application_partial_monthly_usd": "112.50",
+    "current_with_bootstrap_registry_monthly_usd": "117.50",
+    "completed_environment_monthly_baseline_usd": "142.65",
+    "bounded_phase1_total_estimate_usd": "150.00",
+    "hard_ceiling_usd": "250.00",
+    "remaining_headroom_usd": "100.00",
+    "exact_billed_cumulative_cost": "NOT_YET_AVAILABLE_FROM_COST_EXPLORER"
+  },
+  "safety": {
+    "kill_switch": "TRIPPED",
+    "ecs_services": 0,
+    "ecs_tasks": 0,
+    "rds_instances": 0,
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "real_business_access": 0,
+    "external_communications": 0
+  },
+  "warnings": [
+    "Two storage identity check blocks resolve only during apply because the buckets do not yet exist; both planned names match the shared deterministic identifier module and deployed IAM ARNs.",
+    "Exact billed cumulative cost is unavailable; estimates use current AWS public price-list evidence and the bounded architecture.",
+    "Continued delay accrues approximately USD 3.86 per day across the current application, bootstrap, and registry footprint."
+  ],
+  "validation": {
+    "repository_check": "PASS",
+    "ruff_check": "PASS",
+    "ruff_format_check": "PASS",
+    "strict_mypy": "PASS_160_SOURCE_FILES",
+    "deterministic_tests": "PASS_392",
+    "postgres_parity": "SKIPPED_OPT_IN_ENDPOINT_NOT_CONFIGURED",
+    "terraform_format": "PASS",
+    "terraform_bootstrap_validate": "PASS",
+    "terraform_phase1_validate": "PASS",
+    "python_compilation": "PASS",
+    "credential_value_audit": "PASS_3_PROVIDER_VALUES_ABSENT",
+    "iam_access_analyzer_findings": 0,
+    "git_diff_check": "PASS"
+  },
+  "owner_signature": null
+}
