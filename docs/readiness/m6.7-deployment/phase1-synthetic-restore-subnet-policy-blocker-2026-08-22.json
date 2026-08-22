@@ -1,0 +1,39 @@
+{
+  "record_type": "M67_PHASE1_SYNTHETIC_RESTORE_SUBNET_POLICY_BLOCKER",
+  "version": "2026-08-22.1",
+  "state": "BLOCKED_PENDING_EXACT_OPERATOR_POLICY_REMEDIATION",
+  "failed_action": "rds:RestoreDBInstanceToPointInTime",
+  "denied_resource": "arn:aws:rds:us-east-2:785072247535:subgrp:m67-phase1-database",
+  "caller": "arn:aws:sts::785072247535:assumed-role/m67-phase1-operator/m67-env-pitr-restore",
+  "aws_error": "AccessDenied",
+  "restore_target": "m67-phase1-restore-validation-20260822-1",
+  "restore_target_created": false,
+  "root_cause": "EXACT_RDS_SUBNET_GROUP_ARN_ABSENT_FROM_RESTORE_STATEMENT",
+  "remediation": {
+    "policy": "m67-phase1-environment-validation",
+    "statement": "RestoreExactSyntheticValidationDatabase",
+    "add_resource": "aws_db_subnet_group.phase1.arn",
+    "additional_actions": [],
+    "wildcard_resources_added": false
+  },
+  "completed_validations": {
+    "PRIVATE_ECR_S3_PULL_PATH": "PASS",
+    "KILL_SWITCH_BLOCK_V1": "PASS",
+    "MINIMIZATION_PERSISTENCE_V1": "PASS"
+  },
+  "pending_validations": {
+    "RESTORE_INSPECTION_V1": "NOT_STARTED",
+    "A_04": "BLOCKED_PENDING_SYNTHETIC_RESTORE_VALIDATION",
+    "A_08": "BLOCKED_PENDING_DEPLOYED_RESTORE_INSPECTION",
+    "ADR_0071": "PROPOSED_BLOCKED_PENDING_A04_A08"
+  },
+  "safe_state": {
+    "kill_switch": "TRIPPED",
+    "restore_target_absent": true,
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PERSON_CONTACT_PROCESSING": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED"
+  }
+}

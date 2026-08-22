@@ -184,6 +184,7 @@ def test_environment_validation_operator_is_bounded_to_synthetic_resources() -> 
     assert 'variable = "iam:PassedToService"' in policy
     assert 'actions = ["rds:RestoreDBInstanceToPointInTime"]' in policy
     assert "db:${var.name_prefix}-restore-validation-*" in policy
+    assert "aws_db_subnet_group.phase1.arn" in policy
     assert 'actions = ["rds:AddTagsToResource", "rds:DeleteDBInstance"]' in policy
     assert '"ecs:*"' not in policy
     assert '"rds:*"' not in policy

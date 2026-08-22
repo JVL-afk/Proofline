@@ -154,6 +154,7 @@ data "aws_iam_policy_document" "environment_validation" {
     actions = ["rds:RestoreDBInstanceToPointInTime"]
     resources = [
       aws_db_instance.phase1.arn,
+      aws_db_subnet_group.phase1.arn,
       "arn:${data.aws_partition.current.partition}:rds:${var.aws_region}:${data.aws_caller_identity.current.account_id}:db:${var.name_prefix}-restore-validation-*",
     ]
   }
