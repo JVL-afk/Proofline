@@ -1,0 +1,153 @@
+{
+  "record_type": "M67_LIVE_SEED_ROSTER_EXACT_SOURCE_REVIEW_SUCCESSOR",
+  "version": "1.0.0",
+  "observed_at": "2026-08-23T12:39:54.9618562Z",
+  "state": "BLOCKED_PENDING_QUALIFIED_SOURCE_RIGHTS_REVIEW_AND_LOCATOR_CONTRACT_ACCEPTANCE",
+  "requested_terminal_state_not_reached": "READY_FOR_LIVE_SEED_ROSTER_ACQUISITION_AUTHORIZATION",
+  "primary_a_identity_prerequisite": "PRIMARY_A_INDEPENDENT_AUTHENTICATION_ACCEPTED",
+  "primary_a_acceptance_record": "docs/readiness/m6.7-authorization/primary-a-independent-authentication-accepted-2026-08-23.json",
+  "live_candidate_source_operations_performed": 0,
+  "candidate_records_read": 0,
+  "business_websites_accessed": 0,
+  "exact_sources": [
+    {
+      "source_id": "TX_OPEN_DATA_TDLR_ALL_LICENSES::7358-krk7",
+      "source_kind": "DISCOVERY_SOURCE",
+      "exact_identity": "https://data.texas.gov/dataset/TDLR-All-Licenses/7358-krk7",
+      "documented_api": "https://data.texas.gov/api/v3/views/7358-krk7/query.json",
+      "publisher": "Texas Department of Licensing and Regulation",
+      "a09_state": "SOURCE_BLOCKED_PENDING_QUALIFIED_REUSE_CONCLUSION",
+      "access_review": "DOCUMENTED_PUBLIC_UNAUTHENTICATED_API_METADATA_VERIFIED",
+      "robots": "NOT_APPLICABLE_TO_DOCUMENTED_API_CONTRACT; NO HTML CRAWLING AUTHORIZED",
+      "specific_dataset_license": "UNSPECIFIED_OR_NOT_STATED_IN_CURRENT_DATASET_METADATA",
+      "portal_level_statement": "TEXAS_ODP_DESCRIBES_OPEN_DATA_AS_FREELY_USABLE_REUSABLE_AND_REDISTRIBUTABLE",
+      "material_uncertainty": "PORTAL_LEVEL_REUSE_DESCRIPTION_DOES_NOT_BY_ITSELF_RESOLVE_THE_DATASET_SPECIFIC_UNSPECIFIED_LICENSE",
+      "qualified_source_review_required": true,
+      "safe_query_projection_if_later_approved": [
+        "license_type",
+        "license_number",
+        "business_county",
+        "business_name",
+        "business_city_state_zip",
+        "license_expiration_date_mmddccyy",
+        "license_subtype"
+      ],
+      "never_query_or_durably_project": [
+        "business_telephone",
+        "owner_name",
+        "owner_telephone",
+        "business_address_line1",
+        "business_address_line2",
+        "mailing_address_line1",
+        "mailing_address_line2",
+        "mailing_address_city_state_zip",
+        "mailing_address_county",
+        "business_mailing"
+      ],
+      "business_entity_rule": "ONLY_AIR_CONDITIONING_CONTRACTOR_ROWS_WITH_A_HIGH_CONFIDENCE_LEGAL_ENTITY_SUFFIX; ALL_PERSON_SHAPED_SOLE_PROPRIETOR_AND_AMBIGUOUS_NAMES_REJECTED_BEFORE_DURABLE_PROJECTION",
+      "supports": {
+        "public_business_name": "YES_WITH_FAIL_CLOSED_ENTITY_SUFFIX_RULE",
+        "texas_location": "YES_CITY_STATE_ZIP_OR_COUNTY_ONLY",
+        "hvac_license": "YES_AIR_CONDITIONING_CONTRACTOR_LICENSE_TYPE_AND_SUBTYPE",
+        "current_license_evidence": "YES_EXPIRATION_FIELD_ONLY_NOT_GENERAL_OPERATIONAL_STATUS",
+        "first_party_host": "NO",
+        "b2b": "NO",
+        "commercial_service_focus": "NO",
+        "franchise_grouping": "NO"
+      },
+      "source_revision_binding": "FREEZE_METADATA_UPDATED_AT_DATA_UPDATED_AT_QUERY_TEXT_ORDER_AND_OBSERVATION_CUTOFF_BEFORE_RECORD_RETRIEVAL"
+    },
+    {
+      "source_id": "BRAVE_SEARCH_API_HOST_LOCATOR_V1",
+      "source_kind": "DISCOVERY_HOST_LOCATOR",
+      "exact_identity": "https://api.search.brave.com/res/v1/web/search",
+      "access_method": "EXACT_API_ENDPOINT_USING_DETERMINISTIC_BUSINESS_NAME_TEXAS_HVAC_QUERY; ONE_RESULT_CANDIDATE_ONLY; NO_AI_OR_ANSWER_ENDPOINT",
+      "a09_state": "SOURCE_BLOCKED_PENDING_QUALIFIED_CONTRACT_AND_STORAGE_RIGHTS_CONCLUSION",
+      "terms_url": "https://api-dashboard.search.brave.com/terms-of-service",
+      "terms_observed_revision": "2026-02-11",
+      "robots": "NOT_APPLICABLE_TO_CONTRACTED_API; DOWNSTREAM_EXACT_HOST_ROBOTS_REMAINS_PER_HOST",
+      "material_terms": [
+        "GENERAL_TERMS_PROHIBIT_NON_TRANSITORY_STORAGE_OR_DATABASE_CREATION_FROM_SEARCH_RESULTS",
+        "STORAGE_REQUIRES_A_PLAN_THAT_EXPRESSLY_GRANTS_STORAGE_RIGHTS",
+        "API_DOES_NOT_GRANT_RIGHTS_TO_DOWNSTREAM_WEBPAGE_CONTENT",
+        "API_USE_CREATES_A_CONTRACTUAL_RELATIONSHIP"
+      ],
+      "material_uncertainty": "PERSISTING_A_DERIVED_EXACT_HOST_AND_PROVENANCE_IN_THE_ROSTER_REQUIRES_A_QUALIFIED_CONCLUSION_OR_AN_EXPRESS_STORAGE_RIGHTS_PLAN",
+      "qualified_source_review_required": true,
+      "credentials_present": false,
+      "credentials_required_only_after_source_approval": "BRAVE_SEARCH_API_KEY_IN_AWS_SECRETS_MANAGER_NEVER_GIT_OR_CHAT",
+      "cost_if_later_approved": "USD_5_PER_1000_REQUESTS_WITH_ADVERTISED_MONTHLY_CREDIT; BOUND_120_REQUEST_MAX_COST_USD_0_60_BEFORE_CREDIT",
+      "storage_if_later_approved": "TRANSIENT_RESULTS_ONLY_EXCEPT_EXACT_DERIVED_HOST_AND_CONTENT_FREE_PROVENANCE_IF_EXPRESSLY_PERMITTED_BY_REVIEWED_TERMS_OR_ORDER_FORM"
+    },
+    {
+      "source_id": "TX_TDLR_LICENSE_SEARCH_INTERFACE",
+      "a09_state": "ELIMINATED_NOT_NEEDED",
+      "reason": "THE_EXACT_OPEN_DATASET_SUPPLIES_THE_LICENSE_FIELDS_NEEDED_FOR_THE_PRIMARY_IDENTITY_ANCHOR; THE_INTERACTIVE_INTERFACE_ADDS_PERSON_EXPOSURE_AND_AUTOMATION_RISK_WITHOUT_A_REQUIRED_FIELD"
+    }
+  ],
+  "preferred_locator_selection": "BRAVE_SEARCH_API_HOST_LOCATOR_V1",
+  "why_selected": "ONE_DOCUMENTED_NON_AI_API_WITH_DETERMINISTIC_JSON_OUTPUT_AND_NO_BROWSER; GOOGLE_CUSTOM_SEARCH_IS_CLOSED_TO_NEW_CUSTOMERS_AND_SCHEDULED_FOR_DISCONTINUATION; BING_SEARCH_API_IS_RETIRED",
+  "per_host_boundary": {
+    "locator_result_is_not_host_approval": true,
+    "each_host_requires_separate_enumerated_terms_robots_access_reuse_and_identity_result": true,
+    "batch_signature_allowed_only_with_each_host_result_separately_visible": true,
+    "blocked_or_uncertain_host": "SOURCE_BLOCKED",
+    "wildcard_approval": false
+  },
+  "proposed_acquisition_algorithm_after_source_rights_approval": [
+    "FREEZE_TDLR_METADATA_REVISION_QUERY_AND_CUTOFF",
+    "QUERY_ONLY_APPROVED_FIELDS_FOR_AIR_CONDITIONING_CONTRACTOR_ROWS_IN_STABLE_LICENSE_ORDER",
+    "EPHEMERALLY_REJECT_NATURAL_PERSON_SOLE_PROPRIETOR_AND_AMBIGUOUS_BUSINESS_NAMES",
+    "CONSIDER_AT_MOST_500_PREDECLARED_ROWS_AND_PRESERVE_CONTENT_FREE_EXCLUSION_COUNTS",
+    "FOR_EACH_HIGH_CONFIDENCE_BUSINESS_ENTITY_RUN_AT_MOST_ONE_DETERMINISTIC_BRAVE_WEB_QUERY",
+    "TRANSIENTLY_SELECT_ONLY_THE_TOP_EXACT_HOST_CANDIDATE_AND_DISCARD_ALL_SNIPPETS_TITLES_AND_OTHER_RESULTS",
+    "CREATE_SEPARATELY_ENUMERATED_PER_HOST_REVIEW_RECORD",
+    "ACCESS_NO_FIRST_PARTY_HOST_UNTIL_ITS_EXACT_REVIEW_RESULT_IS_APPROVED",
+    "PROJECT_ONLY_COMPLETE_BUSINESS_IDENTITY_TEXAS_HVAC_B2B_OPERATIONAL_HOST_AND_PROVENANCE_EVIDENCE",
+    "SEAL_24_TO_100_OBSERVATIONS_AND_ATTESTATION_THEN_STOP_NETWORK_ACCESS"
+  ],
+  "anti_cherry_picking": {
+    "tdlr_snapshot_query_and_cutoff_frozen_before_record_read": true,
+    "stable_license_order": true,
+    "only_preseed_eligibility_filters": true,
+    "one_locator_query_and_top_result_rule": true,
+    "website_quality_opportunity_value_contactability_and_outcome_forbidden": true,
+    "all_exclusions_ambiguities_and_blocked_hosts_counted": true,
+    "outcome_based_replacement": false
+  },
+  "proposed_limits": {
+    "source_records_considered": 500,
+    "output_observations_min": 24,
+    "output_observations_max": 100,
+    "logical_http_requests": 120,
+    "total_attempts": 360,
+    "aggregate_response_bytes": 36000000,
+    "concurrency": 1,
+    "minimum_delay_seconds_per_host": 2,
+    "ai_calls": 0,
+    "browser_sessions": 0,
+    "source_cost_max_usd": 0.60,
+    "release_validity": "7_DAYS_FROM_FUTURE_EXACT_SIGNATURE",
+    "kill_switch": "START_TRIPPED_EXPLICIT_BOUNDED_RUN_TRANSITION_FAIL_CLOSED_ON_TRIP_END_TRIPPED"
+  },
+  "required_human_source_decisions": [
+    "QUALIFIED_REVIEWER_CONCLUSION_ON_TDLR_DATASET_SPECIFIC_REUSE_WHEN_LICENSE_IS_UNSPECIFIED",
+    "QUALIFIED_REVIEWER_CONCLUSION_ON_WHETHER_BRAVE_DERIVED_HOST_PERSISTENCE_IS_ALLOWED_OR_SELECTION_OF_AN_EXPRESS_STORAGE_RIGHTS_PLAN",
+    "OWNER_ACCEPTANCE_OF_THE_BRAVE_API_CONTRACT_AND_MAXIMUM_USD_0_60_SOURCE_COST_IF_THE_QUALIFIED_REVIEW_ALLOWS_IT"
+  ],
+  "unconsumed_grants": {
+    "offline_seed_source_acquisition": "0/1",
+    "bounded_seed_construction": "0/1"
+  },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  },
+  "owner_live_acquisition_approval_statement": null,
+  "owner_live_acquisition_approval_withheld_reason": "MATERIAL_SOURCE_REUSE_AND_LOCATOR_CONTRACT_STORAGE_RIGHTS_REQUIRE_QUALIFIED_HUMAN_JUDGMENT"
+}

@@ -1,0 +1,36 @@
+{
+  "record_type": "M67_LIVE_SEED_ROSTER_EXACT_SOURCE_REVIEW_SUCCESSOR_PACKAGE",
+  "version": "1.0.0",
+  "created_at": "2026-08-23T12:39:54.9618562Z",
+  "state": "BLOCKED_PENDING_QUALIFIED_SOURCE_RIGHTS_REVIEW_AND_LOCATOR_CONTRACT_ACCEPTANCE",
+  "primary_a_acceptance_commit": "f8696f0703a04b0c4e98c1f5d89c662e8dc37184",
+  "artifacts": [
+    {
+      "path": "docs/readiness/m6.7-authorization/primary-a-independent-authentication-accepted-2026-08-23.json",
+      "sha256": "69413fe3ee7d2d997e579f711e933d72a195a42ae7a8cbfdcd8693a995d0c7ae"
+    },
+    {
+      "path": "docs/readiness/m6.7-authorization/live-seed-roster-exact-source-review-successor-2026-08-23.json",
+      "sha256": "81c3d736ba7d597feb41896812699576a4988bd0129623204e8639790d111ada"
+    },
+    {
+      "path": "docs/readiness/m6.7-authorization/tdlr-brave-source-rights-review-form-2026-08-23.md",
+      "sha256": "db8cfadaf51a1af54d1442f041d925732d6dcef8884303d7293b15ea994c209a"
+    }
+  ],
+  "official_sources_reviewed": [
+    "https://data.texas.gov/dataset/TDLR-All-Licenses/7358-krk7",
+    "https://dev.socrata.com/foundry/data.texas.gov/7358-krk7",
+    "https://data.texas.gov/stories/s/Welcome-to-the-Texas-Open-Data-Portal-2025/pgq4-7ntc/",
+    "https://dir.texas.gov/resource-library-item/texas-data-portals-resource-guide",
+    "https://www.tdlr.texas.gov/acr/",
+    "https://api-dashboard.search.brave.com/terms-of-service",
+    "https://brave.com/search/api/"
+  ],
+  "candidate_source_requests": 0,
+  "candidate_rows_read": 0,
+  "business_hosts_accessed": 0,
+  "approval_statement_emitted": false,
+  "permissions_changed": false,
+  "grants_consumed": false
+}
