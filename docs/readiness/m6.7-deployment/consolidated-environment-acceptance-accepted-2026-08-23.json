@@ -1,0 +1,41 @@
+{
+  "record_type": "M67_CONSOLIDATED_ENVIRONMENT_ACCEPTANCE",
+  "version": "2026-08-23.1",
+  "state": "ACCEPTED_FROZEN",
+  "accepted_at": "2026-08-23T05:01:45.1317759Z",
+  "approval_event": "APPROVE_CONSOLIDATED_PHASE1_ENVIRONMENT_ACCEPTANCE",
+  "approval_provenance": "HUMAN_PROJECT_OWNER_INSTRUCTION",
+  "owner_subject_ref": "m67-subject-01be3fd967846beb320a4ef6c522dcf99a6726fad410ad9b55c1738bff502981",
+  "predecessor_acceptance_record": {
+    "path": "docs/readiness/m6.7-deployment/consolidated-environment-acceptance-ready-2026-08-22.json",
+    "sha256": "7260f0443842e5d7456b27f8dfd8ad9bf39ff45b4e56ba4c56fe8ec9f77088ba"
+  },
+  "environment_evidence": {
+    "record": "M67_PHASE1_CONSOLIDATED_ENVIRONMENT_EVIDENCE::2026-08-22.1",
+    "sha256": "28d03fc5fa21f2a9fd6f5c99c699cfbf4146adf93127c6508f35ae0bd046c530",
+    "frozen": true
+  },
+  "decisions": [
+    {"decision": "A-03", "record_sha256": "350da7d85729385510a7d61a3373571ffa1ef3efe859ddd529488610d0b910b5", "state": "ACCEPTED"},
+    {"decision": "A-04", "record_sha256": "ca3d70511e498e0eddc6dfcf68c960c080c26b121d8e0078a681bcd579d57b52", "state": "ACCEPTED"},
+    {"decision": "A-07", "record_sha256": "29d7b46175895b2abce1ee4633fd02aaeadcefbc57d5078082cd66bea4cef763", "state": "ACCEPTED"},
+    {"decision": "A-08", "record_sha256": "ec8489fcf64987de4767fc202824850a745d0e2124eb20d39857ca08f870a766", "state": "ACCEPTED_LIVE_EFFECTIVE"},
+    {"decision": "ADR-0071", "record_sha256": "b8429209caf5743a8997f7b1030b6fe82ac7be0bc313dbdeb11dc803c9f22f89", "state": "ACCEPTED"}
+  ],
+  "reopen_policy": "ONLY_MATERIALLY_NEW_INVALIDATING_EVIDENCE_MAY_TRIGGER_A_VERSIONED_SUCCESSOR_REVIEW",
+  "primary_a_reconciliation": "PENDING_INDEPENDENT_AUTHENTICATION_FOR_LATER_DISCOVERY_ROLE_BINDING",
+  "non_authority": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED",
+    "SLOT_1": "NOT_AUTHORIZED",
+    "EXTERNAL_COMMUNICATION": "NOT_AUTHORIZED",
+    "AI": "NOT_AUTHORIZED",
+    "BROWSER": "NOT_AUTHORIZED"
+  },
+  "exact_owner_attestation": "I approve APPROVE_CONSOLIDATED_PHASE1_ENVIRONMENT_ACCEPTANCE for AWS account 785072247535 in us-east-2, binding consolidated environment-evidence SHA-256 28d03fc5fa21f2a9fd6f5c99c699cfbf4146adf93127c6508f35ae0bd046c530 and the five separately auditable decision records: A-03 SHA-256 350da7d85729385510a7d61a3373571ffa1ef3efe859ddd529488610d0b910b5; A-04 SHA-256 ca3d70511e498e0eddc6dfcf68c960c080c26b121d8e0078a681bcd579d57b52; A-07 SHA-256 29d7b46175895b2abce1ee4633fd02aaeadcefbc57d5078082cd66bea4cef763; A-08 live-effectiveness SHA-256 ec8489fcf64987de4767fc202824850a745d0e2124eb20d39857ca08f870a766; and ADR-0071 SHA-256 b8429209caf5743a8997f7b1030b6fe82ac7be0bc313dbdeb11dc803c9f22f89. I accept those five environment decisions from the observed deployed and synthetic-validation evidence. This acceptance does not authorize real-business discovery, public research, person/contact processing, Slot 1, external communication, AI use, browser use, or any other live-data activity. PRIMARY_A independent authentication remains a separate later discovery-role prerequisite."
+}
