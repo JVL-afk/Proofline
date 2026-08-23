@@ -1,0 +1,53 @@
+{
+  "record_type": "M67_ELEVATED_LOCAL_DNS_RESOLVER_REMEDIATION_OWNER_APPROVAL_ACCEPTED",
+  "version": "1.0.0",
+  "state": "APPROVED",
+  "event": "APPROVE_ELEVATED_LOCAL_DNS_RESOLVER_REMEDIATION",
+  "account_scope": "LOCAL_WINDOWS_HOST",
+  "preparation_commit": "92a7c283877b3476415beb2a0d0581b512c7d659",
+  "authorization_configuration_sha256": "db856fa62a0f9e6332d971bc9b8aa2b773099f287c55b3d94ce4b2644eaf52da",
+  "exact_executable_sha256": "f78cc0be997d7646cd76bb8c5ce1b2c7ddd9cca4b8a6c54039eff665d72302ed",
+  "consumed_predecessor_attempt_evidence_sha256": "35bb7c5e222a6b100a01be57a594cfaf383b8ecb4293118ec6b9cf1860bef1f3",
+  "validity": {
+    "starts_at": "2026-08-23T17:17:00Z",
+    "expires_at": "2026-08-30T17:17:00Z",
+    "terminal_attempts": 1
+  },
+  "elevation_precondition": {
+    "administrator_token": "REQUIRED",
+    "minimum_integrity": "HIGH",
+    "minimum_integrity_rid": 12288,
+    "checked_before_grant_consumption": true,
+    "non_elevated_result": "GRANT_NOT_CONSUMED"
+  },
+  "target": {
+    "interface_alias": "Wi-Fi",
+    "interface_index": 13,
+    "interface_guid": "{997EE793-757E-4FD9-8138-CE1BF9FA1B32}",
+    "expected_before_ipv4_dns": [
+      "192.168.1.1"
+    ],
+    "approved_after_ipv4_dns": [
+      "8.8.8.8",
+      "8.8.4.4"
+    ]
+  },
+  "proof_scope": {
+    "exact_hosts": [
+      "data.texas.gov",
+      "nominatim.openstreetmap.org"
+    ],
+    "queries_per_host": 1,
+    "http_requests": 0,
+    "tls_connections": 0,
+    "source_content_bytes": 0,
+    "retries": 0
+  },
+  "guard_states": {
+    "kill_switch": "TRIPPED",
+    "all_seven_m6_7_permissions": "NOT_AUTHORIZED",
+    "offline_projection": "0/1_UNCONSUMED",
+    "seed_construction": "0/1_UNCONSUMED"
+  },
+  "exact_owner_attestation": "I approve APPROVE_ELEVATED_LOCAL_DNS_RESOLVER_REMEDIATION on the local Windows host, binding preparation commit 92a7c283877b3476415beb2a0d0581b512c7d659, authorization configuration SHA-256 db856fa62a0f9e6332d971bc9b8aa2b773099f287c55b3d94ce4b2644eaf52da, exact elevated executable SHA-256 f78cc0be997d7646cd76bb8c5ce1b2c7ddd9cca4b8a6c54039eff665d72302ed, and permanently consumed predecessor-attempt evidence SHA-256 35bb7c5e222a6b100a01be57a594cfaf383b8ecb4293118ec6b9cf1860bef1f3. This authorizes exactly one successor attempt between 2026-08-23T17:17:00Z and 2026-08-30T17:17:00Z, but the grant may be consumed only after the exact runner locally proves an elevated Windows Administrator token, High-or-stronger integrity, active Wi-Fi interface index 13 and GUID {997EE793-757E-4FD9-8138-CE1BF9FA1B32}, and unchanged IPv4 DNS before-state 192.168.1.1 without performing any network operation or mutation. A failed elevation, adapter, or before-state precondition does not consume the grant and authorizes no mutation. After those preconditions pass, this authorizes only setting that adapter's IPv4 DNS to preferred 8.8.8.8 and alternate 8.8.4.4 with the exact two netsh commands, flushing the Windows DNS cache, verifying IPv4 address, gateway, DHCP addressing and IPv6 DNS remain unchanged, and performing exactly one ordinary current-system DNS proof for data.texas.gov and exactly one for nominatim.openstreetmap.org. Any apply or DNS-proof failure after consumption requires immediate DHCP-DNS rollback from the same elevated session, cache flush, evidence sealing and stop. This authorizes zero HTTP requests, TLS connections, source-content retrieval, retries, browser or AI use, proxy/VPN/firewall change, AWS or Terraform change, source acquisition, or M6.7 permission change. The kill switch remains TRIPPED; all seven M6.7 permissions remain NOT_AUTHORIZED; and the offline-projection and bounded seed-construction grants remain 0/1 unconsumed. Successful DNS proof authorizes only preparation of a separately reviewed post-remediation DNS/TLS connectivity preflight package and does not authorize that preflight or live acquisition."
+}
