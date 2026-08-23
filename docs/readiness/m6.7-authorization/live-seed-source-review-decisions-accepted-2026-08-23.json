@@ -1,0 +1,58 @@
+{
+  "record_type": "M67_LIVE_SEED_SOURCE_REVIEW_DECISIONS",
+  "version": "1.0.0",
+  "recorded_at": "2026-08-23T13:45:05.7685616Z",
+  "evidence_state": "OWNER_TRANSMITTED_EXACT_REVIEWER_STATEMENT",
+  "review_kind": "SOURCE_GOVERNANCE_NOT_LEGAL_OPINION",
+  "reviewer_human_identity_in_repository": "NOT_RECORDED",
+  "reviewer_statement_path": "docs/readiness/m6.7-authorization/tdlr-brave-qualified-source-review-response-2026-08-23.md",
+  "decisions": [
+    {
+      "source_id": "TX_OPEN_DATA_TDLR_ALL_LICENSES::7358-krk7",
+      "state": "APPROVED_WITH_CONTROLS",
+      "allowed_fields": [
+        "license_type",
+        "license_number",
+        "business_county",
+        "business_name",
+        "business_city_state_zip",
+        "license_expiration_date_mmddccyy",
+        "license_subtype"
+      ],
+      "controls": [
+        "REJECT_NATURAL_PERSON_SOLE_PROPRIETOR_AND_AMBIGUOUS_NAME_RECORDS_BEFORE_DURABLE_PROJECTION",
+        "REQUIRE_HIGH_CONFIDENCE_LEGAL_ENTITY_SUFFIX",
+        "DO_NOT_QUERY_OR_RETAIN_OWNER_TELEPHONE_STREET_MAILING_GEOSPATIAL_OR_CONTACT_FIELDS",
+        "RETAIN_DATASET_URL_IDENTIFIER_AND_ACCESS_DATE_AS_PROVENANCE",
+        "PRESERVE_ONLY_APPROVED_BUSINESS_FIELDS",
+        "DO_NOT_ONWARD_PUBLISH_EXCLUDED_PERSONAL_FIELDS",
+        "PERIODICALLY_RECHECK_DATASET_METADATA_AND_LICENSE_STATUS"
+      ],
+      "residual_uncertainty": "NO_DATASET_SPECIFIC_LICENSE_ESTABLISHED",
+      "unconditional_license_grant": false
+    },
+    {
+      "source_id": "BRAVE_SEARCH_API_HOST_LOCATOR_V1",
+      "plan": "ORDINARY_CURRENT_SEARCH_API_TERMS",
+      "state": "REJECTED",
+      "persistent_hostname_allowed": false,
+      "reason": "ORDINARY_TERMS_PROHIBIT_NON_TRANSITORY_STORAGE_OF_SEARCH_RESULTS_IN_WHOLE_OR_IN_PART",
+      "potential_successor_state": "POTENTIALLY_APPROVABLE_WITH_CONTROLS_AFTER_EXPRESS_CUSTOM_STORAGE_AUTHORIZATION",
+      "required_successor_evidence": "ACTUAL_ORDER_FORM_CUSTOM_AGREEMENT_OR_WRITTEN_AUTHORIZATION_EXPRESSLY_PERMITTING_DERIVED_LOCATOR_RETENTION_AND_USE",
+      "downstream_content_rights_granted": false
+    }
+  ],
+  "current_source_state": "TDLR_APPROVED_WITH_CONTROLS_BRAVE_ORDINARY_PLAN_REJECTED",
+  "live_acquisition_readiness": "BLOCKED_PENDING_COMPLIANT_FIRST_PARTY_HOST_LOCATOR",
+  "live_operations_performed": 0,
+  "grants_consumed": false,
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  }
+}
