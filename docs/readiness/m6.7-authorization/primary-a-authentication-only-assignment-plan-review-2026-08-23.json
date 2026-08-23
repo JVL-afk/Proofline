@@ -1,0 +1,86 @@
+{
+  "record_type": "M67_PRIMARY_A_AUTHENTICATION_ONLY_ASSIGNMENT_PLAN_REVIEW",
+  "version": "1.0.0",
+  "state": "READY_FOR_PRIMARY_A_AUTHENTICATION_ONLY_ASSIGNMENT_APPLY_AUTHORIZATION",
+  "prepared_at": "2026-08-23T11:00:00Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "partition": "aws",
+    "identity_center_instance_arn": "arn:aws:sso:::instance/ssoins-668449c46cda2b4b",
+    "primary_a_user_ref": "sha256:321f4f40a48514c580f7660064eeccb36ecac738065274e9795c739ae1a42c2c"
+  },
+  "source": {
+    "repository_commit": "6554d013c7aa5fa6c3d2bb081c604742055e361f",
+    "readonly_identity_evidence_sha256": "79785be266dd422678e7731a8d94df221932bfbb274c6c9cf98a8df0ac2b3e19"
+  },
+  "toolchain": {
+    "terraform_version": "1.15.9",
+    "aws_provider_version": "6.53.0"
+  },
+  "hashes": {
+    "saved_plan_sha256": "8eaea40311964b3bb4fb6000cce0619c82b106fbf28c91214de7d29d0b531ffa",
+    "plan_json_sha256": "7d7ee74a36554ea3364f9bdfb687095398af08144dce19cdc8c9002930716cd6",
+    "configuration_sha256": "12ad4e0d4cdc2a84e633a3ba541e46285414dcccfa1d9bd711d75b32e3919ccf",
+    "provider_lock_sha256": "b0f95a645ac5a5db24949e074c48758bb1a1f867ef73148e174a1e1ae1e76c9f"
+  },
+  "changes": {
+    "create": 2,
+    "change": 0,
+    "replace": 0,
+    "destroy": 0,
+    "unexpected_change": 0
+  },
+  "planned_resources": [
+    {
+      "address": "aws_ssoadmin_permission_set.primary_a_authentication_only",
+      "action": "CREATE",
+      "name": "m67-primary-a-auth-only",
+      "session_duration": "PT1H",
+      "inline_policies": 0,
+      "managed_policy_attachments": 0,
+      "customer_managed_policy_attachments": 0,
+      "permissions_boundaries": 0,
+      "service_permissions": "NONE"
+    },
+    {
+      "address": "aws_ssoadmin_account_assignment.primary_a_authentication_only",
+      "action": "CREATE",
+      "principal_type": "USER",
+      "principal_ref": "sha256:321f4f40a48514c580f7660064eeccb36ecac738065274e9795c739ae1a42c2c",
+      "target_account_id": "785072247535",
+      "permission_set": "m67-primary-a-auth-only"
+    }
+  ],
+  "resulting_access": {
+    "purpose": "ONE_TIME_INDEPENDENT_MFA_BACKED_IDENTITY_EVENT",
+    "aws_service_permissions": [],
+    "permitted_observation": "AWS_STS_GET_CALLER_IDENTITY_ONLY",
+    "aws_generated_side_effect": "ONE_AWSRESERVEDSSO_ROLE_FOR_THE_NO_POLICY_PERMISSION_SET",
+    "challenge_issuance_authorized": false,
+    "discovery_role_release_authorized": false
+  },
+  "review": {
+    "authenticated_plan_succeeded": true,
+    "target_account_matches": true,
+    "target_region_matches": true,
+    "existing_bootstrap_resources_are_no_op": true,
+    "unrelated_resources_present": false,
+    "policies_attached": false,
+    "long_lived_credentials_created": false,
+    "cost": "NO_MATERIAL_RECURRING_AWS_CHARGE_EXPECTED",
+    "mfa_enrollment_prechallenge_state": "NOT_SYSTEM_VERIFIED",
+    "mfa_resolution": "VERIFY_FROM_PRIMARY_A_INDEPENDENT_AUTHENTICATION_EVENT"
+  },
+  "required_owner_event": "APPROVE_PRIMARY_A_AUTHENTICATION_ONLY_ASSIGNMENT_APPLY",
+  "owner_approval_statement": "I approve APPROVE_PRIMARY_A_AUTHENTICATION_ONLY_ASSIGNMENT_APPLY for AWS account 785072247535 in us-east-2, exclusively for saved Terraform plan SHA-256 8eaea40311964b3bb4fb6000cce0619c82b106fbf28c91214de7d29d0b531ffa, plan-JSON SHA-256 7d7ee74a36554ea3364f9bdfb687095398af08144dce19cdc8c9002930716cd6, configuration SHA-256 12ad4e0d4cdc2a84e633a3ba541e46285414dcccfa1d9bd711d75b32e3919ccf, provider-lock SHA-256 b0f95a645ac5a5db24949e074c48758bb1a1f867ef73148e174a1e1ae1e76c9f, source commit 6554d013c7aa5fa6c3d2bb081c604742055e361f, and read-only identity-evidence SHA-256 79785be266dd422678e7731a8d94df221932bfbb274c6c9cf98a8df0ac2b3e19, comprising 2 creates, 0 changes, 0 replacements, and 0 destroys. This authorizes only creation of the no-policy one-hour permission set m67-primary-a-auth-only and its exact USER assignment to the already-observed pseudonymous PRIMARY_A identity in account 785072247535, including AWS creation of the corresponding no-policy AWSReservedSSO role. It grants no AWS service permissions and exists solely to obtain a later independent MFA-backed STS identity event. It does not authorize challenge issuance, real-business discovery, public research, person/contact processing, seed acquisition or construction, Slot 1, external communication, AI, browser use, or any other AWS change.",
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  }
+}

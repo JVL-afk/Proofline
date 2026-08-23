@@ -6,6 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 AUTH = ROOT / "docs" / "readiness" / "m6.7-authorization"
 TF = ROOT / "infra" / "terraform" / "bootstrap" / "primary_a_authentication.tf"
+PLAN_REVIEW = AUTH / "primary-a-authentication-only-assignment-plan-review-2026-08-23.json"
 
 
 def test_readonly_evidence_requires_a_new_assignment_without_claiming_mfa() -> None:
@@ -51,3 +52,27 @@ def test_raw_primary_a_identity_is_not_committed() -> None:
     assert "@" not in evidence
     assert '"username":' not in evidence.lower()
     assert '"email":' not in evidence.lower()
+
+
+def test_assignment_plan_review_is_exact_and_fail_closed() -> None:
+    review = json.loads(PLAN_REVIEW.read_text(encoding="utf-8"))
+    assert review["state"] == (
+        "READY_FOR_PRIMARY_A_AUTHENTICATION_ONLY_ASSIGNMENT_APPLY_AUTHORIZATION"
+    )
+    assert review["changes"] == {
+        "create": 2,
+        "change": 0,
+        "replace": 0,
+        "destroy": 0,
+        "unexpected_change": 0,
+    }
+    assert {item["address"] for item in review["planned_resources"]} == {
+        "aws_ssoadmin_permission_set.primary_a_authentication_only",
+        "aws_ssoadmin_account_assignment.primary_a_authentication_only",
+    }
+    permission_set = review["planned_resources"][0]
+    assert permission_set["service_permissions"] == "NONE"
+    assert permission_set["inline_policies"] == 0
+    assert permission_set["managed_policy_attachments"] == 0
+    assert review["resulting_access"]["challenge_issuance_authorized"] is False
+    assert set(review["permissions"].values()) == {"NOT_AUTHORIZED"}
