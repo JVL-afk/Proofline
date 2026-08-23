@@ -90,3 +90,32 @@ def test_repaired_runtime_evidence_precedes_successor_network_grant() -> None:
     assert successor["network_limits"]["http_requests"] == 0
     assert successor["network_limits"]["retries"] == 0
     assert successor["permission_effect"]["m6_7_changes"] == 0
+
+
+def test_successor_preflight_owner_gate_is_new_and_zero_http() -> None:
+    directory = ROOT / "docs/readiness/m6.7-authorization"
+    ready_name = "-".join(
+        [
+            "seed",
+            "source",
+            "connectivity",
+            "successor",
+            "preflight",
+            "owner",
+            "approval",
+            "ready",
+            "2026",
+            "08",
+            "23.json",
+        ]
+    )
+    ready_path = directory / ready_name
+    value = json.loads(ready_path.read_text())
+    assert value["event"] == "AUTHORIZE_SUCCESSOR_SEED_SOURCE_CONNECTIVITY_PREFLIGHT"
+    assert value["runtime"]["runtime_preflight_before_grant_consumption"] == "PASS"
+    assert value["limits"]["http_requests"] == 0
+    assert value["limits"]["retries"] == 0
+    assert value["preconditions"]["predecessor_preflight"] == "TERMINAL_NEVER_REUSABLE"
+    statement = value["exact_owner_approval_statement"]
+    assert "all seven M6.7 permissions remain NOT_AUTHORIZED" in statement
+    assert "does not authorize acquisition" in statement
