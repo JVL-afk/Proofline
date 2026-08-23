@@ -1,0 +1,67 @@
+{
+  "record_type": "M67_PRIMARY_A_IDENTITY_CENTER_READONLY_EVIDENCE",
+  "version": "1.0.0",
+  "observed_at": "2026-08-23T10:59:27.7098322Z",
+  "observation_method": "AUTHORIZED_AWS_CLI_V2_SSO_ADMIN_IDENTITYSTORE_STS_AND_CLOUDTRAIL_READ_ONLY",
+  "screenshot_used_as_authoritative_evidence": false,
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "partition": "aws",
+  "caller_authority_ref": "sha256:fdaaa31ab3bd7619085ffed76003464c032fe8cdfac9c007b36a2857c15f497f",
+  "identity_center": {
+    "instance_arn": "arn:aws:sso:::instance/ssoins-668449c46cda2b4b",
+    "identity_store_ref": "sha256:8b64d818818bab15bda3b7a08ad6e6ab93d0908fd8c094f282d584e5ee73fea8",
+    "owner_account_id": "785072247535",
+    "status": "ACTIVE"
+  },
+  "primary_a": {
+    "matching_user_count": 1,
+    "user_ref": "sha256:321f4f40a48514c580f7660064eeccb36ecac738065274e9795c739ae1a42c2c",
+    "user_status": "ENABLED",
+    "distinct_from_owner_actor_observed_user": true,
+    "owner_user_ref": "sha256:b758fe048af0a1dca63310668f458a26bc7578db42ee57c986e76a28f61ebb0f"
+  },
+  "mfa": {
+    "public_identitystore_mfa_device_api_available": false,
+    "cloudtrail_list_mfa_devices_events_observed": 3,
+    "cloudtrail_response_device_count_available": false,
+    "conclusion": "MFA_DEVICE_COUNT_NOT_SYSTEM_VERIFIED_PRE_CHALLENGE",
+    "required_resolution": "VERIFY_MFA_ASSURANCE_FROM_PRIMARY_A_INDEPENDENT_AUTHENTICATION_EVENT"
+  },
+  "assignments": {
+    "aws_account_assignments": 0,
+    "application_assignments": 0,
+    "authentication_only_assignment_exists": false,
+    "existing_assignment_privilege_review": "NO_ASSIGNMENTS_TO_REVIEW"
+  },
+  "conclusion": {
+    "primary_a_actor_exists": true,
+    "primary_a_enabled": true,
+    "primary_a_distinct_from_owner_actor": true,
+    "approved_idp_instance_observed": true,
+    "mfa_enrollment_authoritatively_verified": false,
+    "authentication_only_audience_exists": false,
+    "aws_mutation_required": true,
+    "minimum_mutation": "CREATE_ONE_NO_POLICY_PERMISSION_SET_AND_ONE_ACCOUNT_ASSIGNMENT_FOR_PRIMARY_A_ONLY"
+  },
+  "sensitive_values_not_recorded": [
+    "USERNAME",
+    "DISPLAY_NAME",
+    "EMAIL",
+    "RAW_IDENTITY_STORE_ID",
+    "RAW_USER_IDS",
+    "CALLER_SESSION_NAME",
+    "SSO_START_URL",
+    "TOKEN",
+    "MFA_SECRET_OR_DEVICE_DETAIL"
+  ],
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  }
+}
