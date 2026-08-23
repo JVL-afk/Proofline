@@ -1,0 +1,60 @@
+{
+  "record_type": "M67_OFFLINE_ROSTER_ACQUISITION_BLOCKER",
+  "version": "1.0.0",
+  "state": "BLOCKED_PENDING_OWNER_OFFLINE_ROSTER",
+  "observed_at": "2026-08-23T06:20:37.2419822Z",
+  "source_acquisition_authorization": "AUTHORIZED_UNCONSUMED",
+  "source_acquisition_attempts_consumed": 0,
+  "seed_construction_authorization": "AUTHORIZED_UNCONSUMED",
+  "seed_construction_attempts_consumed": 0,
+  "roster_found": false,
+  "source_instance_attestation_found": false,
+  "authoritative_input_paths": {
+    "roster": "local-data/m6.7/seed-source-acquisition/input/offline-business-roster.json",
+    "attestation": "local-data/m6.7/seed-source-acquisition/input/offline-business-roster-attestation.json"
+  },
+  "downstream_output_paths": {
+    "projected_seed_input": "local-data/m6.7/seed-construction/input/phase1-seed-input.json",
+    "projected_seed_input_attestation": "local-data/m6.7/seed-construction/input/phase1-seed-input-attestation.json"
+  },
+  "required_roster": {
+    "encoding": "UTF8_JSON_ARRAY",
+    "schema": "phase1-seed-construction-input-v1.schema.json",
+    "schema_sha256": "96b0805b6d3c7022387a7290daee81aa90dabcc3489c6a49d8a71ee1c33a296b",
+    "records": "24_TO_100",
+    "maximum_bytes": 5000000,
+    "complete_predeclared_frame": true,
+    "business_only": true,
+    "row_level_provenance": true,
+    "opportunity_or_outcome_selection": false
+  },
+  "required_attestation_template": {
+    "path": "offline-seed-source-instance-attestation.template.json",
+    "sha256": "4e412231b3654d54d1fbc44a1c8f6b90538834eb297e4bc914e7ef13b63e664d",
+    "all_decision_fields_non_null": true,
+    "artifact_hash_before_parse": true,
+    "rights_uncertainty_requires_qualified_review": true
+  },
+  "operations_performed": {
+    "rosters_parsed": 0,
+    "records_projected": 0,
+    "source_acquisition_attempts": 0,
+    "seed_construction_attempts": 0,
+    "csprng_seeds_generated": 0,
+    "dns_queries": 0,
+    "http_requests": 0,
+    "provider_calls": 0,
+    "ai_calls": 0,
+    "browser_sessions": 0,
+    "external_communications": 0
+  },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  }
+}

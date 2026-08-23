@@ -75,3 +75,29 @@ def test_exact_owner_gate_binds_committed_offline_package() -> None:
     statement = approval["exact_owner_approval_statement"]
     assert "zero DNS, HTTP, website, government-registry, provider, AI or browser" in statement
     assert "bounded seed-construction grant remains unconsumed" in statement
+
+
+def test_offline_acquisition_approval_is_frozen_but_unconsumed_without_roster() -> None:
+    ready = load("seed-source-acquisition-owner-approval-ready-2026-08-23.json")
+    accepted = load("seed-source-acquisition-owner-approval-accepted-2026-08-23.json")
+    blocker = load("offline-roster-blocker-2026-08-23.json")
+    assert accepted["state"] == "AUTHORIZED_UNCONSUMED"
+    assert accepted["attempts_consumed"] == 0
+    assert accepted["seed_construction_attempts_consumed"] == 0
+    assert accepted["exact_owner_attestation"] == ready["exact_owner_approval_statement"]
+    assert blocker["state"] == "BLOCKED_PENDING_OWNER_OFFLINE_ROSTER"
+    assert blocker["roster_found"] is False
+    assert blocker["source_instance_attestation_found"] is False
+    assert set(blocker["operations_performed"].values()) == {0}
+    assert set(blocker["permissions"].values()) == {"NOT_AUTHORIZED"}
+
+
+def test_documented_example_is_synthetic_nonexecutable_and_contact_free() -> None:
+    example = (AUTH / "offline-roster-required-structure-and-synthetic-example.md").read_text(
+        encoding="utf-8"
+    )
+    assert "not an executable input artifact" in example
+    assert "intentionally fails the 24-record minimum" in example
+    assert ".example.test" in example
+    assert "@" not in example
+    assert "555-" not in example
