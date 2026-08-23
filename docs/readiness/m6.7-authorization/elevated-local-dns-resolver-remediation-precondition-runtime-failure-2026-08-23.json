@@ -1,0 +1,58 @@
+{
+  "record_type": "M67_ELEVATED_LOCAL_DNS_REMEDIATION_PRECONDITION_RUNTIME_FAILURE",
+  "version": "1.0.0",
+  "evidence_id": "M67_ELEVATED_LOCAL_DNS_PRECONDITION_RUNTIME_FAILURE::2026-08-23.1",
+  "state": "BLOCKED_ELEVATED_DNS_RUNNER_WINDOWS_POWERSHELL_COMPATIBILITY",
+  "terminal_for_exact_executable": true,
+  "observed_at": "2026-08-23T17:25:36.1078390Z",
+  "authorization": {
+    "event": "APPROVE_ELEVATED_LOCAL_DNS_RESOLVER_REMEDIATION",
+    "accepted_record_sha256": "126e634231695b316d0590eddb6b26e702ffdc429704a0a0e6867e4c3ad98658",
+    "exact_executable_sha256": "f78cc0be997d7646cd76bb8c5ce1b2c7ddd9cca4b8a6c54039eff665d72302ed"
+  },
+  "execution": {
+    "launcher": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+    "launcher_version": "5.1.26100.9168",
+    "uac_process_exit_code": 1,
+    "runner_evidence_created": false,
+    "grant_consumed": false,
+    "mutation_started": false,
+    "dns_queries": 0,
+    "http_requests": 0,
+    "tls_connections": 0,
+    "source_content_bytes": 0
+  },
+  "root_cause": {
+    "code": "WINDOWS_POWERSHELL_5_1_CONVERTFROMJSON_ASHASHTABLE_UNSUPPORTED",
+    "observed_supported_convertfrom_json_parameters": [
+      "InputObject",
+      "Verbose",
+      "Debug",
+      "ErrorAction",
+      "WarningAction",
+      "InformationAction",
+      "ErrorVariable",
+      "WarningVariable",
+      "InformationVariable",
+      "OutVariable",
+      "OutBuffer",
+      "PipelineVariable"
+    ],
+    "unsupported_parameter": "AsHashtable",
+    "failure_boundary": "AUTHORIZATION_RECORD_PARSE_BEFORE_ADAPTER_PRECONDITION_AND_BEFORE_GRANT_CONSUMPTION",
+    "conclusion": "The exact runner was written with a PowerShell 7 ConvertFrom-Json parameter but the approved elevated command intentionally launched Windows PowerShell 5.1. The process exited before grant consumption or mutation."
+  },
+  "post_failure_local_observation": {
+    "effective_ipv4_dns": [
+      "192.168.1.1"
+    ],
+    "network_configuration_changed": false
+  },
+  "guard_states": {
+    "kill_switch": "TRIPPED_UNCHANGED",
+    "all_seven_m6_7_permissions": "NOT_AUTHORIZED",
+    "offline_projection": "0/1_UNCONSUMED",
+    "seed_construction": "0/1_UNCONSUMED"
+  },
+  "next_requirement": "Prepare a Windows PowerShell 5.1-compatible hash-locked successor executable and obtain a new exact owner approval before any DNS mutation."
+}
