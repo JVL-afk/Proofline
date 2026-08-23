@@ -89,3 +89,22 @@ def test_hosts_are_compile_time_constants_and_have_no_cli_host_argument() -> Non
     assert "urllib" not in source
     assert ".send(" not in source
     assert ".recv(" not in source
+
+
+def test_owner_gate_does_not_authorize_acquisition_or_permission_change() -> None:
+    directory = ROOT / "docs/readiness/m6.7-authorization"
+    value = json.loads(
+        (
+            directory / "seed-source-connectivity-preflight-owner-approval-ready-2026-08-23.json"
+        ).read_text()
+    )
+    assert value["state"] == "READY_FOR_SEED_SOURCE_CONNECTIVITY_PREFLIGHT"
+    assert value["execution"]["exact_hosts"] == list(preflight.HOSTS)
+    assert value["execution"]["http_requests"] == 0
+    assert value["execution"]["application_bytes_sent"] == 0
+    assert value["aws_mutation"] is False
+    assert value["terraform"]["creates"] == 0
+    assert value["preconditions"]["real_business_discovery"] == "NOT_AUTHORIZED"
+    statement = value["exact_owner_approval_statement"]
+    assert "does not itself authorize acquisition" in statement
+    assert "all seven M6.7 permissions remain NOT_AUTHORIZED" in statement

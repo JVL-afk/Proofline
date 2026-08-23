@@ -1,0 +1,55 @@
+{
+  "record_type": "M67_SEED_SOURCE_CONNECTIVITY_PREFLIGHT_OWNER_APPROVAL_READY",
+  "version": "1.0.0",
+  "state": "READY_FOR_SEED_SOURCE_CONNECTIVITY_PREFLIGHT",
+  "event": "AUTHORIZE_SEED_SOURCE_CONNECTIVITY_PREFLIGHT",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "preparation_commit": "8cbd2cacb84d78ab83bb311e8f859324c42715cb",
+  "diagnosis_sha256": "a9ef057fed28a65ae231452113ae07e6a63e96b609d59b2766598f6babb6d59e",
+  "configuration_sha256": "d5744abae2f2874250dc1123962a24219bad68370bd3fb9af25a495183c0813c",
+  "preflight_executable_sha256": "defb7325b393a07646926843d11f793aae42455b8becaed3294fc99da51a639a",
+  "failed_attempt_evidence_sha256": "f27d224fcadfd0202258358792fb5456672695f64732f8d70f64ea3935d74dee",
+  "validity": {
+    "starts_at": "2026-08-23T15:22:10Z",
+    "expires_at": "2026-08-30T15:22:10Z",
+    "terminal_attempts": 1
+  },
+  "execution": {
+    "path": "LOCAL_WINDOWS_CPYTHON_3_13_EXACT_HASH_BOUND_PREFLIGHT",
+    "python": "C:\\Python313\\python.exe",
+    "exact_hosts": [
+      "data.texas.gov",
+      "nominatim.openstreetmap.org"
+    ],
+    "logical_dns_resolutions": 2,
+    "maximum_tls_connection_attempts": 4,
+    "port": 443,
+    "http_requests": 0,
+    "source_response_bytes": 0,
+    "application_bytes_sent": 0,
+    "application_bytes_received": 0,
+    "alternate_resolver_proxy_vpn_browser": false
+  },
+  "aws_mutation": false,
+  "terraform": {
+    "applicable": false,
+    "creates": 0,
+    "changes": 0,
+    "replacements": 0,
+    "destroys": 0
+  },
+  "preconditions": {
+    "kill_switch": "TRIPPED",
+    "real_business_discovery": "NOT_AUTHORIZED",
+    "all_other_m6_7_permissions": "NOT_AUTHORIZED",
+    "offline_projection_grant": "0/1_UNCONSUMED",
+    "bounded_seed_construction_grant": "0/1_UNCONSUMED"
+  },
+  "terminal_behavior": {
+    "success": "READY_FOR_SUCCESSOR_LIVE_SEED_ROSTER_ACQUISITION_AUTHORIZATION",
+    "failure": "BLOCKED_SEED_SOURCE_CONNECTIVITY_PREFLIGHT_FAILED_NO_RETRY",
+    "successor_acquisition_is_not_automatically_authorized": true
+  },
+  "exact_owner_approval_statement": "I approve AUTHORIZE_SEED_SOURCE_CONNECTIVITY_PREFLIGHT for AWS account 785072247535 in us-east-2, binding preparation commit 8cbd2cacb84d78ab83bb311e8f859324c42715cb, root-cause diagnosis SHA-256 a9ef057fed28a65ae231452113ae07e6a63e96b609d59b2766598f6babb6d59e, preflight configuration SHA-256 d5744abae2f2874250dc1123962a24219bad68370bd3fb9af25a495183c0813c, exact preflight executable SHA-256 defb7325b393a07646926843d11f793aae42455b8becaed3294fc99da51a639a, and consumed failure evidence SHA-256 f27d224fcadfd0202258358792fb5456672695f64732f8d70f64ea3935d74dee. This authorizes exactly one terminal diagnostic attempt between 2026-08-23T15:22:10Z and 2026-08-30T15:22:10Z from the same local Windows C:\\Python313\\python.exe execution path, outside the network-disabled sandbox only for the hash-bound preflight executable, to perform one current-system-resolver DNS resolution for each exact hostname data.texas.gov and nominatim.openstreetmap.org and, only for public DNS answers, at most one IPv4 and one IPv6 certificate-validated TLS handshake per hostname on TCP/443 with exact SNI. It authorizes zero HTTP requests, zero application bytes sent or received, zero source payload retrieval or parsing, no alternate resolver, proxy, VPN, browser, AI, wildcard or caller-supplied hostname, and no Terraform or AWS resource mutation. The kill switch must remain TRIPPED before and after; the consumed acquisition must not be retried; the offline-projection and bounded seed-construction grants remain 0/1 unconsumed; and all seven M6.7 permissions remain NOT_AUTHORIZED. Successful preflight evidence may be used only to prepare a separately reviewed successor live seed-roster acquisition authorization and does not itself authorize acquisition, discovery, research, person/contact processing, Slot 1, outreach, communication, or any source-content access."
+}
