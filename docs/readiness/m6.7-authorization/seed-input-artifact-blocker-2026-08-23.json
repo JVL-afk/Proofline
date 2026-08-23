@@ -1,0 +1,95 @@
+{
+  "record_type": "M67_PHASE1_SEED_INPUT_ARTIFACT_BLOCKER",
+  "version": "1.0.0",
+  "state": "BLOCKED_PENDING_OFFLINE_SEED_INPUT_ARTIFACT",
+  "observed_at": "2026-08-23T05:55:43.9490820Z",
+  "authorization_state": "AUTHORIZED_UNCONSUMED",
+  "construction_attempt_consumed": false,
+  "seed_generated": false,
+  "candidate_artifact_found": false,
+  "completed_attestation_found": false,
+  "authoritative_input_locations_checked": [
+    "local-data/m6.7/seed-construction/input/phase1-seed-input.json",
+    "local-data/m6.7/seed-construction/input/phase1-seed-input-attestation.json",
+    "docs/readiness/m6.7-authorization/phase1-seed-input.json",
+    "docs/readiness/m6.7-authorization/phase1-seed-input-attestation.json"
+  ],
+  "repository_inventory_result": "ONLY_SCHEMAS_TEMPLATES_AND_GOVERNANCE_RECORDS_FOUND",
+  "required_artifact": {
+    "filename_recommendation": "phase1-seed-input.json",
+    "format": "UTF8_JSON_ARRAY",
+    "schema": "phase1-seed-construction-input-v1.schema.json",
+    "schema_sha256": "96b0805b6d3c7022387a7290daee81aa90dabcc3489c6a49d8a71ee1c33a296b",
+    "observation_count": "24_TO_100",
+    "scope": "US_TX_COMMERCIAL_HVAC_B2B",
+    "allowed_content": "BUSINESS_IDENTITY_ELIGIBILITY_EXACT_HOST_CANDIDATE_AND_PROVENANCE_ONLY",
+    "prohibited_content": [
+      "PERSON_OR_CONTACT_FIELDS_OR_VALUES",
+      "OPPORTUNITY_OUTCOME_OR_YIELD_FIELDS",
+      "REVENUE_OR_HEADCOUNT",
+      "CRM_LEAD_VOLUME_RESPONSE_TIME_OR_INTERNAL_PROCESS_CLAIMS",
+      "UNSUPPORTED_SCHEMA_FIELDS"
+    ],
+    "provenance_per_candidate": [
+      "SOURCE_ID",
+      "SOURCE_ARTIFACT_REF",
+      "SOURCE_ARTIFACT_SHA256",
+      "LOCATOR",
+      "OBSERVED_AT"
+    ]
+  },
+  "required_attestation": {
+    "filename_recommendation": "phase1-seed-input-attestation.json",
+    "template": "seed-construction-input-attestation.template.json",
+    "template_sha256": "2fbbce8eb453134af339efb0d5854b43e5bd62465c02ebbd888f30ef68abadbd",
+    "must_bind": [
+      "INPUT_ARTIFACT_SHA256_COMPUTED_BEFORE_PARSE",
+      "CANDIDATE_COUNT",
+      "CONSTRUCTION_METHOD",
+      "COMPLETE_PROVENANCE",
+      "BUSINESS_ONLY_FIELD_CONFIRMATION",
+      "PERSON_CONTACT_ABSENCE",
+      "NO_OPPORTUNITY_OR_OUTCOME_FILTERING",
+      "PERMITTED_USE_AND_REUSE",
+      "ACCOUNTABLE_ACTOR_REF",
+      "EFFECTIVE_AND_EXPIRY_TIMES",
+      "CONFIGURATION_HASH"
+    ]
+  },
+  "alternative_if_artifact_does_not_exist": {
+    "required_authority": "SEPARATE_EXACT_SOURCE_ACQUISITION_AUTHORIZATION",
+    "network_acquisition_semantics": "REAL_BUSINESS_DISCOVERY",
+    "minimum_bindings": [
+      "EXACT_A09_SOURCE_INSTANCE_OR_PROVIDER",
+      "ACCESS_METHOD_AND_AUTHENTICATION_STATE",
+      "TERMS_ROBOTS_AND_REUSE_REVIEW",
+      "ALLOWED_BUSINESS_ONLY_FIELDS",
+      "REQUEST_ATTEMPT_BYTE_RATE_AND_COST_CAPS",
+      "PROVENANCE_CAPTURE",
+      "PERSON_CONTACT_PROHIBITION",
+      "NO_RESEARCH_OPPORTUNITY_AI_BROWSER_OR_COMMUNICATION",
+      "START_EXPIRY_KILL_SWITCH_AND_ACCOUNTABLE_APPROVAL"
+    ],
+    "current_state": "NOT_AUTHORIZED"
+  },
+  "operations_performed": {
+    "source_acquisition": 0,
+    "dns_queries": 0,
+    "http_requests": 0,
+    "business_artifacts_parsed": 0,
+    "candidate_observations_processed": 0,
+    "csprng_seeds_generated": 0,
+    "ai_calls": 0,
+    "browser_sessions": 0,
+    "external_communications": 0
+  },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  }
+}

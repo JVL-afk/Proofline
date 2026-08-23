@@ -86,3 +86,18 @@ def test_exact_owner_gate_binds_committed_package_and_changes_no_permission() ->
     statement = approval["exact_owner_approval_statement"]
     assert "zero source acquisition, DNS queries, HTTP requests" in statement
     assert "remain independently NOT_AUTHORIZED" in statement
+
+
+def test_exact_construction_approval_is_frozen_but_unconsumed_without_input() -> None:
+    ready = load("seed-construction-owner-approval-ready-2026-08-23.json")
+    accepted = load("seed-construction-owner-approval-accepted-2026-08-23.json")
+    blocker = load("seed-input-artifact-blocker-2026-08-23.json")
+    assert accepted["state"] == "AUTHORIZED_UNCONSUMED"
+    assert accepted["attempts_consumed"] == 0
+    assert accepted["exact_owner_attestation"] == ready["exact_owner_approval_statement"]
+    assert blocker["state"] == "BLOCKED_PENDING_OFFLINE_SEED_INPUT_ARTIFACT"
+    assert blocker["construction_attempt_consumed"] is False
+    assert blocker["candidate_artifact_found"] is False
+    assert blocker["completed_attestation_found"] is False
+    assert set(blocker["operations_performed"].values()) == {0}
+    assert set(blocker["permissions"].values()) == {"NOT_AUTHORIZED"}
