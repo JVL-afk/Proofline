@@ -1,0 +1,70 @@
+{
+  "record_type": "M67_PRIMARY_A_AUTHENTICATION_RECONCILIATION_EVIDENCE",
+  "version": "1.0.0",
+  "state": "RECONCILED_PENDING_OWNER_ACCEPTANCE",
+  "observed_at": "2026-08-23T12:22:37.6923203Z",
+  "actor_ref": "PRIMARY_A_ACTOR",
+  "role": "INDEPENDENT_SECOND_REVIEWER",
+  "binding": {
+    "aws_account_id": "785072247535",
+    "aws_region": "us-east-2",
+    "environment": "M67_PHASE1_DEPLOYED_ENVIRONMENT",
+    "idp_issuer_ref": "arn:aws:sso:::instance/ssoins-668449c46cda2b4b",
+    "audience_ref": "sha256:cc50397ec7a6ad0d624f4fd034d92121d084fb231c1bd67909f020ae444a439c",
+    "assignment_evidence_sha256": "82b7bf746bb80a63fde22d9918fdb2736b3ac27dba3ee275ed5332d2ce7560ba",
+    "authentication_subject_matches_exact_assigned_primary_a_user": true,
+    "owner_primary_a_collision_check": "DISTINCT",
+    "opaque_subject_digest": "sha256:70c2225f3085eda87711146411d6be3aa08f0bc8bd67899d5b041f3663e1aa91",
+    "opaque_digest_scheme": "HMAC_SHA256_PRIVATE_RECONCILIATION_SALT_OVER_IDP_INSTANCE_NUL_SUBJECT_V1",
+    "salt_commitment_sha256": "1a67ef6d3200bc179799a3ebf9d261cbfb12877382b187bf7958767a01c28a3e"
+  },
+  "authentication": {
+    "authentication_event_ref": "sha256:929d865c8f81370f874bd0ad030144ba8fef10e838715711ce4000dcf61c930e",
+    "authentication_workflow_ref": "sha256:b951867392d647a3305bc07d1bd575b79ee41110a3b21bcc8b755be5922d3d96",
+    "authenticated_at": "2026-08-23T12:16:36Z",
+    "user_authentication_status": "SUCCESS",
+    "password_verification_status": "SUCCESS",
+    "webauthn_challenge_status": "SUCCESS",
+    "webauthn_verification_status": "SUCCESS",
+    "mfa_assurance": "VERIFIED_WEBAUTHN",
+    "identity_center_authenticate_event_count": 1,
+    "exact_no_policy_role_assumption_count": 1,
+    "saml_role_assumption_event_ref": "sha256:84761c5b23c4252787bcddaee4a2d891893a7df1ca2c4a1d4bb0f3bb0aba945c",
+    "target_account_matches": true,
+    "region_matches": true,
+    "authentication_only_role_matches": true
+  },
+  "challenge": {
+    "challenge_id": "M67-PRIMARY-A-969A2272DCF0FA79",
+    "challenge_commitment_sha256": "5cae4e23a8c41211324fd71c0835ea75212c1b1476d03c5f9ca2efff765ff834",
+    "issued_at": "2026-08-23T12:10:06.688668Z",
+    "expires_at": "2026-08-23T12:25:06.688668Z",
+    "affirmation_received_at": "2026-08-23T12:18:25.3885147Z",
+    "fresh_at_authentication": true,
+    "fresh_at_affirmation_receipt": true,
+    "one_time_use": true,
+    "prior_consumption_count": 0,
+    "consumed": true,
+    "replay_detected": false,
+    "consumed_public_record_sha256": "af843e4b665ac155108c1d4bbb11c68620f975929d7d8f07070da6a0bc79fb39"
+  },
+  "affirmation": {
+    "affirmed_attestation_sha256": "53547bd4e993c67d7bcf31fde09bfac0f95b533f111cafea09f7568029a83cc3",
+    "required_fixed_text_matched": true,
+    "challenge_id_matched": true,
+    "human_name_or_contact_recorded": false
+  },
+  "sensitive_values_not_recorded": [
+    "HUMAN_NAME",
+    "EMAIL",
+    "RAW_IDP_SUBJECT_OR_USER_ID",
+    "RAW_RECONCILIATION_SALT",
+    "RAW_CHALLENGE_NONCE",
+    "PASSWORD_OR_MFA_MATERIAL",
+    "SSO_TOKEN_OR_CACHE",
+    "SESSION_COOKIE",
+    "SAML_ASSERTION"
+  ],
+  "completion_effect": "IDENTITY_PREREQUISITE_ONLY_PENDING_OWNER_ACCEPTANCE",
+  "permissions_granted": []
+}

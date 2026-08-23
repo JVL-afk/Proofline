@@ -1,0 +1,46 @@
+{
+  "record_type": "M67_PRIMARY_A_INDEPENDENT_AUTHENTICATION_EVIDENCE",
+  "version": "1.0.0",
+  "state": "PRIMARY_A_RECONCILED_PENDING_OWNER_ACCEPTANCE",
+  "actor_ref": "PRIMARY_A_ACTOR",
+  "role": "INDEPENDENT_SECOND_REVIEWER",
+  "aws_account_id": "785072247535",
+  "aws_region": "us-east-2",
+  "idp_issuer_ref": "arn:aws:sso:::instance/ssoins-668449c46cda2b4b",
+  "opaque_subject_digest": "sha256:70c2225f3085eda87711146411d6be3aa08f0bc8bd67899d5b041f3663e1aa91",
+  "audience": "sha256:cc50397ec7a6ad0d624f4fd034d92121d084fb231c1bd67909f020ae444a439c",
+  "environment": "M67_PHASE1_DEPLOYED_ENVIRONMENT",
+  "mfa_assurance": "VERIFIED",
+  "authentication_event_ref": "sha256:929d865c8f81370f874bd0ad030144ba8fef10e838715711ce4000dcf61c930e",
+  "authenticated_at": "2026-08-23T12:16:36Z",
+  "challenge_id": "M67-PRIMARY-A-969A2272DCF0FA79",
+  "challenge_commitment_sha256": "5cae4e23a8c41211324fd71c0835ea75212c1b1476d03c5f9ca2efff765ff834",
+  "challenge_issued_at": "2026-08-23T12:10:06.688668Z",
+  "challenge_expires_at": "2026-08-23T12:25:06.688668Z",
+  "challenge_one_time_use": true,
+  "challenge_consumed_at": "2026-08-23T12:18:25.3885147Z",
+  "affirmed_attestation_sha256": "53547bd4e993c67d7bcf31fde09bfac0f95b533f111cafea09f7568029a83cc3",
+  "reconciliation_state": "RECONCILED",
+  "owner_actor_collision_check": "DISTINCT",
+  "system_evidence_sha256": "20772768816c4762b3397fbca4727caedf68abddeab36a8b9678361f8f283770",
+  "owner_acceptance_state": "PENDING",
+  "value_sources": {
+    "human_provided": [
+      "PRIMARY_A_AFFIRMATION",
+      "OWNER_CHALLENGE_ISSUANCE_APPROVAL",
+      "OWNER_RECONCILIATION_ACCEPTANCE"
+    ],
+    "system_derived": [
+      "IDP_ISSUER_REF",
+      "OPAQUE_SUBJECT_DIGEST",
+      "AUDIENCE_AND_ENVIRONMENT",
+      "MFA_ASSURANCE",
+      "AUTHENTICATION_EVENT_REF_AND_TIME",
+      "CHALLENGE_ID_COMMITMENT_ISSUED_EXPIRY_AND_CONSUMPTION",
+      "AFFIRMED_ATTESTATION_SHA256",
+      "OWNER_ACTOR_COLLISION_CHECK",
+      "SYSTEM_EVIDENCE_SHA256"
+    ]
+  },
+  "permissions_granted": []
+}

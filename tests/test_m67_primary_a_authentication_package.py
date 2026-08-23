@@ -174,3 +174,26 @@ def test_challenge_issuance_readiness_binds_deployed_assignment_and_mechanism() 
     assert approval["challenge_issued"] is False
     assert approval["permissions_changed"] is False
     assert set(readiness["permissions"].values()) == {"NOT_AUTHORIZED"}
+
+
+def test_primary_a_reconciliation_evidence_is_complete_and_pending_owner() -> None:
+    reconciliation = load("primary-a-authentication-reconciliation-evidence-2026-08-23.json")
+    evidence = load("primary-a-authentication-evidence-2026-08-23.json")
+    owner_gate = load("primary-a-reconciliation-owner-acceptance-ready-2026-08-23.json")
+    assert evidence["state"] == "PRIMARY_A_RECONCILED_PENDING_OWNER_ACCEPTANCE"
+    assert evidence["mfa_assurance"] == "VERIFIED"
+    assert evidence["reconciliation_state"] == "RECONCILED"
+    assert evidence["owner_actor_collision_check"] == "DISTINCT"
+    assert evidence["challenge_one_time_use"] is True
+    assert evidence["system_evidence_sha256"] == sha256(
+        "primary-a-authentication-reconciliation-evidence-2026-08-23.json"
+    )
+    assert evidence["permissions_granted"] == []
+    assert reconciliation["authentication"]["webauthn_verification_status"] == "SUCCESS"
+    assert reconciliation["challenge"]["fresh_at_affirmation_receipt"] is True
+    assert reconciliation["challenge"]["prior_consumption_count"] == 0
+    assert reconciliation["challenge"]["consumed"] is True
+    assert owner_gate["authentication_evidence_sha256"] == sha256(
+        "primary-a-authentication-evidence-2026-08-23.json"
+    )
+    assert set(owner_gate["permissions"].values()) == {"NOT_AUTHORIZED"}
