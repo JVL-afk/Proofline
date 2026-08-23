@@ -197,3 +197,17 @@ def test_primary_a_reconciliation_evidence_is_complete_and_pending_owner() -> No
         "primary-a-authentication-evidence-2026-08-23.json"
     )
     assert set(owner_gate["permissions"].values()) == {"NOT_AUTHORIZED"}
+
+
+def test_primary_a_acceptance_satisfies_identity_only() -> None:
+    accepted = load("primary-a-independent-authentication-accepted-2026-08-23.json")
+    assert accepted["state"] == "PRIMARY_A_INDEPENDENT_AUTHENTICATION_ACCEPTED"
+    assert accepted["authentication_evidence_sha256"] == sha256(
+        "primary-a-authentication-evidence-2026-08-23.json"
+    )
+    assert accepted["reconciliation_evidence_sha256"] == sha256(
+        "primary-a-authentication-reconciliation-evidence-2026-08-23.json"
+    )
+    assert accepted["independent_opportunity_review_completed"] is False
+    assert accepted["discovery_authorized"] is False
+    assert set(accepted["permissions"].values()) == {"NOT_AUTHORIZED"}

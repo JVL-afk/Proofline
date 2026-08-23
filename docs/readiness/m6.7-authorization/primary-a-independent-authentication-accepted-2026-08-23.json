@@ -1,0 +1,32 @@
+{
+  "record_type": "M67_PRIMARY_A_INDEPENDENT_AUTHENTICATION_ACCEPTANCE",
+  "version": "1.0.0",
+  "state": "PRIMARY_A_INDEPENDENT_AUTHENTICATION_ACCEPTED",
+  "accepted_at": "2026-08-23",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "environment": "M67_PHASE1_DEPLOYED_ENVIRONMENT",
+  "actor_ref": "PRIMARY_A_ACTOR",
+  "role": "INDEPENDENT_SECOND_REVIEWER",
+  "authentication_evidence_sha256": "107e5bfdbb2e00cc40a216ea634eb8c31b5c937c576f95dba1160d32e82d77a8",
+  "reconciliation_evidence_sha256": "20772768816c4762b3397fbca4727caedf68abddeab36a8b9678361f8f283770",
+  "challenge_id": "M67-PRIMARY-A-969A2272DCF0FA79",
+  "authentication_event_ref": "sha256:929d865c8f81370f874bd0ad030144ba8fef10e838715711ce4000dcf61c930e",
+  "opaque_subject_digest": "sha256:70c2225f3085eda87711146411d6be3aa08f0bc8bd67899d5b041f3663e1aa91",
+  "idp_issuer_ref": "arn:aws:sso:::instance/ssoins-668449c46cda2b4b",
+  "audience_ref": "sha256:cc50397ec7a6ad0d624f4fd034d92121d084fb231c1bd67909f020ae444a439c",
+  "owner_attestation": "I approve ACCEPT_PRIMARY_A_INDEPENDENT_AUTHENTICATION for AWS account 785072247535 and the M6.7 Phase 1 environment in us-east-2, binding PRIMARY_A authentication evidence SHA-256 107e5bfdbb2e00cc40a216ea634eb8c31b5c937c576f95dba1160d32e82d77a8, challenge ID M67-PRIMARY-A-969A2272DCF0FA79, authenticated event reference sha256:929d865c8f81370f874bd0ad030144ba8fef10e838715711ce4000dcf61c930e, opaque subject digest sha256:70c2225f3085eda87711146411d6be3aa08f0bc8bd67899d5b041f3663e1aa91, approved IdP issuer reference arn:aws:sso:::instance/ssoins-668449c46cda2b4b, authentication-only audience sha256:cc50397ec7a6ad0d624f4fd034d92121d084fb231c1bd67909f020ae444a439c, and reconciliation evidence SHA-256 20772768816c4762b3397fbca4727caedf68abddeab36a8b9678361f8f283770. I accept that the independently authenticated subject reconciles to PRIMARY_A_ACTOR and remains distinct from OWNER_ACTOR for the INDEPENDENT_SECOND_REVIEWER role. This acceptance satisfies only the identity prerequisite and authorizes no discovery, research, seed acquisition or construction, person/contact processing, Slot 1, communication, AWS administration, AI, browser use, or other M6.7 permission.",
+  "completion_effect": "INDEPENDENT_REVIEWER_IDENTITY_PREREQUISITE_SATISFIED_ONLY",
+  "independent_opportunity_review_completed": false,
+  "discovery_authorized": false,
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  },
+  "reopen_only_on_materially_invalidating_evidence": true
+}
