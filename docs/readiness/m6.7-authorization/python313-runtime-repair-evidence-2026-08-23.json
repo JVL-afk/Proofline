@@ -1,0 +1,62 @@
+{
+  "record_type": "M67_PYTHON313_RUNTIME_REPAIR_EVIDENCE",
+  "version": "1.0.0",
+  "state": "RUNTIME_PREFLIGHT_BEFORE_GRANT_CONSUMPTION_PASS",
+  "target_executable": "C:\\Python313\\python.exe",
+  "python_version": "3.13.3",
+  "repository_lock_sha256": "0fa05efe0335378fd1b3e2a36e68732a512373971b25e2511a78f76971a4354d",
+  "requirements_sha256": "49a128fc8328720940e4c7445ef3113161670c2e3896662fdff1e3ceada0fdc1",
+  "pre_mutation_evidence_sha256": "efd03bd869134dc25e7ae3802d53b6d5df08fc424eaf466a79c15109fc8c8ca0",
+  "runtime_proof_script_sha256": "61eb223dbfa6773ee0549158a658a1d2e599a156baa96a48bcc3e812b39d791f",
+  "private_runtime_readiness_evidence_sha256": "dcf11194e21e8eb37a147ee52eb5bc83a082ee40bea04199c1439d1fbd3bd2f1",
+  "package_operation": {
+    "installer": "C:\\Python313\\python.exe -m pip 26.1.2",
+    "require_hashes": true,
+    "no_dependencies": true,
+    "only_binary": true,
+    "user_site": true,
+    "additions": {
+      "boto3": "1.43.78",
+      "botocore": "1.43.78",
+      "jmespath": "1.1.0",
+      "s3transfer": "0.19.2"
+    },
+    "required_version_change": {
+      "urllib3": "2.6.3 -> 2.7.0"
+    },
+    "already_satisfied": {
+      "python-dateutil": "2.9.0.post0",
+      "six": "1.17.0"
+    },
+    "removals": [],
+    "python_or_pip_upgrade": false,
+    "unrelated_package_change": false,
+    "pip_check": "NO_BROKEN_REQUIREMENTS"
+  },
+  "post_mutation_inventory": {
+    "package_count": 121,
+    "sha256": "f08806112839098ec1e62f319aeb961b2916ada379639050b514ad1d48fadabb"
+  },
+  "proof": {
+    "boto3_import": "PASS_1.43.78",
+    "botocore_import": "PASS_1.43.78",
+    "all_preflight_imports": "PASS",
+    "configuration_load": "PASS",
+    "evidence_schema_load": "PASS",
+    "ssm_client_construction_without_request": "PASS",
+    "final_pre_network_boundary": "PASS",
+    "dns_calls": 0,
+    "socket_connect_calls": 0,
+    "http_requests": 0,
+    "tls_connections": 0
+  },
+  "unchanged": {
+    "aws_infrastructure": true,
+    "terraform": true,
+    "system_dns_proxy_network": true,
+    "browser_or_ai_dependencies_introduced": false,
+    "m6_7_permissions": true
+  },
+  "previous_connectivity_preflight": "1/1_CONSUMED_NEVER_REUSABLE",
+  "successor_network_preflight": "NOT_AUTHORIZED"
+}

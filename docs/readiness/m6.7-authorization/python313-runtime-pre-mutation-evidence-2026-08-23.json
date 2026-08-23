@@ -1,0 +1,70 @@
+{
+  "record_type": "M67_PYTHON313_RUNTIME_PRE_MUTATION_EVIDENCE",
+  "version": "1.0.0",
+  "state": "CAPTURED_BEFORE_DEPENDENCY_INSTALLATION",
+  "target_executable": "C:\\Python313\\python.exe",
+  "python_version": "3.13.3",
+  "pip_version": "26.1.2",
+  "inventory_context": "APPROVED_OUTSIDE_SANDBOX_EXECUTION_WITH_USER_SITE_ENABLED",
+  "installed_package_count": 117,
+  "installed_package_inventory_sha256": "4e62f61dbd0c998a255e7e0dff1ea52faa4bb03a60cc7f29d983aec5374e0797",
+  "relevant_installed_packages": [
+    {
+      "name": "pip",
+      "version": "26.1.2"
+    },
+    {
+      "name": "python-dateutil",
+      "version": "2.9.0.post0"
+    },
+    {
+      "name": "six",
+      "version": "1.17.0"
+    },
+    {
+      "name": "urllib3",
+      "version": "2.6.3"
+    }
+  ],
+  "repository_lock": {
+    "path": "uv.lock",
+    "sha256": "0fa05efe0335378fd1b3e2a36e68732a512373971b25e2511a78f76971a4354d",
+    "managed_environment_match": true
+  },
+  "exact_additions": {
+    "boto3": "1.43.78",
+    "botocore": "1.43.78",
+    "jmespath": "1.1.0",
+    "python-dateutil": "2.9.0.post0",
+    "s3transfer": "0.19.2",
+    "six": "1.17.0",
+    "urllib3": "2.7.0"
+  },
+  "expected_changes": {
+    "add": 4,
+    "change": 1,
+    "remove": 0,
+    "python_upgrade": false,
+    "pip_upgrade": false,
+    "browser_or_ai_dependencies": false,
+    "additions": [
+      "boto3==1.43.78",
+      "botocore==1.43.78",
+      "jmespath==1.1.0",
+      "s3transfer==0.19.2"
+    ],
+    "version_change": "urllib3 2.6.3 -> 2.7.0",
+    "already_satisfied": [
+      "python-dateutil==2.9.0.post0",
+      "six==1.17.0"
+    ]
+  },
+  "prohibited_mutations": [
+    "AWS_INFRASTRUCTURE",
+    "TERRAFORM",
+    "DNS_PROXY_OR_NETWORK_SETTINGS",
+    "UNRELATED_PROJECT_DEPENDENCIES",
+    "PYTHON_OR_PIP_UPGRADE",
+    "BROWSER_OR_AI_DEPENDENCIES"
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "record_type": "M67_SEED_SOURCE_CONNECTIVITY_SUCCESSOR_PREFLIGHT_CONFIGURATION",
+  "version": "1.0.0",
+  "state": "PREPARED_NOT_AUTHORIZED",
+  "runtime_precondition": {
+    "rule": "RUNTIME_PREFLIGHT_BEFORE_GRANT_CONSUMPTION",
+    "executable": "C:\\Python313\\python.exe",
+    "runtime_repair_evidence": "docs/readiness/m6.7-authorization/python313-runtime-repair-evidence-2026-08-23.json",
+    "runtime_readiness_state": "PASS"
+  },
+  "predecessor": {
+    "failed_preflight_evidence_sha256": "2076bc0830cdb6f71c32a2cfcfa536bc5944f9891ee86ccb441fa5a77ca4c699",
+    "state": "PERMANENTLY_CONSUMED_NEVER_RETRY"
+  },
+  "exact_hosts": [
+    "data.texas.gov",
+    "nominatim.openstreetmap.org"
+  ],
+  "dns": {
+    "current_system_resolver_only": true,
+    "logical_resolutions_per_host": 1,
+    "alternate_resolvers": 0,
+    "require_public_answers": true
+  },
+  "tls": {
+    "port": 443,
+    "exact_sni": true,
+    "certificate_and_hostname_validation": true,
+    "maximum_ipv4_attempts_per_host": 1,
+    "maximum_ipv6_attempts_per_host": 1
+  },
+  "network_limits": {
+    "terminal_attempts": 1,
+    "retries": 0,
+    "http_requests": 0,
+    "source_content_bytes": 0,
+    "application_bytes_sent": 0,
+    "application_bytes_received": 0,
+    "proxy_vpn_browser_ai": 0,
+    "caller_supplied_or_wildcard_hosts": 0
+  },
+  "aws_read_only_checks": {
+    "account": "785072247535",
+    "region": "us-east-2",
+    "kill_switch_before": "TRIPPED",
+    "kill_switch_after": "TRIPPED"
+  },
+  "permission_effect": {
+    "m6_7_changes": 0,
+    "real_business_discovery": "NOT_AUTHORIZED",
+    "all_other_successor_permissions": "NOT_AUTHORIZED"
+  },
+  "infrastructure_effect": {
+    "aws_mutation": false,
+    "terraform": false,
+    "creates": 0,
+    "changes": 0,
+    "replacements": 0,
+    "destroys": 0
+  },
+  "success_state": "READY_FOR_SUCCESSOR_LIVE_SEED_ROSTER_ACQUISITION_AUTHORIZATION",
+  "failure_state": "BLOCKED_SUCCESSOR_SEED_SOURCE_CONNECTIVITY_PREFLIGHT_FAILED"
+}
