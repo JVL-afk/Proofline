@@ -1,0 +1,77 @@
+{
+  "record_type": "M67_SEED_SOURCE_CONNECTIVITY_DIAGNOSIS",
+  "version": "1.0.0",
+  "state": "DIAGNOSED_NO_INFRASTRUCTURE_MUTATION_REQUIRED",
+  "failed_attempt_evidence_sha256": "f27d224fcadfd0202258358792fb5456672695f64732f8d70f64ea3935d74dee",
+  "failed_attempt_commit": "156a5144303698082e9987359b428d8e8dfcce5d",
+  "execution_path": {
+    "host": "LOCAL_WINDOWS",
+    "python": "C:\\Python313\\python.exe",
+    "client": "PYTHON_STDLIB_URLLIB",
+    "not_wsl": true,
+    "not_container": true,
+    "not_ecs_or_vpc": true
+  },
+  "root_cause": "LOCAL_CODEX_EXECUTION_SANDBOX_NETWORK_DISABLED",
+  "root_cause_evidence": {
+    "environment_flag": "CODEX_SANDBOX_NETWORK_DISABLED=1",
+    "failure_layer": "WINDOWS_GETADDRINFO_BEFORE_HTTP_TRANSPORT",
+    "windows_error": 11001,
+    "http_responses": 0,
+    "response_bytes": 0,
+    "same_python_inherits_network_disabled_flag": true
+  },
+  "local_configuration_observations": {
+    "active_interface": "Wi-Fi",
+    "configured_ipv4_resolver": "192.168.1.1",
+    "active_default_route": true,
+    "nrpt_policy_present": false,
+    "exact_host_cache_entries_present": false,
+    "winhttp_proxy": "DIRECT",
+    "proxy_environment_variables_present": false
+  },
+  "excluded_causes_at_current_evidence_level": [
+    "AWS_VPC_DNS",
+    "ROUTE53_RESOLVER",
+    "ECS_TASK_SECURITY_GROUP",
+    "ECS_TASK_NACL",
+    "CONTROLLED_EGRESS_GATEWAY",
+    "HTTP_STATUS_OR_SOURCE_PAYLOAD",
+    "LOCAL_PROXY_CONFIGURATION"
+  ],
+  "not_yet_observed": {
+    "data.texas.gov_dns": "NOT_TESTED_AFTER_FAILURE_REQUIRES_NEW_DIAGNOSTIC_AUTHORITY",
+    "nominatim.openstreetmap.org_dns": "NOT_TESTED_REQUIRES_NEW_DIAGNOSTIC_AUTHORITY",
+    "data.texas.gov_tls": "NOT_TESTED_REQUIRES_NEW_DIAGNOSTIC_AUTHORITY",
+    "nominatim.openstreetmap.org_tls": "NOT_TESTED_REQUIRES_NEW_DIAGNOSTIC_AUTHORITY"
+  },
+  "remediation_class": "NO_INFRASTRUCTURE_MUTATION_EXACT_COMMAND_NETWORK_EXECUTION_AUTHORITY_ONLY",
+  "terraform": {
+    "applicable": false,
+    "creates": 0,
+    "changes": 0,
+    "replacements": 0,
+    "destroys": 0
+  },
+  "security_impact": {
+    "before": "ALL_NETWORK_DISABLED_FOR_THE_FAILED_LOCAL_PROCESS",
+    "after_if_preflight_approved": "ONLY_HASH_BOUND_PREFLIGHT_MAY_RESOLVE_TWO_CONSTANT_HOSTS_AND_COMPLETE_TLS_HANDSHAKES_WITH_ZERO_HTTP_BYTES",
+    "arbitrary_public_https": "REMAINS_UNAUTHORIZED_AND_UNEXERCISED",
+    "source_payload_access": "NOT_AUTHORIZED"
+  },
+  "consumed_grant_retry_prohibited": true,
+  "successor_acquisition_authorization_prepared": false,
+  "terminal_permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  },
+  "downstream_grants": {
+    "offline_projection": "0/1_UNCONSUMED",
+    "bounded_seed_construction": "0/1_UNCONSUMED"
+  }
+}

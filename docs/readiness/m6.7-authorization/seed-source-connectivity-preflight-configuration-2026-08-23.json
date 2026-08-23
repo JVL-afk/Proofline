@@ -1,0 +1,51 @@
+{
+  "record_type": "M67_SEED_SOURCE_CONNECTIVITY_PREFLIGHT_CONFIGURATION",
+  "version": "1.0.0",
+  "state": "PREPARED_NOT_AUTHORIZED",
+  "execution_path": "LOCAL_WINDOWS_CPYTHON_3_13",
+  "exact_hosts": [
+    "data.texas.gov",
+    "nominatim.openstreetmap.org"
+  ],
+  "dns": {
+    "resolver": "CURRENT_WINDOWS_SYSTEM_RESOLVER_ONLY",
+    "logical_resolutions_per_host": 1,
+    "alternate_resolver": false,
+    "require_only_public_answers": true,
+    "durable_address_representation": "SHA256_OF_SORTED_ANSWER_SET"
+  },
+  "tls": {
+    "port": 443,
+    "sni": "EXACT_HOSTNAME",
+    "certificate_validation": "SYSTEM_TRUST_STORE_AND_HOSTNAME_REQUIRED",
+    "maximum_connection_attempts_per_host": 2,
+    "application_bytes_sent": 0,
+    "application_bytes_received": 0,
+    "http_requests": 0
+  },
+  "prohibited": [
+    "HTTP_GET_OR_HEAD",
+    "SOURCE_PAYLOAD_RETRIEVAL_OR_PARSE",
+    "ALTERNATE_RESOLVER_PROXY_VPN_OR_BROWSER",
+    "CALLER_SUPPLIED_OR_WILDCARD_HOST",
+    "REDIRECT",
+    "RETRY_OF_CONSUMED_ACQUISITION",
+    "SUCCESSOR_ACQUISITION",
+    "M6_7_PERMISSION_CHANGE"
+  ],
+  "aws_checks": {
+    "read_only_sts_account": "785072247535",
+    "read_only_ssm_kill_switch_before_after": "TRIPPED",
+    "region": "us-east-2",
+    "profile": "m67-phase1-owner"
+  },
+  "success_gate": {
+    "both_dns_resolve_to_public_addresses": true,
+    "both_tls_handshakes_validate": true,
+    "http_requests": 0,
+    "kill_switch_unchanged": "TRIPPED",
+    "all_permissions_unchanged": true,
+    "next_state": "READY_FOR_SUCCESSOR_LIVE_SEED_ROSTER_ACQUISITION_AUTHORIZATION"
+  },
+  "failure_gate": "BLOCKED_SEED_SOURCE_CONNECTIVITY_PREFLIGHT_FAILED_NO_RETRY"
+}
