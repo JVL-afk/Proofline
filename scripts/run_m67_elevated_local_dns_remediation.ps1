@@ -11,7 +11,7 @@ $InterfaceGuid = "{997EE793-757E-4FD9-8138-CE1BF9FA1B32}"
 $BeforeDns = @("192.168.1.1")
 $AfterDns = @("8.8.8.8", "8.8.4.4")
 $Hosts = @("data.texas.gov", "nominatim.openstreetmap.org")
-$Event = "APPROVE_ELEVATED_LOCAL_DNS_RESOLVER_REMEDIATION"
+$Event = "APPROVE_ELEVATED_LOCAL_DNS_RESOLVER_REMEDIATION_SUCCESSOR"
 $EvidenceRelativePath = "local-data/m6.7/seed-source-connectivity/elevated-local-dns-remediation-evidence.json"
 
 function Test-ArrayEqual {
