@@ -1,0 +1,33 @@
+{
+  "record_type": "M67_PHASE1_SEED_POLICY_OWNER_APPROVAL",
+  "version": "1.0.0",
+  "state": "APPROVED_FROZEN",
+  "approval_event": "APPROVE_PHASE1_SEED_POLICY",
+  "accepted_at": "2026-08-23T05:26:40.0783904Z",
+  "actor_ref": "OWNER_ACTOR",
+  "ready_record": "seed-policy-owner-approval-ready-2026-08-23.json",
+  "ready_record_sha256": "869fbb9795a5d516b28dbc6355eb1108f14c365b2d9c351f48a43bc7f8d41da2",
+  "bindings": {
+    "aws_account": "785072247535",
+    "region": "us-east-2",
+    "environment_acceptance_sha256": "713062b65cdb340e8d552f6562cdd22431c2aee057bb3baa8a74411c06648103",
+    "seed_policy_record_sha256": "301423b30c60e622e96388454f485e23d4ebbe795af0f8c7312f712362cde454",
+    "seed_policy_configuration_sha256": "ea12cd02a3517b949a2dd900cafcb825f197b801e032d4d0c423d58a65c5b6bf",
+    "generator_sha256": "daae6bc65f3b7344701bb0e39640c28353a17fd7cd3316ee68245836dc741d56",
+    "schema_sha256": "4c839697a08186214a515cac485481bb8e29503e2efb6d2990d7be1ea9fba771",
+    "source_policy_sha256": "15785a5ea56bb6b755c76be0330c3fe3cbb20fd54e344ee0d56fc2580703e255",
+    "primary_a_authentication_step_sha256": "ae24e1106c61dd2853a8b3fb88c34963123549b56dd4a79f633f46d90630e8db"
+  },
+  "effect": "SEED_POLICY_ACCEPTED_ONLY",
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  },
+  "real_candidate_frame_constructed": false,
+  "exact_owner_attestation": "I approve APPROVE_PHASE1_SEED_POLICY for AWS account 785072247535 in us-east-2, binding accepted environment record SHA-256 713062b65cdb340e8d552f6562cdd22431c2aee057bb3baa8a74411c06648103, seed-policy record SHA-256 301423b30c60e622e96388454f485e23d4ebbe795af0f8c7312f712362cde454, seed-policy configuration SHA-256 ea12cd02a3517b949a2dd900cafcb825f197b801e032d4d0c423d58a65c5b6bf, deterministic generator SHA-256 daae6bc65f3b7344701bb0e39640c28353a17fd7cd3316ee68245836dc741d56, seed schema SHA-256 4c839697a08186214a515cac485481bb8e29503e2efb6d2990d7be1ea9fba771, A-09 source-policy SHA-256 15785a5ea56bb6b755c76be0330c3fe3cbb20fd54e344ee0d56fc2580703e255, and PRIMARY_A independent-authentication-step SHA-256 ae24e1106c61dd2853a8b3fb88c34963123549b56dd4a79f633f46d90630e8db. I accept the business-only US-TX Commercial HVAC B2B inbound-lead-response eligibility rules, candidate-frame maximum 100, deterministic pre-seed eligibility and deduplication, one-time post-freeze CSPRNG seed, frozen 24-company ordering and reserve, no outcome-based replacement, provenance requirements, and separately enumerated per-host A-09 review mechanics. This authorizes only the seed policy itself; it does not authorize constructing a real-business candidate frame, real-business discovery, public research, person/contact processing, Slot 1, AI, browser use, outreach, communication, or any successor M6.7 permission."
+}
