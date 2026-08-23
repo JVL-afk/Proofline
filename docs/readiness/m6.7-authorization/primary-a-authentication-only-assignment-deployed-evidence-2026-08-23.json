@@ -1,0 +1,77 @@
+{
+  "record_type": "M67_PRIMARY_A_AUTHENTICATION_ONLY_ASSIGNMENT_DEPLOYED_EVIDENCE",
+  "version": "1.0.0",
+  "state": "DEPLOYED_AND_INDEPENDENTLY_VERIFIED",
+  "observed_at": "2026-08-23T11:51:33.8739784Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "identity_center": {
+    "instance_arn": "arn:aws:sso:::instance/ssoins-668449c46cda2b4b",
+    "primary_a_user_ref": "sha256:321f4f40a48514c580f7660064eeccb36ecac738065274e9795c739ae1a42c2c",
+    "primary_a_distinct_from_owner_actor": true,
+    "permission_set_name": "m67-primary-a-auth-only",
+    "permission_set_ref": "sha256:cc50397ec7a6ad0d624f4fd034d92121d084fb231c1bd67909f020ae444a439c",
+    "session_duration": "PT1H",
+    "exact_primary_a_assignment_count": 1,
+    "total_assignments_for_permission_set": 1
+  },
+  "effective_permissions": {
+    "inline_policy_present": false,
+    "aws_managed_policy_attachments": 0,
+    "customer_managed_policy_attachments": 0,
+    "permissions_boundary_present": false,
+    "reserved_role_ref": "sha256:c48a76a9723b806c6c6049f3033b69e323ad3801d3f114f0b86a8d243ff8b8c8",
+    "reserved_role_inline_policies": 0,
+    "reserved_role_attached_policies": 0,
+    "aws_service_permissions": [],
+    "permitted_identity_observation": "STS_GET_CALLER_IDENTITY_REQUIRES_NO_ALLOW_POLICY"
+  },
+  "apply": {
+    "approved_saved_plan_sha256": "8eaea40311964b3bb4fb6000cce0619c82b106fbf28c91214de7d29d0b531ffa",
+    "approved_plan_json_sha256": "7d7ee74a36554ea3364f9bdfb687095398af08144dce19cdc8c9002930716cd6",
+    "configuration_sha256": "12ad4e0d4cdc2a84e633a3ba541e46285414dcccfa1d9bd711d75b32e3919ccf",
+    "provider_lock_sha256": "b0f95a645ac5a5db24949e074c48758bb1a1f867ef73148e174a1e1ae1e76c9f",
+    "creates": 2,
+    "changes": 0,
+    "replacements": 0,
+    "destroys": 0,
+    "result": "SUCCESS"
+  },
+  "mutation_scope": {
+    "create_account_assignment_events_in_observation_window": 1,
+    "create_assignment_event_ref": "sha256:036c96f7fe0a33c7557d025aef7de9b38a4fdef8113b503f839c0554df25269c",
+    "event_time": "2026-08-23T11:50:11Z",
+    "event_target_account_matches": true,
+    "event_target_type": "AWS_ACCOUNT",
+    "event_principal_type": "USER",
+    "event_permission_set_matches": true,
+    "unrelated_assignment_mutation_observed": false
+  },
+  "terraform_reconciliation": {
+    "post_apply_plan": "NO_CHANGES",
+    "remote_state_matches_configuration": true
+  },
+  "authentication": {
+    "challenge_issued": false,
+    "live_primary_a_authentication_performed": false,
+    "mfa_assurance": "PENDING_VERIFICATION_FROM_INDEPENDENT_AUTH_EVENT"
+  },
+  "sensitive_values_not_recorded": [
+    "HUMAN_NAME",
+    "EMAIL",
+    "RAW_IDENTITY_STORE_USER_ID",
+    "RAW_OWNER_OR_PRIMARY_A_IDP_SUBJECT",
+    "SSO_TOKEN_OR_CACHE",
+    "MFA_SECRET_OR_RECOVERY_CODE",
+    "RAW_CHALLENGE_NONCE"
+  ],
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  }
+}

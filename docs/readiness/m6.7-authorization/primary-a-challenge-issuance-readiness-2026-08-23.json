@@ -1,0 +1,51 @@
+{
+  "record_type": "M67_PRIMARY_A_CHALLENGE_ISSUANCE_READINESS",
+  "version": "1.0.0",
+  "state": "READY_FOR_PRIMARY_A_CHALLENGE_ISSUANCE_AUTHORIZATION",
+  "actor_ref": "PRIMARY_A_ACTOR",
+  "role": "INDEPENDENT_SECOND_REVIEWER",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "environment": "M67_PHASE1_DEPLOYED_ENVIRONMENT",
+    "idp_issuer_ref": "arn:aws:sso:::instance/ssoins-668449c46cda2b4b",
+    "authentication_only_audience_ref": "sha256:cc50397ec7a6ad0d624f4fd034d92121d084fb231c1bd67909f020ae444a439c"
+  },
+  "prerequisites": {
+    "primary_a_user_exists_and_enabled": true,
+    "primary_a_distinct_from_owner_actor": true,
+    "authentication_only_assignment_deployed": true,
+    "authentication_only_permission_set_has_no_policies": true,
+    "generated_reserved_role_has_no_policies": true,
+    "terraform_post_apply_state": "NO_CHANGES",
+    "challenge_mechanism_ready": true,
+    "challenge_issued": false
+  },
+  "hash_bindings": {
+    "preparation_package_sha256": "ce2d202dde1653373208a61fe895624bab5cab950a9b09ca05788fdb85f4eedc",
+    "assignment_deployed_evidence_sha256": "82b7bf746bb80a63fde22d9918fdb2736b3ac27dba3ee275ed5332d2ce7560ba",
+    "challenge_mechanism_sha256": "2bb97feb8500737e17b40816f72e9e6c6f201f7946a366835b4d1b322121739b",
+    "challenge_template_sha256": "699e4880b3f80a68b80f6e272df46f23acb79e7b2428c0049d4c14a8102b4b42",
+    "accepted_environment_sha256": "713062b65cdb340e8d552f6562cdd22431c2aee057bb3baa8a74411c06648103",
+    "a07_identity_access_sha256": "29d7b46175895b2abce1ee4633fd02aaeadcefbc57d5078082cd66bea4cef763"
+  },
+  "authorization_effect": {
+    "issue_exactly_one_fresh_challenge": true,
+    "challenge_lifetime": "PT15M",
+    "single_use": true,
+    "primary_a_may_complete_the_issued_challenge_in_an_independent_session": true,
+    "owner_session_substitution_authorized": false,
+    "aws_mutation_authorized": false,
+    "m67_permission_change_authorized": false
+  },
+  "next_state_after_exact_approval_and_issuance": "PRIMARY_A_CHALLENGE_ISSUED",
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  }
+}

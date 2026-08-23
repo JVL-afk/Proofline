@@ -1,0 +1,48 @@
+{
+  "record_type": "M67_PRIMARY_A_CHALLENGE_MECHANISM",
+  "version": "1.0.0",
+  "state": "READY_NOT_ISSUED",
+  "actor_ref": "PRIMARY_A_ACTOR",
+  "role": "INDEPENDENT_SECOND_REVIEWER",
+  "binding": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "environment": "M67_PHASE1_DEPLOYED_ENVIRONMENT",
+    "idp_issuer_ref": "arn:aws:sso:::instance/ssoins-668449c46cda2b4b",
+    "audience_ref": "sha256:cc50397ec7a6ad0d624f4fd034d92121d084fb231c1bd67909f020ae444a439c",
+    "assignment_evidence_sha256": "82b7bf746bb80a63fde22d9918fdb2736b3ac27dba3ee275ed5332d2ce7560ba"
+  },
+  "issuance": {
+    "required_owner_event": "APPROVE_PRIMARY_A_CHALLENGE_ISSUANCE",
+    "fresh_nonce_bytes": 32,
+    "random_source": "PYTHON_SECRETS_SYSTEM_CSPRNG",
+    "challenge_lifetime": "PT15M",
+    "single_use": true,
+    "overwrite_prohibited": true,
+    "raw_nonce_storage": "RESTRICTED_LOCAL_DATA_OUTSIDE_GIT",
+    "public_record_contains_commitment_only": true,
+    "challenge_issued": false
+  },
+  "authentication_requirements": {
+    "independent_primary_a_session": true,
+    "owner_session_prohibited": true,
+    "mfa_required": true,
+    "exact_account_environment_and_audience_required": true,
+    "opaque_subject_collision_check_required": true,
+    "expired_or_replayed_challenge": "FAIL_CLOSED_NEW_OWNER_APPROVAL_REQUIRED"
+  },
+  "implementation": {
+    "challenge_template_sha256": "699e4880b3f80a68b80f6e272df46f23acb79e7b2428c0049d4c14a8102b4b42",
+    "issuer_script": "scripts/issue_m67_primary_a_challenge.py",
+    "issuer_script_sha256": "dea3ea4c042eef2981804e040b4c0c564e08d9abf3d98e021c1f769e104165cf"
+  },
+  "sensitive_values_excluded_from_repository": [
+    "RAW_NONCE",
+    "RAW_IDP_SUBJECT",
+    "HUMAN_NAME_OR_EMAIL",
+    "SSO_TOKEN_OR_CACHE",
+    "SESSION_COOKIE",
+    "MFA_SECRET_OR_RECOVERY_CODE"
+  ],
+  "permissions_granted": []
+}

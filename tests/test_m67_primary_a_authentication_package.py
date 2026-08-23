@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import hashlib
+import importlib.util
 import json
 import subprocess
 import sys
+from datetime import UTC, datetime
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -11,6 +14,10 @@ AUTH = ROOT / "docs" / "readiness" / "m6.7-authorization"
 
 def load(name: str) -> dict[str, object]:
     return json.loads((AUTH / name).read_text(encoding="utf-8"))
+
+
+def sha256(name: str) -> str:
+    return hashlib.sha256((AUTH / name).read_bytes()).hexdigest()
 
 
 def test_machine_validator_accepts_fail_closed_package() -> None:
@@ -110,3 +117,60 @@ def test_manifest_binds_only_non_secret_preparation_artifacts() -> None:
     paths = {artifact["path"] for artifact in manifest["artifacts"]}
     assert all("local-data" not in path for path in paths)
     assert all("token" not in path.lower() for path in paths)
+
+
+def test_challenge_issuer_keeps_nonce_private_and_refuses_overwrite(tmp_path: Path) -> None:
+    script = ROOT / "scripts" / "issue_m67_primary_a_challenge.py"
+    spec = importlib.util.spec_from_file_location("issue_primary_a", script)
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    public_path, private_path = module.issue(
+        output_dir=tmp_path,
+        owner_approval_sha256="a" * 64,
+        now=datetime(2026, 8, 23, 12, 0, tzinfo=UTC),
+    )
+    public = json.loads(public_path.read_text(encoding="utf-8"))
+    private = json.loads(private_path.read_text(encoding="utf-8"))
+    assert public["state"] == "PRIMARY_A_CHALLENGE_ISSUED"
+    assert public["expires_at"] == "2026-08-23T12:15:00Z"
+    assert public["permissions_granted"] == []
+    assert "raw_nonce" not in public
+    assert private["raw_nonce"] not in public_path.read_text(encoding="utf-8")
+    try:
+        module.issue(
+            output_dir=tmp_path,
+            owner_approval_sha256="a" * 64,
+            now=datetime(2026, 8, 23, 12, 1, tzinfo=UTC),
+        )
+    except FileExistsError:
+        pass
+    else:
+        raise AssertionError("challenge issuer overwrote an existing challenge")
+
+
+def test_challenge_issuance_readiness_binds_deployed_assignment_and_mechanism() -> None:
+    readiness = load("primary-a-challenge-issuance-readiness-2026-08-23.json")
+    mechanism = load("primary-a-challenge-mechanism-ready-2026-08-23.json")
+    approval = load("primary-a-challenge-issuance-owner-approval-ready-2026-08-23.json")
+    assert readiness["state"] == "READY_FOR_PRIMARY_A_CHALLENGE_ISSUANCE_AUTHORIZATION"
+    assert readiness["prerequisites"]["challenge_issued"] is False
+    assert readiness["prerequisites"]["terraform_post_apply_state"] == "NO_CHANGES"
+    assert readiness["hash_bindings"]["assignment_deployed_evidence_sha256"] == sha256(
+        "primary-a-authentication-only-assignment-deployed-evidence-2026-08-23.json"
+    )
+    assert readiness["hash_bindings"]["challenge_mechanism_sha256"] == sha256(
+        "primary-a-challenge-mechanism-ready-2026-08-23.json"
+    )
+    assert approval["authentication_package_sha256"] == sha256(
+        "primary-a-challenge-issuance-readiness-2026-08-23.json"
+    )
+    assert (
+        mechanism["implementation"]["issuer_script_sha256"]
+        == hashlib.sha256(
+            (ROOT / "scripts" / "issue_m67_primary_a_challenge.py").read_bytes()
+        ).hexdigest()
+    )
+    assert approval["challenge_issued"] is False
+    assert approval["permissions_changed"] is False
+    assert set(readiness["permissions"].values()) == {"NOT_AUTHORIZED"}
