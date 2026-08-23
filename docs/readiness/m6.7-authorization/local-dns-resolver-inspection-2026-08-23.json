@@ -1,0 +1,72 @@
+{
+  "record_type": "M67_LOCAL_DNS_RESOLVER_INSPECTION",
+  "version": "1.0.0",
+  "state": "READ_ONLY_INSPECTION_COMPLETE",
+  "observed_at": "2026-08-23T16:33:52.1268718Z",
+  "root_cause": "LOCAL_WINDOWS_CURRENT_SYSTEM_DNS_RESOLVER_PATH_FAILURE",
+  "root_cause_basis": {
+    "independent_system_evidence": [
+      "TWO_SEPARATELY_AUTHORIZED_LOCAL_WINDOWS_PREFLIGHTS_RETURNED_GETADDRINFO_11001_FOR_DATA_TEXAS_GOV_BEFORE_TLS",
+      "ACTIVE_ADAPTER_EFFECTIVE_IPV4_DNS_IS_DHCP_DERIVED_192_168_1_1",
+      "NO_NRPT_POLICY_PROXY_OR_EXACT_NEGATIVE_CACHE_ENTRY_WAS_PRESENT"
+    ],
+    "owner_attested_supporting_diagnostics_not_treated_as_system_evidence": [
+      "ROUTER_RESOLVER_192_168_1_1_TIMED_OUT_FOR_DATA_TEXAS_GOV",
+      "GOOGLE_PUBLIC_DNS_8_8_8_8_RESOLVED_BOTH_EXACT_APPROVED_HOSTS",
+      "CLOUDFLARE_1_1_1_1_TIMED_OUT_FOR_DATA_TEXAS_GOV"
+    ]
+  },
+  "default_routes": [
+    {
+      "interface_alias": "Wi-Fi",
+      "interface_index": 13,
+      "gateway": "192.168.1.1",
+      "route_metric": 0,
+      "interface_metric": 45,
+      "effective_metric": 45,
+      "selected_active_path": true
+    },
+    {
+      "interface_alias": "Radmin VPN",
+      "interface_index": 17,
+      "gateway": "26.0.0.1",
+      "route_metric": 9256,
+      "interface_metric": 1,
+      "effective_metric": 9257,
+      "selected_active_path": false
+    }
+  ],
+  "active_adapter": {
+    "interface_alias": "Wi-Fi",
+    "interface_index": 13,
+    "interface_guid": "{997EE793-757E-4FD9-8138-CE1BF9FA1B32}",
+    "description": "Intel(R) Wi-Fi 6 AX201 160MHz",
+    "status": "Up",
+    "mac_sha256": "d7cdbe6b9df166a9676bb134b32c30ace6dde0566acf7ed36aea97d678e084a9"
+  },
+  "ipv4_before": {
+    "address": "192.168.1.135",
+    "gateway": "192.168.1.1",
+    "dhcp_addressing": "ENABLED",
+    "effective_dns_servers": [
+      "192.168.1.1"
+    ],
+    "static_nameserver_registry_value": "",
+    "dhcp_nameserver_registry_value": "192.168.1.1",
+    "dns_origin": "DHCP_DERIVED"
+  },
+  "ipv6_before": {
+    "dhcp": "ENABLED",
+    "router_discovery": "ENABLED",
+    "effective_dns_servers": [
+      "fe80::1",
+      "fe80::1"
+    ],
+    "change_required": false,
+    "reason": "THE_APPROVED_HOST PATH_CAN_USE_VALIDATED_IPV4_DNS_AND_TLS; IPV6_DNS_CHANGE_IS_NOT_REQUIRED_AND_WOULD_BROADEN_THE_MUTATION"
+  },
+  "winhttp_proxy": "DIRECT",
+  "live_dns_queries_during_inspection": 0,
+  "http_requests_during_inspection": 0,
+  "source_content_bytes": 0
+}

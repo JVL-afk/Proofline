@@ -1,0 +1,96 @@
+{
+  "record_type": "M67_LOCAL_DNS_RESOLVER_REMEDIATION_PLAN",
+  "version": "1.0.0",
+  "state": "PREPARED_NOT_AUTHORIZED",
+  "target": {
+    "interface_alias": "Wi-Fi",
+    "interface_index": 13,
+    "interface_guid": "{997EE793-757E-4FD9-8138-CE1BF9FA1B32}",
+    "address_family": "IPv4_ONLY"
+  },
+  "before": {
+    "dns_origin": "DHCP_DERIVED",
+    "dns_servers": [
+      "192.168.1.1"
+    ],
+    "ipv4_addressing": "DHCP_ENABLED",
+    "gateway": "192.168.1.1"
+  },
+  "after": {
+    "dns_origin": "STATIC_ADAPTER_OVERRIDE",
+    "dns_servers": [
+      "8.8.8.8",
+      "8.8.4.4"
+    ],
+    "ipv4_addressing": "DHCP_ENABLED_UNCHANGED",
+    "gateway": "192.168.1.1_UNCHANGED",
+    "ipv6_dns": "UNCHANGED"
+  },
+  "precondition_commands": [
+    "$adapter = Get-NetAdapter -InterfaceIndex 13 -ErrorAction Stop",
+    "if ((\"{\" + $adapter.InterfaceGuid.ToString().Trim('{}') + \"}\") -ne '{997EE793-757E-4FD9-8138-CE1BF9FA1B32}') { throw 'adapter identity mismatch' }",
+    "if ($adapter.Status -ne 'Up') { throw 'target adapter is not active' }",
+    "$before4 = @(Get-DnsClientServerAddress -InterfaceIndex 13 -AddressFamily IPv4 -ErrorAction Stop).ServerAddresses",
+    "if ((Compare-Object $before4 @('192.168.1.1'))) { throw 'IPv4 DNS before-state mismatch' }",
+    "$before6 = @(Get-DnsClientServerAddress -InterfaceIndex 13 -AddressFamily IPv6 -ErrorAction Stop).ServerAddresses"
+  ],
+  "apply_commands": [
+    "netsh interface ipv4 set dnsservers name=13 source=static address=8.8.8.8 register=primary validate=no",
+    "netsh interface ipv4 add dnsservers name=13 address=8.8.4.4 index=2 validate=no",
+    "Clear-DnsClientCache"
+  ],
+  "post_apply_proof_commands": [
+    "$after4 = @(Get-DnsClientServerAddress -InterfaceIndex 13 -AddressFamily IPv4 -ErrorAction Stop).ServerAddresses",
+    "if ((Compare-Object $after4 @('8.8.8.8','8.8.4.4'))) { throw 'IPv4 DNS after-state mismatch' }",
+    "$after6 = @(Get-DnsClientServerAddress -InterfaceIndex 13 -AddressFamily IPv6 -ErrorAction Stop).ServerAddresses",
+    "if (Compare-Object $before6 $after6) { throw 'IPv6 DNS changed unexpectedly' }",
+    "Resolve-DnsName -Name data.texas.gov -Type A_AAAA -DnsOnly -NoHostsFile -ErrorAction Stop",
+    "Resolve-DnsName -Name nominatim.openstreetmap.org -Type A_AAAA -DnsOnly -NoHostsFile -ErrorAction Stop"
+  ],
+  "rollback_commands": [
+    "netsh interface ipv4 set dnsservers name=13 source=dhcp",
+    "Clear-DnsClientCache",
+    "$rollback4 = @(Get-DnsClientServerAddress -InterfaceIndex 13 -AddressFamily IPv4 -ErrorAction Stop).ServerAddresses",
+    "if ((Compare-Object $rollback4 @('192.168.1.1'))) { throw 'DHCP DNS rollback did not restore observed resolver' }"
+  ],
+  "automatic_rollback_conditions": [
+    "SECOND_DNS_SERVER_CONFIGURATION_FAILURE",
+    "POST_APPLY_IPV4_DNS_MISMATCH",
+    "ANY_IPV6_DNS_CHANGE",
+    "DATA_TEXAS_GOV_SYSTEM_RESOLUTION_FAILURE",
+    "NOMINATIM_OPENSTREETMAP_ORG_SYSTEM_RESOLUTION_FAILURE"
+  ],
+  "network_proof_limits": {
+    "exact_hosts": [
+      "data.texas.gov",
+      "nominatim.openstreetmap.org"
+    ],
+    "logical_system_dns_queries": 2,
+    "http_requests": 0,
+    "tls_connections": 0,
+    "source_content_bytes": 0,
+    "alternate_resolver_during_proof": false
+  },
+  "explicitly_unchanged": [
+    "IP_ADDRESS",
+    "DEFAULT_GATEWAY",
+    "DHCP_ADDRESSING",
+    "IPV6_DNS",
+    "PROXY",
+    "VPN",
+    "FIREWALL",
+    "AWS_INFRASTRUCTURE",
+    "TERRAFORM",
+    "SOURCE_POLICY",
+    "M6_7_PERMISSIONS"
+  ],
+  "terraform": {
+    "applicable": false,
+    "creates": 0,
+    "changes": 0,
+    "replacements": 0,
+    "destroys": 0
+  },
+  "terminal_success_state": "LOCAL_DNS_RESOLVER_REMEDIATION_APPLIED_SYSTEM_DNS_PROOF_PASS",
+  "terminal_failure_state": "LOCAL_DNS_RESOLVER_REMEDIATION_ROLLED_BACK_BLOCKED"
+}
