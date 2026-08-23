@@ -1,0 +1,79 @@
+{
+  "record_type": "M67_LIVE_SEED_ROSTER_ACQUISITION_ATTEMPT",
+  "version": "1.0.0",
+  "state": "TERMINAL_FAILED_DNS_BEFORE_TDLR_RESPONSE",
+  "next_state": "BLOCKED_LIVE_SEED_ROSTER_ACQUISITION_ATTEMPT_CONSUMED_DNS_FAILURE",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "release_id": "M67_LIVE_SEED_ROSTER_ACQUISITION_V1",
+  "authorization_sha256": "7c3c8573f97ba105dd321b85fb89fba67040f69d122ffbe1896278ade7d780d9",
+  "ready_package_sha256": "bb3d3f8129f0e31faf3a1462baf096b42216ed25753d6c16c2e2d760042cbde7",
+  "runner_commit": "bb78788a4a85647af6922eb3b5715fda1de8ecf4",
+  "runner_sha256": "503a2d3ff66698894243cd0e03ee0e85e2ef740c114a699da2e62533f1209c80",
+  "attempt_window": {
+    "run_transition_at": "2026-08-23T15:02:06Z",
+    "tripped_restored_at": "2026-08-23T15:02:18Z",
+    "evidence_sealed_at": "2026-08-23T15:03:31.3646116Z"
+  },
+  "terminal_failure": {
+    "stage": "FIRST_TDLR_REQUEST_DNS_RESOLUTION",
+    "endpoint": "https://data.texas.gov/api/v3/views/7358-krk7/query.json",
+    "error_class": "DNS_GETADDRINFO_FAILED",
+    "error_code": 11001,
+    "response_received": false,
+    "response_bytes": 0,
+    "tdlr_payload_parsed": false,
+    "nominatim_called": false,
+    "retry_performed": false,
+    "alternate_endpoint_or_client_used": false,
+    "first_party_host_accessed": false
+  },
+  "counts": {
+    "logical_http_requests_attempted": 1,
+    "attempts": 1,
+    "tdlr_records_considered": 0,
+    "eligible_business_entities": 0,
+    "exclusions_by_reason": {},
+    "nominatim_queries": 0,
+    "hostname_FOUND": 0,
+    "hostname_NOT_FOUND": 0,
+    "hostname_AMBIGUOUS": 0,
+    "hostname_REJECTED_BY_GUARD": 0,
+    "compliant_final_observations": 0,
+    "aggregate_response_bytes": 0
+  },
+  "kill_switch_evidence": {
+    "before": "TRIPPED",
+    "run_transition_parameter_version": 4,
+    "run_transition_event_ref": "sha256:50c08da0509d04967f20173196f60643b7852293f962ebe31dd2587fb270e1e3",
+    "terminal": "TRIPPED",
+    "terminal_parameter_version": 5,
+    "terminal_event_ref": "sha256:885c51008244a137ea54857aa42322968844da950764ec03dd2aa756ae3b81da"
+  },
+  "artifact_evidence": {
+    "offline_business_roster_exists": false,
+    "offline_business_roster_attestation_exists": false,
+    "phase1_seed_input_exists": false,
+    "phase1_seed_input_attestation_exists": false,
+    "raw_or_contact_shaped_durable_artifact_created": false,
+    "raw_response_logged_or_measured": false,
+    "reason": "NO_SOURCE_RESPONSE_WAS_RECEIVED"
+  },
+  "grant_consumption": {
+    "live_seed_roster_acquisition": "1/1_CONSUMED_TERMINAL_FAILURE",
+    "offline_seed_source_acquisition": "0/1_UNCONSUMED_PRECONDITION_MISSING",
+    "bounded_seed_construction": "0/1_UNCONSUMED_PRECONDITION_MISSING",
+    "csprng_seeds_generated": 0
+  },
+  "terminal_permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  },
+  "retry_prohibited": true,
+  "required_next_human_action": "A_NEW_EXACT_LIVE_ACQUISITION_AUTHORIZATION_IS_REQUIRED_ONLY_AFTER_PROVING_A_COMPLIANT_EXECUTION_PATH_CAN_RESOLVE_THE_TWO_ALREADY_APPROVED_SOURCE_HOSTS_WITHOUT_CHANGING_SOURCES_OR_POLICY"
+}
