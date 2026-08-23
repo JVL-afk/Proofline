@@ -1,0 +1,136 @@
+{
+  "record_type": "M67_SEED_SOURCE_ACQUISITION_AUTHORIZATION_READY",
+  "version": "1.0.0",
+  "state": "READY_FOR_SEED_SOURCE_ACQUISITION_AUTHORIZATION",
+  "required_event": "AUTHORIZE_OFFLINE_PHASE1_SEED_SOURCE_ACQUISITION",
+  "grant_type": "ONE_SHOT_OFFLINE_SOURCE_ACQUISITION_SUBSTAGE_NOT_A_SUCCESSOR_PERMISSION",
+  "source_set": [
+    {
+      "source_class": "OWNER_CONTROLLED_FIELD_LIMITED_OFFLINE_BUSINESS_ROSTER_V1",
+      "exact_instances_allowed": 1,
+      "access_method": "RESTRICTED_OFFLINE_FILE_TRANSFER_AND_LOCAL_DETERMINISTIC_PROJECTION",
+      "a09_state": "READY_PENDING_EXACT_INSTANCE_ATTESTATION",
+      "terms_access_state": "MUST_BE_ATTESTED_FOR_EXACT_INSTANCE_OR_SOURCE_BLOCKED",
+      "robots_state": "NOT_APPLICABLE_NO_NETWORK",
+      "reuse_storage_state": "RESTRICTED_TO_SEED_INPUT_AND_AUDIT_UNDER_A08_ADR0071",
+      "qualified_source_review": "REQUIRED_IF_THIRD_PARTY_RIGHTS_OR_REUSE_ARE_UNCERTAIN",
+      "network_hosts": [],
+      "wildcard_hosts": false
+    }
+  ],
+  "scope": {
+    "jurisdiction": "US-TX",
+    "vertical": "COMMERCIAL_HVAC",
+    "context": "B2B",
+    "purpose": "BUSINESS_IDENTITY_AND_PRESEED_ELIGIBILITY_ONLY",
+    "minimum_records": 24,
+    "maximum_records": 100,
+    "maximum_terminal_attempts": 1,
+    "starts_at": "2026-08-23T06:09:13.8775470Z",
+    "expires_at": "2026-08-30T06:09:13.8775470Z"
+  },
+  "allowed_output_fields": [
+    "PUBLIC_BUSINESS_NAME_AND_ALIASES",
+    "TEXAS_CITY_OR_SERVICE_AREA",
+    "BUSINESS_IDENTITY_EVIDENCE",
+    "COMMERCIAL_HVAC_ELIGIBILITY_EVIDENCE",
+    "B2B_ELIGIBILITY_EVIDENCE",
+    "PUBLIC_OPERATIONAL_STATUS_EVIDENCE",
+    "FIRST_PARTY_HOST_CANDIDATE_AND_EVIDENCE",
+    "ORGANIZATION_SHARED_BRAND_AND_LEAD_FLOW_HINTS",
+    "SOURCE_ID_ARTIFACT_REF_ARTIFACT_SHA256_LOCATOR_OBSERVED_AT"
+  ],
+  "prohibited": [
+    "PERSON_NAMES_EMAILS_PHONES_OR_STAFF_BLOCKS",
+    "PROFESSIONAL_IDENTITY_RESOLUTION_OR_CONTACT_STORAGE",
+    "REVENUE_HEADCOUNT_CRM_LEAD_VOLUME_RESPONSE_TIME_OR_INTERNAL_PROCESS",
+    "CUSTOMER_COMPLAINTS",
+    "OPPORTUNITY_SCORING_OUTCOME_FILTERING_OR_VALUE_RANKING",
+    "M1_M2_M3_M4_M5",
+    "OUTREACH_OR_COMMUNICATION",
+    "AI",
+    "BROWSER_AUTOMATION",
+    "DNS_HTTP_WEBSITE_GOVERNMENT_REGISTRY_OR_PROVIDER_ACCESS",
+    "RETRY_ALTERNATE_ROSTER_OR_POST_ORDER_SUBSTITUTION"
+  ],
+  "minimization": {
+    "boundary": "EPHEMERAL_OFFLINE_INPUT_TO_DETERMINISTIC_FIELD_LIMITED_PROJECTION_TO_DURABLE_SEED_INPUT",
+    "preferred_input": "FIELD_LIMITED_EXPORT_WITH_NO_PERSON_CONTACT_DATA",
+    "incidental_person_contact_data": "NEVER_PROJECT_INDEX_SEARCH_SCORE_LOG_MEASURE_OR_PERSIST",
+    "unsafe_or_unprovable_projection": "FAIL_CLOSED_CONTENT_FREE_AUDIT_ONLY",
+    "raw_input_durable_copy": false,
+    "review_artifact_contains_raw": false
+  },
+  "anti_cherry_picking": {
+    "complete_predeclared_source_frame_required": true,
+    "frame_cap_before_filtering": 100,
+    "permitted_filters": [
+      "BUSINESS_IDENTITY",
+      "TEXAS_SCOPE",
+      "COMMERCIAL_HVAC",
+      "B2B",
+      "PUBLIC_OPERATIONAL_STATUS",
+      "FIRST_PARTY_HOST_CANDIDACY",
+      "AMBIGUITY",
+      "DUPLICATE_OR_SHARED_BRAND",
+      "SCHEMA_OR_PROVENANCE_FAILURE"
+    ],
+    "outcome_or_opportunity_observation": "PROHIBITED",
+    "source_order_and_exclusions_preserved": true
+  },
+  "limits": {
+    "input_artifacts": 1,
+    "input_bytes": 5000000,
+    "durable_output_bytes": 5000000,
+    "local_reads": 1,
+    "external_requests": 0,
+    "dns_queries": 0,
+    "http_attempts": 0,
+    "retries": 0,
+    "concurrency": 1,
+    "ai_calls": 0,
+    "browser_sessions": 0,
+    "monetary_cost_usd": 0
+  },
+  "kill_switch": {
+    "must_be_unblocked_at_start": true,
+    "trip_or_suspension_effect": "BLOCK_START_PARSE_PROJECTION_AND_RETRY",
+    "trip_during_processing": "DISCARD_TRANSIENT_INPUT_WRITE_CONTENT_FREE_AUDIT_CONSUME_GRANT",
+    "ordinary_operator_override": false
+  },
+  "terminal_outputs": [
+    "local-data/m6.7/seed-construction/input/phase1-seed-input.json",
+    "local-data/m6.7/seed-construction/input/phase1-seed-input-attestation.json"
+  ],
+  "mandatory_stop": "AFTER_TWO_OUTPUTS_ARE_HASHED_AND_SEALED_BEFORE_SEED_CONSTRUCTION",
+  "primary_a": {
+    "required_for_this_gate": false,
+    "required_for_candidate_package_owner_review": false,
+    "mandatory_gate": "LATER_REAL_BUSINESS_DISCOVERY_ROLE_RELEASE",
+    "state": "PENDING_INDEPENDENT_AUTHENTICATION",
+    "owner_actor_substitution_prohibited": true
+  },
+  "permissions_before_during_after": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  },
+  "bindings": {
+    "blocker_record_sha256": "95eda42752f4ece71e5f7c27f153576d1403bc69138f731eb3b6cd8bf95f6437",
+    "seed_construction_grant_sha256": "7e641a4a80fc0af36737025480a1408296b515c30dd02e51a04a4117316dbc7a",
+    "accepted_environment_record_sha256": "713062b65cdb340e8d552f6562cdd22431c2aee057bb3baa8a74411c06648103",
+    "a08_live_effectiveness_sha256": "ec8489fcf64987de4767fc202824850a745d0e2124eb20d39857ca08f870a766",
+    "adr0071_sha256": "b8429209caf5743a8997f7b1030b6fe82ac7be0bc313dbdeb11dc803c9f22f89",
+    "a17_attorney_result_sha256": "c3f006989b2d82e8f9f381d1e549a68d736babdb32f51cdbe5a5af4273fcd745",
+    "source_policy_document_sha256": "d82e2bd9ef83bbaa34d9c1312ee7bfdab376ec1eecd4e1fc1552f1e7f0886205",
+    "source_instance_attestation_template_sha256": "4e412231b3654d54d1fbc44a1c8f6b90538834eb297e4bc914e7ef13b63e664d",
+    "output_schema_sha256": "96b0805b6d3c7022387a7290daee81aa90dabcc3489c6a49d8a71ee1c33a296b",
+    "output_attestation_template_sha256": "2fbbce8eb453134af339efb0d5854b43e5bd62465c02ebbd888f30ef68abadbd"
+  },
+  "live_source_operations_performed": 0,
+  "configuration_hash": "3df6ca6809eef3b10fdd1e51ff55e4c3c7c1d52de65393af1437bc47ac90a7d7"
+}
