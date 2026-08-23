@@ -1,0 +1,93 @@
+{
+  "record_type": "M67_SEED_SOURCE_CONNECTIVITY_SUCCESSOR_PREFLIGHT_ATTEMPT",
+  "version": "1.0.0",
+  "state": "TERMINAL_FAILED_CURRENT_SYSTEM_DNS_DATA_TEXAS_GOV",
+  "next_state": "BLOCKED_SUCCESSOR_SEED_SOURCE_CONNECTIVITY_PREFLIGHT_DNS_FAILURE_DATA_TEXAS_GOV",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "approval_sha256": "f8a80df6a430bf157984e5b0b550c7d11f86305ed02de0c03ec55c991dbe300b",
+  "ready_package_sha256": "d4ee2f559a5c1ee610fdf7632ee000804b491f1cae73147274f25e560c309af6",
+  "runtime_repair_evidence_sha256": "58d71d3133b5b488cfb3577c1db0844fe4d461ce506e6f8775c990a433f95475",
+  "preflight_executable_sha256": "defb7325b393a07646926843d11f793aae42455b8becaed3294fc99da51a639a",
+  "attempted_at": "2026-08-23T16:20:40Z",
+  "evidence_sealed_at": "2026-08-23T16:21:18.1597059Z",
+  "execution_path": {
+    "host": "LOCAL_WINDOWS",
+    "python": "C:\\Python313\\python.exe",
+    "python_version": "3.13.3",
+    "boto3": "1.43.78",
+    "botocore": "1.43.78",
+    "resolver": "CURRENT_WINDOWS_SYSTEM_RESOLVER"
+  },
+  "runtime_precondition": {
+    "state": "RUNTIME_PREFLIGHT_BEFORE_GRANT_CONSUMPTION_PASS",
+    "evidence_sha256": "dcf11194e21e8eb37a147ee52eb5bc83a082ee40bea04199c1439d1fbd3bd2f1",
+    "reverified_immediately_before_network_attempt": true
+  },
+  "terminal_failure": {
+    "stage": "FIRST_EXACT_HOST_CURRENT_SYSTEM_DNS_RESOLUTION",
+    "hostname": "data.texas.gov",
+    "exception": "socket.gaierror",
+    "windows_error": 11001,
+    "message": "getaddrinfo failed",
+    "http_transport_entered": false,
+    "source_response_received": false,
+    "source_content_bytes": 0,
+    "retry_performed": false,
+    "alternate_resolver_proxy_vpn_source_client_or_environment": false
+  },
+  "host_results": [
+    {
+      "hostname": "data.texas.gov",
+      "dns": "FAILED_GETADDRINFO_11001",
+      "accepted_public_address_families": [],
+      "tls": "NOT_ATTEMPTED_DNS_PRECONDITION_FAILED",
+      "certificate_hostname_validation": "NOT_ATTEMPTED",
+      "http_requests": 0,
+      "source_content_bytes": 0
+    },
+    {
+      "hostname": "nominatim.openstreetmap.org",
+      "dns": "NOT_ATTEMPTED_AFTER_TERMINAL_FIRST_HOST_FAILURE",
+      "accepted_public_address_families": [],
+      "tls": "NOT_ATTEMPTED",
+      "certificate_hostname_validation": "NOT_ATTEMPTED",
+      "http_requests": 0,
+      "source_content_bytes": 0
+    }
+  ],
+  "counts": {
+    "logical_dns_resolutions": 1,
+    "accepted_public_addresses": 0,
+    "tls_connection_attempts": 0,
+    "http_requests": 0,
+    "application_bytes_sent": 0,
+    "application_bytes_received": 0,
+    "source_content_bytes": 0
+  },
+  "post_failure_observation": {
+    "kill_switch": "TRIPPED",
+    "kill_switch_parameter_version": 5,
+    "exact_dns_cache_entries": 0,
+    "success_evidence_created": false
+  },
+  "grant_state": {
+    "successor_connectivity_preflight": "1/1_CONSUMED_TERMINAL_DNS_FAILURE",
+    "predecessor_connectivity_preflight": "1/1_CONSUMED_NEVER_REUSABLE",
+    "original_live_acquisition": "1/1_CONSUMED_NEVER_REUSABLE",
+    "offline_projection": "0/1_UNCONSUMED",
+    "bounded_seed_construction": "0/1_UNCONSUMED"
+  },
+  "terminal_permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  },
+  "retry_prohibited": true,
+  "successor_live_acquisition_authorization_prepared": false,
+  "exact_technical_blocker": "CURRENT_WINDOWS_SYSTEM_RESOLVER_CANNOT_RESOLVE_DATA_TEXAS_GOV_FROM_THE_APPROVED_LOCAL_EXECUTION_PATH; GETADDRINFO_RETURNS_WINDOWS_11001_BEFORE_TLS"
+}
