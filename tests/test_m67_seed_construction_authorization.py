@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -70,3 +71,18 @@ def test_primary_a_preparation_requires_independent_session_and_grants_nothing()
     assert challenge["required_independent_session"] is True
     assert challenge["owner_session_prohibited"] is True
     assert challenge["permissions_granted"] == []
+
+
+def test_exact_owner_gate_binds_committed_package_and_changes_no_permission() -> None:
+    approval = load("seed-construction-owner-approval-ready-2026-08-23.json")
+    package_path = AUTH / "seed-construction-authorization-ready-2026-08-23.json"
+    assert approval["state"] == "READY_FOR_SEED_CONSTRUCTION_AUTHORIZATION"
+    assert (
+        approval["bindings"]["authorization_package_sha256"]
+        == hashlib.sha256(package_path.read_bytes()).hexdigest()
+    )
+    assert approval["bindings"]["preparation_commit"] == "920f4a2aa60a0cb1b4f8ac1f781f71023d8ab778"
+    assert approval["successor_permissions_changed"] is False
+    statement = approval["exact_owner_approval_statement"]
+    assert "zero source acquisition, DNS queries, HTTP requests" in statement
+    assert "remain independently NOT_AUTHORIZED" in statement

@@ -1,0 +1,22 @@
+{
+  "record_type": "M67_BOUNDED_SEED_CONSTRUCTION_OWNER_APPROVAL_READY",
+  "version": "1.0.0",
+  "state": "READY_FOR_SEED_CONSTRUCTION_AUTHORIZATION",
+  "required_event": "AUTHORIZE_BOUNDED_PHASE1_SEED_CONSTRUCTION",
+  "bindings": {
+    "aws_account": "785072247535",
+    "region": "us-east-2",
+    "preparation_commit": "920f4a2aa60a0cb1b4f8ac1f781f71023d8ab778",
+    "authorization_package_sha256": "8c08df4c73734c28b8936196119bb3a5f9a86fe21419dddc41476927f18447d4",
+    "authorization_configuration_sha256": "cf22e382dee4eeb7f62cbaa95a5b177938d59e1e8e6d7e6213b6c7eec8c7575f",
+    "seed_policy_accepted_record_sha256": "0b100005423674b48ad759f16c14ca815097b518b88d4194d45ad5f22437733e",
+    "generator_sha256": "daae6bc65f3b7344701bb0e39640c28353a17fd7cd3316ee68245836dc741d56",
+    "input_schema_sha256": "96b0805b6d3c7022387a7290daee81aa90dabcc3489c6a49d8a71ee1c33a296b",
+    "scope_document_sha256": "7ed7ef0f720b7a4baa03b63bb59cb298503eaa6ba30fd429e2d812919519c5ce",
+    "input_attestation_template_sha256": "2fbbce8eb453134af339efb0d5854b43e5bd62465c02ebbd888f30ef68abadbd",
+    "primary_a_challenge_template_sha256": "699e4880b3f80a68b80f6e272df46f23acb79e7b2428c0049d4c14a8102b4b42"
+  },
+  "approval_effect": "AUTHORIZE_ONE_OFFLINE_BUSINESS_ONLY_SEED_CONSTRUCTION_ATTEMPT",
+  "successor_permissions_changed": false,
+  "exact_owner_approval_statement": "I approve AUTHORIZE_BOUNDED_PHASE1_SEED_CONSTRUCTION for AWS account 785072247535 in us-east-2, binding preparation commit 920f4a2aa60a0cb1b4f8ac1f781f71023d8ab778, bounded authorization package SHA-256 8c08df4c73734c28b8936196119bb3a5f9a86fe21419dddc41476927f18447d4, authorization configuration SHA-256 cf22e382dee4eeb7f62cbaa95a5b177938d59e1e8e6d7e6213b6c7eec8c7575f, accepted seed-policy record SHA-256 0b100005423674b48ad759f16c14ca815097b518b88d4194d45ad5f22437733e, deterministic generator SHA-256 daae6bc65f3b7344701bb0e39640c28353a17fd7cd3316ee68245836dc741d56, input schema SHA-256 96b0805b6d3c7022387a7290daee81aa90dabcc3489c6a49d8a71ee1c33a296b, scope document SHA-256 7ed7ef0f720b7a4baa03b63bb59cb298503eaa6ba30fd429e2d812919519c5ce, input-attestation template SHA-256 2fbbce8eb453134af339efb0d5854b43e5bd62465c02ebbd888f30ef68abadbd, and PRIMARY_A challenge template SHA-256 699e4880b3f80a68b80f6e272df46f23acb79e7b2428c0049d4c14a8102b4b42. This authorizes exactly one terminal attempt within seven days to ingest one separately attested, provenance-backed offline business-only JSON artifact containing 24 to 100 US-TX Commercial HVAC B2B candidates; hash and validate it before parsing; reject prohibited or contact-shaped content; apply only the approved eligibility, ambiguity, deterministic deduplication, frame-freeze, post-freeze CSPRNG seed, 24-slot ordering and reserve rules; write only restricted business-only package, private seed evidence and content-free audit records; emit independently unapproved exact-host review stubs; and stop immediately after sealing the immutable candidate/source package. It authorizes zero source acquisition, DNS queries, HTTP requests, website or government-source access, robots or Terms retrieval, person/contact processing, opportunity or outcome filtering, AI, browser use, research, Slot 1, outreach, communication, delivery, AWS infrastructure change, automatic retry, or outcome-based replacement. REAL_BUSINESS_DISCOVERY, REAL_PUBLIC_RESEARCH, PROFESSIONAL_IDENTITY_RESOLUTION, REAL_CONTACT_STORAGE, CONTACT_VERIFICATION, SHADOW_ELIGIBILITY_EVALUATION, and SHADOW_READY_ASSESSMENT remain independently NOT_AUTHORIZED before, during, and after this one-shot construction grant."
+}
