@@ -1,0 +1,121 @@
+{
+  "record_type": "M67_COMPLIANT_FIRST_PARTY_HOST_LOCATOR_CONFIGURATION",
+  "version": "1.0.0",
+  "state": "READY_FOR_OWNER_SOURCE_ACCEPTANCE_NOT_AUTHORIZED",
+  "source_id": "OSM_NOMINATIM_PUBLIC_SEARCH_V1",
+  "provider": "OpenStreetMap Foundation",
+  "product": "Public Nominatim Search API",
+  "endpoint": "https://nominatim.openstreetmap.org/search",
+  "data_license": "Open Data Commons Open Database License 1.0",
+  "access_policy": "Nominatim Usage Policy",
+  "query_contract": {
+    "input_fields": [
+      "public_business_name",
+      "texas_city_or_service_area"
+    ],
+    "parameters": {
+      "format": "jsonv2",
+      "countrycodes": "us",
+      "layer": "poi",
+      "addressdetails": 1,
+      "extratags": 1,
+      "namedetails": 0,
+      "limit": 3
+    },
+    "result_field_used_for_host": "extratags.website",
+    "result_identity_fields_used": [
+      "name",
+      "osm_type",
+      "osm_id",
+      "address.state",
+      "address.ISO3166-2-lvl4"
+    ]
+  },
+  "durable_output_fields": [
+    "public_business_name",
+    "texas_city_or_service_area",
+    "first_party_host_candidate",
+    "locator",
+    "source_id",
+    "source_artifact_sha256",
+    "observed_at",
+    "state"
+  ],
+  "prohibited_fields": [
+    "person_name",
+    "email",
+    "telephone",
+    "contact_or_staff_data",
+    "contact_website",
+    "street_or_mailing_address",
+    "raw_response_body",
+    "display_name",
+    "revenue",
+    "headcount",
+    "crm",
+    "lead_volume",
+    "response_time",
+    "internal_process",
+    "opportunity_or_outcome_score"
+  ],
+  "matching": {
+    "order": "FROZEN_TDLR_FRAME_ORDER",
+    "name_rule": "EXACT_NORMALIZED_NAME_OR_EXACT_NORMALIZED_NAME_WITH_LEGAL_SUFFIX_REMOVED",
+    "location_rule": "TEXAS_REQUIRED_CITY_REMAINS_INPUT_BINDING",
+    "host_rule": "ONE_UNIQUE_SAFE_EXTRATAGS_WEBSITE_HOST_OR_AMBIGUOUS_NOT_FOUND",
+    "social_hosts_rejected": true,
+    "ambiguous_and_not_found_preserved": true,
+    "outcome_based_replacement": false
+  },
+  "minimization": {
+    "boundary": "EPHEMERAL_RAW_RESPONSE_TO_DETERMINISTIC_FIELD_PROJECTION_TO_DURABLE_BUSINESS_HOST_EVIDENCE",
+    "raw_body_durable": false,
+    "raw_body_logs_metrics_traces": false,
+    "unsafe_result": "CONTENT_FREE_QUARANTINE_OR_AMBIGUOUS_NOT_FOUND",
+    "exact_host_state_after_projection": "PENDING_EXACT_HOST_A09_REVIEW"
+  },
+  "execution_envelope": {
+    "maximum_candidates": 100,
+    "maximum_logical_requests": 100,
+    "maximum_attempts": 100,
+    "maximum_response_bytes": 5000000,
+    "maximum_response_bytes_per_request": 50000,
+    "concurrency": 1,
+    "minimum_delay_seconds": 2,
+    "automatic_retry": false,
+    "cost_ceiling_usd": 0,
+    "browser_sessions": 0,
+    "ai_calls": 0,
+    "cache_each_result": true,
+    "user_agent": "M67Phase1SeedLocator/1.0",
+    "kill_switch_start_and_end": "TRIPPED"
+  },
+  "rights_and_obligations": {
+    "persistent_internal_hostname_storage": "PERMITTED_SUBJECT_TO_ODBL_AND_ATTRIBUTION",
+    "attribution": "Copyright OpenStreetMap contributors; data available under ODbL 1.0",
+    "share_alike": "NOT_TRIGGERED_BY_PRIVATE_INTERNAL_USE; REASSESS_BEFORE_PUBLICATION_OR_EXTERNAL_TRANSFER",
+    "retention": "PHASE1_APPROVED_ROSTER_AND_PROVENANCE_RETENTION_ONLY",
+    "deletion": "A08_GOVERNED_DELETION_AND_CONTENT_FREE_TOMBSTONE",
+    "robots": "NOT_APPLICABLE_TO_DOCUMENTED_API_ENDPOINT",
+    "credential": "NONE",
+    "account_or_paid_plan": "NONE",
+    "service_capacity_guarantee": "NONE_SWITCHABLE_SERVICE_NO_COMPLETENESS_GUARANTEE"
+  },
+  "a09_disposition": "APPROVABLE_WITH_CONTROLS_PENDING_OWNER_SOURCE_ACCEPTANCE",
+  "qualified_source_review_required": false,
+  "live_source_operations_performed": 0,
+  "candidate_records_processed": 0,
+  "one_shot_grants": {
+    "offline_acquisition": "0/1",
+    "bounded_seed_construction": "0/1"
+  },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  }
+}

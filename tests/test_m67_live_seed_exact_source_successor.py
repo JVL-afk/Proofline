@@ -2,15 +2,15 @@ import hashlib
 import json
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 AUTH = ROOT / "docs" / "readiness" / "m6.7-authorization"
 
 
 def test_exact_source_successor_remains_fail_closed() -> None:
     record = json.loads(
-        (AUTH / "live-seed-roster-exact-source-review-successor-2026-08-23.json")
-        .read_text(encoding="utf-8")
+        (AUTH / "live-seed-roster-exact-source-review-successor-2026-08-23.json").read_text(
+            encoding="utf-8"
+        )
     )
     assert record["state"] == (
         "BLOCKED_PENDING_QUALIFIED_SOURCE_RIGHTS_REVIEW_AND_LOCATOR_CONTRACT_ACCEPTANCE"
@@ -31,8 +31,9 @@ def test_exact_source_successor_remains_fail_closed() -> None:
 
 def test_tdlr_projection_excludes_contact_and_owner_fields() -> None:
     record = json.loads(
-        (AUTH / "live-seed-roster-exact-source-review-successor-2026-08-23.json")
-        .read_text(encoding="utf-8")
+        (AUTH / "live-seed-roster-exact-source-review-successor-2026-08-23.json").read_text(
+            encoding="utf-8"
+        )
     )
     tdlr = record["exact_sources"][0]
     allowed = set(tdlr["safe_query_projection_if_later_approved"])
@@ -44,8 +45,9 @@ def test_tdlr_projection_excludes_contact_and_owner_fields() -> None:
 
 def test_locator_is_non_ai_and_per_host_review_remains_separate() -> None:
     record = json.loads(
-        (AUTH / "live-seed-roster-exact-source-review-successor-2026-08-23.json")
-        .read_text(encoding="utf-8")
+        (AUTH / "live-seed-roster-exact-source-review-successor-2026-08-23.json").read_text(
+            encoding="utf-8"
+        )
     )
     brave = record["exact_sources"][1]
     assert brave["source_id"] == "BRAVE_SEARCH_API_HOST_LOCATOR_V1"
@@ -58,10 +60,9 @@ def test_locator_is_non_ai_and_per_host_review_remains_separate() -> None:
 
 def test_successor_package_binds_exact_review_artifacts() -> None:
     package = json.loads(
-        (
-            AUTH
-            / "live-seed-roster-exact-source-review-successor-package-2026-08-23.json"
-        ).read_text(encoding="utf-8")
+        (AUTH / "live-seed-roster-exact-source-review-successor-package-2026-08-23.json").read_text(
+            encoding="utf-8"
+        )
     )
     for artifact in package["artifacts"]:
         content = (ROOT / artifact["path"]).read_bytes()
