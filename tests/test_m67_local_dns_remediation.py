@@ -35,3 +35,20 @@ def test_plan_changes_only_exact_adapter_ipv4_dns_and_is_rollbackable() -> None:
     assert value["network_proof_limits"]["source_content_bytes"] == 0
     assert value["terraform"]["applicable"] is False
     assert "M6_7_PERMISSIONS" in value["explicitly_unchanged"]
+
+
+def test_owner_gate_binds_only_ipv4_dns_and_two_zero_http_proofs() -> None:
+    ready_path = DIRECTORY / "local-dns-resolver-remediation-owner-approval-ready-2026-08-23.json"
+    value = json.loads(ready_path.read_text())
+    assert value["state"] == "READY_FOR_LOCAL_DNS_RESOLVER_REMEDIATION_AUTHORIZATION"
+    assert value["target"]["interface_index"] == 13
+    assert value["target"]["address_family"] == "IPv4_ONLY"
+    assert value["after"]["dns_servers"] == ["8.8.8.8", "8.8.4.4"]
+    assert value["proof"]["logical_dns_queries"] == 2
+    assert value["proof"]["http_requests"] == 0
+    assert value["proof"]["source_content_bytes"] == 0
+    assert value["rollback"]["automatic_on_any_apply_or_proof_failure"] is True
+    assert all(value["unchanged"].values())
+    statement = value["exact_owner_approval_statement"]
+    assert "all traffic using that adapter" in statement
+    assert "does not authorize another connectivity preflight or live acquisition" in statement

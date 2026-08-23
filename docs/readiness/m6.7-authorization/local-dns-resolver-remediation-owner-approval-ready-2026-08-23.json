@@ -1,0 +1,74 @@
+{
+  "record_type": "M67_LOCAL_DNS_RESOLVER_REMEDIATION_OWNER_APPROVAL_READY",
+  "version": "1.0.0",
+  "state": "READY_FOR_LOCAL_DNS_RESOLVER_REMEDIATION_AUTHORIZATION",
+  "event": "APPROVE_LOCAL_DNS_RESOLVER_REMEDIATION",
+  "preparation_commit": "5c9d811562d94cbace7e41cf6f0bc3048f65cc1d",
+  "inspection_sha256": "29736d93cccb0ff16d7b54ea8148c4f365c7b5569b775c67cd80f4250012f5b7",
+  "remediation_plan_sha256": "a691de5fa497f5f48def8f98ebf2fd373b15caf03c461a3dde03bd1e2b08e400",
+  "consumed_successor_preflight_sha256": "42d370fbab6dd661c8b1ba0b08a3a48eee7b0a368d1010f6bd6d552e32bf84a5",
+  "validity": {
+    "starts_at": "2026-08-23T16:36:34Z",
+    "expires_at": "2026-08-30T16:36:34Z",
+    "terminal_attempts": 1
+  },
+  "target": {
+    "host": "LOCAL_WINDOWS",
+    "interface_alias": "Wi-Fi",
+    "interface_index": 13,
+    "interface_guid": "{997EE793-757E-4FD9-8138-CE1BF9FA1B32}",
+    "address_family": "IPv4_ONLY"
+  },
+  "before": {
+    "dns_origin": "DHCP_DERIVED",
+    "dns_servers": [
+      "192.168.1.1"
+    ]
+  },
+  "after": {
+    "dns_origin": "STATIC_ADAPTER_OVERRIDE",
+    "dns_servers": [
+      "8.8.8.8",
+      "8.8.4.4"
+    ],
+    "host_wide_ipv4_dns_effect_on_target_adapter_acknowledged": true
+  },
+  "proof": {
+    "flush_windows_dns_cache": true,
+    "system_resolver_exact_hosts": [
+      "data.texas.gov",
+      "nominatim.openstreetmap.org"
+    ],
+    "logical_dns_queries": 2,
+    "http_requests": 0,
+    "tls_connections": 0,
+    "source_content_bytes": 0
+  },
+  "rollback": {
+    "automatic_on_any_apply_or_proof_failure": true,
+    "restore_mode": "IPV4_DNS_FROM_DHCP",
+    "expected_restored_resolver": "192.168.1.1",
+    "flush_windows_dns_cache": true
+  },
+  "unchanged": {
+    "ipv4_address": true,
+    "gateway": true,
+    "dhcp_addressing": true,
+    "ipv6_dns": true,
+    "proxy": true,
+    "vpn": true,
+    "firewall": true,
+    "aws": true,
+    "terraform": true,
+    "source_policy": true,
+    "m6_7_permissions": true
+  },
+  "precondition_state": {
+    "kill_switch": "TRIPPED",
+    "kill_switch_parameter_version": 5,
+    "all_seven_permissions": "NOT_AUTHORIZED",
+    "offline_projection": "0/1_UNCONSUMED",
+    "bounded_seed_construction": "0/1_UNCONSUMED"
+  },
+  "exact_owner_approval_statement": "I approve APPROVE_LOCAL_DNS_RESOLVER_REMEDIATION on the local Windows host, binding preparation commit 5c9d811562d94cbace7e41cf6f0bc3048f65cc1d, active-adapter inspection SHA-256 29736d93cccb0ff16d7b54ea8148c4f365c7b5569b775c67cd80f4250012f5b7, exact remediation/rollback plan SHA-256 a691de5fa497f5f48def8f98ebf2fd373b15caf03c461a3dde03bd1e2b08e400, and consumed successor-preflight evidence SHA-256 42d370fbab6dd661c8b1ba0b08a3a48eee7b0a368d1010f6bd6d552e32bf84a5. This authorizes exactly one bounded local resolver remediation attempt between 2026-08-23T16:36:34Z and 2026-08-30T16:36:34Z on active Wi-Fi interface index 13 and GUID {997EE793-757E-4FD9-8138-CE1BF9FA1B32}: replace only its DHCP-derived IPv4 DNS server 192.168.1.1 with static IPv4 preferred 8.8.8.8 and alternate 8.8.4.4, flush the Windows DNS cache, and perform exactly one ordinary current-system Resolve-DnsName proof for data.texas.gov and one for nominatim.openstreetmap.org. I acknowledge that an adapter DNS override governs IPv4 DNS for all traffic using that adapter, although this authorization permits source-name proof only for those two exact hosts. It authorizes zero HTTP requests, TLS connections, source-content bytes, retries, source acquisition, browser, AI, proxy, VPN or alternate execution path. IPv4 addressing, gateway and DHCP addressing must remain unchanged; IPv6 DNS, proxy, VPN, firewall, AWS, Terraform, source policy and all M6.7 permissions must remain unchanged. Any adapter-identity, before-state, apply, after-state, IPv6-preservation or exact-host DNS-proof failure requires immediate rollback of IPv4 DNS to DHCP, cache flush, evidence sealing and stop. The kill switch must remain TRIPPED; all seven M6.7 permissions remain NOT_AUTHORIZED; and the offline-projection and bounded seed-construction grants remain 0/1 unconsumed. Successful DNS proof does not authorize another connectivity preflight or live acquisition; each remains separately gated."
+}
