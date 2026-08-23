@@ -1,0 +1,20 @@
+{
+  "record_type": "M67_PHASE1_OFFLINE_SEED_INPUT_ATTESTATION",
+  "version": "1.0.0",
+  "state": "MISSING_INPUT_ARTIFACT",
+  "source_mechanism_id": "PHASE1_PROVENANCE_BACKED_OFFLINE_BUSINESS_SEED_INPUT_V1",
+  "artifact_ref": null,
+  "artifact_sha256": null,
+  "candidate_count": null,
+  "schema_sha256": "96b0805b6d3c7022387a7290daee81aa90dabcc3489c6a49d8a71ee1c33a296b",
+  "construction_method": null,
+  "source_provenance_complete": null,
+  "business_only_fields_confirmed": null,
+  "person_contact_fields_absent": null,
+  "opportunity_or_outcome_filtering_absent": null,
+  "permitted_use_and_reuse_attested": null,
+  "accountable_actor_ref": null,
+  "attested_at": null,
+  "expires_at": null,
+  "configuration_hash": null
+}

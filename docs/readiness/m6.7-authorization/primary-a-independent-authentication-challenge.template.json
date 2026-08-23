@@ -1,0 +1,32 @@
+{
+  "record_type": "M67_PRIMARY_A_INDEPENDENT_AUTHENTICATION_CHALLENGE",
+  "version": "1.0.0",
+  "state": "NOT_ISSUED",
+  "actor_ref": "PRIMARY_A_ACTOR",
+  "required_role": "INDEPENDENT_SECOND_REVIEWER",
+  "issuer": null,
+  "audience": "M67_PHASE1_DEPLOYED_ENVIRONMENT",
+  "challenge_nonce_commitment": null,
+  "expires_at": null,
+  "required_assurance": "MFA",
+  "required_independent_session": true,
+  "owner_session_prohibited": true,
+  "captured_after_authentication": {
+    "opaque_subject_or_digest": null,
+    "authentication_event_ref": null,
+    "authenticated_at": null,
+    "assurance_evidence_ref": null,
+    "reconciliation_sha256": null
+  },
+  "repository_must_not_store": [
+    "NAME",
+    "EMAIL",
+    "PASSWORD",
+    "ACCESS_TOKEN",
+    "REFRESH_TOKEN",
+    "SESSION_COOKIE",
+    "LONG_LIVED_CREDENTIAL"
+  ],
+  "completion_effect": "IDENTITY_BINDING_PREREQUISITE_ONLY",
+  "permissions_granted": []
+}

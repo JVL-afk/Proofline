@@ -1,0 +1,108 @@
+{
+  "record_type": "M67_BOUNDED_SEED_CONSTRUCTION_AUTHORIZATION_READY",
+  "version": "1.0.0",
+  "state": "READY_FOR_SEED_CONSTRUCTION_AUTHORIZATION",
+  "required_event": "AUTHORIZE_BOUNDED_PHASE1_SEED_CONSTRUCTION",
+  "grant_type": "ONE_SHOT_EXECUTION_GRANT_NOT_A_SUCCESSOR_PERMISSION",
+  "scope": {
+    "aws_account": "785072247535",
+    "region": "us-east-2",
+    "jurisdiction": "US-TX",
+    "vertical": "COMMERCIAL_HVAC",
+    "context": "B2B",
+    "opportunity_context": "INBOUND_LEAD_RESPONSE",
+    "candidate_frame_minimum": 24,
+    "candidate_frame_maximum": 100,
+    "cohort_target": 24,
+    "validity_after_signature_days": 7,
+    "maximum_terminal_attempts": 1
+  },
+  "input_source": {
+    "source_mechanism_id": "PHASE1_PROVENANCE_BACKED_OFFLINE_BUSINESS_SEED_INPUT_V1",
+    "maximum_artifacts": 1,
+    "artifact_must_be_hash_bound_before_parse": true,
+    "attestation_required_before_execution": true,
+    "acquisition_by_this_grant": "PROHIBITED",
+    "network_source_access": "PROHIBITED",
+    "unknown_or_unattested_source": "FAIL_CLOSED"
+  },
+  "permitted_operations": [
+    "RECEIVE_ONE_RESTRICTED_OFFLINE_BUSINESS_ONLY_JSON_ARTIFACT",
+    "HASH_BEFORE_PARSE",
+    "VALIDATE_EXACT_SCHEMA_COUNT_PROVENANCE_AND_ATTESTATION",
+    "REJECT_PROHIBITED_FIELDS_AND_CONTACT_SHAPED_VALUES",
+    "NORMALIZE_BUSINESS_COMPARISON_KEYS_AND_EXACT_HOST_STRINGS_WITHOUT_DNS",
+    "CLASSIFY_ONLY_APPROVED_BUSINESS_ELIGIBILITY_AND_AMBIGUITY",
+    "DETERMINISTICALLY_DEDUPLICATE_AND_APPLY_SHARED_BRAND_CAP",
+    "FREEZE_CANONICAL_ELIGIBLE_FRAME_BEFORE_SEED",
+    "GENERATE_ONE_32_BYTE_OS_CSPRNG_SEED_AND_COMMITMENT",
+    "DETERMINISTICALLY_ORDER_SELECT_24_AND_FREEZE_RESERVE",
+    "EMIT_SEPARATE_NOT_APPROVED_HOST_REVIEW_STUBS",
+    "WRITE_ONLY_RESTRICTED_BUSINESS_ONLY_PACKAGE_PRIVATE_SEED_EVIDENCE_AND_CONTENT_FREE_AUDIT",
+    "STOP_IMMEDIATELY_AFTER_IMMUTABLE_PACKAGE_SEAL"
+  ],
+  "operation_caps": {
+    "dns_queries": 0,
+    "http_requests": 0,
+    "browser_sessions": 0,
+    "ai_provider_calls": 0,
+    "external_communications": 0,
+    "person_contact_records": 0,
+    "opportunity_scores": 0,
+    "aws_infrastructure_mutations": 0,
+    "business_input_artifacts": 1,
+    "candidate_observations": 100,
+    "generated_candidate_packages": 1
+  },
+  "prohibited_operations": [
+    "SOURCE_SEARCH_OR_ACQUISITION",
+    "DNS_OR_NETWORK_HOST_VALIDATION",
+    "HTTP_OR_REDIRECT_ACCESS",
+    "ROBOTS_OR_TERMS_RETRIEVAL",
+    "PUBLIC_WEBSITE_OR_GOVERNMENT_REGISTRY_ACCESS",
+    "AUTHENTICATED_SOCIAL_REVIEW_PEOPLE_OR_EMAIL_SOURCE",
+    "PERSON_OR_CONTACT_PROCESSING",
+    "OPPORTUNITY_OUTCOME_YIELD_OR_SCORE_FILTERING",
+    "REVENUE_HEADCOUNT_CRM_LEAD_VOLUME_RESPONSE_TIME_OR_INTERNAL_PROCESS_INFERENCE",
+    "AI_OR_BROWSER_USE",
+    "RESEARCH_OR_SLOT_EXECUTION",
+    "OUTREACH_COMMUNICATION_FORM_BOOKING_MAILBOX_CRM_OR_DELIVERY",
+    "AWS_INFRASTRUCTURE_IDENTITY_POLICY_ROUTE_OR_CREDENTIAL_CHANGE",
+    "AUTOMATIC_RETRY_OR_OUTCOME_BASED_REPLACEMENT"
+  ],
+  "terminal_behavior": {
+    "success": "PACKAGE_FROZEN_AWAITING_OWNER_SEED_SOURCE_PACKAGE_APPROVAL",
+    "validation_failure": "ATTEMPT_CONSUMED_FAIL_CLOSED_CONTENT_FREE_AUDIT_ONLY",
+    "ambiguous_candidate": "REVIEW_REQUIRED_EXCLUDED_FROM_ELIGIBLE_FRAME",
+    "blocked_or_unreviewed_host": "NOT_APPROVED_NO_ACCESS",
+    "automatic_next_stage": false
+  },
+  "permissions_before_during_after": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  },
+  "primary_a": {
+    "state": "PENDING_INDEPENDENT_AUTHENTICATION",
+    "not_required_for_seed_construction": true,
+    "required_before_later_discovery_role_gate": true,
+    "owner_actor_substitution_prohibited": true
+  },
+  "bindings": {
+    "seed_policy_approval_commit": "7c76eb2037a7fdcd6f06b33f702287c4a9b88bd3",
+    "seed_policy_accepted_record_sha256": "0b100005423674b48ad759f16c14ca815097b518b88d4194d45ad5f22437733e",
+    "accepted_environment_record_sha256": "713062b65cdb340e8d552f6562cdd22431c2aee057bb3baa8a74411c06648103",
+    "generator_sha256": "daae6bc65f3b7344701bb0e39640c28353a17fd7cd3316ee68245836dc741d56",
+    "input_schema_sha256": "96b0805b6d3c7022387a7290daee81aa90dabcc3489c6a49d8a71ee1c33a296b",
+    "scope_document_sha256": "7ed7ef0f720b7a4baa03b63bb59cb298503eaa6ba30fd429e2d812919519c5ce",
+    "input_attestation_template_sha256": "2fbbce8eb453134af339efb0d5854b43e5bd62465c02ebbd888f30ef68abadbd",
+    "primary_a_challenge_template_sha256": "699e4880b3f80a68b80f6e272df46f23acb79e7b2428c0049d4c14a8102b4b42"
+  },
+  "real_candidates_present": 0,
+  "live_business_operations_performed": 0,
+  "configuration_hash": "cf22e382dee4eeb7f62cbaa95a5b177938d59e1e8e6d7e6213b6c7eec8c7575f"
+}
