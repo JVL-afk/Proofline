@@ -1,0 +1,25 @@
+{
+  "record_type": "M67_SEED_SOURCE_ACQUISITION_OWNER_APPROVAL_READY",
+  "version": "1.0.0",
+  "state": "READY_FOR_SEED_SOURCE_ACQUISITION_AUTHORIZATION",
+  "required_event": "AUTHORIZE_OFFLINE_PHASE1_SEED_SOURCE_ACQUISITION",
+  "bindings": {
+    "aws_account": "785072247535",
+    "region": "us-east-2",
+    "preparation_commit": "71b4e72d6528918b7f124f635e9e7201b8fb1950",
+    "authorization_package_sha256": "c1590d99d42928ee219b4476d60e1cc3d48955ef25482e5a70561512dc74ad29",
+    "authorization_configuration_sha256": "3df6ca6809eef3b10fdd1e51ff55e4c3c7c1d52de65393af1437bc47ac90a7d7",
+    "source_policy_sha256": "d82e2bd9ef83bbaa34d9c1312ee7bfdab376ec1eecd4e1fc1552f1e7f0886205",
+    "source_instance_attestation_template_sha256": "4e412231b3654d54d1fbc44a1c8f6b90538834eb297e4bc914e7ef13b63e664d",
+    "output_schema_sha256": "96b0805b6d3c7022387a7290daee81aa90dabcc3489c6a49d8a71ee1c33a296b",
+    "output_attestation_template_sha256": "2fbbce8eb453134af339efb0d5854b43e5bd62465c02ebbd888f30ef68abadbd",
+    "blocked_seed_input_record_sha256": "95eda42752f4ece71e5f7c27f153576d1403bc69138f731eb3b6cd8bf95f6437"
+  },
+  "effective_window": {
+    "starts_at": "2026-08-23T06:09:13.8775470Z",
+    "expires_at": "2026-08-30T06:09:13.8775470Z"
+  },
+  "approval_effect": "AUTHORIZE_ONE_ZERO_NETWORK_OFFLINE_SOURCE_ACQUISITION_AND_FIELD_LIMITED_PROJECTION_ATTEMPT",
+  "successor_permissions_changed": false,
+  "exact_owner_approval_statement": "I approve AUTHORIZE_OFFLINE_PHASE1_SEED_SOURCE_ACQUISITION for AWS account 785072247535 in us-east-2, binding preparation commit 71b4e72d6528918b7f124f635e9e7201b8fb1950, acquisition package SHA-256 c1590d99d42928ee219b4476d60e1cc3d48955ef25482e5a70561512dc74ad29, acquisition configuration SHA-256 3df6ca6809eef3b10fdd1e51ff55e4c3c7c1d52de65393af1437bc47ac90a7d7, offline source policy SHA-256 d82e2bd9ef83bbaa34d9c1312ee7bfdab376ec1eecd4e1fc1552f1e7f0886205, exact-source attestation template SHA-256 4e412231b3654d54d1fbc44a1c8f6b90538834eb297e4bc914e7ef13b63e664d, output schema SHA-256 96b0805b6d3c7022387a7290daee81aa90dabcc3489c6a49d8a71ee1c33a296b, output-attestation template SHA-256 2fbbce8eb453134af339efb0d5854b43e5bd62465c02ebbd888f30ef68abadbd, and blocked-input evidence SHA-256 95eda42752f4ece71e5f7c27f153576d1403bc69138f731eb3b6cd8bf95f6437. This authorizes exactly one terminal attempt between 2026-08-23T06:09:13.8775470Z and 2026-08-30T06:09:13.8775470Z to receive one owner-controlled, exact-instance-attested, field-limited offline business roster of 24 to 100 complete predeclared US-TX Commercial HVAC B2B records, maximum 5,000,000 bytes; hash it before parsing; verify origin, provenance, permitted use/reuse and anti-cherry-picking completeness; deterministically project only the approved business identity, eligibility, first-party-host candidate and provenance fields; reject unsafe or unprovable minimization with content-free audit only; and seal exactly phase1-seed-input.json plus phase1-seed-input-attestation.json. The exact source instance must be SOURCE_BLOCKED if provenance or reuse rights cannot be attested, and qualified source review remains required if third-party rights or reuse are uncertain. This authorizes zero DNS, HTTP, website, government-registry, provider, AI or browser operations; zero retries and USD 0 cost; no person/contact indexing, search, scoring, storage, logs or metrics; no opportunity/outcome/value filtering; no M1-M5, seed ordering, CSPRNG generation, outreach, communication, infrastructure change or automatic next stage. The existing bounded seed-construction grant remains unconsumed. REAL_BUSINESS_DISCOVERY, REAL_PUBLIC_RESEARCH, PROFESSIONAL_IDENTITY_RESOLUTION, REAL_CONTACT_STORAGE, CONTACT_VERIFICATION, SHADOW_ELIGIBILITY_EVALUATION and SHADOW_READY_ASSESSMENT remain independently NOT_AUTHORIZED before, during and after this offline acquisition substage."
+}

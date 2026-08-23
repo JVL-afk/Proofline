@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import subprocess
 import sys
@@ -59,3 +60,18 @@ def test_permissions_and_primary_a_gate_remain_separate() -> None:
     assert value["primary_a"]["required_for_candidate_package_owner_review"] is False
     assert value["primary_a"]["mandatory_gate"] == "LATER_REAL_BUSINESS_DISCOVERY_ROLE_RELEASE"
     assert value["primary_a"]["owner_actor_substitution_prohibited"] is True
+
+
+def test_exact_owner_gate_binds_committed_offline_package() -> None:
+    approval = load("seed-source-acquisition-owner-approval-ready-2026-08-23.json")
+    package_path = AUTH / "seed-source-acquisition-authorization-ready-2026-08-23.json"
+    assert approval["state"] == "READY_FOR_SEED_SOURCE_ACQUISITION_AUTHORIZATION"
+    assert approval["bindings"]["preparation_commit"] == "71b4e72d6528918b7f124f635e9e7201b8fb1950"
+    assert (
+        approval["bindings"]["authorization_package_sha256"]
+        == hashlib.sha256(package_path.read_bytes()).hexdigest()
+    )
+    assert approval["successor_permissions_changed"] is False
+    statement = approval["exact_owner_approval_statement"]
+    assert "zero DNS, HTTP, website, government-registry, provider, AI or browser" in statement
+    assert "bounded seed-construction grant remains unconsumed" in statement
