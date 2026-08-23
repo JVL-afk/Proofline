@@ -1,0 +1,114 @@
+{
+  "record_type": "M67_PRIMARY_A_AUTHENTICATION_PACKAGE",
+  "version": "1.0.0",
+  "state": "BLOCKED_PENDING_PRIMARY_A_AUTHENTICATION_ONLY_IDP_ASSIGNMENT",
+  "actor_ref": "PRIMARY_A_ACTOR",
+  "role": "INDEPENDENT_SECOND_REVIEWER",
+  "account": "785072247535",
+  "region": "us-east-2",
+  "environment": "M67_PHASE1_DEPLOYED_ENVIRONMENT",
+  "authoritative_predecessor_states": {
+    "authentication_step": "PENDING_INDEPENDENT_AUTHENTICATION",
+    "live_discovery_role_gate": "REQUIRED_PENDING_INDEPENDENT_AUTHENTICATION",
+    "challenge": "NOT_ISSUED",
+    "role_assignment": "APPROVED_PENDING_OIDC_RECONCILIATION",
+    "environment_acceptance": "ACCEPTED_FROZEN"
+  },
+  "value_ownership": {
+    "owner_actor": [
+      "REQUEST_OR_APPROVE_AUTHENTICATION_ONLY_IDP_INVITATION_OR_ASSIGNMENT",
+      "APPROVE_ONE_FRESH_CHALLENGE_AFTER_SYSTEM_POPULATES_EXACT_BINDINGS",
+      "ACCEPT_OR_REJECT_COMPLETED_RECONCILIATION_EVIDENCE",
+      "LATER_SIGN_OR_REJECT_THE_SEPARATE_EXACT_DISCOVERY_RELEASE"
+    ],
+    "primary_a": [
+      "AUTHENTICATE_IN_OWN_INDEPENDENT_SESSION",
+      "USE_MFA",
+      "RESPOND_TO_EXACT_FRESH_CHALLENGE",
+      "AFFIRM_THE_FIXED_NARROW_ATTESTATION"
+    ],
+    "idp_and_system": [
+      "IDP_ISSUER_AND_AUDIENCE",
+      "OPAQUE_SUBJECT_DIGEST",
+      "AUTH_EVENT_ID_AND_TIMESTAMP",
+      "MFA_ASSURANCE",
+      "ACCOUNT_ENVIRONMENT_AND_AUDIENCE_BINDING",
+      "CHALLENGE_ID_NONCE_COMMITMENT_ISSUED_EXPIRY_AND_USE_STATE",
+      "OWNER_ACTOR_COLLISION_CHECK",
+      "ATTESTATION_AND_EVIDENCE_HASHES"
+    ]
+  },
+  "state_machine": {
+    "success": [
+      "PRIMARY_A_AUTH_PACKAGE_READY",
+      "PRIMARY_A_CHALLENGE_ISSUED",
+      "PRIMARY_A_AUTHENTICATED_PENDING_RECONCILIATION",
+      "PRIMARY_A_RECONCILED_PENDING_OWNER_ACCEPTANCE",
+      "PRIMARY_A_INDEPENDENT_AUTHENTICATION_ACCEPTED"
+    ],
+    "fail_closed": [
+      "EXPIRED_CHALLENGE",
+      "WRONG_ACTOR",
+      "WRONG_ACCOUNT_OR_ENVIRONMENT",
+      "MFA_REQUIRED",
+      "REPLAYED_CHALLENGE",
+      "AMBIGUOUS_SUBJECT",
+      "OWNER_PRIMARY_A_IDENTITY_COLLISION",
+      "INCOMPLETE_ATTESTATION"
+    ],
+    "retry_rule": "NO_RETRY_OR_REUSE_NEW_OWNER_APPROVED_CHALLENGE_REQUIRED"
+  },
+  "missing_external_prerequisite": {
+    "exact_item": "APPROVED_AUTHENTICATION_ONLY_IDP_ASSIGNMENT_OR_AUDIENCE_FOR_PRIMARY_A_ACTOR",
+    "must_be_observed": [
+      "IDP_ISSUER_OR_INSTANCE_REFERENCE",
+      "SECURE_INVITATION_OR_EXISTING_IDENTITY_ASSIGNMENT_STATUS",
+      "AUTHENTICATION_ONLY_AUDIENCE_OR_PERMISSION_SET_REFERENCE",
+      "MFA_POLICY_REFERENCE",
+      "ASSIGNMENT_IDENTIFIER_AND_EXPIRY"
+    ],
+    "must_not_use": [
+      "OWNER_ADMINISTRATOR_SESSION",
+      "OPERATOR_ROLE",
+      "WORKLOAD_ROLE",
+      "KILL_SWITCH_ROLE"
+    ]
+  },
+  "authentication_vs_review": {
+    "authentication_complete_effect": "IDENTITY_PREREQUISITE_ONLY",
+    "independent_opportunity_review_complete": false,
+    "primary_a_separate_discovery_release_signature_required_by_frozen_design": false,
+    "owner_exact_discovery_release_signature_still_required": true
+  },
+  "sensitive_material_outside_git": [
+    "REAL_NAME",
+    "PERSONAL_OR_WORK_EMAIL",
+    "PHONE",
+    "RAW_IDP_SUBJECT",
+    "SSO_START_URL_IF_CLASSIFIED_RESTRICTED",
+    "PASSWORD",
+    "ACCESS_OR_REFRESH_TOKEN",
+    "SESSION_COOKIE_OR_SSO_CACHE",
+    "MFA_SECRET_OR_RECOVERY_CODE",
+    "RAW_CHALLENGE_NONCE"
+  ],
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  },
+  "live_authentication_performed": false,
+  "challenge_issued": false,
+  "human_documents": {
+    "owner_checklist": "primary-a-owner-checklist-2026-08-23.md",
+    "primary_a_only_form": "primary-a-independent-authentication-form-2026-08-23.md",
+    "owner_statement_templates": "primary-a-owner-statements-2026-08-23.json",
+    "evidence_schema": "primary-a-authentication-evidence-v1.schema.json",
+    "evidence_template": "primary-a-authentication-evidence.template.json"
+  },
+  "permissions_changed": false
+}

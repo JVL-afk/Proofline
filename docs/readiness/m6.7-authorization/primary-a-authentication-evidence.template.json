@@ -1,0 +1,46 @@
+{
+  "record_type": "M67_PRIMARY_A_INDEPENDENT_AUTHENTICATION_EVIDENCE",
+  "version": "1.0.0",
+  "state": "PRIMARY_A_AUTHENTICATED_PENDING_RECONCILIATION",
+  "actor_ref": "PRIMARY_A_ACTOR",
+  "role": "INDEPENDENT_SECOND_REVIEWER",
+  "aws_account_id": "785072247535",
+  "aws_region": "us-east-2",
+  "idp_issuer_ref": "<SYSTEM_DERIVED_APPROVED_IDP_ISSUER_REF>",
+  "opaque_subject_digest": "sha256:<SYSTEM_DERIVED_64_LOWER_HEX>",
+  "audience": "<SYSTEM_DERIVED_APPROVED_AUTHENTICATION_ONLY_AUDIENCE>",
+  "environment": "M67_PHASE1_DEPLOYED_ENVIRONMENT",
+  "mfa_assurance": "VERIFIED",
+  "authentication_event_ref": "<SYSTEM_DERIVED_EVENT_REF>",
+  "authenticated_at": "<SYSTEM_DERIVED_RFC3339_TIMESTAMP>",
+  "challenge_id": "M67-PRIMARY-A-<SYSTEM_DERIVED_ID>",
+  "challenge_commitment_sha256": "<SYSTEM_DERIVED_64_LOWER_HEX>",
+  "challenge_issued_at": "<SYSTEM_DERIVED_RFC3339_TIMESTAMP>",
+  "challenge_expires_at": "<SYSTEM_DERIVED_RFC3339_TIMESTAMP>",
+  "challenge_one_time_use": true,
+  "challenge_consumed_at": "<SYSTEM_DERIVED_RFC3339_TIMESTAMP>",
+  "affirmed_attestation_sha256": "<SYSTEM_DERIVED_64_LOWER_HEX>",
+  "reconciliation_state": "PENDING",
+  "owner_actor_collision_check": "UNRESOLVED",
+  "system_evidence_sha256": "<SYSTEM_DERIVED_64_LOWER_HEX>",
+  "owner_acceptance_state": "PENDING",
+  "value_sources": {
+    "human_provided": [
+      "PRIMARY_A_AFFIRMATION",
+      "OWNER_CHALLENGE_ISSUANCE_APPROVAL",
+      "OWNER_RECONCILIATION_ACCEPTANCE"
+    ],
+    "system_derived": [
+      "IDP_ISSUER_REF",
+      "OPAQUE_SUBJECT_DIGEST",
+      "AUDIENCE_AND_ENVIRONMENT",
+      "MFA_ASSURANCE",
+      "AUTHENTICATION_EVENT_REF_AND_TIME",
+      "CHALLENGE_ID_COMMITMENT_ISSUED_EXPIRY_AND_CONSUMPTION",
+      "AFFIRMED_ATTESTATION_SHA256",
+      "OWNER_ACTOR_COLLISION_CHECK",
+      "SYSTEM_EVIDENCE_SHA256"
+    ]
+  },
+  "permissions_granted": []
+}

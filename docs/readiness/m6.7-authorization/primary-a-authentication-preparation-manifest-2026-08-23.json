@@ -1,0 +1,42 @@
+{
+  "record_type": "M67_PRIMARY_A_AUTHENTICATION_PREPARATION_MANIFEST",
+  "version": "1.0.0",
+  "state": "BLOCKED_PENDING_PRIMARY_A_AUTHENTICATION_ONLY_IDP_ASSIGNMENT",
+  "artifacts": [
+    {
+      "path": "docs/readiness/m6.7-authorization/primary-a-independent-authentication-form-2026-08-23.md",
+      "sha256": "3edbe194d06fa0bf783b5d2916f0d342175ad5b132bd58fc8741726262bbae44"
+    },
+    {
+      "path": "docs/readiness/m6.7-authorization/primary-a-owner-checklist-2026-08-23.md",
+      "sha256": "035453d7e3b96664350cb640e149c59417e0c6f664dba700d0ccbcacb862218b"
+    },
+    {
+      "path": "docs/readiness/m6.7-authorization/primary-a-authentication-evidence-v1.schema.json",
+      "sha256": "385a69cf0c14426f06eeb32f005dba37c5d88ac7abc0a8b2c380930bf93be4d2"
+    },
+    {
+      "path": "docs/readiness/m6.7-authorization/primary-a-authentication-evidence.template.json",
+      "sha256": "57cef291394f468a4c76ccd6a80b70d6468071b699db0491a94ac96f4b04eb73"
+    },
+    {
+      "path": "docs/readiness/m6.7-authorization/primary-a-owner-statements-2026-08-23.json",
+      "sha256": "3abc9b3ea9ef863b1954f919d3c8624a8d7e2b190721108d0cc9ebceaf8a7220"
+    },
+    {
+      "path": "docs/readiness/m6.7-authorization/primary-a-authentication-package-2026-08-23.json",
+      "sha256": "ce2d202dde1653373208a61fe895624bab5cab950a9b09ca05788fdb85f4eedc"
+    }
+  ],
+  "authoritative_bindings": {
+    "authentication_step_sha256": "ae24e1106c61dd2853a8b3fb88c34963123549b56dd4a79f633f46d90630e8db",
+    "live_discovery_role_gate_sha256": "efdca50dccd995c293cb19d5c4b670b21198754ddddbcae574e95f916830ec7f",
+    "challenge_template_sha256": "699e4880b3f80a68b80f6e272df46f23acb79e7b2428c0049d4c14a8102b4b42",
+    "role_assignments_sha256": "bcb8b9aaaa3b7bf692e32e0df9e417991cb336d7b2d6acfa67261a3e22cb3292",
+    "accepted_environment_sha256": "713062b65cdb340e8d552f6562cdd22431c2aee057bb3baa8a74411c06648103",
+    "a07_identity_access_sha256": "29d7b46175895b2abce1ee4633fd02aaeadcefbc57d5078082cd66bea4cef763"
+  },
+  "challenge_issued": false,
+  "live_authentication_performed": false,
+  "permissions_changed": false
+}

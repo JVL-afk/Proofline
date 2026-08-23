@@ -1,0 +1,33 @@
+{
+  "record_type": "M67_PRIMARY_A_OWNER_STATEMENT_TEMPLATES",
+  "version": "1.0.0",
+  "state": "BLOCKED_PENDING_AUTHENTICATION_ONLY_IDP_ASSIGNMENT",
+  "already_approved_not_repeated": {
+    "actor_designation": "PRIMARY_A_ACTOR",
+    "role": "INDEPENDENT_SECOND_REVIEWER",
+    "subject_ref": "m67-subject-71411f1094857b41cf4906b108936e30a7f76a65ac1d768e1957825fd1c6453d",
+    "approval_id": "M67_CONSOLIDATED_OWNER_APPROVAL_V1"
+  },
+  "identity_admin_request_text": "Please provision or identify one existing least-privilege authentication-only AWS IAM Identity Center/upstream-IdP assignment for PRIMARY_A_ACTOR in AWS account 785072247535 for the M6.7 Phase 1 environment in us-east-2. It must permit independent MFA-backed authentication and auditable challenge reconciliation only; it must not grant administrator, operator, workload, kill-switch, discovery, research, data, or delivery authority. Return through the protected system interface—not chat or Git—the IdP issuer/instance reference, authentication audience or permission-set reference, secure invitation status, MFA policy reference, assignment identifier, and expiry/review metadata. Do not return the human name, email, raw subject, tokens, cookies, MFA secrets, recovery codes, or credentials.",
+  "challenge_issuance_approval_template": "I approve APPROVE_PRIMARY_A_CHALLENGE_ISSUANCE for AWS account 785072247535 in us-east-2, binding PRIMARY_A authentication package SHA-256 <AUTHENTICATION_PACKAGE_SHA256>, approved IdP issuer reference <IDP_ISSUER_REF>, authentication-only audience <AUDIENCE_REF>, assignment evidence SHA-256 <IDP_ASSIGNMENT_EVIDENCE_SHA256>, and challenge mechanism SHA-256 <CHALLENGE_MECHANISM_SHA256>. This authorizes issuance of exactly one fresh, expiring, single-use challenge to PRIMARY_A_ACTOR through the approved independent IdP session and secure invitation path. It authorizes no owner-session substitution, AWS administration, discovery, research, person/contact processing, Slot 1, communication, or M6.7 permission change.",
+  "challenge_issuance_fill_rule": {
+    "AUTHENTICATION_PACKAGE_SHA256": "SYSTEM_HASH_OF_FROZEN_PACKAGE",
+    "IDP_ISSUER_REF": "SYSTEM_OBSERVED_NON_SECRET_ISSUER_OR_OPAQUE_REFERENCE",
+    "AUDIENCE_REF": "SYSTEM_OBSERVED_AUTHENTICATION_ONLY_AUDIENCE_OR_PERMISSION_SET_REFERENCE",
+    "IDP_ASSIGNMENT_EVIDENCE_SHA256": "SYSTEM_HASH_OF_IDP_ASSIGNMENT_EVIDENCE",
+    "CHALLENGE_MECHANISM_SHA256": "SYSTEM_HASH_OF_APPROVED_CHALLENGE_TEMPLATE_AND_ISSUER",
+    "emitted_at_state": "READY_FOR_PRIMARY_A_CHALLENGE_ISSUANCE_AUTHORIZATION"
+  },
+  "reconciliation_acceptance_template": "I approve ACCEPT_PRIMARY_A_INDEPENDENT_AUTHENTICATION for AWS account 785072247535 and the M6.7 Phase 1 environment in us-east-2, binding PRIMARY_A authentication evidence SHA-256 <PRIMARY_A_AUTHENTICATION_EVIDENCE_SHA256>, challenge ID <CHALLENGE_ID>, authenticated event reference <AUTH_EVENT_REF>, opaque subject digest <OPAQUE_SUBJECT_DIGEST>, approved IdP issuer reference <IDP_ISSUER_REF>, authentication-only audience <AUDIENCE_REF>, and reconciliation evidence SHA-256 <RECONCILIATION_EVIDENCE_SHA256>. I accept that the independently authenticated subject reconciles to PRIMARY_A_ACTOR and remains distinct from OWNER_ACTOR for the INDEPENDENT_SECOND_REVIEWER role. This acceptance satisfies only the identity prerequisite and authorizes no discovery, research, person/contact processing, Slot 1, communication, AWS administration, or other M6.7 permission.",
+  "reconciliation_fill_rule": {
+    "all_placeholders": "SYSTEM_DERIVED_FROM_VERIFIED_AUTHENTICATION_AND_RECONCILIATION_EVIDENCE",
+    "emitted_at_state": "PRIMARY_A_RECONCILED_PENDING_OWNER_ACCEPTANCE"
+  },
+  "later_discovery_release_acknowledgement_template": "I acknowledge that PRIMARY_A independent authentication evidence SHA-256 <ACCEPTED_PRIMARY_A_EVIDENCE_SHA256> satisfies only the independent-reviewer identity prerequisite for discovery release <EXACT_DISCOVERY_RELEASE_ID_AND_SHA256>. I understand authentication is not independent opportunity review or approval, and no state advances unless I separately sign the exact REAL_BUSINESS_DISCOVERY release after all remaining source and policy prerequisites pass.",
+  "later_release_fill_rule": {
+    "ACCEPTED_PRIMARY_A_EVIDENCE_SHA256": "SYSTEM_DERIVED_FROM_ACCEPTED_IDENTITY_RECORD",
+    "EXACT_DISCOVERY_RELEASE_ID_AND_SHA256": "SYSTEM_DERIVED_ONLY_AFTER_EXACT_RELEASE_EXISTS",
+    "emitted_at_state": "READY_FOR_REAL_BUSINESS_DISCOVERY_OWNER_SIGNATURE"
+  },
+  "permissions_changed": false
+}

@@ -1,0 +1,105 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/schemas/m6.7/primary-a-authentication-evidence-v1.json",
+  "title": "M6.7 PRIMARY_A independent authentication evidence",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "record_type",
+    "version",
+    "state",
+    "actor_ref",
+    "role",
+    "aws_account_id",
+    "aws_region",
+    "idp_issuer_ref",
+    "opaque_subject_digest",
+    "audience",
+    "environment",
+    "mfa_assurance",
+    "authentication_event_ref",
+    "authenticated_at",
+    "challenge_id",
+    "challenge_commitment_sha256",
+    "challenge_issued_at",
+    "challenge_expires_at",
+    "challenge_one_time_use",
+    "challenge_consumed_at",
+    "affirmed_attestation_sha256",
+    "reconciliation_state",
+    "owner_actor_collision_check",
+    "system_evidence_sha256",
+    "owner_acceptance_state",
+    "value_sources",
+    "permissions_granted"
+  ],
+  "properties": {
+    "record_type": {"const": "M67_PRIMARY_A_INDEPENDENT_AUTHENTICATION_EVIDENCE"},
+    "version": {"type": "string", "minLength": 1},
+    "state": {
+      "enum": [
+        "PRIMARY_A_AUTHENTICATED_PENDING_RECONCILIATION",
+        "PRIMARY_A_RECONCILED_PENDING_OWNER_ACCEPTANCE",
+        "PRIMARY_A_INDEPENDENT_AUTHENTICATION_ACCEPTED",
+        "EXPIRED_CHALLENGE",
+        "WRONG_ACTOR",
+        "WRONG_ACCOUNT_OR_ENVIRONMENT",
+        "MFA_REQUIRED",
+        "REPLAYED_CHALLENGE",
+        "AMBIGUOUS_SUBJECT",
+        "OWNER_PRIMARY_A_IDENTITY_COLLISION",
+        "INCOMPLETE_ATTESTATION"
+      ]
+    },
+    "actor_ref": {"const": "PRIMARY_A_ACTOR"},
+    "role": {"const": "INDEPENDENT_SECOND_REVIEWER"},
+    "aws_account_id": {"const": "785072247535"},
+    "aws_region": {"const": "us-east-2"},
+    "idp_issuer_ref": {"type": "string", "minLength": 1},
+    "opaque_subject_digest": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+    "audience": {"type": "string", "minLength": 1},
+    "environment": {"const": "M67_PHASE1_DEPLOYED_ENVIRONMENT"},
+    "mfa_assurance": {"const": "VERIFIED"},
+    "authentication_event_ref": {"type": "string", "minLength": 1},
+    "authenticated_at": {"type": "string", "format": "date-time"},
+    "challenge_id": {"type": "string", "pattern": "^M67-PRIMARY-A-[A-Z0-9-]+$"},
+    "challenge_commitment_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "challenge_issued_at": {"type": "string", "format": "date-time"},
+    "challenge_expires_at": {"type": "string", "format": "date-time"},
+    "challenge_one_time_use": {"const": true},
+    "challenge_consumed_at": {"type": "string", "format": "date-time"},
+    "affirmed_attestation_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "reconciliation_state": {"enum": ["PENDING", "RECONCILED", "REJECTED"]},
+    "owner_actor_collision_check": {"enum": ["DISTINCT", "COLLISION", "UNRESOLVED"]},
+    "system_evidence_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "owner_acceptance_state": {"enum": ["PENDING", "ACCEPTED", "REJECTED"]},
+    "value_sources": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["human_provided", "system_derived"],
+      "properties": {
+        "human_provided": {
+          "const": [
+            "PRIMARY_A_AFFIRMATION",
+            "OWNER_CHALLENGE_ISSUANCE_APPROVAL",
+            "OWNER_RECONCILIATION_ACCEPTANCE"
+          ]
+        },
+        "system_derived": {
+          "const": [
+            "IDP_ISSUER_REF",
+            "OPAQUE_SUBJECT_DIGEST",
+            "AUDIENCE_AND_ENVIRONMENT",
+            "MFA_ASSURANCE",
+            "AUTHENTICATION_EVENT_REF_AND_TIME",
+            "CHALLENGE_ID_COMMITMENT_ISSUED_EXPIRY_AND_CONSUMPTION",
+            "AFFIRMED_ATTESTATION_SHA256",
+            "OWNER_ACTOR_COLLISION_CHECK",
+            "SYSTEM_EVIDENCE_SHA256"
+          ]
+        }
+      }
+    },
+    "permissions_granted": {"type": "array", "maxItems": 0}
+  }
+}
