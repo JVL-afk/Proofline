@@ -1,0 +1,34 @@
+{
+  "record_type": "M67_OSM_NOMINATIM_HOST_LOCATOR_SOURCE_ACCEPTANCE",
+  "version": "1.0.0",
+  "state": "APPROVED_FROZEN",
+  "approval_event": "APPROVE_OSM_NOMINATIM_PHASE1_HOST_LOCATOR_SOURCE",
+  "accepted_at": "2026-08-23",
+  "actor_ref": "OWNER_ACTOR",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "bindings": {
+    "preparation_commit": "0929e83e506e520703e04cc7536670c23f798f88",
+    "locator_configuration_sha256": "615c0ea29c11a8827d3a99ebfc128eef02bbf5948447803972e0a3f31d569175",
+    "source_review_sha256": "c1d2c2c504c97b3ecb53837eec7e72e9bb12afab48019af36287513de847ba14",
+    "deterministic_projector_sha256": "d2324e785c457bf9dfb86306cd8aa49e5f59c0cf3b41c34c73f1c049906855e7",
+    "accepted_primary_a_authentication_sha256": "69413fe3ee7d2d997e579f711e933d72a195a42ae7a8cbfdcd8693a995d0c7ae",
+    "accepted_tdlr_and_brave_decisions_sha256": "4c528f65c0e902c9efd79e88b32b59a9252ecce58d6f9a92804948df43bb4bac"
+  },
+  "effect": "HOST_LOCATOR_SOURCE_POLICY_ACCEPTED_ONLY",
+  "live_source_operations_authorized": false,
+  "exact_owner_attestation": "I approve APPROVE_OSM_NOMINATIM_PHASE1_HOST_LOCATOR_SOURCE for AWS account 785072247535 in us-east-2, binding preparation commit 0929e83e506e520703e04cc7536670c23f798f88, locator configuration SHA-256 615c0ea29c11a8827d3a99ebfc128eef02bbf5948447803972e0a3f31d569175, source-review SHA-256 c1d2c2c504c97b3ecb53837eec7e72e9bb12afab48019af36287513de847ba14, deterministic projector SHA-256 d2324e785c457bf9dfb86306cd8aa49e5f59c0cf3b41c34c73f1c049906855e7, accepted PRIMARY_A authentication SHA-256 69413fe3ee7d2d997e579f711e933d72a195a42ae7a8cbfdcd8693a995d0c7ae, and accepted TDLR/Brave decision record SHA-256 4c528f65c0e902c9efd79e88b32b59a9252ecce58d6f9a92804948df43bb4bac. I accept the exact OpenStreetMap Foundation public Nominatim Search API at https://nominatim.openstreetmap.org/search as the Phase 1 business-host locator under ODbL 1.0 and the Nominatim Usage Policy, solely for deterministic internal retention of a likely first-party hostname and content-free provenance from public business name plus Texas location. I accept the required OpenStreetMap attribution, internal-use boundary, one-thread two-second minimum delay, one request and no retry per frozen candidate, 100-request and 5,000,000-byte aggregate ceilings, USD 0 source cost, deterministic minimization, preservation of ambiguous/not-found results, and separately pending exact-host A-09 review. This approves only the locator source policy; it does not authorize any live Nominatim, TDLR, DNS, HTTP, website, seed acquisition or construction operation, generic public-web search, person/contact processing, opportunity research, AI, browser use, Slot 1, outreach, communication, or any M6.7 permission change. Both existing one-shot grants remain unconsumed and all seven M6.7 permissions remain NOT_AUTHORIZED.",
+  "one_shot_grants": {
+    "offline_acquisition": "0/1",
+    "bounded_seed_construction": "0/1"
+  },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  }
+}
