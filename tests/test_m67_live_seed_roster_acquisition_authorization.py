@@ -76,3 +76,19 @@ def test_exact_source_set_and_tdlr_projection_remain_narrow() -> None:
     assert sources[1]["allowlisted_host_tag"] == "extratags.website"
     assert sources[1]["automatic_retry"] is False
     assert value["unused_cap_cannot_be_reassigned_to_unapproved_sources"] is True
+
+
+def test_owner_gate_is_exact_and_does_not_preconsume_existing_grants() -> None:
+    value = load("live-seed-roster-acquisition-owner-approval-ready-2026-08-23.json")
+    assert value["state"] == "READY_FOR_LIVE_SEED_ROSTER_ACQUISITION_AUTHORIZATION"
+    assert value["authority"]["REAL_BUSINESS_DISCOVERY_before"] == "NOT_AUTHORIZED"
+    assert value["authority"]["REAL_BUSINESS_DISCOVERY_after"] == "NOT_AUTHORIZED"
+    assert value["authority"]["other_six_permissions_before_during_after"] == "NOT_AUTHORIZED"
+    assert set(value["existing_one_shot_grants_before_run"].values()) == {"0/1"}
+    assert value["no_live_source_operations_during_preparation"] is True
+    statement = value["exact_owner_approval_statement"]
+    assert "AUTHORIZE_LIVE_PHASE1_SEED_ROSTER_ACQUISITION" in statement
+    assert "temporarily sets REAL_BUSINESS_DISCOVERY" in statement
+    assert "Nominatim exactly once without retry" in statement
+    assert "first-party-host DNS or HTTP access" in statement
+    assert "remain NOT_AUTHORIZED before, during and after" in statement
