@@ -1,0 +1,77 @@
+{
+  "record_type": "M67_SEED_SOURCE_CONNECTIVITY_PREFLIGHT_ATTEMPT",
+  "version": "1.0.0",
+  "state": "TERMINAL_FAILED_BEFORE_DNS_RUNTIME_DEPENDENCY_MISSING",
+  "next_state": "BLOCKED_SEED_SOURCE_CONNECTIVITY_PREFLIGHT_RUNTIME_DEPENDENCY_MISSING",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "approval_sha256": "d518e4a0957344e6ffe86b73e6449fecf3925bfd2f0b81a77b9fd6a7d6c98acf",
+  "preflight_executable_sha256": "defb7325b393a07646926843d11f793aae42455b8becaed3294fc99da51a639a",
+  "attempted_at": "2026-08-23T15:56:50Z",
+  "evidence_sealed_at": "2026-08-23T15:57:17.0433206Z",
+  "execution_path": {
+    "host": "LOCAL_WINDOWS",
+    "python": "C:\\Python313\\python.exe",
+    "script": "scripts/run_m67_seed_source_connectivity_preflight.py"
+  },
+  "terminal_failure": {
+    "stage": "PYTHON_MODULE_IMPORT_BEFORE_AUTHENTICATION_OR_NETWORK",
+    "exception": "ModuleNotFoundError",
+    "missing_module": "boto3",
+    "message": "No module named 'boto3'",
+    "script_body_entered": false,
+    "aws_read_performed_by_preflight": false,
+    "dns_resolution_attempted": false,
+    "tls_connection_attempted": false,
+    "http_request_attempted": false,
+    "source_content_retrieved": false
+  },
+  "host_results": [
+    {
+      "hostname": "data.texas.gov",
+      "dns": "NOT_ATTEMPTED",
+      "address_families": [],
+      "tls": "NOT_ATTEMPTED",
+      "certificate_hostname_validation": "NOT_ATTEMPTED"
+    },
+    {
+      "hostname": "nominatim.openstreetmap.org",
+      "dns": "NOT_ATTEMPTED",
+      "address_families": [],
+      "tls": "NOT_ATTEMPTED",
+      "certificate_hostname_validation": "NOT_ATTEMPTED"
+    }
+  ],
+  "counts": {
+    "logical_dns_resolutions": 0,
+    "tls_connection_attempts": 0,
+    "http_requests": 0,
+    "application_bytes_sent": 0,
+    "application_bytes_received": 0,
+    "source_content_bytes": 0
+  },
+  "independent_post_failure_observation": {
+    "aws_account": "785072247535",
+    "kill_switch": "TRIPPED",
+    "kill_switch_parameter_version": 5,
+    "preflight_success_evidence_created": false
+  },
+  "grant_state": {
+    "connectivity_preflight": "1/1_CONSUMED_TERMINAL_IMPORT_FAILURE",
+    "original_live_acquisition": "1/1_CONSUMED_TERMINAL_DNS_FAILURE_NEVER_REUSABLE",
+    "offline_projection": "0/1_UNCONSUMED",
+    "bounded_seed_construction": "0/1_UNCONSUMED"
+  },
+  "terminal_permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  },
+  "retry_prohibited": true,
+  "successor_live_acquisition_authorization_prepared": false,
+  "minimum_future_remediation_question": "Whether a separately reviewed successor preflight should bind the repository virtual-environment Python that already contains boto3, or an exact dependency provisioning action for C:\\Python313\\python.exe"
+}
