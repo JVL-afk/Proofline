@@ -7,6 +7,10 @@ CONFIG = (
     "elevated-local-dns-resolver-remediation-configuration-2026-08-23.json"
 )
 SCRIPT = ROOT / "scripts/run_m67_elevated_local_dns_remediation.ps1"
+OWNER_GATE = (
+    ROOT / "docs/readiness/m6.7-authorization/"
+    "elevated-local-dns-resolver-remediation-owner-approval-ready-2026-08-23.json"
+)
 
 
 def test_elevation_is_proven_before_grant_consumption() -> None:
@@ -57,3 +61,21 @@ def test_failure_after_consumption_has_automatic_dhcp_rollback() -> None:
         "offline_projection": "0/1_UNCONSUMED",
         "seed_construction": "0/1_UNCONSUMED",
     }
+
+
+def test_owner_gate_binds_elevated_runner_and_manual_administrator_launch() -> None:
+    gate = json.loads(OWNER_GATE.read_text(encoding="utf-8"))
+    assert gate["state"] == "READY_FOR_ELEVATED_LOCAL_DNS_REMEDIATION_AUTHORIZATION"
+    assert gate["preparation_commit"] == "92a7c283877b3476415beb2a0d0581b512c7d659"
+    assert gate["exact_executable_sha256"] == (
+        "f78cc0be997d7646cd76bb8c5ce1b2c7ddd9cca4b8a6c54039eff665d72302ed"
+    )
+    assert gate["grant_consumption_boundary"]["administrator_token"] == "REQUIRED"
+    assert gate["grant_consumption_boundary"]["minimum_integrity"] == "HIGH"
+    assert gate["grant_consumption_boundary"]["precondition_network_operations"] == 0
+    assert "Run as administrator" in gate["execution"]["administrator_launch_instruction"]
+    assert "-AuthorizationRecordPath" in gate["execution"]["exact_elevated_command"]
+    statement = gate["exact_owner_approval_statement"]
+    assert "failed elevation" in statement
+    assert "does not consume the grant" in statement
+    assert "zero HTTP requests" in statement
