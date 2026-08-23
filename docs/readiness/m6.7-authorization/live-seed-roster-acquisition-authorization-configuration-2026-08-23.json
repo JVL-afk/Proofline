@@ -1,0 +1,138 @@
+{
+  "record_type": "M67_LIVE_SEED_ROSTER_ACQUISITION_AUTHORIZATION_CONFIGURATION",
+  "version": "1.0.0",
+  "release_id": "M67_LIVE_SEED_ROSTER_ACQUISITION_V1",
+  "state": "PREPARED_NOT_AUTHORIZED",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "effective_window": {
+    "starts_at": "2026-08-23T14:30:00Z",
+    "expires_at": "2026-08-30T14:30:00Z"
+  },
+  "terminal_attempts": 1,
+  "sources": [
+    {
+      "source_id": "TX_OPEN_DATA_TDLR_ALL_LICENSES::7358-krk7",
+      "endpoint": "https://data.texas.gov/api/v3/views/7358-krk7/query.json",
+      "purpose": "BUSINESS_IDENTITY_TEXAS_HVAC_LICENSE_AND_PRESEED_ELIGIBILITY_EVIDENCE",
+      "a09_state": "APPROVED_WITH_CONTROLS",
+      "allowed_fields": [
+        "license_type",
+        "license_number",
+        "business_county",
+        "business_name",
+        "business_city_state_zip",
+        "license_expiration_date_mmddccyy",
+        "license_subtype"
+      ],
+      "maximum_source_records_considered": 500,
+      "maximum_logical_requests": 20,
+      "maximum_attempts": 60,
+      "maximum_response_bytes": 31000000,
+      "minimum_delay_seconds": 2,
+      "business_entity_rule": "HIGH_CONFIDENCE_LEGAL_ENTITY_SUFFIX_REQUIRED",
+      "commercial_b2b_rule": "LICENSE_SUBTYPE_MUST_EXPLICITLY_STATE_COMMERCIAL_REFRIGERATION_OR_EQUIVALENT_APPROVED_COMMERCIAL_TEXT; OTHERWISE_UNRESOLVED_NOT_ELIGIBLE",
+      "operational_rule": "LICENSE_EXPIRATION_MUST_NOT_PRECEDE_FROZEN_OBSERVATION_CUTOFF",
+      "natural_person_or_ambiguous_record": "REJECT_BEFORE_DURABLE_PROJECTION"
+    },
+    {
+      "source_id": "OSM_NOMINATIM_PUBLIC_SEARCH_V1",
+      "endpoint": "https://nominatim.openstreetmap.org/search",
+      "purpose": "LIKELY_FIRST_PARTY_HOST_CANDIDATE_ONLY",
+      "a09_state": "APPROVED_WITH_CONTROLS",
+      "maximum_candidates": 100,
+      "maximum_logical_requests": 100,
+      "maximum_attempts": 100,
+      "maximum_response_bytes": 5000000,
+      "minimum_delay_seconds": 2,
+      "concurrency": 1,
+      "automatic_retry": false,
+      "allowlisted_host_tag": "extratags.website",
+      "third_party_guard_required": true,
+      "exact_host_after_projection": "PENDING_EXACT_HOST_A09_REVIEW"
+    }
+  ],
+  "global_hard_caps": {
+    "maximum_source_records_considered": 500,
+    "minimum_output_observations": 24,
+    "maximum_output_observations": 100,
+    "logical_http_requests": 120,
+    "attempts": 360,
+    "aggregate_response_bytes": 36000000,
+    "concurrency": 1,
+    "minimum_per_host_delay_seconds": 2,
+    "source_cost_usd": 0,
+    "ai_calls": 0,
+    "browser_sessions": 0
+  },
+  "unused_cap_cannot_be_reassigned_to_unapproved_sources": true,
+  "algorithm": [
+    "FREEZE_TDLR_METADATA_QUERY_CUTOFF_AND_STABLE_LICENSE_ORDER_BEFORE_RECORD_CLASSIFICATION",
+    "QUERY_ONLY_THE_SEVEN_APPROVED_TDLR_FIELDS",
+    "EPHEMERALLY_REJECT_NATURAL_PERSON_SOLE_PROPRIETOR_AND_AMBIGUOUS_NAMES",
+    "CLASSIFY_ONLY_APPROVED_IDENTITY_TEXAS_COMMERCIAL_HVAC_B2B_OPERATIONAL_DIMENSIONS",
+    "PRESERVE_EVERY_CONTENT_FREE_EXCLUSION_AND_AMBIGUITY_IN_FROZEN_SOURCE_ORDER",
+    "TAKE_AT_MOST_THE_FIRST_100_COMPLETE_PREDECLARED_ELIGIBLE_BUSINESS_IDENTITIES",
+    "QUERY_NOMINATIM_EXACTLY_ONCE_FOR_EACH_FROZEN_BUSINESS_IN_ORDER",
+    "PROJECT_ONLY_EXTRATAGS_WEBSITE_THROUGH_ACCEPTED_PROJECTOR_AND_THIRD_PARTY_GUARD",
+    "PRESERVE_NOT_FOUND_AND_AMBIGUOUS_WITHOUT_RETRY_FALLBACK_OR_REPLACEMENT",
+    "SEAL_24_TO_100_COMPLETE_BUSINESS_ONLY_OBSERVATIONS_OR_TERMINALLY_FAIL",
+    "STOP_ALL_NETWORK_ACTIVITY",
+    "WRITE_ONLY_OFFLINE_BUSINESS_ROSTER_AND_ATTESTATION",
+    "MANDATORY_STOP_BEFORE_ANY_FIRST_PARTY_HOST_ACCESS_OR_RESEARCH"
+  ],
+  "anti_cherry_picking": {
+    "complete_predeclared_tdlr_frame": true,
+    "stable_license_order": true,
+    "website_quality_observed": false,
+    "opportunity_value_contactability_outcome_observed": false,
+    "not_found_or_ambiguous_replacement": false,
+    "alternate_locator": false,
+    "automatic_retry_after_terminal_attempt": false
+  },
+  "minimization": {
+    "boundary": "EPHEMERAL_SOURCE_RESPONSES_TO_DETERMINISTIC_BUSINESS_ONLY_PROJECTION_TO_DURABLE_ROSTER",
+    "raw_response_durable": false,
+    "person_contact_index_search_score_store_log_metric": false,
+    "unsafe_projection": "CONTENT_FREE_FAILURE_ONLY",
+    "permitted_tdlr_fields_only": true,
+    "nominatim_host_guard_required": true
+  },
+  "outputs": [
+    "local-data/m6.7/seed-source-acquisition/input/offline-business-roster.json",
+    "local-data/m6.7/seed-source-acquisition/input/offline-business-roster-attestation.json"
+  ],
+  "kill_switch": {
+    "before": "TRIPPED",
+    "bounded_run": "RUN_ONLY_FOR_THIS_RELEASE",
+    "trip_effect": "STOP_NEW_REQUESTS_ATTEMPTS_AND_WRITES_CONSUME_RELEASE_CONTENT_FREE_AUDIT_ONLY",
+    "after": "TRIPPED"
+  },
+  "permission_transition": {
+    "REAL_BUSINESS_DISCOVERY_before": "NOT_AUTHORIZED",
+    "REAL_BUSINESS_DISCOVERY_during": "AUTHORIZED_ONLY_FOR_M67_LIVE_SEED_ROSTER_ACQUISITION_V1",
+    "REAL_BUSINESS_DISCOVERY_after": "NOT_AUTHORIZED",
+    "all_other_six_permissions_before_during_after": "NOT_AUTHORIZED"
+  },
+  "explicitly_prohibited": [
+    "FIRST_PARTY_HOST_HTTP_OR_DNS_ACCESS",
+    "GENERIC_PUBLIC_WEB_SEARCH",
+    "TDLR_INTERACTIVE_LICENSE_SEARCH",
+    "ANY_SOURCE_OTHER_THAN_THE_TWO_EXACT_ENDPOINTS",
+    "PERSON_OR_CONTACT_PROCESSING",
+    "OPPORTUNITY_RESEARCH_OR_SCORING",
+    "M1_THROUGH_M5",
+    "AI",
+    "BROWSER",
+    "SLOT_1",
+    "OUTREACH_OR_COMMUNICATION",
+    "INFRASTRUCTURE_MUTATION",
+    "AUTOMATIC_CONSUMPTION_BEFORE_ROSTER_SEAL"
+  ],
+  "existing_one_shot_grants_before_run": {
+    "offline_seed_source_acquisition": "0/1",
+    "bounded_seed_construction": "0/1"
+  },
+  "live_operations_performed_during_preparation": 0,
+  "candidate_records_processed_during_preparation": 0
+}

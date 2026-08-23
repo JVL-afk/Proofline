@@ -1,0 +1,87 @@
+{
+  "record_type": "M67_NOMINATIM_HOST_DERIVATION_VERIFICATION",
+  "version": "1.0.0",
+  "state": "VERIFIED_FAIL_CLOSED",
+  "verified_at": "2026-08-23T14:30:00Z",
+  "accepted_source_configuration_sha256": "615c0ea29c11a8827d3a99ebfc128eef02bbf5948447803972e0a3f31d569175",
+  "accepted_projector_sha256": "d2324e785c457bf9dfb86306cd8aa49e5f59c0cf3b41c34c73f1c049906855e7",
+  "request": {
+    "endpoint": "https://nominatim.openstreetmap.org/search",
+    "extratags": 1,
+    "format": "jsonv2",
+    "countrycodes": "us",
+    "layer": "poi",
+    "addressdetails": 1,
+    "namedetails": 0,
+    "limit": 3
+  },
+  "allowlisted_osm_host_tags": [
+    "extratags.website"
+  ],
+  "ignored_host_shaped_tags": [
+    "extratags.contact:website",
+    "extratags.url",
+    "extratags.brand:website",
+    "extratags.operator:website",
+    "extratags.facebook",
+    "extratags.contact:facebook",
+    "all_other_response_fields"
+  ],
+  "host_derivation": [
+    "REQUIRE_RESULT_NAME_MATCH_UNDER_APPROVED_NORMALIZATION",
+    "REQUIRE_TEXAS_STATE_MARKER",
+    "READ_ONLY_EXTRATAGS_WEBSITE",
+    "REQUIRE_HTTP_OR_HTTPS_WITHOUT_USERINFO",
+    "NORMALIZE_ONLY_HOST_TO_LOWERCASE_IDNA_ASCII_WITHOUT_TRAILING_DOT",
+    "REJECT_IP_LITERAL_LOCALHOST_LOCAL_OR_MALFORMED_HOST",
+    "REJECT_ENUMERATED_SOCIAL_DIRECTORY_MARKETPLACE_MAP_AND_SHORTENER_DOMAINS",
+    "REQUIRE_ONE_UNIQUE_SURVIVING_HOST",
+    "OUTPUT_HOST_ONLY_WITH_CONTENT_FREE_OSM_PROVENANCE",
+    "KEEP_RESULT_PENDING_EXACT_HOST_A09_REVIEW"
+  ],
+  "third_party_guard": {
+    "guard_sha256": "9b33230eb162f193463df3c69ad6786d555efc0c96fd735fb1a689b7f1766f55",
+    "denied_registrable_domains": [
+      "angi.com",
+      "bbb.org",
+      "bit.ly",
+      "buildzoom.com",
+      "chamberofcommerce.com",
+      "facebook.com",
+      "goo.gl",
+      "google.com",
+      "homeadvisor.com",
+      "houzz.com",
+      "instagram.com",
+      "linktr.ee",
+      "linkedin.com",
+      "manta.com",
+      "mapquest.com",
+      "nextdoor.com",
+      "porch.com",
+      "thumbtack.com",
+      "tiktok.com",
+      "tinyurl.com",
+      "x.com",
+      "yellowpages.com",
+      "yelp.com",
+      "youtube.com"
+    ],
+    "subdomains_denied": true,
+    "unexpected_projector_fields": "AMBIGUOUS_CONTENT_FREE",
+    "runs_before_durable_roster_write": true
+  },
+  "failure_semantics": {
+    "zero_surviving_hosts": "NOT_FOUND",
+    "multiple_surviving_hosts": "AMBIGUOUS",
+    "unsafe_or_unrecognized_output": "AMBIGUOUS_OR_CONTENT_FREE_QUARANTINE",
+    "fallback_locator": "PROHIBITED",
+    "retry": "PROHIBITED_FOR_NOMINATIM",
+    "candidate_replacement": "PROHIBITED",
+    "outcome_based_substitution": "PROHIBITED",
+    "first_party_access": "NOT_AUTHORIZED_BY_LOCATOR_RESULT"
+  },
+  "execution_envelope_changed": false,
+  "live_requests_performed": 0,
+  "candidate_records_processed": 0
+}
