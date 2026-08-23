@@ -11,6 +11,10 @@ OWNER_GATE = (
     ROOT / "docs/readiness/m6.7-authorization/"
     "elevated-local-dns-resolver-remediation-owner-approval-ready-2026-08-23.json"
 )
+SUCCESSOR_CONFIG = (
+    ROOT / "docs/readiness/m6.7-authorization/"
+    "elevated-local-dns-resolver-remediation-successor-configuration-2026-08-23.json"
+)
 
 
 def test_elevation_is_proven_before_grant_consumption() -> None:
@@ -79,3 +83,18 @@ def test_owner_gate_binds_elevated_runner_and_manual_administrator_launch() -> N
     assert "failed elevation" in statement
     assert "does not consume the grant" in statement
     assert "zero HTTP requests" in statement
+
+
+def test_successor_runner_is_windows_powershell_5_1_compatible() -> None:
+    successor = json.loads(SUCCESSOR_CONFIG.read_text(encoding="utf-8"))
+    compatibility = successor["compatibility_remediation"]
+    assert compatibility["target_runtime"] == "WINDOWS_POWERSHELL_5_1"
+    assert compatibility["removed_unsupported_parameter"] == (
+        "ConvertFrom-Json -AsHashtable"
+    )
+    assert compatibility["dns_design_changed"] is False
+    assert compatibility["network_scope_changed"] is False
+    script = SCRIPT.read_text(encoding="utf-8")
+    assert "ConvertFrom-Json -AsHashtable" not in script
+    assert "ConvertFrom-Json" in script
+    assert "[System.Collections.IDictionary]" in script

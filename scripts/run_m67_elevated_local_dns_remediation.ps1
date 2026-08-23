@@ -119,7 +119,10 @@ function Assert-ActiveAdapter {
 }
 
 function Assert-UnchangedExceptIpv4Dns {
-    param([hashtable]$Before, [hashtable]$After)
+    param(
+        [System.Collections.IDictionary]$Before,
+        [System.Collections.IDictionary]$After
+    )
     foreach ($field in @(
         "interface_alias", "interface_index", "interface_guid", "adapter_status",
         "dhcp_addressing", "proxy_state_sha256", "vpn_state_sha256", "firewall_state_sha256"
@@ -162,7 +165,10 @@ function Get-DnsProof {
 }
 
 function Write-Evidence {
-    param([hashtable]$Evidence, [string]$RepositoryRoot)
+    param(
+        [System.Collections.IDictionary]$Evidence,
+        [string]$RepositoryRoot
+    )
     $target = Join-Path $RepositoryRoot $EvidenceRelativePath
     $directory = Split-Path -Parent $target
     New-Item -ItemType Directory -Force -Path $directory | Out-Null
@@ -183,7 +189,7 @@ $authorizationPath = (Resolve-Path $AuthorizationRecordPath).Path
 if (-not $authorizationPath.StartsWith($repositoryRoot, [StringComparison]::OrdinalIgnoreCase)) {
     throw "AUTHORIZATION_RECORD_OUTSIDE_REPOSITORY"
 }
-$authorization = Get-Content -Raw $authorizationPath | ConvertFrom-Json -AsHashtable
+$authorization = Get-Content -Raw $authorizationPath | ConvertFrom-Json
 if ($authorization.event -ne $Event -or $authorization.state -ne "APPROVED") {
     throw "AUTHORIZATION_RECORD_INVALID"
 }
