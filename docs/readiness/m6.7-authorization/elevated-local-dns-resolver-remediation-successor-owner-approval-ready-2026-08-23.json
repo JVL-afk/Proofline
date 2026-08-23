@@ -1,0 +1,72 @@
+{
+  "record_type": "M67_ELEVATED_LOCAL_DNS_RESOLVER_REMEDIATION_SUCCESSOR_OWNER_APPROVAL_READY",
+  "version": "1.0.0",
+  "state": "READY_FOR_ELEVATED_LOCAL_DNS_REMEDIATION_SUCCESSOR_AUTHORIZATION",
+  "event": "APPROVE_ELEVATED_LOCAL_DNS_RESOLVER_REMEDIATION_SUCCESSOR",
+  "preparation_commit": "353b0541029688c4ed1ec232e094ccd6fe6c39ab",
+  "successor_configuration_sha256": "d11bc526be191e4167568728884187b3623e1f9e81c6b4c672687941efc4978a",
+  "exact_successor_executable_sha256": "92ffad4b753717440edbca429591c402f128c9446db0459bf40abe7a22a0c145",
+  "precondition_runtime_failure_sha256": "5e7ea8142e5e240c30f4c1385d5dc399f33a86db0ce0292a1184baec9ce019a1",
+  "unconsumed_predecessor_approval_sha256": "126e634231695b316d0590eddb6b26e702ffdc429704a0a0e6867e4c3ad98658",
+  "validity": {
+    "starts_at": "2026-08-23T17:30:00Z",
+    "expires_at": "2026-08-30T17:30:00Z",
+    "terminal_attempts": 1
+  },
+  "compatibility_only_change": {
+    "runtime": "WINDOWS_POWERSHELL_5_1",
+    "removed": "ConvertFrom-Json -AsHashtable",
+    "replacement": "ConvertFrom-Json",
+    "dns_design_changed": false,
+    "authority_changed": false
+  },
+  "grant_consumption_boundary": {
+    "administrator_token": "REQUIRED",
+    "minimum_integrity": "HIGH",
+    "minimum_integrity_rid": 12288,
+    "active_adapter_identity": "MUST_MATCH",
+    "expected_ipv4_dns": [
+      "192.168.1.1"
+    ],
+    "precondition_network_operations": 0,
+    "precondition_mutations": 0,
+    "precondition_failure_consumes_grant": false
+  },
+  "target": {
+    "interface_alias": "Wi-Fi",
+    "interface_index": 13,
+    "interface_guid": "{997EE793-757E-4FD9-8138-CE1BF9FA1B32}",
+    "before_ipv4_dns": [
+      "192.168.1.1"
+    ],
+    "after_ipv4_dns": [
+      "8.8.8.8",
+      "8.8.4.4"
+    ],
+    "ipv6_dns": "UNCHANGED",
+    "ipv4_address_gateway_dhcp": "UNCHANGED"
+  },
+  "proof": {
+    "exact_hosts": [
+      "data.texas.gov",
+      "nominatim.openstreetmap.org"
+    ],
+    "queries_per_host": 1,
+    "http_requests": 0,
+    "tls_connections": 0,
+    "source_content_bytes": 0,
+    "retries": 0
+  },
+  "execution": {
+    "accepted_authorization_record_path": "C:\\Users\\eugen\\OneDrive\\Documents\\ChatGPT\\ARCHITECT\\docs\\readiness\\m6.7-authorization\\elevated-local-dns-resolver-remediation-successor-owner-approval-accepted-2026-08-23.json",
+    "administrator_launch_instruction": "After this successor approval is recorded, open Windows PowerShell using Run as administrator, approve UAC, and paste the exact command.",
+    "exact_elevated_command": "Set-Location -LiteralPath 'C:\\Users\\eugen\\OneDrive\\Documents\\ChatGPT\\ARCHITECT'; & 'C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe' -NoProfile -ExecutionPolicy Bypass -File 'C:\\Users\\eugen\\OneDrive\\Documents\\ChatGPT\\ARCHITECT\\scripts\\run_m67_elevated_local_dns_remediation.ps1' -AuthorizationRecordPath 'C:\\Users\\eugen\\OneDrive\\Documents\\ChatGPT\\ARCHITECT\\docs\\readiness\\m6.7-authorization\\elevated-local-dns-resolver-remediation-successor-owner-approval-accepted-2026-08-23.json'"
+  },
+  "guard_states": {
+    "kill_switch": "TRIPPED",
+    "all_seven_m6_7_permissions": "NOT_AUTHORIZED",
+    "offline_projection": "0/1_UNCONSUMED",
+    "seed_construction": "0/1_UNCONSUMED"
+  },
+  "exact_owner_approval_statement": "I approve APPROVE_ELEVATED_LOCAL_DNS_RESOLVER_REMEDIATION_SUCCESSOR on the local Windows host, binding preparation commit 353b0541029688c4ed1ec232e094ccd6fe6c39ab, successor configuration SHA-256 d11bc526be191e4167568728884187b3623e1f9e81c6b4c672687941efc4978a, exact Windows PowerShell 5.1-compatible executable SHA-256 92ffad4b753717440edbca429591c402f128c9446db0459bf40abe7a22a0c145, pre-consumption runtime-failure evidence SHA-256 5e7ea8142e5e240c30f4c1385d5dc399f33a86db0ce0292a1184baec9ce019a1, and unconsumed predecessor approval record SHA-256 126e634231695b316d0590eddb6b26e702ffdc429704a0a0e6867e4c3ad98658. This supersedes only the exact incompatible predecessor executable under which no grant was consumed, no mutation began, and no DNS or other network operation occurred. It authorizes exactly one successor attempt between 2026-08-23T17:30:00Z and 2026-08-30T17:30:00Z, but the grant may be consumed only after the successor runner locally proves an elevated Windows Administrator token, High-or-stronger integrity, active Wi-Fi interface index 13 and GUID {997EE793-757E-4FD9-8138-CE1BF9FA1B32}, and unchanged IPv4 DNS before-state 192.168.1.1 with zero network operations or mutations. A failed elevation, adapter, or before-state precondition does not consume the grant. After those preconditions pass, this authorizes only the unchanged exact mutation setting that adapter's IPv4 DNS to preferred 8.8.8.8 and alternate 8.8.4.4, flushing the Windows DNS cache, verifying IPv4 address, gateway, DHCP addressing and IPv6 DNS remain unchanged, and performing exactly one ordinary current-system DNS proof for data.texas.gov and exactly one for nominatim.openstreetmap.org. Any apply or DNS-proof failure after consumption requires immediate DHCP-DNS rollback from the same elevated session, cache flush, evidence sealing and stop. This authorizes zero HTTP requests, TLS connections, source-content retrieval, retries, browser or AI use, proxy/VPN/firewall change, AWS or Terraform change, source acquisition, or M6.7 permission change. The kill switch remains TRIPPED; all seven M6.7 permissions remain NOT_AUTHORIZED; and the offline-projection and bounded seed-construction grants remain 0/1 unconsumed. Successful DNS proof authorizes only preparation of a separately reviewed post-remediation DNS/TLS connectivity preflight package and does not authorize that preflight or live acquisition."
+}

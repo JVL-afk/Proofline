@@ -15,6 +15,10 @@ SUCCESSOR_CONFIG = (
     ROOT / "docs/readiness/m6.7-authorization/"
     "elevated-local-dns-resolver-remediation-successor-configuration-2026-08-23.json"
 )
+SUCCESSOR_GATE = (
+    ROOT / "docs/readiness/m6.7-authorization/"
+    "elevated-local-dns-resolver-remediation-successor-owner-approval-ready-2026-08-23.json"
+)
 
 
 def test_elevation_is_proven_before_grant_consumption() -> None:
@@ -98,3 +102,19 @@ def test_successor_runner_is_windows_powershell_5_1_compatible() -> None:
     assert "ConvertFrom-Json -AsHashtable" not in script
     assert "ConvertFrom-Json" in script
     assert "[System.Collections.IDictionary]" in script
+
+
+def test_successor_gate_binds_repaired_executable_and_unchanged_scope() -> None:
+    gate = json.loads(SUCCESSOR_GATE.read_text(encoding="utf-8"))
+    assert gate["state"] == (
+        "READY_FOR_ELEVATED_LOCAL_DNS_REMEDIATION_SUCCESSOR_AUTHORIZATION"
+    )
+    assert gate["preparation_commit"] == "353b0541029688c4ed1ec232e094ccd6fe6c39ab"
+    assert gate["exact_successor_executable_sha256"] == (
+        "92ffad4b753717440edbca429591c402f128c9446db0459bf40abe7a22a0c145"
+    )
+    assert gate["compatibility_only_change"]["dns_design_changed"] is False
+    assert gate["compatibility_only_change"]["authority_changed"] is False
+    assert gate["proof"]["http_requests"] == 0
+    assert gate["proof"]["tls_connections"] == 0
+    assert gate["proof"]["retries"] == 0
