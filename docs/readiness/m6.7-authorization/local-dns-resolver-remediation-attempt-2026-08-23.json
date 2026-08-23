@@ -1,0 +1,97 @@
+{
+  "schema_version": "m67-local-dns-resolver-remediation-attempt-v1",
+  "evidence_id": "M67_LOCAL_DNS_RESOLVER_REMEDIATION_ATTEMPT::2026-08-23.1",
+  "state": "BLOCKED_LOCAL_DNS_REMEDIATION_REQUIRES_ELEVATED_WINDOWS_SESSION",
+  "terminal": true,
+  "retry_permitted_under_this_authorization": false,
+  "observed_at": "2026-08-23T17:01:55.5634819Z",
+  "post_failure_state_observed_at": "2026-08-23T17:03:00Z",
+  "authorization": {
+    "event": "APPROVE_LOCAL_DNS_RESOLVER_REMEDIATION",
+    "accepted_record_sha256": "4ff9769f6efaba53153359d39cd640c52517a3f9156d8a6df5f0480c0c8f6497",
+    "preparation_commit": "5c9d811562d94cbace7e41cf6f0bc3048f65cc1d",
+    "active_adapter_inspection_sha256": "29736d93cccb0ff16d7b54ea8148c4f365c7b5569b775c67cd80f4250012f5b7",
+    "remediation_rollback_plan_sha256": "a691de5fa497f5f48def8f98ebf2fd373b15caf03c461a3dde03bd1e2b08e400",
+    "consumed_successor_preflight_evidence_sha256": "42d370fbab6dd661c8b1ba0b08a3a48eee7b0a368d1010f6bd6d552e32bf84a5"
+  },
+  "preconditions": {
+    "hashes": "PASS",
+    "validity_window": "PASS",
+    "active_route_interface_index": 13,
+    "adapter_name": "Wi-Fi",
+    "adapter_guid": "{997EE793-757E-4FD9-8138-CE1BF9FA1B32}",
+    "adapter_status": "Up",
+    "ipv4_dns": [
+      "192.168.1.1"
+    ],
+    "ipv6_dns": [
+      "fe80::1",
+      "fe80::1"
+    ],
+    "ipv4_addresses": [
+      "192.168.1.135"
+    ],
+    "default_gateway": [
+      "192.168.1.1"
+    ],
+    "dhcp_addressing": "Enabled",
+    "winhttp_proxy_state_sha256": "797eec67bc119fe7cedf4fce713be7b5a4562518033bd15b9214913b1c700ee9",
+    "vpn_state_sha256": "bf4dccf78d4063744b58df96b980a81ed7c5d71cba583446dda69d9571d8d8d1",
+    "firewall_profile_state_sha256": "1aee9cab34ec888208755ec8fa121c1476fdb2c385404bb09a4d1736df18169d"
+  },
+  "attempt": {
+    "attempts_consumed": "1/1",
+    "first_mutation_command": "netsh interface ipv4 set dnsservers name=13 source=static address=8.8.8.8 register=primary validate=no",
+    "first_mutation_result": "FAILED",
+    "failure_code": "PRIMARY_DNS_SET_FAILED",
+    "rollback_command": "netsh interface ipv4 set dnsservers name=13 source=dhcp",
+    "rollback_command_result": "FAILED",
+    "failure_cause": "The Windows process ran at Medium Mandatory Level and did not possess the elevated administrator token required by netsh to change adapter DNS settings.",
+    "dns_cache_flush_after_apply": false,
+    "dns_queries": 0,
+    "http_requests": 0,
+    "tls_connections": 0,
+    "source_content_bytes": 0
+  },
+  "post_failure_read_only_observation": {
+    "adapter_name": "Wi-Fi",
+    "interface_index": 13,
+    "adapter_guid": "{997EE793-757E-4FD9-8138-CE1BF9FA1B32}",
+    "adapter_status": "Up",
+    "effective_ipv4_dns": [
+      "192.168.1.1"
+    ],
+    "effective_ipv6_dns": [
+      "fe80::1",
+      "fe80::1"
+    ],
+    "ipv4_addresses": [
+      "192.168.1.135"
+    ],
+    "default_gateway": [
+      "192.168.1.1"
+    ],
+    "dhcp_addressing": "Enabled",
+    "registry_static_name_server": "",
+    "registry_dhcp_name_server": "192.168.1.1",
+    "process_integrity": "S-1-16-8192_MEDIUM_MANDATORY_LEVEL",
+    "conclusion": "The first mutation command did not alter adapter state. Although the defensive rollback command also lacked elevation, the independently observed effective and registry DNS state remained byte-for-value equivalent to the approved before state. No unresolved partial DNS mutation exists."
+  },
+  "guard_states": {
+    "kill_switch": "TRIPPED_UNCHANGED",
+    "real_business_discovery": "NOT_AUTHORIZED",
+    "real_public_research": "NOT_AUTHORIZED",
+    "professional_identity_resolution": "NOT_AUTHORIZED",
+    "real_contact_storage": "NOT_AUTHORIZED",
+    "contact_verification": "NOT_AUTHORIZED",
+    "shadow_eligibility_evaluation": "NOT_AUTHORIZED",
+    "shadow_ready_assessment": "NOT_AUTHORIZED",
+    "offline_projection_grant": "0/1_UNCONSUMED",
+    "seed_construction_grant": "0/1_UNCONSUMED"
+  },
+  "next_gate": {
+    "state": "BLOCKED_LOCAL_DNS_REMEDIATION_REQUIRES_ELEVATED_WINDOWS_SESSION",
+    "requirement": "A fresh, separately approved remediation attempt must be executed from an elevated Windows administrator session. The consumed authorization cannot be reused.",
+    "post_dns_connectivity_preflight_ready": false
+  }
+}
