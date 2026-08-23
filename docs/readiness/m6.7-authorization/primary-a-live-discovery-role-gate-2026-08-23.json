@@ -1,0 +1,36 @@
+{
+  "record_type": "M67_PRIMARY_A_LIVE_DISCOVERY_ROLE_GATE",
+  "version": "1.0.0",
+  "state": "REQUIRED_PENDING_INDEPENDENT_AUTHENTICATION",
+  "actor_ref": "PRIMARY_A_ACTOR",
+  "required_role": "INDEPENDENT_SECOND_REVIEWER",
+  "triggering_gate": "REAL_BUSINESS_DISCOVERY_RELEASE_FOR_LIVE_SEED_ROSTER_ACQUISITION",
+  "reason": "Live public-source roster acquisition has REAL_BUSINESS_DISCOVERY semantics; the frozen role design makes independent reviewer identity reconciliation mandatory at this release gate.",
+  "owner_actor_substitution_prohibited": true,
+  "required_evidence": [
+    "APPROVED_IDENTITY_PROVIDER_ISSUER",
+    "OPAQUE_SUBJECT_OR_APPROVED_SUBJECT_DIGEST_OBSERVED_FROM_PRIMARY_A_AUTHENTICATION",
+    "PHASE1_ENVIRONMENT_AND_AUDIENCE",
+    "MFA_ASSURANCE",
+    "AUTHENTICATION_EVENT_ID_AND_TIME",
+    "ONE_TIME_CHALLENGE_OR_NONCE_BINDING",
+    "SIGNED_RECONCILIATION_ATTESTATION",
+    "SYSTEM_DERIVED_RECONCILIATION_EVIDENCE_SHA256"
+  ],
+  "prohibited_repository_material": [
+    "NAME",
+    "EMAIL",
+    "PASSWORD",
+    "TOKEN",
+    "SESSION_SECRET",
+    "LONG_LIVED_CREDENTIAL"
+  ],
+  "completion_effect": "SATISFIES_ONLY_INDEPENDENT_REVIEWER_IDENTITY_PREREQUISITE_FOR_THE_EXACT_DISCOVERY_RELEASE",
+  "permissions_granted": [],
+  "current_permissions_changed": false,
+  "live_operations_performed": 0,
+  "binding": {
+    "base_authentication_step": "primary-a-independent-authentication-step-2026-08-23.json",
+    "challenge_template": "primary-a-independent-authentication-challenge.template.json"
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "record_type": "M67_LIVE_SEED_ROSTER_SOURCE_REVIEW_PACKAGE",
+  "version": "1.0.0",
+  "created_at": "2026-08-23T06:35:02.5478792Z",
+  "state": "BLOCKED_PENDING_TDLR_EXACT_SOURCE_REVIEW_HOST_LOCATOR_SOURCE_REVIEW_AND_PRIMARY_A_AUTHENTICATION",
+  "artifacts": [
+    {
+      "path": "docs/readiness/m6.7-authorization/live-seed-roster-source-review-blocker-2026-08-23.json",
+      "sha256": "3b653b6f19e0ada60af0601b804ce28aea02e06566511a99324e25117798024f"
+    },
+    {
+      "path": "docs/readiness/m6.7-authorization/tdlr-live-seed-roster-source-analysis-2026-08-23.md",
+      "sha256": "87e738455303d4f790ae35628da6ccaa8719a8af033167b055a5c3d2043e8d55"
+    },
+    {
+      "path": "docs/readiness/m6.7-authorization/primary-a-live-discovery-role-gate-2026-08-23.json",
+      "sha256": "efdca50dccd995c293cb19d5c4b670b21198754ddddbcae574e95f916830ec7f"
+    },
+    {
+      "path": "scripts/validate_m67_live_seed_source_readiness.py",
+      "sha256": "2e03d2026324bf01f2ae28af26954401a81f8075b216a4f52a789dfb7c61fa3e"
+    },
+    {
+      "path": "tests/test_m67_live_seed_source_readiness.py",
+      "sha256": "a71f0231ad192a1c7c943fc16f5c37d8502b7177d8618b8d403a9ba056170f4c"
+    }
+  ],
+  "live_source_operations": 0,
+  "approval_statement_emitted": false,
+  "offline_acquisition_grant_consumed": false,
+  "bounded_seed_construction_grant_consumed": false,
+  "permissions_changed": false
+}

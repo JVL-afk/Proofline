@@ -1,0 +1,217 @@
+{
+  "record_type": "M67_LIVE_SEED_ROSTER_SOURCE_REVIEW_BLOCKER",
+  "version": "1.0.0",
+  "observed_at": "2026-08-23T06:35:02.5478792Z",
+  "state": "BLOCKED_PENDING_TDLR_EXACT_SOURCE_REVIEW_HOST_LOCATOR_SOURCE_REVIEW_AND_PRIMARY_A_AUTHENTICATION",
+  "requested_terminal_state_not_reached": "READY_FOR_LIVE_SEED_ROSTER_ACQUISITION_AUTHORIZATION",
+  "reason": "Captured repository evidence does not identify or review the exact Texas Open Data TDLR - All Licenses dataset instance, schema, machine-access contract, reuse terms, or business-versus-natural-person discriminator; no exact first-party-host locator source is approved; and PRIMARY_A has not independently authenticated for the REAL_BUSINESS_DISCOVERY release gate.",
+  "analysis_basis": "REPOSITORY_CAPTURED_OFFICIAL_SOURCE_EVIDENCE_ONLY_NO_LIVE_REQUESTS",
+  "live_source_operations_performed": 0,
+  "source_candidates": [
+    {
+      "source_id": "TX_OPEN_DATA_TDLR_ALL_LICENSES::<EXACT_RESOURCE_ID_PENDING>",
+      "source_kind": "DISCOVERY_SOURCE",
+      "identity": "Texas Open Data TDLR - All Licenses exact dataset instance",
+      "access_method": "EXACT_VERSIONED_PUBLIC_DATASET_API_OR_DOWNLOAD_PENDING_REVIEW",
+      "a09_state": "SOURCE_BLOCKED_PENDING_EXACT_INSTANCE_REVIEW",
+      "terms_access_state": "UNRESOLVED",
+      "robots_state": "UNRESOLVED_AND_DEPENDENT_ON_ACCESS_METHOD",
+      "storage_reuse_state": "UNRESOLVED",
+      "copyright_contract_risk": "MATERIAL_UNRESOLVED_REUSE_AND_ACCESS_CONDITIONS",
+      "qualified_source_review_required": true,
+      "required_provenance": [
+        "EXACT_DATASET_URL_AND_RESOURCE_ID",
+        "DATASET_REVISION_OR_EXPORT_TIMESTAMP",
+        "SCHEMA_OR_FIELD_DICTIONARY_HASH",
+        "ACCESS_TERMS_OR_LICENSE_URL_AND_HASH",
+        "QUERY_OR_EXPORT_PARAMETERS",
+        "SOURCE_ARTIFACT_HASH",
+        "RECORD_LOCATOR",
+        "OBSERVED_AT"
+      ]
+    },
+    {
+      "source_id": "TX_TDLR_ACR_LICENSE_VERIFICATION_V1",
+      "source_kind": "DISCOVERY_SOURCE",
+      "identity": "https://www.tdlr.texas.gov/LicenseSearch/ on www.tdlr.texas.gov",
+      "access_method": "TARGETED_PUBLIC_UNAUTHENTICATED_LOOKUP_ONLY_IF_EXACT_INTERFACE_IS_APPROVED",
+      "a09_state": "NOT_APPROVED_PENDING_SEPARATE_REVIEW",
+      "terms_access_state": "UNRESOLVED",
+      "robots_state": "UNRESOLVED",
+      "storage_reuse_state": "UNRESOLVED",
+      "copyright_contract_risk": "MATERIAL_UNRESOLVED_AUTOMATED_ACCESS_AND_PERSON_LICENSE_EXPOSURE",
+      "qualified_source_review_required": true,
+      "required_provenance": [
+        "EXACT_ENDPOINT_AND_ALLOWED_PATH",
+        "QUERY_KEY_DERIVED_FROM_ALREADY_ENUMERATED_BUSINESS_RECORD",
+        "TERMS_URL_AND_HASH",
+        "ROBOTS_URL_AND_HASH_IF_APPLICABLE",
+        "MINIMIZED_BUSINESS_ONLY_RESULT_HASH",
+        "RECORD_LOCATOR",
+        "OBSERVED_AT"
+      ]
+    },
+    {
+      "source_id": "FIRST_PARTY_HOST_LOCATOR::<EXACT_SOURCE_INSTANCE_PENDING>",
+      "source_kind": "DISCOVERY_SOURCE",
+      "identity": "Exact authoritative directory, registry, or specifically contracted locator instance; generic web search is prohibited",
+      "access_method": "PENDING_EXACT_SOURCE_SELECTION_AND_REVIEW",
+      "a09_state": "SOURCE_BLOCKED_NO_EXACT_INSTANCE",
+      "terms_access_state": "UNRESOLVED",
+      "robots_state": "UNRESOLVED",
+      "storage_reuse_state": "UNRESOLVED",
+      "copyright_contract_risk": "MATERIAL_UNRESOLVED",
+      "qualified_source_review_required": true,
+      "required_provenance": [
+        "EXACT_SOURCE_ID",
+        "EXACT_RECORD_OR_QUERY_LOCATOR",
+        "TERMS_AND_REUSE_REVIEW",
+        "OBSERVED_HOST_CANDIDATE",
+        "SOURCE_ARTIFACT_HASH",
+        "OBSERVED_AT"
+      ]
+    },
+    {
+      "source_id": "FIRST_PARTY_DISCOVERY::<EXACT_HOST_PENDING>",
+      "source_kind": "DISCOVERY_SOURCE",
+      "identity": "One exact normalized first-party business host after a locator source yields a candidate",
+      "access_method": "BOUNDED_UNAUTHENTICATED_HTTPS_HEAD_OR_MINIMIZED_GET_AFTER_PER_HOST_REVIEW",
+      "a09_state": "CANNOT_BE_CREATED_BEFORE_EXACT_HOST_EXISTS_AND_PASSES_REVIEW",
+      "terms_access_state": "PER_HOST_REVIEW_REQUIRED",
+      "robots_state": "PER_HOST_REVIEW_REQUIRED_FAIL_CLOSED",
+      "storage_reuse_state": "BUSINESS_ONLY_MINIMIZED_PROJECTION_ONLY_PENDING_PER_HOST_APPROVAL",
+      "copyright_contract_risk": "PER_HOST_MATERIAL_RISK_MUST_BE_RESOLVED",
+      "qualified_source_review_required": true,
+      "required_provenance": [
+        "NORMALIZED_EXACT_HOST",
+        "TERMS_URL_HASH_AND_CONCLUSION",
+        "ROBOTS_URL_HASH_AND_TECHNICAL_RESULT",
+        "ACCESS_RESTRICTION_RESULT",
+        "MINIMIZED_SOURCE_ARTIFACT_HASH",
+        "OBSERVED_AT"
+      ]
+    }
+  ],
+  "tdlr_field_support": {
+    "public_business_name": "NOT_VERIFIED_NO_CAPTURED_EXACT_DATASET_SCHEMA",
+    "texas_location_or_service_area": "NOT_VERIFIED_REGULATOR_JURISDICTION_DOES_NOT_PROVE_RECORD_FIELD_OR_SERVICE_AREA",
+    "hvac_contractor_or_license_evidence": "PROGRAM_LEVEL_RELEVANCE_ONLY_EXACT_LICENSE_FIELDS_CLASS_AND_STATUS_NOT_VERIFIED",
+    "operational_evidence": "NOT_SUPPORTED_LICENSE_STATUS_IF_LATER_VERIFIED_IS_NOT_EQUIVALENT_TO_BUSINESS_OPERATIONAL_STATUS",
+    "organization_grouping_or_franchise_hint": "NOT_SUPPORTED",
+    "first_party_host_candidate": "NOT_SUPPORTED_BY_CAPTURED_EVIDENCE",
+    "b2b_evidence": "NOT_SUPPORTED",
+    "commercial_hvac_evidence": "NOT_SUPPORTED_BEYOND_GENERAL_ACR_LICENSING_RELEVANCE",
+    "business_entity_vs_natural_person_discriminator": "NOT_VERIFIED_CRITICAL_PRIVACY_BLOCKER"
+  },
+  "proposed_algorithm_after_all_blockers_are_closed": [
+    "FREEZE_EXACT_TDLR_DATASET_INSTANCE_REVISION_QUERY_AND_CUTOFF_BEFORE_READING_RECORD_CONTENT",
+    "HASH_CAPTURE_THEN_APPLY_FIELD_LIMITED_EPHEMERAL_MINIMIZATION",
+    "REJECT_NATURAL_PERSON_OR_UNCLASSIFIABLE_LICENSE_RECORDS_BEFORE_DURABLE_PROJECTION",
+    "FILTER_ONLY_VERIFIED_ACR_LICENSE_TEXAS_BUSINESS_ENTITY_AND_ALLOWED_STATUS_FIELDS",
+    "SORT_BY_VERIFIED_IMMUTABLE_SOURCE_RECORD_ID_OR_APPROVED_STABLE_KEY",
+    "CONSIDER_AT_MOST_500_PREDECLARED_SOURCE_RECORDS_AND_PRESERVE_ALL_EXCLUSION_COUNTS",
+    "TAKE_AT_MOST_100 COMPLETE_ELIGIBLE_BUSINESS_RECORDS_WITHOUT_OPPORTUNITY_OR_SITE_QUALITY_CRITERIA",
+    "USE_TARGETED_TDLR_VERIFICATION_ONLY_FOR_PREDECLARED_AMBIGUOUS_BUSINESS_RECORDS",
+    "LOCATE_HOST_ONLY_THROUGH_ONE_EXACT_APPROVED_LOCATOR_SOURCE",
+    "REVIEW_EACH_EXACT_FIRST_PARTY_HOST_SEPARATELY_AND_PROJECT_ONLY APPROVED BUSINESS EVIDENCE",
+    "SEAL_EXACTLY_THE_ROSTER_AND_ATTESTATION_THEN_STOP_NETWORK_ACCESS"
+  ],
+  "anti_cherry_picking": {
+    "source_snapshot_and_cutoff_frozen_before_content_classification": true,
+    "stable_source_order_required": true,
+    "complete_predeclared_frame_required": true,
+    "opportunity_site_quality_contactability_and_value_signals_prohibited": true,
+    "outcome_based_replacement_prohibited": true,
+    "all_exclusions_and_ambiguities_preserved": true
+  },
+  "minimization": {
+    "pipeline": "EPHEMERAL_RAW_FETCH_TO_DETERMINISTIC_MINIMIZATION_TO_DURABLE_BUSINESS_ONLY_ROSTER",
+    "durable_allowed": [
+      "BUSINESS_IDENTITY",
+      "VERIFIED_TEXAS_ELIGIBILITY_EVIDENCE",
+      "VERIFIED_COMMERCIAL_HVAC_EVIDENCE",
+      "VERIFIED_B2B_EVIDENCE",
+      "CANDIDATE_FIRST_PARTY_HOST",
+      "SOURCE_ID_ARTIFACT_HASH_LOCATOR_AND_OBSERVED_AT"
+    ],
+    "durable_prohibited": [
+      "PERSON_NAMES",
+      "EMAILS",
+      "TELEPHONE_NUMBERS",
+      "INDIVIDUAL_LICENSE_RECORDS",
+      "CONTACT_OR_STAFF_BLOCKS",
+      "REVENUE_OR_HEADCOUNT",
+      "CRM_LEAD_VOLUME_RESPONSE_TIME_INTERNAL_PROCESS_OR_COMPLAINTS",
+      "OPPORTUNITY_VALUE_OR_OUTCOME_SIGNALS"
+    ],
+    "unsafe_or_unprovable_result": "QUARANTINE_WITH_CONTENT_FREE_AUDIT_AND_NO_ROSTER_PROJECTION",
+    "logs_metrics_review_artifacts": "NO_PERSON_CONTACT_OR_RAW_SOURCE_CONTENT"
+  },
+  "proposed_limits_after_source_approval": {
+    "source_records_considered": 500,
+    "roster_observations_min": 24,
+    "roster_observations_max": 100,
+    "logical_http_requests": 120,
+    "total_attempts": 360,
+    "aggregate_response_bytes": 36000000,
+    "attempts_per_logical_request": 3,
+    "concurrency": 1,
+    "minimum_delay_seconds_per_host": 2,
+    "ai_calls": 0,
+    "browser_sessions": 0,
+    "monetary_cost_usd": 0,
+    "validity": "RECOMMENDED_7_DAYS_AFTER_ALL_SOURCE_AND_ROLE_REVIEWS_COMPLETE",
+    "kill_switch": "MUST_START_TRIPPED_FAIL_CLOSED_BLOCK_NEW_REQUESTS_AND_RETRIES_AND_RETURN_TRIPPED_AFTER_TERMINAL_ATTEMPT"
+  },
+  "role_and_permission_gate": {
+    "operation_semantics": "REAL_BUSINESS_DISCOVERY",
+    "temporary_permission_bypass_allowed": false,
+    "primary_a_required_before_live_acquisition_authorization": true,
+    "primary_a_state": "PENDING_INDEPENDENT_AUTHENTICATION",
+    "owner_actor_substitution_prohibited": true,
+    "only_permission_that_could_change_after_all_blockers_and_exact_signature": "REAL_BUSINESS_DISCOVERY",
+    "real_business_discovery_scope_if_later_signed": "ONE_TERMINAL_SEED_ROSTER_ACQUISITION_ATTEMPT_USING_ONLY_EXACT_APPROVED_DISCOVERY_SOURCES",
+    "real_public_research": "NOT_AUTHORIZED",
+    "other_successor_permissions": "NOT_AUTHORIZED"
+  },
+  "required_outputs_if_later_authorized": [
+    "local-data/m6.7/seed-source-acquisition/input/offline-business-roster.json",
+    "local-data/m6.7/seed-source-acquisition/input/offline-business-roster-attestation.json"
+  ],
+  "unconsumed_grants": {
+    "offline_seed_source_acquisition": "0/1",
+    "bounded_seed_construction": "0/1"
+  },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  },
+  "required_to_reach_ready": [
+    "CAPTURE_AND_REVIEW_EXACT_TEXAS_OPEN_DATA_DATASET_ID_URL_SCHEMA_FIELD_DICTIONARY_API_OR_EXPORT_METHOD_TERMS_LICENSE_AND_REUSE_RULES",
+    "PROVE_A_RELIABLE_BUSINESS_ENTITY_DISCRIMINATOR_AND_FIELD_LEVEL_EXCLUSION_OF_NATURAL_PERSON_LICENSE_RECORDS",
+    "SELECT_AND_REVIEW_ONE_EXACT_NON_WILDCARD_FIRST_PARTY_HOST_LOCATOR_SOURCE_OR_VERIFY_AN_APPROVED_TDLR_HOST_FIELD",
+    "COMPLETE_REQUIRED_PER_SOURCE_TERMS_ROBOTS_ACCESS_STORAGE_REUSE_AND_COPYRIGHT_CONTRACT_REVIEW",
+    "COMPLETE_PRIMARY_A_INDEPENDENT_AUTHENTICATION_AND_RECONCILIATION",
+    "GENERATE_A_NEW_EXACT_HASH_BOUND_REAL_BUSINESS_DISCOVERY_RELEASE_OBJECT"
+  ],
+  "owner_approval_statement": null,
+  "owner_approval_statement_withheld_reason": "MATERIAL_SOURCE_RIGHTS_ACCESS_FIELD_AND_ROLE_BLOCKERS_PREVENT_AN_AUTHORIZABLE_PACKAGE",
+  "evidence_bindings": {
+    "adr0069": "docs/adr/0069-split-m67-real-data-permissions.md",
+    "source_policy_matrix": "docs/readiness/m6.7b/source-policy-matrix.md",
+    "legal_authority_register": "docs/readiness/m6.7b/legal-and-authority-register.md",
+    "source_approval_package": "docs/readiness/m6.7-authorization/source-approval-package.md",
+    "a17_attorney_result_sha256": "c3f006989b2d82e8f9f381d1e549a68d736babdb32f51cdbe5a5af4273fcd745",
+    "a08_live_effectiveness_sha256": "ec8489fcf64987de4767fc202824850a745d0e2124eb20d39857ca08f870a766",
+    "adr0071_sha256": "b8429209caf5743a8997f7b1030b6fe82ac7be0bc313dbdeb11dc803c9f22f89",
+    "accepted_environment_sha256": "713062b65cdb340e8d552f6562cdd22431c2aee057bb3baa8a74411c06648103",
+    "offline_acquisition_grant_sha256": "61f2ec49e225541cdd9b6d0cf953f9293383a8a8adde9eea752117599dd2088f",
+    "seed_construction_grant_sha256": "7e641a4a80fc0af36737025480a1408296b515c30dd02e51a04a4117316dbc7a",
+    "offline_roster_blocker_sha256": "51741250980c67436f88d52ec8a559da8836d3a635ef38be566e2c1bb885ae57"
+  }
+}
