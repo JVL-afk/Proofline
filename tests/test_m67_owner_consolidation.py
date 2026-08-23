@@ -78,14 +78,16 @@ def synthetic_observation(index: int) -> dict[str, object]:
             "texas": ["controlled Texas fixture"],
             "commercial_hvac": ["controlled commercial HVAC fixture"],
             "b2b": ["controlled B2B fixture"],
+            "operational": ["controlled operating-status fixture"],
+            "first_party_host": [f"synthetic-{index}.example.test"],
         },
         "provenance": [
             {
                 "source_id": f"fixture-source-{index}",
                 "source_artifact_ref": f"fixture-artifact-{index}",
-                "source_locator": f"fixture:{index}",
+                "locator": f"fixture:{index}",
                 "observed_at": "2026-08-21T12:00:00+00:00",
-                "artifact_hash": artifact_hash,
+                "source_artifact_sha256": artifact_hash,
             }
         ],
     }
@@ -120,12 +122,14 @@ def test_seed_and_source_package_is_generated_without_blanket_host_approval(
     )
     package = load(output)
     manifest = package["manifest"]
-    assert manifest["state"] == "FROZEN"
-    assert len(manifest["candidates"]) == 24
+    assert manifest["state"] == "FROZEN_AWAITING_OWNER_ARTIFACT_APPROVAL"
+    assert len(manifest["selected"]) == 24
+    assert manifest["reserve"] == []
     assert len(manifest["manifest_hash"]) == 64
     assert package["wildcard_approval_prohibited"] is True
     assert {item["human_conclusion"] for item in package["host_reviews"]} == {"PENDING"}
     assert {item["final_state"] for item in package["host_reviews"]} == {"NOT_APPROVED"}
+    assert set(package["permissions"].values()) == {"NOT_AUTHORIZED"}
 
 
 def test_seed_generation_rejects_person_contact_fields(tmp_path: Path) -> None:

@@ -1,0 +1,98 @@
+{
+  "record_type": "M67_PHASE1_SEED_GENERATOR_SOURCE_POLICY",
+  "version": "1.0.0",
+  "state": "READY_FOR_SEED_POLICY_OWNER_APPROVAL",
+  "environment_acceptance": {
+    "commit": "94c3bfa8f227562239b573533fd033902d1d3282",
+    "record": "consolidated-environment-acceptance-accepted-2026-08-23.json",
+    "record_sha256": "713062b65cdb340e8d552f6562cdd22431c2aee057bb3baa8a74411c06648103"
+  },
+  "scope": {
+    "jurisdiction": "US-TX",
+    "vertical": "COMMERCIAL_HVAC",
+    "context": "B2B",
+    "opportunity_context": "INBOUND_LEAD_RESPONSE",
+    "candidate_frame_maximum": 100,
+    "cohort_target": 24
+  },
+  "eligibility_required": [
+    "PUBLIC_BUSINESS_IDENTITY",
+    "TEXAS_OPERATION_OR_COMMERCIAL_SERVICE_AREA",
+    "COMMERCIAL_HVAC_RELEVANCE",
+    "B2B_RELEVANCE",
+    "PUBLIC_OPERATIONAL_STATUS",
+    "EXACT_FIRST_PARTY_HOST_CANDIDATE"
+  ],
+  "business_only_fields": [
+    "PUBLIC_BUSINESS_NAME_AND_ALIASES",
+    "TEXAS_CITY_OR_SERVICE_AREA",
+    "EXACT_FIRST_PARTY_HOST_CANDIDATE",
+    "ORGANIZATION_SHARED_BRAND_AND_LEAD_FLOW_HINTS",
+    "ELIGIBILITY_OBSERVATIONS_AND_EVIDENCE_REFS",
+    "SOURCE_PROVENANCE"
+  ],
+  "prohibited": [
+    "PERSON_OR_CONTACT_FIELDS_OR_VALUES",
+    "NATURAL_PERSON_NAMES",
+    "EMAILS_OR_PHONES",
+    "STAFF_OR_EMPLOYEE_BLOCKS",
+    "OPPORTUNITY_OR_OUTCOME_FIELDS",
+    "REVENUE_OR_HEADCOUNT",
+    "CRM_RESPONSE_LEAD_OR_CONVERSION_METRICS",
+    "INFERRED_INTERNAL_PROCESS_OR_FACT",
+    "AI",
+    "BROWSER",
+    "OUTREACH_OR_COMMUNICATION"
+  ],
+  "selection": {
+    "frame_frozen_before_seed": true,
+    "deduplication": "EXACT_HOST_THEN_ORGANIZATION_PLUS_LEAD_FLOW_THEN_SHARED_BRAND_CAP_ONE",
+    "ordering_version": "m6.7.phase1.seeded-order@1",
+    "seed": "32_RANDOM_BYTES_OS_CSPRNG_GENERATED_ONCE_AFTER_FRAME_FREEZE",
+    "selected": "FIRST_24",
+    "reserve": "ALL_REMAINING_IN_FROZEN_ORDER",
+    "outcome_based_replacement": "PROHIBITED"
+  },
+  "source_review": {
+    "a09": "PER_EXACT_HOST",
+    "wildcard_approval": "PROHIBITED",
+    "required_states": [
+      "TERMS",
+      "ROBOTS",
+      "ACCESS_RESTRICTIONS",
+      "AUTOMATED_ACCESS",
+      "CAPTURE_STORAGE_REUSE",
+      "COPYRIGHT_CONTRACT"
+    ],
+    "material_prohibition": "SOURCE_BLOCKED",
+    "material_uncertainty": "SOURCE_REVIEW_REQUIRED",
+    "robots_is_legal_authorization": false
+  },
+  "mandatory_stop": "AFTER_CANDIDATE_AND_HOST_PACKAGE_CONSTRUCTION_BEFORE_ANY_RESEARCH",
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  },
+  "artifact_bindings": {
+    "generator": "scripts/generate_m67_seed_source_package.py",
+    "generator_sha256": "daae6bc65f3b7344701bb0e39640c28353a17fd7cd3316ee68245836dc741d56",
+    "schema": "docs/readiness/m6.7-authorization/phase1-owner-seed-manifest-v1.schema.json",
+    "schema_sha256": "4c839697a08186214a515cac485481bb8e29503e2efb6d2990d7be1ea9fba771",
+    "policy": "docs/readiness/m6.7-authorization/seed-generator-source-policy-2026-08-23.md",
+    "policy_sha256": "6921b11b30ed4081f2f668fa0811f1912726ff9e476264f3cabfe97a31bfbc37",
+    "source_policy": "docs/readiness/m6.7-authorization/source-approval-package.md",
+    "source_policy_sha256": "15785a5ea56bb6b755c76be0330c3fe3cbb20fd54e344ee0d56fc2580703e255",
+    "primary_a_step": "docs/readiness/m6.7-authorization/primary-a-independent-authentication-step-2026-08-23.json",
+    "primary_a_step_sha256": "ae24e1106c61dd2853a8b3fb88c34963123549b56dd4a79f633f46d90630e8db",
+    "empty_template": "docs/readiness/m6.7-authorization/generated-seed-source-package.template.json",
+    "empty_template_sha256": "ef7f54ce972f73a40fb9a942f7bf2e880c0a5571c8a373278766a0a2b4460433"
+  },
+  "real_candidates_present": 0,
+  "live_source_operations": 0,
+  "configuration_hash": "ea12cd02a3517b949a2dd900cafcb825f197b801e032d4d0c423d58a65c5b6bf"
+}

@@ -1,0 +1,29 @@
+{
+  "record_type": "M67_PRIMARY_A_INDEPENDENT_AUTHENTICATION_STEP",
+  "version": "1.0.0",
+  "state": "PENDING_INDEPENDENT_AUTHENTICATION",
+  "actor_ref": "PRIMARY_A_ACTOR",
+  "role": "INDEPENDENT_SECOND_REVIEWER",
+  "owner_actor_may_not_satisfy": true,
+  "required_independent_evidence": {
+    "approved_identity_provider_issuer": "OBSERVED_FROM_DEPLOYED_IDP",
+    "opaque_subject_or_approved_subject_digest": "OBSERVED_FROM_PRIMARY_A_AUTHENTICATION",
+    "audience_and_environment": "PHASE1_DEPLOYED_ENVIRONMENT",
+    "mfa_assurance": "REQUIRED",
+    "authentication_event_id_and_time": "REQUIRED",
+    "one_time_challenge_or_nonce_binding": "REQUIRED",
+    "signed_reconciliation_attestation": "REQUIRED",
+    "reconciliation_evidence_sha256": "SYSTEM_DERIVED"
+  },
+  "prohibited_repository_material": [
+    "NAME",
+    "EMAIL",
+    "PASSWORD",
+    "TOKEN",
+    "SESSION_SECRET",
+    "LONG_LIVED_CREDENTIAL"
+  ],
+  "completion_effect": "SATISFIES_ONLY_THE_INDEPENDENT_REVIEWER_IDENTITY_PREREQUISITE",
+  "permissions_granted": [],
+  "owner_actor_substitution_prohibited": true
+}

@@ -1,7 +1,8 @@
 {
   "record_type": "M67_GENERATED_SEED_SOURCE_APPROVAL_PACKAGE",
-  "version": "DRAFT",
-  "state": "BLOCKED_UNTIL_DISCOVERY_SOURCE_AUTHORITY",
+  "version": "2.0.0",
+  "state": "BLOCKED_UNTIL_SEED_CONSTRUCTION_AUTHORIZATION",
+  "policy_revision": "m6.7.phase1.seed-generator-source-policy@1",
   "seed_schema_revision": "PHASE1_OWNER_SEED_MANIFEST_V1@1.0.0",
   "candidate_frame_maximum": 100,
   "cohort_target": 24,
@@ -13,6 +14,9 @@
     "manifest_hash": null,
     "deterministic_selection_order_hash": null
   },
+  "eligibility_decisions": [],
+  "selected": [],
+  "reserve": [],
   "host_reviews": [],
   "host_review_requirements": {
     "separate_result_per_exact_host": true,
@@ -21,6 +25,16 @@
     "human_conclusion_required": true,
     "blocked_or_uncertain_host_remains_visible": true
   },
+  "permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  },
+  "mandatory_stop_after_construction": true,
   "batch_signature": null,
   "configuration_hash": null
 }
