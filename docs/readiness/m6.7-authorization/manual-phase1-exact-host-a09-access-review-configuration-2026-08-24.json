@@ -1,0 +1,66 @@
+{
+  "schema_version": "m67-manual-phase1-exact-host-a09-access-review-configuration-v1",
+  "event": "AUTHORIZE_MANUAL_PHASE1_EXACT_HOST_A09_ACCESS_REVIEW",
+  "account": "785072247535",
+  "region": "us-east-2",
+  "ordered_package_file_sha256": "755279cb8e5ac06c579c411857bfc6d380602722813de1cda21175b9385b5467",
+  "ordered_package_semantic_sha256": "8a0703e6a441e28a62ae5f5ed32faf0279502c695d34779132ffa48979074050",
+  "ordered_sample_acceptance_sha256": "2341f6a6349e2a34bf61c0c0cdf827e4addfeab9c43abe509a3ea5c81f66b0e1",
+  "offline_a09_evidence_sha256": "049088a62eba7cd927bf1dffbc0a11b2e3f68cd8eb339df9ca3047c8bd4ee7ec",
+  "window": {
+    "starts_at": "2026-08-24T17:00:00Z",
+    "expires_at": "2026-08-31T17:00:00Z",
+    "terminal_attempts": 1
+  },
+  "scope": {
+    "hosts": "EXACT_24_HOSTS_BOUND_BY_ORDERED_PACKAGE_ONLY",
+    "scheme": "https",
+    "port": 443,
+    "mandatory_paths": ["/robots.txt", "/"],
+    "optional_path": "AT_MOST_ONE_SAME_HOST_QUERY_FREE_TERMS_OR_LEGAL_PATH_DETERMINISTICALLY_DISCOVERED_FROM_ROOT",
+    "redirects_followed": 0,
+    "generic_search": false,
+    "whois": false,
+    "browser": false,
+    "ai": false,
+    "m1_m5": false,
+    "public_research": false
+  },
+  "limits": {
+    "logical_http_requests": 72,
+    "attempts": 72,
+    "max_response_bytes": 250000,
+    "max_total_response_bytes": 12000000,
+    "concurrency": 1,
+    "minimum_delay_seconds": 2,
+    "retries": 0,
+    "cost_usd": 0
+  },
+  "durable_evidence": {
+    "raw_bodies": false,
+    "person_contact_values": false,
+    "page_text": false,
+    "allowed": [
+      "status",
+      "content_type",
+      "body_length_and_sha256",
+      "redirect_host_without_following",
+      "robots_root_access_classification",
+      "business_name_match_classification",
+      "same_host_legal_path",
+      "content_free_restriction_marker_flags"
+    ]
+  },
+  "decision_rule": {
+    "automatic_approval": false,
+    "robots_denial_or_foreign_redirect": "REJECTED",
+    "otherwise": "REQUIRES_HUMAN_REVIEW",
+    "public_research_requires_later_exact_host_owner_decision": true
+  },
+  "unchanged_controls": {
+    "kill_switch": "TRIPPED",
+    "all_seven_m6_7_permissions": "NOT_AUTHORIZED",
+    "slot_mapping": "IMMUTABLE",
+    "replacements": 0
+  }
+}
