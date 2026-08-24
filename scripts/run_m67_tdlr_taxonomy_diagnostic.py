@@ -20,10 +20,10 @@ from typing import Any
 
 ACCOUNT = "785072247535"
 REGION = "us-east-2"
-EVENT = "AUTHORIZE_TDLR_TAXONOMY_DISCOVERY"
+EVENT = "AUTHORIZE_TDLR_TAXONOMY_DISCOVERY_SUCCESSOR"
 ENDPOINT = "https://data.texas.gov/api/v3/views/7358-krk7/query.json"
-STARTS_AT = datetime.fromisoformat("2026-08-24T08:15:00+00:00")
-EXPIRES_AT = datetime.fromisoformat("2026-08-31T08:15:00+00:00")
+STARTS_AT = datetime.fromisoformat("2026-08-24T10:20:00+00:00")
+EXPIRES_AT = datetime.fromisoformat("2026-08-31T10:20:00+00:00")
 MAX_BYTES = 50_000
 PAGE_SIZE = 250
 QUERY = (
@@ -101,34 +101,39 @@ def seal(path: Path, value: object) -> None:
         os.fsync(handle.fileno())
 
 
+class TaxonomyValidationError(RuntimeError):
+    def __init__(self, code: str) -> None:
+        super().__init__(code)
+        self.code = code
+
+
 def validate_taxonomy(parsed: object) -> dict[str, Any]:
     if not isinstance(parsed, list):
-        raise RuntimeError("taxonomy response is not a top-level array")
+        raise TaxonomyValidationError("TOP_LEVEL_NOT_ARRAY")
     if not 1 <= len(parsed) < PAGE_SIZE:
-        raise RuntimeError(
-            "taxonomy result is empty or reached the page ceiling; completeness is unproven"
-        )
+        raise TaxonomyValidationError("EMPTY_OR_PAGE_CEILING_COMPLETENESS_UNPROVEN")
     values: list[dict[str, Any]] = []
-    prior: str | None = None
+    seen: set[str] = set()
     for row in parsed:
         if not isinstance(row, dict) or set(row) != {"license_type", "record_count"}:
-            raise RuntimeError("taxonomy row does not contain exactly license_type and record_count")
+            raise TaxonomyValidationError("ROW_FIELDS_NOT_EXACT")
         license_type = row["license_type"]
         raw_count = row["record_count"]
         if not isinstance(license_type, str) or not license_type.strip() or len(license_type) > 256:
-            raise RuntimeError("invalid license_type taxonomy value")
+            raise TaxonomyValidationError("LICENSE_TYPE_INVALID")
         if CONTACT_SHAPE.search(license_type):
-            raise RuntimeError("contact-shaped taxonomy value")
+            raise TaxonomyValidationError("CONTACT_SHAPED_VALUE")
         try:
             count = int(raw_count)
         except (TypeError, ValueError) as error:
-            raise RuntimeError("invalid aggregate count") from error
+            raise TaxonomyValidationError("AGGREGATE_COUNT_INVALID") from error
         if count <= 0:
-            raise RuntimeError("aggregate count must be positive")
+            raise TaxonomyValidationError("AGGREGATE_COUNT_NOT_POSITIVE")
         normalized = license_type.strip()
-        if prior is not None and normalized <= prior:
-            raise RuntimeError("taxonomy values are not unique and stably ordered")
-        prior = normalized
+        uniqueness_key = normalized.casefold()
+        if uniqueness_key in seen:
+            raise TaxonomyValidationError("LICENSE_TYPE_NOT_UNIQUE")
+        seen.add(uniqueness_key)
         folded = normalized.casefold()
         values.append({
             "observed_dataset_value": normalized,
@@ -194,7 +199,7 @@ def run(
         parse_error_type = type(error).__name__
 
     evidence: dict[str, Any] = {
-        "schema_version": "m67-tdlr-taxonomy-diagnostic-evidence-v1",
+        "schema_version": "m67-tdlr-taxonomy-diagnostic-evidence-v2",
         "state": "TDLR_TAXONOMY_METADATA_CAPTURED_PENDING_VALIDATION",
         "account": ACCOUNT,
         "region": REGION,
@@ -203,6 +208,7 @@ def run(
             "RESPONSE_METADATA_CAPTURE_BEFORE_SCHEMA_VALIDATION": "PASS",
             "SOURCE_API_CONTRACT_PREFLIGHT": "PASS_BOUND_TO_78210d95a9693c57cbc75955227f2c33fc1d0737c1e4ea424da35b72b9e05de3",
             "TDLR_TAXONOMY_FILTER_PROVEN": "PENDING_THIS_DIAGNOSTIC",
+            "PREDECESSOR_TAXONOMY_DIAGNOSTIC": "PERMANENTLY_CONSUMED_BOUND_TO_E0DE2DECC29F1DBFFDA939A94EDB2AE7C90F6C6C138BE936D5CE50F195CD8415",
         },
         "request": {
             "method": "POST",
@@ -260,10 +266,13 @@ def run(
     else:
         try:
             taxonomy = validate_taxonomy(parsed)
-        except RuntimeError as error:
+        except TaxonomyValidationError as error:
             evidence["state"] = "TDLR_TAXONOMY_DIAGNOSTIC_FAIL"
             evidence["failure_stage"] = "TAXONOMY_SCHEMA"
-            evidence["taxonomy_validation"] = type(error).__name__
+            evidence["taxonomy_validation"] = {
+                "parser_schema_result": "FAIL",
+                "safe_failure_code": error.code,
+            }
         else:
             evidence["state"] = "TDLR_TAXONOMY_DIAGNOSTIC_PASS_PENDING_INTERPRETATION"
             evidence["taxonomy_validation"] = taxonomy

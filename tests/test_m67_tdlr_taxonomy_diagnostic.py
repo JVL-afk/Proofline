@@ -81,7 +81,7 @@ def test_classification_values_and_counts_are_the_only_durable_source_values(tmp
         auth,
         evidence_path,
         opener=opener,
-        now=datetime(2026, 8, 24, 9, tzinfo=UTC),
+        now=datetime(2026, 8, 24, 11, tzinfo=UTC),
     )
     evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
     assert opener.calls == 1
@@ -102,7 +102,7 @@ def test_transport_metadata_survives_taxonomy_schema_failure(tmp_path: Path) -> 
         auth,
         evidence_path,
         opener=Opener(raw),
-        now=datetime(2026, 8, 24, 9, tzinfo=UTC),
+        now=datetime(2026, 8, 24, 11, tzinfo=UTC),
     )
     evidence = json.loads(evidence_path.read_text(encoding="utf-8"))
     assert result["state"] == "TDLR_TAXONOMY_DIAGNOSTIC_FAIL"
@@ -111,12 +111,12 @@ def test_transport_metadata_survives_taxonomy_schema_failure(tmp_path: Path) -> 
     assert evidence["invariants"]["RESPONSE_METADATA_CAPTURE_BEFORE_SCHEMA_VALIDATION"] == "PASS"
 
 
-def test_taxonomy_validation_rejects_contact_shape_and_unstable_order() -> None:
+def test_taxonomy_validation_rejects_contact_shape_and_duplicate_value() -> None:
     unsafe_cases = (
         [{"license_type": "contact@example.com", "record_count": "1"}],
         [
-            {"license_type": "Zulu", "record_count": "1"},
             {"license_type": "Alpha", "record_count": "1"},
+            {"license_type": "alpha", "record_count": "2"},
         ],
     )
     for rows in unsafe_cases:
@@ -137,6 +137,15 @@ def test_taxonomy_validation_fails_closed_at_page_ceiling() -> None:
     try:
         MODULE.validate_taxonomy(rows)
     except RuntimeError as error:
-        assert "completeness is unproven" in str(error)
+        assert str(error) == "EMPTY_OR_PAGE_CEILING_COMPLETENESS_UNPROVEN"
     else:
         raise AssertionError("a full page cannot prove exhaustive taxonomy")
+
+
+def test_socrata_collation_order_does_not_cause_local_rejection() -> None:
+    result = MODULE.validate_taxonomy([
+        {"license_type": "Zulu", "record_count": "1"},
+        {"license_type": "Alpha", "record_count": "2"},
+    ])
+
+    assert result["classification_value_count"] == 2
