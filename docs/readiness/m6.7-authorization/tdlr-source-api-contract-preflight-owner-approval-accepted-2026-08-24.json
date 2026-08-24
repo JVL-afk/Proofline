@@ -1,0 +1,17 @@
+{
+  "schema_version": "m67-tdlr-source-api-contract-preflight-owner-approval-accepted-v1",
+  "state": "APPROVED",
+  "event": "AUTHORIZE_TDLR_SOURCE_API_CONTRACT_PREFLIGHT",
+  "account": "785072247535",
+  "region": "us-east-2",
+  "accepted_at": "2026-08-24",
+  "preparation_commit": "e742d0d5fc091d6070b605d9c194a230eeede008",
+  "diagnosis_sha256": "44eadfa217af44f5edd9b91b3bae315a44bf7803131999fbc39d4f7ecb8eedca",
+  "configuration_sha256": "b13b7dfd0b2f928c0be6b5b1535ac5b1619de0404a208e97618e54e8a5bae373",
+  "exact_executable_sha256": "a97b88ddc19284c102d4ebe1de715cbc69df983108575a59b7771f273edf9dd8",
+  "consumed_v2_terminal_evidence_sha256": "c7645d9d5ee2efefd5e85292dd9128064e5d7b691bce7939aa4cd9ce8b66a1c7",
+  "valid_from": "2026-08-24T07:00:00Z",
+  "expires_at": "2026-08-31T07:00:00Z",
+  "terminal_attempts_authorized": 1,
+  "exact_owner_attestation": "I approve AUTHORIZE_TDLR_SOURCE_API_CONTRACT_PREFLIGHT for AWS account 785072247535 in us-east-2, binding preparation commit e742d0d5fc091d6070b605d9c194a230eeede008, TDLR request/response diagnosis SHA-256 44eadfa217af44f5edd9b91b3bae315a44bf7803131999fbc39d4f7ecb8eedca, preflight configuration SHA-256 b13b7dfd0b2f928c0be6b5b1535ac5b1619de0404a208e97618e54e8a5bae373, exact executable SHA-256 a97b88ddc19284c102d4ebe1de715cbc69df983108575a59b7771f273edf9dd8, and permanently consumed V2 terminal evidence SHA-256 c7645d9d5ee2efefd5e85292dd9128064e5d7b691bce7939aa4cd9ce8b66a1c7. This authorizes exactly one terminal TDLR source-API contract preflight between 2026-08-24T07:00:00Z and 2026-08-31T07:00:00Z against only https://data.texas.gov/api/v3/views/7358-krk7/query.json, using one certificate-validated HTTPS POST, zero retries, application/json, no app token, page 1 with page size 5, includeSynthetic=false, and a SoQL projection limited to license_type, license_number, business_county, business_name, business_city_state_zip, license_expiration_date_mmddccyy, and license_subtype, filtered to exact license_type Air Conditioning Contractor and deterministically ordered by license_number then business_name. The response ceiling is 100,000 bytes. Raw rows remain ephemeral; durable evidence may contain only status, content-free allowlisted headers, body length/hash, schema assertions, counts, and content-free row hashes. This authorizes no Nominatim or first-party-host request, roster or candidate creation, discovery, public research, person/contact processing, seed/CSPRNG activity, M1-M5, Slot 1, outreach, communication, AI, browser use, AWS/Terraform mutation, or retry of the consumed V2 acquisition. The kill switch remains TRIPPED; all seven M6.7 permissions remain NOT_AUTHORIZED; and the offline-projection and seed-construction grants remain 0/1 unconsumed. A pass authorizes only preparation of a separately reviewed successor live seed-roster acquisition authorization."
+}
