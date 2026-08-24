@@ -1,0 +1,21 @@
+{
+  "schema_version": "m67-slot01-exact-host-a09-dns-diagnostic-owner-approval-ready-v1",
+  "state": "READY_FOR_SLOT01_EXACT_HOST_A09_DNS_DIAGNOSTIC_AUTHORIZATION",
+  "event": "AUTHORIZE_SLOT01_EXACT_HOST_A09_DNS_DIAGNOSTIC",
+  "account": "785072247535",
+  "region": "us-east-2",
+  "preparation_commit": "bfd754ada42e34f25392cf43a2edd5c7d511b6b7",
+  "terminal_access_review_evidence_sha256": "1bf1fc7eaf6eef75539a69bed17d43f15d113efc03e972156cf004e12c19a107",
+  "human_decision_package_sha256": "7de8c4505fdd38b381d8e235e7dbba126e1a79efaafcd1102fb8758a24ea5007",
+  "configuration_sha256": "1bfa2a074d403a0538c18633222f5b3caeec4935d59a913115b835060fff7154",
+  "exact_executable_sha256": "369180e55f50d7911ff8e22d22da72d1ce704b9aea2bae11bda51f8a1e8c5765",
+  "tests_sha256": "41281292abebde2a4d500ffcc2f24992d8f4861eeff13f49a397ccc8466ff128",
+  "ordered_package_file_sha256": "755279cb8e5ac06c579c411857bfc6d380602722813de1cda21175b9385b5467",
+  "window": {
+    "starts_at": "2026-08-24T18:30:00Z",
+    "expires_at": "2026-08-31T18:30:00Z",
+    "terminal_attempts": 1
+  },
+  "precondition": "OWNER_SSO_REAUTHENTICATED_AND_READ_ONLY_SSM_KILL_SWITCH_EQUALS_TRIPPED",
+  "exact_owner_approval_statement": "I approve AUTHORIZE_SLOT01_EXACT_HOST_A09_DNS_DIAGNOSTIC for AWS account 785072247535 in us-east-2, binding preparation commit bfd754ada42e34f25392cf43a2edd5c7d511b6b7, consumed A-09 access-review terminal evidence SHA-256 1bf1fc7eaf6eef75539a69bed17d43f15d113efc03e972156cf004e12c19a107, content-minimized human-decision package SHA-256 7de8c4505fdd38b381d8e235e7dbba126e1a79efaafcd1102fb8758a24ea5007, diagnostic configuration SHA-256 1bfa2a074d403a0538c18633222f5b3caeec4935d59a913115b835060fff7154, exact executable SHA-256 369180e55f50d7911ff8e22d22da72d1ce704b9aea2bae11bda51f8a1e8c5765, deterministic tests SHA-256 41281292abebde2a4d500ffcc2f24992d8f4861eeff13f49a397ccc8466ff128, and immutable ordered-package file SHA-256 755279cb8e5ac06c579c411857bfc6d380602722813de1cda21175b9385b5467. This authorizes exactly one terminal DNS-only diagnostic between 2026-08-24T18:30:00Z and 2026-08-31T18:30:00Z for immutable Slot 01 candidate hostname bobsmithac.com using only the current-system resolver. Before grant consumption, the exact runner must use the reauthenticated m67-phase1-owner read-only session to verify /m67-phase1/kill-switch equals TRIPPED; an expired session or non-TRIPPED result performs no DNS operation and does not consume the diagnostic. After that precondition passes, the runner may perform exactly one getaddrinfo resolution for bobsmithac.com on port 443, with zero retries and no alternate resolver. It may durably retain only answer count, address families, an answer-set SHA-256 and any numeric getaddrinfo failure code; raw addresses are not persisted. This authorizes zero TLS connections, HTTP requests, source-content bytes, redirects, browser sessions, AI calls, M1-M5 operations, research, person/contact processing, outreach, communication, AWS mutation, Terraform mutation, slot replacement, or retry/reuse of the consumed A-09 access-review attempt. A pass authorizes only preparation of the smallest successor Slot 01 exact-host A-09 access review; a failure preserves REQUIRES_SUCCESSOR_HOST_REVIEW. The kill switch remains TRIPPED, all seven M6.7 permissions remain NOT_AUTHORIZED, Slots 01-24 remain immutable, and replacements remain zero."
+}
