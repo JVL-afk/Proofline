@@ -1,0 +1,66 @@
+{
+  "schema_version": "m67-tdlr-response-shape-diagnostic-terminal-interpretation-v1",
+  "state": "BLOCKED_TDLR_LICENSE_TYPE_FILTER_ZERO_ROWS",
+  "observed_at": "2026-08-24T07:41:12.296313Z",
+  "account": "785072247535",
+  "region": "us-east-2",
+  "diagnostic_evidence_sha256": "78210d95a9693c57cbc75955227f2c33fc1d0737c1e4ea424da35b72b9e05de3",
+  "authorization": {
+    "event": "AUTHORIZE_TDLR_RESPONSE_SHAPE_DIAGNOSTIC",
+    "attempts_consumed": "1/1_TERMINAL",
+    "retry_authorized": false
+  },
+  "proven_response_contract": {
+    "http_status": 200,
+    "declared_content_type": "application/json; charset=utf-8",
+    "declared_content_length": null,
+    "actual_response_byte_length": 4,
+    "raw_body_sha256": "3fbbd4c6d76130399b0c79cdf41758669224a91e05b7b216953f0c9728750865",
+    "json_parse_success": true,
+    "top_level_json_type": "ARRAY",
+    "top_level_object_keys": [],
+    "row_array_location": "$",
+    "row_array_length": 0,
+    "first_row_field_names": [],
+    "parser_schema_outcome": "FAIL_ROW_ARRAY_EMPTY",
+    "failure_stage": "ROW_ARRAY_OR_FIELD_SCHEMA",
+    "raw_body_persisted": false,
+    "field_values_persisted": false
+  },
+  "safe_header_evidence": {
+    "x_soda2_fields": [
+      "license_type",
+      "license_number",
+      "business_county",
+      "business_name",
+      "business_city_state_zip",
+      "license_expiration_date_mmddccyy",
+      "license_subtype"
+    ],
+    "x_soda2_types": ["text", "text", "text", "text", "text", "text", "text"],
+    "x_soda2_cached": "false"
+  },
+  "conclusions": {
+    "soda3_top_level_shape": "RAW_ARRAY_PROVEN",
+    "existing_top_level_array_parser": "CORRECT_NO_WRAPPER_FIX_REQUIRED",
+    "post_body_contract": "ACCEPTED_BY_ENDPOINT",
+    "seven_field_projection": "ACCEPTED_AND_REFLECTED_IN_RESPONSE_HEADERS",
+    "exact_filter_result": "ZERO_ROWS",
+    "exact_blocker": "The current endpoint returned no record for exact equality license_type = Air Conditioning Contractor. The diagnostic did not authorize enumeration or an alternate filter, so the current dataset value or required matching expression remains unproven."
+  },
+  "prohibited_operations": {
+    "nominatim_requests": 0,
+    "first_party_host_requests": 0,
+    "candidate_or_roster_creation": false,
+    "discovery": false,
+    "seed_or_csprng_activity": false
+  },
+  "safe_terminal_state": {
+    "kill_switch": "TRIPPED",
+    "kill_switch_version": 7,
+    "offline_projection": "0/1_UNCONSUMED",
+    "seed_construction": "0/1_UNCONSUMED",
+    "all_seven_m6_7_permissions": "NOT_AUTHORIZED"
+  },
+  "next_action": "STOP_NO_ACQUISITION_AUTHORIZATION_NO_GUESSING"
+}
