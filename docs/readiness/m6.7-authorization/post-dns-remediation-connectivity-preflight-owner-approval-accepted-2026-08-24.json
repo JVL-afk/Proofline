@@ -1,0 +1,34 @@
+{
+  "record_type": "M67_POST_DNS_REMEDIATION_CONNECTIVITY_PREFLIGHT_OWNER_APPROVAL_ACCEPTED",
+  "version": "1.0.0",
+  "state": "APPROVED",
+  "event": "AUTHORIZE_POST_DNS_REMEDIATION_CONNECTIVITY_PREFLIGHT",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "preparation_commit": "521f2b4ce79ab5904ffdba8a870489bdbba5b4e1",
+  "host_inspection_evidence_sha256": "fc0cd3aa6847ce7067fc0ac3ad3b3e320cdafce5282c998d0b7dd8cb17c972d8",
+  "configuration_sha256": "d85931893942c21e7aae6e28644c742556ac1b73f0c7db0945f8998a8ec0eaa2",
+  "exact_executable_sha256": "2f7eaf889db06e39ec7e6b0fb34d5c4822518800763ff4e13f82a8172d3faed2",
+  "runtime_evidence_sha256": "58d71d3133b5b488cfb3577c1db0844fe4d461ce506e6f8775c990a433f95475",
+  "requirements_sha256": "49a128fc8328720940e4c7445ef3113161670c2e3896662fdff1e3ceada0fdc1",
+  "consumed_original_acquisition_failure_sha256": "f27d224fcadfd0202258358792fb5456672695f64732f8d70f64ea3935d74dee",
+  "consumed_predecessor_preflight_sha256": "42d370fbab6dd661c8b1ba0b08a3a48eee7b0a368d1010f6bd6d552e32bf84a5",
+  "validity": {
+    "starts_at": "2026-08-24T06:00:00Z",
+    "expires_at": "2026-08-31T06:00:00Z",
+    "terminal_attempts": 1
+  },
+  "execution_path": "C:\\Python313\\python.exe",
+  "expected_ipv4_dns": ["8.8.8.8", "8.8.4.4"],
+  "exact_hosts": ["data.texas.gov", "nominatim.openstreetmap.org"],
+  "http_requests": 0,
+  "source_content_bytes": 0,
+  "retries": 0,
+  "guard_states": {
+    "kill_switch": "TRIPPED",
+    "all_seven_m6_7_permissions": "NOT_AUTHORIZED",
+    "offline_projection": "0/1_UNCONSUMED",
+    "seed_construction": "0/1_UNCONSUMED"
+  },
+  "exact_owner_attestation": "I approve AUTHORIZE_POST_DNS_REMEDIATION_CONNECTIVITY_PREFLIGHT for AWS account 785072247535 in us-east-2, binding preparation commit 521f2b4ce79ab5904ffdba8a870489bdbba5b4e1, DNS-remediated host-inspection evidence SHA-256 fc0cd3aa6847ce7067fc0ac3ad3b3e320cdafce5282c998d0b7dd8cb17c972d8, preflight configuration SHA-256 d85931893942c21e7aae6e28644c742556ac1b73f0c7db0945f8998a8ec0eaa2, exact executable SHA-256 2f7eaf889db06e39ec7e6b0fb34d5c4822518800763ff4e13f82a8172d3faed2, repaired-runtime evidence SHA-256 58d71d3133b5b488cfb3577c1db0844fe4d461ce506e6f8775c990a433f95475, locked requirements SHA-256 49a128fc8328720940e4c7445ef3113161670c2e3896662fdff1e3ceada0fdc1, consumed original-acquisition failure SHA-256 f27d224fcadfd0202258358792fb5456672695f64732f8d70f64ea3935d74dee, and consumed predecessor-preflight evidence SHA-256 42d370fbab6dd661c8b1ba0b08a3a48eee7b0a368d1010f6bd6d552e32bf84a5. This authorizes exactly one terminal post-DNS-remediation connectivity preflight between 2026-08-24T06:00:00Z and 2026-08-31T06:00:00Z from C:\\Python313\\python.exe. The grant may be consumed only after local zero-network checks prove locked boto3/botocore 1.43.78 imports, exact adapter IPv4 DNS 8.8.8.8 and 8.8.4.4, the approved hash-bound executable and authorization, and successful arrival at the pre-network boundary. It may then perform exactly one current-system DNS resolution for each exact hostname data.texas.gov and nominatim.openstreetmap.org and, for public answers only, at most one IPv4 and one IPv6 certificate-validated TLS handshake per hostname on TCP/443 with exact SNI. It authorizes zero HTTP requests, zero source-content bytes, zero retries, zero alternate resolvers, zero browser or AI use, zero proxy/VPN changes, and zero AWS or Terraform mutation. The kill switch remains TRIPPED; all seven M6.7 permissions remain NOT_AUTHORIZED; and offline projection and bounded seed construction remain 0/1 unconsumed. A pass authorizes only preparation of a separately reviewed successor live seed-roster acquisition authorization and does not authorize acquisition, discovery, research, person/contact processing, Slot 1, outreach, communication, or source-content retrieval."
+}
