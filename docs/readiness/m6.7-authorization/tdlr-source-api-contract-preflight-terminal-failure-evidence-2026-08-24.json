@@ -1,0 +1,77 @@
+{
+  "schema_version": "m67-tdlr-source-api-contract-preflight-terminal-failure-evidence-v1",
+  "state": "BLOCKED_TDLR_SOURCE_API_CONTRACT_PREFLIGHT_NON_ROW_BEARING_RESPONSE",
+  "observed_at": "2026-08-24T07:14:56.9903277Z",
+  "account": "785072247535",
+  "region": "us-east-2",
+  "authorization": {
+    "event": "AUTHORIZE_TDLR_SOURCE_API_CONTRACT_PREFLIGHT",
+    "record_sha256": "69b1ed852bb33b1b854bcf10454af8fefc49a7535fb6eb251f1dcaf6ed58e1db",
+    "attempts_consumed": "1/1_TERMINAL",
+    "retry_authorized": false
+  },
+  "bound_artifacts": {
+    "preparation_commit": "e742d0d5fc091d6070b605d9c194a230eeede008",
+    "configuration_sha256": "b13b7dfd0b2f928c0be6b5b1535ac5b1619de0404a208e97618e54e8a5bae373",
+    "exact_executable_sha256": "a97b88ddc19284c102d4ebe1de715cbc69df983108575a59b7771f273edf9dd8"
+  },
+  "request": {
+    "logical_http_requests": 1,
+    "attempts": 1,
+    "retries": 0,
+    "method": "POST",
+    "url": "https://data.texas.gov/api/v3/views/7358-krk7/query.json",
+    "certificate_validation": "COMPLETED_WITHOUT_TLS_EXCEPTION",
+    "content_type": "application/json",
+    "app_token_supplied": false,
+    "page": {"pageNumber": 1, "pageSize": 5},
+    "includeSynthetic": false,
+    "query": "SELECT `license_type`, `license_number`, `business_county`, `business_name`, `business_city_state_zip`, `license_expiration_date_mmddccyy`, `license_subtype` WHERE `license_type` = 'Air Conditioning Contractor' ORDER BY `license_number` ASC, `business_name` ASC"
+  },
+  "response": {
+    "http_transport": "COMPLETED_VIA_NORMAL_URLLIB_RESPONSE_PATH",
+    "exact_http_status": "UNKNOWN_NOT_RETAINED",
+    "headers": "UNKNOWN_NOT_RETAINED",
+    "body_length": "UNKNOWN_NOT_RETAINED",
+    "body_sha256": "UNKNOWN_NOT_RETAINED",
+    "syntactically_valid_json": true,
+    "json_validity_basis": "json.loads completed before validation failed",
+    "documented_top_level_row_array_with_one_to_five_rows": false,
+    "exact_json_shape": "UNKNOWN_NOT_RETAINED",
+    "rows_persisted": 0,
+    "raw_body_persisted": false,
+    "business_values_persisted": false
+  },
+  "exact_failure": {
+    "exception_type": "RuntimeError",
+    "message": "response is not a row-bearing JSON array of one to five rows",
+    "source_location": "scripts/run_m67_tdlr_source_api_contract_preflight.py:76",
+    "root_cause": "TDLR_V3_RESPONSE_NOT_ROW_BEARING_UNDER_APPROVED_POST_CONTRACT",
+    "additional_control_defect": "PREFLIGHT_EVIDENCE_WRITTEN_ONLY_AFTER_SCHEMA_VALIDATION",
+    "impact": "The exact response status, headers, length, hash, and JSON shape were not sealed on failure, so no corrected acquisition authorization can be prepared from this attempt."
+  },
+  "prohibited_operations": {
+    "nominatim_requests": 0,
+    "first_party_host_requests": 0,
+    "candidate_selection": false,
+    "roster_created": false,
+    "seed_generated": false,
+    "m1_to_m5": false
+  },
+  "safe_terminal_state": {
+    "kill_switch": "TRIPPED",
+    "kill_switch_version": 7,
+    "offline_projection_grant": "0/1_UNCONSUMED",
+    "seed_construction_grant": "0/1_UNCONSUMED",
+    "m67_permissions": {
+      "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+      "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+      "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+      "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+      "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+      "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+      "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+    }
+  },
+  "next_action": "STOP_NO_RETRY_NO_SUCCESSOR_ACQUISITION_AUTHORIZATION"
+}
