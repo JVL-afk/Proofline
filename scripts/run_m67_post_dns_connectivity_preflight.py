@@ -8,8 +8,8 @@ import ipaddress
 import json
 import socket
 import ssl
-import subprocess
 import sys
+import winreg
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -41,17 +41,13 @@ def pre_network_checks(root: Path, authorization: Path) -> dict[str, object]:
     own_hash = sha256(Path(__file__).read_bytes())
     if record.get("exact_executable_sha256") != own_hash:
         raise RuntimeError("EXECUTABLE_HASH_MISMATCH_GRANT_NOT_CONSUMED")
-    command = (
-        "(Get-DnsClientServerAddress -InterfaceIndex 13 -AddressFamily IPv4)."
-        "ServerAddresses | ConvertTo-Json -Compress"
+    registry_path = (
+        r"SYSTEM\CurrentControlSet\Services\Tcpip\Parameters\Interfaces"
+        r"\{997EE793-757E-4FD9-8138-CE1BF9FA1B32}"
     )
-    completed = subprocess.run(
-        ["powershell.exe", "-NoProfile", "-Command", command],
-        check=True,
-        capture_output=True,
-        text=True,
-    )
-    dns = json.loads(completed.stdout)
+    with winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, registry_path) as key:
+        static_dns = str(winreg.QueryValueEx(key, "NameServer")[0])
+    dns = [item.strip() for item in static_dns.split(",") if item.strip()]
     if dns != EXPECTED_DNS:
         raise RuntimeError("DNS_CONFIGURATION_MISMATCH_GRANT_NOT_CONSUMED")
     return {
