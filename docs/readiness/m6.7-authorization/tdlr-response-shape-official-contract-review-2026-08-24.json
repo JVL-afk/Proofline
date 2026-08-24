@@ -1,0 +1,45 @@
+{
+  "schema_version": "m67-tdlr-response-shape-official-contract-review-v1",
+  "state": "LIVE_SHAPE_DIAGNOSTIC_REQUIRED",
+  "reviewed_at": "2026-08-24",
+  "official_sources": [
+    "https://dev.socrata.com/foundry/data.texas.gov/7358-krk7",
+    "https://dev.socrata.com/docs/queries/index.html",
+    "https://dev.socrata.com/docs/queries/page",
+    "https://dev.socrata.com/docs/formats/json",
+    "https://dev.socrata.com/docs/endpoints.html",
+    "https://support.socrata.com/hc/en-us/articles/34730618169623-SODA3-API"
+  ],
+  "request_contract": {
+    "endpoint": "https://data.texas.gov/api/v3/views/7358-krk7/query.json",
+    "preferred_method": "POST",
+    "content_type": "application/json",
+    "body": {
+      "query": "SoQL string",
+      "page": {"pageNumber": 1, "pageSize": 1},
+      "includeSynthetic": false
+    },
+    "backtick_field_identifiers": "SUPPORTED_BY_DATASET_SPECIFIC_FOUNDRY_EXAMPLE",
+    "equality_expression": "SUPPORTED_BY_DATASET_SPECIFIC_FOUNDRY_EXAMPLE",
+    "ordering_clause": "SUPPORTED_BY_SOQL",
+    "app_token": "NOT_SUPPLIED_UNDER_FROZEN_DIAGNOSTIC_SCOPE"
+  },
+  "seven_approved_fields": [
+    "license_type",
+    "license_number",
+    "business_county",
+    "business_name",
+    "business_city_state_zip",
+    "license_expiration_date_mmddccyy",
+    "license_subtype"
+  ],
+  "response_contract_findings": {
+    "generic_json_documentation": "Describes JSON results as a top-level array of row objects.",
+    "soda3_query_documentation": "Defines the endpoint and request options but does not publish an unambiguous response-envelope schema or a complete response example.",
+    "dataset_specific_examples": "Show GET and POST request construction but do not establish the returned top-level JSON envelope.",
+    "soda2_vs_soda3": "The generic row-array documentation is not sufficient to override the authenticated observation that this SODA3 endpoint returned valid non-array JSON.",
+    "conclusion": "Current official documentation does not conclusively identify the observed SODA3 response shape; a one-request content-free shape diagnostic is required."
+  },
+  "consumed_preflight_evidence_sha256": "2b3a160091d3538ab81e18e6bfee7e3ef92f26bbb6862130c94b27e72860e2e6",
+  "no_live_source_request_during_review": true
+}
