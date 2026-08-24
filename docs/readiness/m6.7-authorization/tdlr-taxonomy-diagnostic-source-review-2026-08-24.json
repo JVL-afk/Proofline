@@ -1,0 +1,35 @@
+{
+  "schema_version": "m67-tdlr-taxonomy-diagnostic-source-review-v1",
+  "state": "LIVE_LICENSE_TYPE_TAXONOMY_DIAGNOSTIC_REQUIRED",
+  "reviewed_at": "2026-08-24",
+  "official_sources": [
+    "https://dev.socrata.com/docs/functions/distinct",
+    "https://dev.socrata.com/docs/queries/group",
+    "https://dev.socrata.com/docs/functions/count",
+    "https://dev.socrata.com/docs/queries/query.html",
+    "https://dev.socrata.com/foundry/data.texas.gov/7358-krk7"
+  ],
+  "official_contract_findings": {
+    "distinct": "Supported for text on SODA 2.1 and 3.0.",
+    "group_by": "Supported with SELECT aggregations.",
+    "count": "Supported for text and SODA3.",
+    "aliases": "SELECT expressions may use AS aliases.",
+    "stable_order": "ORDER BY is supported.",
+    "preferred_query": "SELECT `license_type`, count(*) AS `record_count` WHERE `license_type` IS NOT NULL GROUP BY `license_type` ORDER BY `license_type` ASC"
+  },
+  "taxonomy_location_analysis": {
+    "license_type": "Primary regulated-license classification candidate; exact current vocabulary is not documented and exact Air Conditioning Contractor equality returned zero rows.",
+    "license_subtype": "Potential endorsement/classification refinement; not queried in first-stage taxonomy enumeration.",
+    "combination": "May be required if license_type identifies ACR broadly and license_subtype distinguishes commercial refrigeration/process cooling. This remains a separately gated second-stage possibility.",
+    "conclusion": "Official documentation establishes query capability but not current dataset vocabulary. One classification-only live diagnostic is necessary."
+  },
+  "first_stage_output": ["license_type", "record_count"],
+  "business_identity_fields": [],
+  "second_stage_if_required": {
+    "authorized_now": false,
+    "conceptual_query": "SELECT `license_type`, `license_subtype`, count(*) AS `record_count` GROUP BY `license_type`, `license_subtype` ORDER BY `license_type`, `license_subtype`",
+    "requires_separate_owner_authorization": true
+  },
+  "response_contract_evidence_sha256": "78210d95a9693c57cbc75955227f2c33fc1d0737c1e4ea424da35b72b9e05de3",
+  "no_live_source_request_during_review": true
+}
