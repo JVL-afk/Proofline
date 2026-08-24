@@ -1,0 +1,17 @@
+{
+  "record_type": "M67_SUCCESSOR_LIVE_SEED_ROSTER_ACQUISITION_CONFIGURATION",
+  "version": "1.0.0",
+  "release_id": "M67_LIVE_SEED_ROSTER_ACQUISITION_V2",
+  "state": "PREPARED_NOT_AUTHORIZED",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "window": {"starts_at": "2026-08-24T06:30:00Z", "expires_at": "2026-08-31T06:30:00Z"},
+  "terminal_attempts": 1,
+  "sources": ["TX_OPEN_DATA_TDLR_ALL_LICENSES::7358-krk7", "OSM_NOMINATIM_PUBLIC_SEARCH_V1"],
+  "limits": {"tdlr_records": 500, "frozen_candidates": 100, "logical_http_requests": 120, "attempts": 360, "response_bytes": 36000000, "concurrency": 1, "minimum_per_host_delay_seconds": 2, "cost_usd": 0, "ai_calls": 0, "browser_sessions": 0},
+  "tdlr": {"endpoint": "https://data.texas.gov/api/v3/views/7358-krk7/query.json", "approved_fields": ["license_type", "license_number", "business_county", "business_name", "business_city_state_zip", "license_expiration_date_mmddccyy", "license_subtype"], "natural_person_sole_proprietor_ambiguous": "FAIL_CLOSED"},
+  "nominatim": {"endpoint": "https://nominatim.openstreetmap.org/search", "requests_per_frozen_candidate": 1, "retry": 0, "extratags": 1, "allowlisted_output": "extratags.website", "guard_required": true, "not_found_ambiguous": "FROZEN_NO_REPLACEMENT"},
+  "permissions": {"REAL_BUSINESS_DISCOVERY_before": "NOT_AUTHORIZED", "REAL_BUSINESS_DISCOVERY_during": "AUTHORIZED_ONLY_FOR_M67_LIVE_SEED_ROSTER_ACQUISITION_V2", "REAL_BUSINESS_DISCOVERY_after": "NOT_AUTHORIZED", "all_other_six": "NOT_AUTHORIZED"},
+  "downstream": {"offline_projection": "0/1_UNCONSUMED_EXISTING_GRANT", "seed_construction": "0/1_UNCONSUMED_EXISTING_GRANT"},
+  "prohibited": ["FIRST_PARTY_HOST_ACCESS", "GENERIC_WEB_SEARCH", "PERSON_CONTACT_PROCESSING", "OPPORTUNITY_FILTERING", "CANDIDATE_REPLACEMENT", "M1_M5", "SLOT_1", "OUTREACH", "COMMUNICATION"]
+}

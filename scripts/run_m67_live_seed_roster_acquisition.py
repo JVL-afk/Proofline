@@ -28,12 +28,11 @@ from m67_nominatim_host_locator import build_query, project_response, response_s
 ACCOUNT = "785072247535"
 REGION = "us-east-2"
 PROFILE = "m67-phase1-owner"
-RELEASE_ID = "M67_LIVE_SEED_ROSTER_ACQUISITION_V1"
+RELEASE_ID = "M67_LIVE_SEED_ROSTER_ACQUISITION_V2"
 TDLR_ENDPOINT = "https://data.texas.gov/api/v3/views/7358-krk7/query.json"
 KILL_SWITCH = "/m67-phase1/kill-switch"
-AUTH_SHA256 = "bb3d3f8129f0e31faf3a1462baf096b42216ed25753d6c16c2e2d760042cbde7"
-STARTS_AT = datetime.fromisoformat("2026-08-23T14:30:00+00:00")
-EXPIRES_AT = datetime.fromisoformat("2026-08-30T14:30:00+00:00")
+STARTS_AT = datetime.fromisoformat("2026-08-24T06:30:00+00:00")
+EXPIRES_AT = datetime.fromisoformat("2026-08-31T06:30:00+00:00")
 TDLR_FIELDS = (
     "license_type",
     "license_number",
@@ -167,17 +166,19 @@ def build_observation(
     }
 
 
-def run(*, root: Path, opener: urllib.request.OpenerDirector | None = None) -> dict[str, Any]:
+def run(
+    *, root: Path, authorization_record: Path, opener: urllib.request.OpenerDirector | None = None
+) -> dict[str, Any]:
     now = datetime.now(UTC)
     if not STARTS_AT <= now <= EXPIRES_AT:
         raise RuntimeError("authorization window is not active")
-    auth = (
-        root
-        / "docs/readiness/m6.7-authorization"
-        / ("live-seed-roster-acquisition-owner-approval-ready-2026-08-23.json")
-    )
-    if sha256_bytes(auth.read_bytes()) != AUTH_SHA256:
-        raise RuntimeError("authorization package hash mismatch")
+    authorization = json.loads(authorization_record.read_text(encoding="utf-8"))
+    if authorization.get("event") != "AUTHORIZE_SUCCESSOR_LIVE_PHASE1_SEED_ROSTER_ACQUISITION":
+        raise RuntimeError("successor acquisition authorization event mismatch")
+    if authorization.get("state") != "APPROVED":
+        raise RuntimeError("successor acquisition is not approved")
+    if authorization.get("exact_executable_sha256") != sha256_bytes(Path(__file__).read_bytes()):
+        raise RuntimeError("successor acquisition executable hash mismatch")
     session = boto3.Session(profile_name=PROFILE, region_name=REGION)
     identity = session.client("sts").get_caller_identity()
     if identity["Account"] != ACCOUNT:
@@ -344,7 +345,7 @@ def _write_success(
         "record_count": len(observations),
         "complete_predeclared_frame": True,
         "origin_and_construction_method": (
-            "M67_LIVE_SEED_ROSTER_ACQUISITION_V1_EXACT_TDLR_AND_NOMINATIM"
+            "M67_LIVE_SEED_ROSTER_ACQUISITION_V2_EXACT_TDLR_AND_NOMINATIM"
         ),
         "row_level_provenance_present": True,
         "permitted_use_and_reuse_basis": (
@@ -377,8 +378,9 @@ def _write_success(
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, required=True)
+    parser.add_argument("--authorization-record", type=Path, required=True)
     args = parser.parse_args()
-    result = run(root=args.root.resolve())
+    result = run(root=args.root.resolve(), authorization_record=args.authorization_record.resolve())
     print(json.dumps(result, sort_keys=True))
     return 0 if result["state"] == "ROSTER_AND_ATTESTATION_SEALED" else 2
 
