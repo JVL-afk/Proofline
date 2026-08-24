@@ -1,0 +1,42 @@
+{
+  "schema_version": "m67-manual-phase1-sample-input-preconsumption-blocker-v1",
+  "state": "BLOCKED_PENDING_COMPLETE_MANUAL_PHASE1_SAMPLE_INPUT",
+  "observed_at": "2026-08-24",
+  "submitted_artifact_sha256": "36ce8d5daf6a02b6df1c5a3e65bcd07585554bc5493d6d8bb7ff63e8ffdd5a91",
+  "submitted_artifact_bytes": 5823,
+  "candidate_count": 24,
+  "control_fields": {
+    "AUTOMATED_TDLR_DISCOVERY_VALIDATED": false,
+    "PHASE1_SAMPLE_SOURCE": "OWNER_CURATED_TDLR_NON_CHERRY_PICKED"
+  },
+  "preconsumption_validation": {
+    "exact_runner_invoked": false,
+    "ingestion_attempt_consumed": false,
+    "csprng_seeds_generated": 0,
+    "network_operations": 0,
+    "m1_m5_operations": 0,
+    "failure_code": "CANDIDATE_HOSTNAME_REQUIRED_BUT_NULL",
+    "failing_submission_indices": [21, 22, 23, 24],
+    "business_values_persisted_in_blocker_evidence": false
+  },
+  "required_correction": {
+    "preserve_exact_same_24_businesses": true,
+    "replace_only_null_candidate_hostname_values": true,
+    "hostname_format": "LOWERCASE_HOSTNAME_WITHOUT_SCHEME_PATH_PORT_QUERY_OR_FRAGMENT",
+    "candidate_replacement_prohibited": true,
+    "host_lookup_by_codex_not_authorized": true
+  },
+  "authorization": {
+    "event": "AUTHORIZE_MANUAL_PHASE1_SAMPLE_INGESTION",
+    "state": "APPROVED_UNCONSUMED_PRECONDITION_FAILED",
+    "expires_at": "2026-08-31T10:30:00Z",
+    "new_owner_approval_required_after_field_completion": false,
+    "completed_input_must_receive_new_preparse_sha256_and_matching_json_attestation": true
+  },
+  "guard_states": {
+    "kill_switch": "TRIPPED",
+    "all_seven_m6_7_permissions": "NOT_AUTHORIZED",
+    "offline_projection": "0/1_UNCONSUMED",
+    "seed_construction": "0/1_UNCONSUMED"
+  }
+}
