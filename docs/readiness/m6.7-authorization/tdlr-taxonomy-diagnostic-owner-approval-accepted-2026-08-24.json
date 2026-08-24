@@ -1,0 +1,18 @@
+{
+  "schema_version": "m67-tdlr-taxonomy-diagnostic-owner-approval-accepted-v1",
+  "state": "APPROVED",
+  "event": "AUTHORIZE_TDLR_TAXONOMY_DISCOVERY",
+  "account": "785072247535",
+  "region": "us-east-2",
+  "accepted_at": "2026-08-24",
+  "preparation_commit": "43889d1db25d19f55ddc863c92c46309aa33becf",
+  "source_review_sha256": "92032522dd4632ae2efb796fac86eabffd879377d6d2f9dfa5df13ea6cf3c9db",
+  "configuration_sha256": "3c7c61466744c030e99aeacc650baeb04b1fa21231185111f583a3921f833aec",
+  "exact_executable_sha256": "d339fa2363424d12e16f7ff0a7d3f57d989c8c8881cb14457dffcf538eae0644",
+  "response_contract_evidence_sha256": "78210d95a9693c57cbc75955227f2c33fc1d0737c1e4ea424da35b72b9e05de3",
+  "zero_row_terminal_interpretation_sha256": "ffc64e4df51a0e25424869632b3c9bd012729152825d4f83425358de246c3db1",
+  "valid_from": "2026-08-24T08:15:00Z",
+  "expires_at": "2026-08-31T08:15:00Z",
+  "terminal_attempts_authorized": 1,
+  "exact_owner_attestation": "I approve AUTHORIZE_TDLR_TAXONOMY_DISCOVERY for AWS account 785072247535 in us-east-2, binding preparation commit 43889d1db25d19f55ddc863c92c46309aa33becf, TDLR taxonomy source review SHA-256 92032522dd4632ae2efb796fac86eabffd879377d6d2f9dfa5df13ea6cf3c9db, diagnostic configuration SHA-256 3c7c61466744c030e99aeacc650baeb04b1fa21231185111f583a3921f833aec, exact diagnostic executable SHA-256 d339fa2363424d12e16f7ff0a7d3f57d989c8c8881cb14457dffcf538eae0644, proven TDLR response-contract evidence SHA-256 78210d95a9693c57cbc75955227f2c33fc1d0737c1e4ea424da35b72b9e05de3, and zero-row terminal interpretation SHA-256 ffc64e4df51a0e25424869632b3c9bd012729152825d4f83425358de246c3db1. This authorizes exactly one terminal classification-vocabulary diagnostic between 2026-08-24T08:15:00Z and 2026-08-31T08:15:00Z against only https://data.texas.gov/api/v3/views/7358-krk7/query.json, using one certificate-validated HTTPS POST, zero retries, no app token, application/json, page 1 with page size 250, includeSynthetic=false, and the exact query SELECT `license_type`, count(*) AS `record_count` WHERE `license_type` IS NOT NULL GROUP BY `license_type` ORDER BY `license_type` ASC. It may retrieve and durably retain only distinct license_type classification strings and aggregate record counts plus allowlisted content-free transport/shape evidence and deterministic official-terminology token hits, under a 50,000-byte response ceiling. It must fail closed if the result is empty or contains 250 rows because exhaustive taxonomy would then be unproven. It authorizes no business names, license numbers, locations, license_subtype values, owner/person/contact fields, row-level business records, raw response persistence, Nominatim or first-party-host request, candidate or roster creation, discovery, public research, person/contact processing, seed/CSPRNG activity, M1-M5, Slot 1, outreach, communication, AI, browser use, AWS/Terraform mutation, retry, or reuse of any consumed grant. The kill switch remains TRIPPED; all seven M6.7 permissions remain NOT_AUTHORIZED; and offline projection and seed construction remain 0/1 unconsumed. A pass proves only the observed license_type vocabulary and counts; mapping any value to the target category must remain separately evidence-based, and any license_type/license_subtype second-stage diagnostic remains separately gated. This diagnostic does not authorize acquisition."
+}

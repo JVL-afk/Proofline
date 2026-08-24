@@ -1,0 +1,42 @@
+{
+  "schema_version": "m67-tdlr-taxonomy-diagnostic-terminal-interpretation-v1",
+  "state": "BLOCKED_TDLR_TAXONOMY_DIAGNOSTIC_VALIDATOR_OBSERVABILITY_DEFECT",
+  "observed_at": "2026-08-24T10:14:16.509128Z",
+  "authorization_attempt": "1/1_PERMANENTLY_CONSUMED",
+  "authorization_accepted_sha256": "63881dfed20511add59c04fb6d10d348a5b802dddc3ddd7f78d40ef5e94124f1",
+  "terminal_evidence_sha256": "e0de2decc29f1dbffda939a94edb2ae7c90f6c6c138be936d5ce50f195cd8415",
+  "observed_transport": {
+    "http_status": 200,
+    "content_type": "application/json; charset=utf-8",
+    "actual_bytes": 5855,
+    "body_sha256": "060498f569fb92d1061ff0b1bb3cfa295e8d59a4a70128fe0c12c62be4d17ab9",
+    "top_level_type": "ARRAY",
+    "array_length": 86,
+    "first_row_fields": ["license_type", "record_count"],
+    "socrata_fields": ["license_type", "record_count"],
+    "socrata_types": ["text", "number"]
+  },
+  "exact_failure": {
+    "stage": "TAXONOMY_SCHEMA",
+    "persisted_validator_result": "RuntimeError",
+    "root_cause": "THE_LOCAL_VALIDATOR_REJECTED_THE_ROWSET_BUT_PERSISTED_NEITHER_THE_SAFE_FAILURE_RULE_NOR_THE_ALREADY_AUTHORIZED_CLASSIFICATION_VALUES",
+    "classification_mapping_state": "UNPROVEN",
+    "inference_prohibited": true
+  },
+  "successor_requirement": {
+    "same_endpoint_query_and_bounds": true,
+    "persist_enumerated_safe_failure_code": true,
+    "accept_socrata_server_order_without_requiring_python_lexical_COLLATION": true,
+    "require_case_insensitive_uniqueness": true,
+    "persist_only_validated_classification_values_and_aggregate_counts": true,
+    "separate_observed_value_from_target_interpretation": true
+  },
+  "guard_states": {
+    "kill_switch": "TRIPPED",
+    "all_seven_m6_7_permissions": "NOT_AUTHORIZED",
+    "offline_projection": "0/1_UNCONSUMED",
+    "seed_construction": "0/1_UNCONSUMED",
+    "nominatim_requests": 0,
+    "candidate_or_roster_creation": false
+  }
+}
