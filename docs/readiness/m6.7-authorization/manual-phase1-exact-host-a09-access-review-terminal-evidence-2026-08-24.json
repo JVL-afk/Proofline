@@ -1,0 +1,58 @@
+{
+  "schema_version": "m67-manual-phase1-exact-host-a09-access-review-terminal-evidence-v1",
+  "state": "BLOCKED_EXACT_HOST_A09_ACCESS_REVIEW_ATTEMPT_CONSUMED_SLOT01_DNS_FAILURE",
+  "account": "785072247535",
+  "region": "us-east-2",
+  "observed_at": "2026-08-24T18:14:49Z",
+  "accepted_authorization_sha256": "d747e23e30740d6edf13f1f3b8c10f64be5fd142e39382a161d413043c45ffdc",
+  "configuration_sha256": "facf622dde0385b8c09aa964ff6199cc4d2444702a291f52bb3fbbc1071ab2db",
+  "exact_executable_sha256": "97e13fddf2b383d26819d8aed2cac29abfa0245b12488fb7bf71b2133c47b4fd",
+  "attempts_consumed": "1/1",
+  "failure": {
+    "slot": 1,
+    "candidate_hostname": "bobsmithac.com",
+    "path": "/robots.txt",
+    "stage": "CURRENT_SYSTEM_DNS_RESOLUTION_BEFORE_TLS_OR_HTTP",
+    "exception_type": "urllib.error.URLError(socket.gaierror)",
+    "windows_error": 11001,
+    "error": "DNS_GETADDRINFO_FAILED",
+    "retries": 0
+  },
+  "network_counts": {
+    "host_resolution_attempts": 1,
+    "tls_connections": 0,
+    "http_requests_transmitted": 0,
+    "http_responses": 0,
+    "response_bytes": 0,
+    "redirects_followed": 0
+  },
+  "coverage": {
+    "slot_01": "TERMINAL_DNS_FAILURE_BEFORE_ROBOTS",
+    "slots_02_through_24": "NOT_ATTEMPTED_AFTER_TERMINAL_FAILURE",
+    "hosts_automatically_approved": 0,
+    "hosts_automatically_rejected": 0,
+    "hosts_requiring_successor_or_human_review": 24
+  },
+  "human_decision_package_sha256": "7de8c4505fdd38b381d8e235e7dbba126e1a79efaafcd1102fb8758a24ea5007",
+  "observability_defect": "HASH_BOUND_RUNNER_DID_NOT_SEAL_PARTIAL_EVIDENCE_BEFORE_UNHANDLED_URLERROR",
+  "immutable_slot_mapping": "UNCHANGED",
+  "replacements": 0,
+  "m1_m5_operations": 0,
+  "raw_bodies_persisted": false,
+  "person_contact_values_persisted": false,
+  "kill_switch": {
+    "mutation_attempted": false,
+    "last_accepted_state": "TRIPPED",
+    "current_read_only_verification": "BLOCKED_OWNER_SSO_TOKEN_EXPIRED"
+  },
+  "m67_permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  },
+  "consumed_attempt_must_not_be_retried": true
+}

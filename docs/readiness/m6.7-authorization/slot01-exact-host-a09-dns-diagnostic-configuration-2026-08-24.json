@@ -1,0 +1,42 @@
+{
+  "schema_version": "m67-slot01-exact-host-a09-dns-diagnostic-configuration-v1",
+  "event": "AUTHORIZE_SLOT01_EXACT_HOST_A09_DNS_DIAGNOSTIC",
+  "account": "785072247535",
+  "region": "us-east-2",
+  "slot": 1,
+  "candidate_hostname": "bobsmithac.com",
+  "ordered_package_file_sha256": "755279cb8e5ac06c579c411857bfc6d380602722813de1cda21175b9385b5467",
+  "consumed_access_review_terminal_evidence": "BOUND_BY_OWNER_APPROVAL_READY_RECORD",
+  "window": {
+    "starts_at": "2026-08-24T18:30:00Z",
+    "expires_at": "2026-08-31T18:30:00Z",
+    "terminal_attempts": 1
+  },
+  "pre_consumption": {
+    "owner_sso_profile": "m67-phase1-owner",
+    "owner_sso_must_be_current": true,
+    "kill_switch_parameter": "/m67-phase1/kill-switch",
+    "required_kill_switch_value": "TRIPPED",
+    "dns_operations_before_pass": 0
+  },
+  "network_scope": {
+    "current_system_dns_resolutions": 1,
+    "exact_hostname": "bobsmithac.com",
+    "retries": 0,
+    "alternate_resolvers": 0,
+    "tls_connections": 0,
+    "http_requests": 0,
+    "source_content_bytes": 0,
+    "browser_sessions": 0,
+    "ai_calls": 0
+  },
+  "durable_evidence": {
+    "raw_addresses": false,
+    "allowed": ["answer_count", "address_families", "answer_set_sha256", "gaierror_number"]
+  },
+  "unchanged_controls": {
+    "all_seven_m6_7_permissions": "NOT_AUTHORIZED",
+    "slot_mapping": "IMMUTABLE",
+    "replacements": 0
+  }
+}
