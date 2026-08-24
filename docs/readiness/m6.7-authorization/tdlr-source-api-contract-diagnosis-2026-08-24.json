@@ -1,0 +1,81 @@
+{
+  "schema_version": "m67-tdlr-source-api-contract-diagnosis-v1",
+  "state": "BLOCKED_PENDING_TDLR_SOURCE_API_CONTRACT_PREFLIGHT",
+  "observed_at": "2026-08-24",
+  "dataset": {
+    "identity": "TDLR - All Licenses",
+    "identifier": "7358-krk7",
+    "source_domain": "data.texas.gov",
+    "endpoint_version": "3.0",
+    "official_foundry": "https://dev.socrata.com/foundry/data.texas.gov/7358-krk7",
+    "official_endpoint": "https://data.texas.gov/api/v3/views/7358-krk7/query.json"
+  },
+  "immutable_v2_response_evidence": {
+    "body_length": 4,
+    "body_sha256": "3fbbd4c6d76130399b0c79cdf41758669224a91e05b7b216953f0c9728750865",
+    "raw_hex": "UNKNOWN_NOT_RETAINED",
+    "safe_text": "UNKNOWN_NOT_RETAINED",
+    "http_status": "UNKNOWN_NOT_RETAINED",
+    "content_type": "UNKNOWN_NOT_RETAINED",
+    "content_length_header": "UNKNOWN_NOT_RETAINED",
+    "socrata_tyler_headers": "UNKNOWN_NOT_RETAINED",
+    "syntactically_valid_json": true,
+    "json_validity_basis": "json.loads completed and the runner returned its structured zero-row terminal result",
+    "observability_defect": "The V2 request helper returned only body bytes and discarded status, headers, and body after hashing; a length and SHA-256 cannot uniquely recover four unknown bytes."
+  },
+  "failed_v2_request": {
+    "method": "GET",
+    "url": "https://data.texas.gov/api/v3/views/7358-krk7/query.json?query=SELECT+license_type%2C+license_number%2C+business_county%2C+business_name%2C+business_city_state_zip%2C+license_expiration_date_mmddccyy%2C+license_subtype+WHERE+upper%28license_type%29+like+%27%25AIR+CONDITION%25%27+ORDER+BY+license_number+ASC%2C+business_name+ASC+LIMIT+500",
+    "query": "SELECT license_type, license_number, business_county, business_name, business_city_state_zip, license_expiration_date_mmddccyy, license_subtype WHERE upper(license_type) like '%AIR CONDITION%' ORDER BY license_number ASC, business_name ASC LIMIT 500",
+    "pageNumber": "OMITTED",
+    "pageSize": "OMITTED",
+    "content_type": "NONE_GET",
+    "accept": "application/json",
+    "app_token_supplied": false,
+    "parser": "accepted a top-level array or dict.data/results/rows"
+  },
+  "official_contract": {
+    "preferred_method": "POST",
+    "content_type": "application/json",
+    "request_body_keys": ["query", "page", "includeSynthetic"],
+    "page": {"pageNumber": 1, "pageSize": 5},
+    "json_response_shape": "top-level array of row objects",
+    "app_token": "recommended; official app-token documentation permits lower-rate unauthenticated public queries",
+    "approved_fields": [
+      "license_type",
+      "license_number",
+      "business_county",
+      "business_name",
+      "business_city_state_zip",
+      "license_expiration_date_mmddccyy",
+      "license_subtype"
+    ],
+    "intended_license_type": "Air Conditioning Contractor",
+    "intended_license_type_basis": "Official TDLR program/license-type documentation; current dataset equality match remains to be proven by the preflight."
+  },
+  "failed_vs_expected_diff": [
+    "GET becomes the officially preferred POST",
+    "query-only URL becomes application/json request body",
+    "embedded LIMIT 500 becomes explicit page.pageNumber=1 and page.pageSize=5",
+    "broad upper(... ) LIKE filter becomes exact license_type equality",
+    "implicit synthetic-field behavior becomes includeSynthetic=false",
+    "discarded transport metadata becomes content-free status/header/hash evidence",
+    "permissive response-envelope parser becomes the documented top-level JSON-array contract"
+  ],
+  "root_cause": {
+    "state": "UNDETERMINED_DUE_TO_RESPONSE_OBSERVABILITY_DEFECT",
+    "proven": [
+      "The V2 request omitted explicit SODA3 paging and did not use the preferred POST body contract.",
+      "The four-byte response was valid JSON and produced zero parsed rows.",
+      "The runner did not retain the bytes or transport metadata needed to distinguish empty-result, null-like, or other valid JSON responses."
+    ],
+    "not_proven": [
+      "which exact valid four-byte JSON value was returned",
+      "whether missing pagination alone caused the result",
+      "whether the filter/query shape was accepted as intended",
+      "whether an app-token behavior affected the response",
+      "the exact HTTP response status and headers"
+    ]
+  },
+  "required_next_step": "One separately authorized row-limited POST contract preflight; no acquisition, Nominatim, roster, or seed operation."
+}

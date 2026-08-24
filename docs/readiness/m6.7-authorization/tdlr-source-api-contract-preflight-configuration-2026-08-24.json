@@ -1,0 +1,53 @@
+{
+  "schema_version": "m67-tdlr-source-api-contract-preflight-configuration-v1",
+  "event": "AUTHORIZE_TDLR_SOURCE_API_CONTRACT_PREFLIGHT",
+  "account": "785072247535",
+  "region": "us-east-2",
+  "valid_from": "2026-08-24T07:00:00Z",
+  "expires_at": "2026-08-31T07:00:00Z",
+  "terminal_attempts": 1,
+  "endpoint": "https://data.texas.gov/api/v3/views/7358-krk7/query.json",
+  "method": "POST",
+  "logical_http_requests": 1,
+  "retries": 0,
+  "page_number": 1,
+  "page_size": 5,
+  "maximum_response_bytes": 100000,
+  "content_type": "application/json",
+  "app_token_supplied": false,
+  "query": "SELECT `license_type`, `license_number`, `business_county`, `business_name`, `business_city_state_zip`, `license_expiration_date_mmddccyy`, `license_subtype` WHERE `license_type` = 'Air Conditioning Contractor' ORDER BY `license_number` ASC, `business_name` ASC",
+  "includeSynthetic": false,
+  "durable_evidence": [
+    "HTTP status and content-free allowlisted response headers",
+    "request body SHA-256 and exact non-secret request shape",
+    "response body length and SHA-256",
+    "JSON-array and exact seven-field schema assertions",
+    "row count and content-free row hashes"
+  ],
+  "durably_prohibited": [
+    "raw response body",
+    "business field values",
+    "person/contact-shaped content",
+    "candidate or roster records"
+  ],
+  "nominatim_requests": 0,
+  "first_party_host_requests": 0,
+  "candidate_selection": false,
+  "roster_creation": false,
+  "seed_or_csprng_activity": false,
+  "ai_calls": 0,
+  "browser_sessions": 0,
+  "cost_usd": 0,
+  "kill_switch": "TRIPPED_UNCHANGED",
+  "offline_projection_grant": "0/1_UNCONSUMED",
+  "seed_construction_grant": "0/1_UNCONSUMED",
+  "m67_permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  }
+}
