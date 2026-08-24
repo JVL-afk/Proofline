@@ -1,0 +1,61 @@
+{
+  "record_type": "M67_SUCCESSOR_LIVE_SEED_ROSTER_ACQUISITION_TERMINAL_EVIDENCE",
+  "version": "1.0.0",
+  "evidence_id": "M67_LIVE_SEED_ROSTER_ACQUISITION_V2_TERMINAL::2026-08-24.1",
+  "state": "BLOCKED_SUCCESSOR_LIVE_SEED_ROSTER_ACQUISITION_TERMINAL_INSUFFICIENT_OBSERVATIONS",
+  "terminal": true,
+  "retry_permitted": false,
+  "started_at": "2026-08-24T06:51:52.398620Z",
+  "ended_at": "2026-08-24T06:51:53.643529Z",
+  "authorization": {
+    "event": "AUTHORIZE_SUCCESSOR_LIVE_PHASE1_SEED_ROSTER_ACQUISITION",
+    "release": "M67_LIVE_SEED_ROSTER_ACQUISITION_V2",
+    "accepted_record_sha256": "77905c386b51c5dc7fd23192010696afb845d3a5d8e7d1b6ed0b583afcd523e2",
+    "consumed": true
+  },
+  "account_observation": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "caller_arn_sha256": "c4ed4c42c1fe52dfbdf8ebf9183069ef1b15b1baa764125bf9c4b4dc46699615",
+    "observed_at": "2026-08-24T06:52:16.9323845Z"
+  },
+  "source_outcome": {
+    "tdlr_endpoint": "https://data.texas.gov/api/v3/views/7358-krk7/query.json",
+    "tdlr_logical_requests": 1,
+    "tdlr_attempts": 1,
+    "tdlr_response_bytes": 4,
+    "tdlr_response_sha256": "3fbbd4c6d76130399b0c79cdf41758669224a91e05b7b216953f0c9728750865",
+    "tdlr_records_considered": 0,
+    "eligible_business_entities": 0,
+    "exclusions_by_reason": {},
+    "nominatim_queries": 0,
+    "hostname_found": 0,
+    "hostname_not_found": 0,
+    "hostname_ambiguous": 0,
+    "hostname_guard_rejections": 0,
+    "compliant_final_observations": 0,
+    "aggregate_response_bytes": 4
+  },
+  "outputs": {
+    "roster_exists": false,
+    "attestation_exists": false,
+    "offline_projection_consumed": false,
+    "seed_construction_consumed": false,
+    "eligible_frame_frozen": false,
+    "csprng_seed_generated": false,
+    "ordered_24_generated": false,
+    "a09_stubs_generated": 0
+  },
+  "terminal_control_observation": {
+    "kill_switch": "TRIPPED",
+    "kill_switch_parameter_version": 7,
+    "real_business_discovery": "NOT_AUTHORIZED",
+    "real_public_research": "NOT_AUTHORIZED",
+    "professional_identity_resolution": "NOT_AUTHORIZED",
+    "real_contact_storage": "NOT_AUTHORIZED",
+    "contact_verification": "NOT_AUTHORIZED",
+    "shadow_eligibility_evaluation": "NOT_AUTHORIZED",
+    "shadow_ready_assessment": "NOT_AUTHORIZED"
+  },
+  "conclusion": "The one-shot acquisition truthfully failed before Nominatim because the exact authorized TDLR query returned a four-byte response yielding zero source records. No retry, alternate source, candidate replacement, downstream projection, seed construction, or first-party-host access occurred."
+}
