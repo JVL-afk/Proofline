@@ -1,0 +1,22 @@
+{
+  "schema_version": "m67-ordered-manual-phase1-sample-owner-acceptance-accepted-v1",
+  "state": "ACCEPTED",
+  "event": "APPROVE_ORDERED_MANUAL_PHASE1_SAMPLE",
+  "account": "785072247535",
+  "region": "us-east-2",
+  "accepted_at": "2026-08-24",
+  "ingestion_evidence_sha256": "0e79d22ed1ad1024cf1f1a48b5578a39f30683c58d59dabab7c97b0c5f7ce1cd",
+  "input_artifact_sha256": "3a24dbbaed5d9c11413a064d5682fecc4f76e4034cae9c240794289005921194",
+  "owner_attestation_sha256": "21a0fb2bfdc2de64db950b3e491f11b11e84ca0887b96613bf542a8c5f3ee499",
+  "frozen_frame_sha256": "aebd0c6c1df4290cfa0209b4f8d65d48d15a6cf013c071dad985e385da6da0ea",
+  "seed_evidence_sha256": "93cc1f9d2e5a68180498331c55fa7320185298cb65941d6cdc9a2072a0ae9966",
+  "ordered_package_semantic_sha256": "8a0703e6a441e28a62ae5f5ed32faf0279502c695d34779132ffa48979074050",
+  "ordered_package_file_sha256": "755279cb8e5ac06c579c411857bfc6d380602722813de1cda21175b9385b5467",
+  "slot_count": 24,
+  "reserve_count": 0,
+  "AUTOMATED_TDLR_DISCOVERY_VALIDATED": false,
+  "PHASE1_SAMPLE_SOURCE": "OWNER_CURATED_TDLR_NON_CHERRY_PICKED",
+  "authority": "LOCAL_PREPARATION_OF_SEPARATELY_BOUNDED_EXACT_HOST_A09_ACCESS_REVIEW_PACKAGE_ONLY",
+  "network_access_authorized": false,
+  "all_seven_m6_7_permissions": "NOT_AUTHORIZED"
+}
