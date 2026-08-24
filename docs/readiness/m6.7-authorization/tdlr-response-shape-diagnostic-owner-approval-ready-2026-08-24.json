@@ -1,0 +1,16 @@
+{
+  "schema_version": "m67-tdlr-response-shape-diagnostic-owner-approval-ready-v1",
+  "state": "READY_FOR_TDLR_RESPONSE_SHAPE_DIAGNOSTIC_AUTHORIZATION",
+  "event": "AUTHORIZE_TDLR_RESPONSE_SHAPE_DIAGNOSTIC",
+  "account": "785072247535",
+  "region": "us-east-2",
+  "preparation_commit": "e9beac1f31ecceb167c711476e4df2c41ea222fb",
+  "official_contract_review_sha256": "47136464eece737097ec3caea38ffe0175abf053cc491dd44241fffbb1d37c39",
+  "configuration_sha256": "8112ed938af72760200d62a362138030d32d713b38b31e7f5a1f027c3da090c3",
+  "exact_executable_sha256": "51429675c6d86307ceb4d7072fa11218a01a06fe118cf8c3439a6d923b0fbeda",
+  "source_adapter_invariants_sha256": "f2716dee8948c12553ae1df818b9344905a11f840ad3b218742ed3f10d888423",
+  "consumed_preflight_terminal_evidence_sha256": "2b3a160091d3538ab81e18e6bfee7e3ef92f26bbb6862130c94b27e72860e2e6",
+  "valid_from": "2026-08-24T07:30:00Z",
+  "expires_at": "2026-08-31T07:30:00Z",
+  "exact_owner_approval_statement": "I approve AUTHORIZE_TDLR_RESPONSE_SHAPE_DIAGNOSTIC for AWS account 785072247535 in us-east-2, binding preparation commit e9beac1f31ecceb167c711476e4df2c41ea222fb, official SODA3/TDLR response-contract review SHA-256 47136464eece737097ec3caea38ffe0175abf053cc491dd44241fffbb1d37c39, diagnostic configuration SHA-256 8112ed938af72760200d62a362138030d32d713b38b31e7f5a1f027c3da090c3, exact diagnostic executable SHA-256 51429675c6d86307ceb4d7072fa11218a01a06fe118cf8c3439a6d923b0fbeda, permanent source-adapter invariants SHA-256 f2716dee8948c12553ae1df818b9344905a11f840ad3b218742ed3f10d888423, and permanently consumed predecessor-preflight terminal evidence SHA-256 2b3a160091d3538ab81e18e6bfee7e3ef92f26bbb6862130c94b27e72860e2e6. This authorizes exactly one terminal response-shape diagnostic between 2026-08-24T07:30:00Z and 2026-08-31T07:30:00Z against only https://data.texas.gov/api/v3/views/7358-krk7/query.json, using one certificate-validated HTTPS POST, zero retries, no app token, application/json, page 1 with page size 1, includeSynthetic=false, and only the seven previously approved fields filtered to exact license_type Air Conditioning Contractor and ordered by license_number then business_name. The response ceiling is 50,000 bytes. Before schema validation, the executable must durably seal only HTTP status, allowlisted headers, declared content type/length, actual byte length, raw-body SHA-256, JSON parse state, top-level JSON type, content-free top-level keys, array lengths, first-row field names, wrapped row-array location, parser/schema result, and failure stage. It must never persist the raw body or field values. This authorizes no Nominatim or first-party-host request, candidate or roster creation, discovery, public research, person/contact processing, seed/CSPRNG activity, M1-M5, Slot 1, outreach, communication, AI, browser use, AWS/Terraform mutation, or retry/reuse of any consumed grant. The kill switch remains TRIPPED; all seven M6.7 permissions remain NOT_AUTHORIZED; and offline projection and seed construction remain 0/1 unconsumed. A diagnostic pass authorizes only local correction of the response parser and preparation of a separately reviewed successor live seed-roster acquisition authorization; it does not authorize acquisition."
+}
