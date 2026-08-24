@@ -1,0 +1,20 @@
+{
+  "schema_version": "m67-manual-phase1-exact-host-a09-access-review-owner-approval-accepted-v1",
+  "state": "APPROVED",
+  "event": "AUTHORIZE_MANUAL_PHASE1_EXACT_HOST_A09_ACCESS_REVIEW",
+  "account": "785072247535",
+  "region": "us-east-2",
+  "accepted_at": "2026-08-24",
+  "preparation_commit": "c373c40fc9808f296f108f85f848079c6bb4c7e4",
+  "configuration_sha256": "facf622dde0385b8c09aa964ff6199cc4d2444702a291f52bb3fbbc1071ab2db",
+  "exact_executable_sha256": "97e13fddf2b383d26819d8aed2cac29abfa0245b12488fb7bf71b2133c47b4fd",
+  "tests_sha256": "dc1d602ba539695eeedfcee3fbb1d713e35f7ceb829d3493e72a08cffa6a7c81",
+  "ordered_sample_acceptance_sha256": "2341f6a6349e2a34bf61c0c0cdf827e4addfeab9c43abe509a3ea5c81f66b0e1",
+  "ordered_package_file_sha256": "755279cb8e5ac06c579c411857bfc6d380602722813de1cda21175b9385b5467",
+  "ordered_package_semantic_sha256": "8a0703e6a441e28a62ae5f5ed32faf0279502c695d34779132ffa48979074050",
+  "offline_a09_evidence_sha256": "049088a62eba7cd927bf1dffbc0a11b2e3f68cd8eb339df9ca3047c8bd4ee7ec",
+  "valid_from": "2026-08-24T17:00:00Z",
+  "expires_at": "2026-08-31T17:00:00Z",
+  "terminal_attempts": 1,
+  "exact_owner_attestation": "I approve AUTHORIZE_MANUAL_PHASE1_EXACT_HOST_A09_ACCESS_REVIEW for AWS account 785072247535 in us-east-2, binding preparation commit c373c40fc9808f296f108f85f848079c6bb4c7e4, exact-host review configuration SHA-256 facf622dde0385b8c09aa964ff6199cc4d2444702a291f52bb3fbbc1071ab2db, exact executable SHA-256 97e13fddf2b383d26819d8aed2cac29abfa0245b12488fb7bf71b2133c47b4fd, deterministic tests SHA-256 dc1d602ba539695eeedfcee3fbb1d713e35f7ceb829d3493e72a08cffa6a7c81, accepted ordered-sample record SHA-256 2341f6a6349e2a34bf61c0c0cdf827e4addfeab9c43abe509a3ea5c81f66b0e1, ordered-package file SHA-256 755279cb8e5ac06c579c411857bfc6d380602722813de1cda21175b9385b5467, ordered-package semantic SHA-256 8a0703e6a441e28a62ae5f5ed32faf0279502c695d34779132ffa48979074050, and offline A-09 evidence SHA-256 049088a62eba7cd927bf1dffbc0a11b2e3f68cd8eb339df9ca3047c8bd4ee7ec. This authorizes exactly one terminal A-09 source-access review attempt between 2026-08-24T17:00:00Z and 2026-08-31T17:00:00Z against only the 24 immutable candidate hostnames bound by the ordered package, using current-system DNS solely as required for certificate-validated HTTPS on port 443. For each exact host, the runner may make one no-retry GET of /robots.txt, one no-retry GET of /, and at most one no-retry GET of a same-host, query-free Terms or legal path deterministically discovered from the root page. Redirects must not be followed; any redirect target requires its own later review. Global ceilings are 72 logical HTTPS requests and attempts, 250,000 bytes per response, 12,000,000 response bytes total, concurrency one, minimum two-second delay, USD 0, AI calls 0, and browser sessions 0. Raw bodies remain ephemeral; durable evidence is limited to transport/body hashes and lengths, redirect host without following, robots access classification, business-name-match classification, one same-host legal path, and content-free restriction-marker flags. Person/contact values, page text, credentials, cookies, forms and interactive operations must not be persisted or used. The runner may automatically REJECT a robots-denied or foreign-redirect host but may not automatically approve any host; all other hosts remain REQUIRES_HUMAN_REVIEW pending a separately accountable exact-host decision. This authorization is only for A-09 source/access evidence collection. It does not authorize REAL_BUSINESS_DISCOVERY, REAL_PUBLIC_RESEARCH, M1-M5, Slot 1, first-party research, person/contact processing, professional identity resolution, contact storage or verification, shadow evaluation/readiness, outreach, communication, AI, browser automation, AWS/Terraform mutation, slot replacement, or any other M6.7 permission change. The kill switch remains TRIPPED, all seven M6.7 permissions remain NOT_AUTHORIZED, Slots 01-24 remain immutable, and zero replacements remain mandatory."
+}
