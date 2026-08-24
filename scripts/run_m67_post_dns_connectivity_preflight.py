@@ -17,7 +17,7 @@ import boto3
 import botocore
 
 HOSTS = ("data.texas.gov", "nominatim.openstreetmap.org")
-EVENT = "AUTHORIZE_POST_DNS_REMEDIATION_CONNECTIVITY_PREFLIGHT"
+EVENT = "AUTHORIZE_POST_DNS_REMEDIATION_CONNECTIVITY_PREFLIGHT_SUCCESSOR"
 EXPECTED_DNS = ["8.8.8.8", "8.8.4.4"]
 EVIDENCE = Path(
     "local-data/m6.7/seed-source-connectivity/post-dns-connectivity-preflight-evidence.json"
