@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:opintel:m6.7:manual-phase1-sample-owner-attestation-v1",
+  "title": "Owner attestation for the manually curated Phase 1 sample",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["record_type", "schema_version", "state", "actor_ref", "input_artifact_sha256", "candidate_count", "selected_before_m1_m5", "selection_not_based_on_perceived_opportunity", "selection_not_based_on_website_weakness", "selection_not_based_on_sales_attractiveness", "selection_not_based_on_expected_result", "business_only_confirmed", "person_contact_data_absent", "no_outcome_based_exclusion_or_replacement", "candidate_hostnames_manually_identified", "automated_tdlr_discovery_validated", "phase1_sample_source", "attested_at", "exact_affirmation"],
+  "properties": {
+    "record_type": {"const": "M67_MANUAL_PHASE1_SAMPLE_OWNER_ATTESTATION"},
+    "schema_version": {"const": "1.0.0"},
+    "state": {"const": "SIGNED"},
+    "actor_ref": {"const": "OWNER_ACTOR"},
+    "input_artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "candidate_count": {"const": 24},
+    "selected_before_m1_m5": {"const": true},
+    "selection_not_based_on_perceived_opportunity": {"const": true},
+    "selection_not_based_on_website_weakness": {"const": true},
+    "selection_not_based_on_sales_attractiveness": {"const": true},
+    "selection_not_based_on_expected_result": {"const": true},
+    "business_only_confirmed": {"const": true},
+    "person_contact_data_absent": {"const": true},
+    "no_outcome_based_exclusion_or_replacement": {"const": true},
+    "candidate_hostnames_manually_identified": {"const": true},
+    "automated_tdlr_discovery_validated": {"const": false},
+    "phase1_sample_source": {"const": "OWNER_CURATED_TDLR_NON_CHERRY_PICKED"},
+    "attested_at": {"type": "string", "format": "date-time"},
+    "exact_affirmation": {"const": "I attest that I selected exactly 24 Texas Commercial HVAC businesses before any M1-M5 evaluation; I did not select them based on perceived opportunity, website weakness, sales attractiveness, expected result, or contactability; the submitted artifact contains business-only fields and manually identified candidate hostnames; and no later outcome may cause a submitted business or slot to be replaced."}
+  }
+}

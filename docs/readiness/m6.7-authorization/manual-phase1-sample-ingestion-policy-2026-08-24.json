@@ -1,0 +1,78 @@
+{
+  "schema_version": "m67-manual-phase1-sample-ingestion-policy-v1",
+  "state": "PREPARED_NOT_AUTHORIZED",
+  "account": "785072247535",
+  "region": "us-east-2",
+  "event": "AUTHORIZE_MANUAL_PHASE1_SAMPLE_INGESTION",
+  "valid_from": "2026-08-24T10:30:00Z",
+  "expires_at": "2026-08-31T10:30:00Z",
+  "terminal_attempts": 1,
+  "purpose": "INGEST_AND_ORDER_OWNER_CURATED_BUSINESS_ONLY_PHASE1_SAMPLE",
+  "truth_boundary": {
+    "AUTOMATED_TDLR_DISCOVERY_VALIDATED": false,
+    "PHASE1_SAMPLE_SOURCE": "OWNER_CURATED_TDLR_NON_CHERRY_PICKED",
+    "automated_tdlr_taxonomy_discovery_defect": "OPEN_SEPARATE_ENGINEERING_WORKSTREAM",
+    "manual_sample_is_automated_discovery_evidence": false
+  },
+  "exact_paths": {
+    "input": "local-data/m6.7/manual-phase1-sample/input/manual-phase1-sample.json",
+    "owner_attestation": "local-data/m6.7/manual-phase1-sample/input/manual-phase1-sample-owner-attestation.json",
+    "ordered_output": "local-data/m6.7/manual-phase1-sample/output/manual-phase1-ordered-sample.json",
+    "private_seed": "local-data/m6.7/manual-phase1-sample/private/ordering-seed.json",
+    "content_free_evidence": "docs/readiness/m6.7-authorization/manual-phase1-sample-ingestion-evidence-2026-08-24.json"
+  },
+  "input_requirements": {
+    "candidate_count": 24,
+    "allowed_fields": [
+      "submission_index",
+      "public_business_name",
+      "texas_city_or_service_area",
+      "tdlr_reference",
+      "candidate_hostname"
+    ],
+    "tdlr_reference_optional": true,
+    "validation": [
+      "EXACT_SCHEMA",
+      "CONTACT_SHAPE_REJECTION",
+      "LOWERCASE_ASCII_HOSTNAME_SYNTAX",
+      "SUBMISSION_INDICES_1_THROUGH_24"
+    ],
+    "eligibility_scoring": false,
+    "deduplication_or_exclusion": false,
+    "outcome_filtering_or_replacement": false
+  },
+  "ordering": {
+    "freeze_all_24_before_seed": true,
+    "csprng_seed_count": 1,
+    "seed_bytes": 32,
+    "slots": 24,
+    "reserve": 0,
+    "seed_material_private": true,
+    "immutable_after_seal": true
+  },
+  "operation_caps": {
+    "dns_queries": 0,
+    "http_requests": 0,
+    "first_party_host_accesses": 0,
+    "m1_m5_operations": 0,
+    "person_contact_records": 0,
+    "ai_calls": 0,
+    "browser_sessions": 0,
+    "outreach_or_communications": 0,
+    "aws_or_terraform_mutations": 0
+  },
+  "permissions_before_during_after": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  },
+  "existing_grants": {
+    "offline_projection": "0/1_UNCONSUMED_NOT_USED_BY_MANUAL_PATH",
+    "seed_construction": "0/1_UNCONSUMED_NOT_USED_BY_MANUAL_PATH"
+  },
+  "next_gate_after_success": "READY_FOR_ORDERED_MANUAL_SAMPLE_AND_EXACT_HOST_REVIEW_AUTHORIZATION"
+}

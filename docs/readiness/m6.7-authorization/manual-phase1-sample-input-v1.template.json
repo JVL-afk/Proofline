@@ -1,0 +1,32 @@
+{
+  "record_type": "M67_MANUAL_PHASE1_SAMPLE_INPUT",
+  "schema_version": "1.0.0",
+  "sample_source": "OWNER_CURATED_TDLR_NON_CHERRY_PICKED",
+  "automated_tdlr_discovery_validated": false,
+  "candidates": [
+    {"submission_index": 1, "public_business_name": "REPLACE_01", "texas_city_or_service_area": "REPLACE_01", "tdlr_reference": null, "candidate_hostname": "replace-01.example"},
+    {"submission_index": 2, "public_business_name": "REPLACE_02", "texas_city_or_service_area": "REPLACE_02", "tdlr_reference": null, "candidate_hostname": "replace-02.example"},
+    {"submission_index": 3, "public_business_name": "REPLACE_03", "texas_city_or_service_area": "REPLACE_03", "tdlr_reference": null, "candidate_hostname": "replace-03.example"},
+    {"submission_index": 4, "public_business_name": "REPLACE_04", "texas_city_or_service_area": "REPLACE_04", "tdlr_reference": null, "candidate_hostname": "replace-04.example"},
+    {"submission_index": 5, "public_business_name": "REPLACE_05", "texas_city_or_service_area": "REPLACE_05", "tdlr_reference": null, "candidate_hostname": "replace-05.example"},
+    {"submission_index": 6, "public_business_name": "REPLACE_06", "texas_city_or_service_area": "REPLACE_06", "tdlr_reference": null, "candidate_hostname": "replace-06.example"},
+    {"submission_index": 7, "public_business_name": "REPLACE_07", "texas_city_or_service_area": "REPLACE_07", "tdlr_reference": null, "candidate_hostname": "replace-07.example"},
+    {"submission_index": 8, "public_business_name": "REPLACE_08", "texas_city_or_service_area": "REPLACE_08", "tdlr_reference": null, "candidate_hostname": "replace-08.example"},
+    {"submission_index": 9, "public_business_name": "REPLACE_09", "texas_city_or_service_area": "REPLACE_09", "tdlr_reference": null, "candidate_hostname": "replace-09.example"},
+    {"submission_index": 10, "public_business_name": "REPLACE_10", "texas_city_or_service_area": "REPLACE_10", "tdlr_reference": null, "candidate_hostname": "replace-10.example"},
+    {"submission_index": 11, "public_business_name": "REPLACE_11", "texas_city_or_service_area": "REPLACE_11", "tdlr_reference": null, "candidate_hostname": "replace-11.example"},
+    {"submission_index": 12, "public_business_name": "REPLACE_12", "texas_city_or_service_area": "REPLACE_12", "tdlr_reference": null, "candidate_hostname": "replace-12.example"},
+    {"submission_index": 13, "public_business_name": "REPLACE_13", "texas_city_or_service_area": "REPLACE_13", "tdlr_reference": null, "candidate_hostname": "replace-13.example"},
+    {"submission_index": 14, "public_business_name": "REPLACE_14", "texas_city_or_service_area": "REPLACE_14", "tdlr_reference": null, "candidate_hostname": "replace-14.example"},
+    {"submission_index": 15, "public_business_name": "REPLACE_15", "texas_city_or_service_area": "REPLACE_15", "tdlr_reference": null, "candidate_hostname": "replace-15.example"},
+    {"submission_index": 16, "public_business_name": "REPLACE_16", "texas_city_or_service_area": "REPLACE_16", "tdlr_reference": null, "candidate_hostname": "replace-16.example"},
+    {"submission_index": 17, "public_business_name": "REPLACE_17", "texas_city_or_service_area": "REPLACE_17", "tdlr_reference": null, "candidate_hostname": "replace-17.example"},
+    {"submission_index": 18, "public_business_name": "REPLACE_18", "texas_city_or_service_area": "REPLACE_18", "tdlr_reference": null, "candidate_hostname": "replace-18.example"},
+    {"submission_index": 19, "public_business_name": "REPLACE_19", "texas_city_or_service_area": "REPLACE_19", "tdlr_reference": null, "candidate_hostname": "replace-19.example"},
+    {"submission_index": 20, "public_business_name": "REPLACE_20", "texas_city_or_service_area": "REPLACE_20", "tdlr_reference": null, "candidate_hostname": "replace-20.example"},
+    {"submission_index": 21, "public_business_name": "REPLACE_21", "texas_city_or_service_area": "REPLACE_21", "tdlr_reference": null, "candidate_hostname": "replace-21.example"},
+    {"submission_index": 22, "public_business_name": "REPLACE_22", "texas_city_or_service_area": "REPLACE_22", "tdlr_reference": null, "candidate_hostname": "replace-22.example"},
+    {"submission_index": 23, "public_business_name": "REPLACE_23", "texas_city_or_service_area": "REPLACE_23", "tdlr_reference": null, "candidate_hostname": "replace-23.example"},
+    {"submission_index": 24, "public_business_name": "REPLACE_24", "texas_city_or_service_area": "REPLACE_24", "tdlr_reference": null, "candidate_hostname": "replace-24.example"}
+  ]
+}

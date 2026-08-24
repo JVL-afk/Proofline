@@ -1,0 +1,21 @@
+{
+  "record_type": "M67_MANUAL_PHASE1_SAMPLE_OWNER_ATTESTATION",
+  "schema_version": "1.0.0",
+  "state": "SIGNED",
+  "actor_ref": "OWNER_ACTOR",
+  "input_artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "candidate_count": 24,
+  "selected_before_m1_m5": true,
+  "selection_not_based_on_perceived_opportunity": true,
+  "selection_not_based_on_website_weakness": true,
+  "selection_not_based_on_sales_attractiveness": true,
+  "selection_not_based_on_expected_result": true,
+  "business_only_confirmed": true,
+  "person_contact_data_absent": true,
+  "no_outcome_based_exclusion_or_replacement": true,
+  "candidate_hostnames_manually_identified": true,
+  "automated_tdlr_discovery_validated": false,
+  "phase1_sample_source": "OWNER_CURATED_TDLR_NON_CHERRY_PICKED",
+  "attested_at": "1970-01-01T00:00:00Z",
+  "exact_affirmation": "I attest that I selected exactly 24 Texas Commercial HVAC businesses before any M1-M5 evaluation; I did not select them based on perceived opportunity, website weakness, sales attractiveness, expected result, or contactability; the submitted artifact contains business-only fields and manually identified candidate hostnames; and no later outcome may cause a submitted business or slot to be replaced."
+}
