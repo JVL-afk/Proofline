@@ -1,0 +1,82 @@
+{
+  "record_type": "M67_POST_MANUAL_DNS_HOST_INSPECTION_EVIDENCE",
+  "version": "1.0.0",
+  "evidence_id": "M67_POST_MANUAL_DNS_HOST_INSPECTION::2026-08-23.1",
+  "state": "DNS_REMEDIATED_HOST_INSPECTION_PASS",
+  "observed_at": "2026-08-23T17:40:18.8136602Z",
+  "execution_path": {
+    "host": "LOCAL_WINDOWS",
+    "principal_reference": "sha256:opaque-local-host-principal",
+    "python_executable": "C:\\Python313\\python.exe",
+    "python_version": "3.13.3"
+  },
+  "adapter": {
+    "interface_alias": "Wi-Fi",
+    "interface_index": 13,
+    "interface_guid": "{997EE793-757E-4FD9-8138-CE1BF9FA1B32}",
+    "active_route_interface_index": 13,
+    "effective_ipv4_dns": [
+      "8.8.8.8",
+      "8.8.4.4"
+    ],
+    "effective_ipv6_dns": [
+      "fe80::1",
+      "fe80::1"
+    ],
+    "ipv4_addresses": [
+      "192.168.1.135"
+    ],
+    "default_gateways": [
+      "192.168.1.1"
+    ],
+    "dhcp_addressing": "Enabled",
+    "proxy_state_sha256": "797eec67bc119fe7cedf4fce713be7b5a4562518033bd15b9214913b1c700ee9",
+    "vpn_state_sha256": "bf4dccf78d4063744b58df96b980a81ed7c5d71cba583446dda69d9571d8d8d1",
+    "firewall_state_sha256": "1aee9cab34ec888208755ec8fa121c1476fdb2c385404bb09a4d1736df18169d",
+    "unchanged_except_ipv4_dns": true
+  },
+  "runtime": {
+    "boto3": "1.43.78",
+    "botocore": "1.43.78",
+    "jmespath": "1.1.0",
+    "s3transfer": "0.19.2",
+    "runtime_repair_evidence_sha256": "58d71d3133b5b488cfb3577c1db0844fe4d461ce506e6f8775c990a433f95475",
+    "locked_requirements_sha256": "49a128fc8328720940e4c7445ef3113161670c2e3896662fdff1e3ceada0fdc1",
+    "imports": "PASS"
+  },
+  "dns_proofs": [
+    {
+      "hostname": "data.texas.gov",
+      "success": true,
+      "address_count": 3,
+      "address_families": [
+        "IPv4"
+      ],
+      "answer_set_sha256": "67486dea6eea493a4d5e134ce814c9cc9aa65ba2e899112d948b74762c0be01f",
+      "logical_system_dns_queries": 1
+    },
+    {
+      "hostname": "nominatim.openstreetmap.org",
+      "success": true,
+      "address_count": 2,
+      "address_families": [
+        "IPv4",
+        "IPv6"
+      ],
+      "answer_set_sha256": "b338672d03b7e38053bb8ce547b2ba148d80d8bd89d2698b11e51540ddb0956a",
+      "logical_system_dns_queries": 1
+    }
+  ],
+  "totals": {
+    "dns_queries": 2,
+    "http_requests": 0,
+    "tls_connections": 0,
+    "source_content_bytes": 0
+  },
+  "guard_states": {
+    "kill_switch": "TRIPPED_UNCHANGED",
+    "all_seven_m6_7_permissions": "NOT_AUTHORIZED",
+    "offline_projection": "0/1_UNCONSUMED",
+    "seed_construction": "0/1_UNCONSUMED"
+  }
+}
