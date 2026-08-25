@@ -1,0 +1,32 @@
+{
+  "schema_version": "m67-replacement-sample-exact-host-a09-access-review-owner-approval-accepted-v1",
+  "state": "APPROVED",
+  "event": "AUTHORIZE_REPLACEMENT_SAMPLE_EXACT_HOST_A09_ACCESS_REVIEW",
+  "account": "785072247535",
+  "region": "us-east-2",
+  "accepted_at": "2026-08-25T14:00:00Z",
+  "preparation_commit": "2e742b5580fd7058a631b2683eb2a7e33a020ccb",
+  "configuration_sha256": "de948d089e0dc7e1dcd60397006ec4cc1584552fcd843509a1c0983022141041",
+  "exact_executable_sha256": "fdec09f64506e53fd018fd984c7b2c0cf11ce0f2488adfdffbfcec6cc7425bb4",
+  "deterministic_tests_sha256": "51990f1221949b6f0cab2e00977d43bd4626cdb42b35db34b2b59b32af560eaa",
+  "ordered_package_file_sha256": "0283f0a6956f6bd11e9326419d9671a61cc57dac0b6d376b9e2b7a11f0507a70",
+  "ordered_package_semantic_sha256": "3419a018a0cfb39c7fe6391c19b3acb43378b7b88e92337a2c70af305d345b5b",
+  "ordered_frame_evidence_sha256": "23a2efe438dcc51e2dc290da49d5d73f10cd8af9e94743ed8a6da62cfa09980a",
+  "ingestion_evidence_sha256": "9952bc8803ca850e66a1d1f68242206a0704ad88db94b028e5a2ccdb025d773c",
+  "prior_sample_supersession_evidence_sha256": "b7717da1ce97cefe6190af36224337799adf3f6f531896d32a4662637856f8f4",
+  "approval_ready_record_sha256": "29ed337a1fee30f94507e533bb77ef9063ecfef2f2341532524fbf287c839f5d",
+  "terminal_attempts_authorized": 1,
+  "window": {
+    "starts_at": "2026-08-25T14:00:00Z",
+    "expires_at": "2026-09-01T14:00:00Z"
+  },
+  "scope": "EXACT_24_REPLACEMENT_SAMPLE_HOSTS_A09_ACCESS_EVIDENCE_ONLY",
+  "automatic_host_approval": false,
+  "redirects_followed": 0,
+  "retries": 0,
+  "slots_immutable": true,
+  "replacements": 0,
+  "kill_switch": "TRIPPED",
+  "all_seven_m6_7_permissions": "NOT_AUTHORIZED",
+  "automated_tdlr_discovery_validated": false
+}
