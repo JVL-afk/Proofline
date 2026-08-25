@@ -1,0 +1,85 @@
+{
+  "schema_version": "m67-slot01-real-public-research-runtime-blocker-v1",
+  "state": "BLOCKED_PENDING_SLOT01_RUNTIME_SUCCESSOR_IMPLEMENTATION_AND_DEPLOYMENT_PLAN",
+  "account": "785072247535",
+  "region": "us-east-2",
+  "slot": 1,
+  "business": "903 HVAC",
+  "exact_hostname": "903hvac.com",
+  "a09_decision": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+  "requested_target_state": "READY_FOR_SLOT01_REAL_PUBLIC_RESEARCH_AUTHORIZATION",
+  "target_state_reached": false,
+  "blockers": [
+    {
+      "code": "LIVE_PERMISSION_RELEASE_HAS_NO_AUTHORIZATION_COMMAND",
+      "evidence_path": "packages/shadow-core/src/opintel_shadow/gate_application.py",
+      "evidence_sha256": "3117aa688adbdc61a53ae007ae7b4f33c76fd402425f888a6e851cd9be0f1d42",
+      "detail": "LiveResearchGateService explicitly creates NOT_AUTHORIZED releases and exposes no command capable of authorizing one."
+    },
+    {
+      "code": "DEPLOYED_TASK_CONFIGURATION_FAIL_CLOSED",
+      "evidence_path": "infra/terraform/phase1/compute.tf",
+      "evidence_sha256": "91b1479436a09330d1c7435f42cab9196f3dce8afddf9303fa54fdb92467c099",
+      "detail": "Research live-enabled is false, the worker egress policy is NOT_AUTHORIZED, and the controlled-egress allowed-host set is empty. Changing these values is an AWS task-definition/service mutation."
+    },
+    {
+      "code": "M1_RUNTIME_ROBOTS_ENFORCEMENT_ABSENT",
+      "evidence_paths": [
+        "packages/research-core/src/opintel_research/workflow.py",
+        "packages/research-local/src/opintel_research_local/http.py"
+      ],
+      "evidence_sha256": [
+        "81ab2c33432c66a25b6f79628652e80ff263bc91e18315d285f06553cc692c53",
+        "a960bdb6f3c254c7c6b4c8985c3c62a8f18a36651e624a6a7b2b812f71df7dbe"
+      ],
+      "detail": "Exact-host URL, DNS, SSRF, redirect, timeout and byte controls exist, but the production crawl does not retrieve or evaluate robots policy before same-host page access."
+    },
+    {
+      "code": "M2_M5_INTELLIGENCE_WORKER_NOT_DEPLOYED_IN_PHASE1",
+      "evidence_path": "workers/intelligence/src/opintel_intelligence_worker/main.py",
+      "evidence_sha256": "f414ec52341d5712067a8a9936c312383333d4e0346525a6c0d8d36b003f20a4",
+      "detail": "The canonical deterministic M2-M5 worker exists in source, but Phase 1 Terraform defines only research-worker and controlled-egress ECS task/service resources."
+    }
+  ],
+  "canonical_source_tree_sha256": {
+    "M1_research_core": "5c6401cf7369cd23417ef80f00059aa53873ec1309b9f217397b1c83e25e7323",
+    "M1_research_local": "433297408bf762ab8eff26ecac8b5b277620e410d8d88dc44e7847511ba0f715",
+    "M2_opportunity_core": "ceeabaad3affc58ba0c7b75df6634b3e1fe1fd4d0c333bb3c08e49400c7650e0",
+    "M3_audit_core": "02dac0353c222c33b064c90261ad8e29529ddb9a49d9afd04c978b28eb738d8f",
+    "M4_demo_core": "a9b3749d46ccd65719e79d90f164989cc3898e022b591ac4e30b56e01a211bdc",
+    "M5_outreach_core": "056b415514397de15cf0456b411c571b76bbd3a04d098996b3581d5147875822",
+    "M67_shadow_core": "486a4b79f9b16e1139bae5d0e780d0c9fc00178ed915ac7d8e77e2a659999476",
+    "research_worker": "4eeb5eedd0bab331e2cd3913c3b552c2030e5a973f7e3530bfbc722ab8cfd91f",
+    "intelligence_worker": "4c8bf13e1bdf7de7b9fed9f80b9c4926636484056ca76d30c0cccc314fc7a0d8",
+    "phase1_terraform": "1034093c82f86f85045bf66f157ccfb48be13d633b827c270a61a0351c81dd54"
+  },
+  "canonical_milestone_commits": {
+    "M1": "529cb1a",
+    "M2": "8e82948",
+    "M3": "d1eb54d",
+    "M4": "498a1af",
+    "M5": "bae1128"
+  },
+  "minimum_successor_requirements": [
+    "Add a fail-closed owner-approval applicator that creates separately represented REAL_PUBLIC_RESEARCH and RUN_PHASE_1_SLOT_1_ONLY records without changing the other six permissions.",
+    "Add deterministic robots retrieval/evaluation and provenance binding before any research page access.",
+    "Create a corrected immutable worker/runtime revision and exact-host controlled-egress revision for only 903hvac.com with browser and AI disabled.",
+    "Represent the deterministic M2-M5 worker in the Phase 1 runtime or provide an equally bounded deployed execution path with no delivery dependency.",
+    "Build, scan and bind immutable images, then generate an authenticated Terraform successor plan with zero unexpected replacements and zero unexpected destroys.",
+    "Keep ECS desired count zero and kill switch TRIPPED until a later exact Slot 01 run authorization is accepted."
+  ],
+  "aws_mutation_required_before_live_run": true,
+  "terraform_plan_available": false,
+  "safe_exact_owner_approval_statement_available": false,
+  "reason_no_owner_statement": "No hash-bound apply plan or immutable corrected runtime exists; emitting a live research approval would not bind an executable fail-closed path.",
+  "kill_switch": "TRIPPED",
+  "m67_permissions": {
+    "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+    "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+    "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+    "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+    "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+    "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+    "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+  }
+}
