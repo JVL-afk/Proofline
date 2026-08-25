@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:m67:replacement-100-company-normalized-frame:v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "PHASE1_SAMPLE_SOURCE",
+    "HVAC_ELIGIBILITY_SOURCE",
+    "AUTOMATED_TDLR_DISCOVERY_VALIDATED",
+    "representation_scope",
+    "companies"
+  ],
+  "properties": {
+    "schema_version": {"const": "m67-replacement-100-company-normalized-frame-v1"},
+    "PHASE1_SAMPLE_SOURCE": {"const": "OWNER_CURATED_TEXAS_HVAC_WITH_MANUALLY_VERIFIED_REACHABLE_WEBSITE"},
+    "HVAC_ELIGIBILITY_SOURCE": {"const": "OWNER_MANUAL_SELECTION_AT_FRAME_CONSTRUCTION"},
+    "AUTOMATED_TDLR_DISCOVERY_VALIDATED": {"const": false},
+    "representation_scope": {"const": "OWNER_CURATED_TEXAS_HVAC_WITH_MANUALLY_VERIFIED_REACHABLE_WEB_PRESENCE_NOT_ALL_TEXAS_HVAC"},
+    "companies": {
+      "type": "array",
+      "minItems": 100,
+      "maxItems": 100,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "submission_index",
+          "company_name",
+          "company_website_original",
+          "county",
+          "city",
+          "normalized_company_name_key",
+          "candidate_hostname",
+          "source_row_sha256"
+        ],
+        "properties": {
+          "submission_index": {"type": "integer", "minimum": 1, "maximum": 100},
+          "company_name": {"type": "string", "minLength": 1, "maxLength": 240},
+          "company_website_original": {"type": "string", "minLength": 1, "maxLength": 2048},
+          "county": {"type": "string", "minLength": 1, "maxLength": 160},
+          "city": {"type": "string", "minLength": 1, "maxLength": 160},
+          "normalized_company_name_key": {"type": "string", "minLength": 1, "maxLength": 240},
+          "candidate_hostname": {
+            "type": "string",
+            "pattern": "^(?=.{1,253}$)(?!.*\\.\\.)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\\.)+[a-z](?:[a-z0-9-]{0,61}[a-z0-9])$"
+          },
+          "source_row_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "schema_version": "m67-replacement-100-company-owner-attestation-v1",
+  "state": "SIGNED_BY_EXACT_OWNER_APPROVAL",
+  "actor_ref": "OWNER_ACTOR",
+  "input_artifact_sha256": "6604b3bad0ff9c363255ca56bcb1efc80bb6fa9d7f7b17bda312a0061c64b35c",
+  "candidate_count": 100,
+  "all_are_owner_selected_texas_hvac_businesses": true,
+  "websites_manually_checked_reachable_at_preparation_time": true,
+  "selected_before_m1_m5": true,
+  "not_selected_by_opportunity_website_weakness_expected_result_or_sales_attractiveness": true,
+  "no_later_outcome_replacement": true,
+  "exact_affirmation": "I attest that all 100 submitted records are Texas HVAC businesses selected for this Phase 1 sampling frame; all submitted websites were manually checked and appeared reachable at preparation time; selection occurred before M1-M5 evaluation; selection was not based on perceived opportunity strength, website weakness, expected result, sales attractiveness, or contactability; and no later A-09 or M1-M5 outcome may cause a submitted company, slot, or frame position to be redrawn or replaced."
+}

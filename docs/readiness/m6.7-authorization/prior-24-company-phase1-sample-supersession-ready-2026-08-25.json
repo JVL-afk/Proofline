@@ -1,0 +1,20 @@
+{
+  "schema_version": "m67-prior-24-company-phase1-sample-supersession-ready-v1",
+  "state": "READY_PENDING_OWNER_AUTHORIZATION",
+  "planned_supersession_state": "SUPERSEDED_BEFORE_PUBLIC_RESEARCH_DUE_TO_OWNER_DISCOVERED_HOST_VALIDITY_DEFECT",
+  "supersession_reason": "INPUT_FRAME_WEBSITE_VALIDITY_DEFECT",
+  "supersession_outcome_based": false,
+  "prior_input_artifact_sha256": "3a24dbbaed5d9c11413a064d5682fecc4f76e4034cae9c240794289005921194",
+  "prior_frozen_frame_sha256": "aebd0c6c1df4290cfa0209b4f8d65d48d15a6cf013c071dad985e385da6da0ea",
+  "prior_seed_evidence_sha256": "93cc1f9d2e5a68180498331c55fa7320185298cb65941d6cdc9a2072a0ae9966",
+  "prior_ordered_package_semantic_sha256": "8a0703e6a441e28a62ae5f5ed32faf0279502c695d34779132ffa48979074050",
+  "prior_ordered_sample_acceptance_sha256": "2341f6a6349e2a34bf61c0c0cdf827e4addfeab9c43abe509a3ea5c81f66b0e1",
+  "prior_a09_terminal_evidence_sha256": "1bf1fc7eaf6eef75539a69bed17d43f15d113efc03e972156cf004e12c19a107",
+  "m1_m5_executions_under_prior_sample": 0,
+  "public_research_outcomes_observed": 0,
+  "person_contact_operations": 0,
+  "outreach_delivery_operations": 0,
+  "consumed_grants_remain_consumed": true,
+  "historical_evidence_remains_immutable": true,
+  "old_grant_reuse_prohibited": true
+}

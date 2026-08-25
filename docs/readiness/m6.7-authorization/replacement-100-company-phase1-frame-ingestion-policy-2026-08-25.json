@@ -1,0 +1,39 @@
+{
+  "schema_version": "m67-replacement-100-company-phase1-frame-ingestion-policy-v1",
+  "state": "READY_PENDING_OWNER_AUTHORIZATION",
+  "account": "785072247535",
+  "region": "us-east-2",
+  "expected_input_sha256": "6604b3bad0ff9c363255ca56bcb1efc80bb6fa9d7f7b17bda312a0061c64b35c",
+  "required_row_count": 100,
+  "required_columns_in_order": ["company_name", "company_website", "county", "city"],
+  "PHASE1_SAMPLE_SOURCE": "OWNER_CURATED_TEXAS_HVAC_WITH_MANUALLY_VERIFIED_REACHABLE_WEBSITE",
+  "HVAC_ELIGIBILITY_SOURCE": "OWNER_MANUAL_SELECTION_AT_FRAME_CONSTRUCTION",
+  "AUTOMATED_TDLR_DISCOVERY_VALIDATED": false,
+  "representation_scope": "OWNER_CURATED_TEXAS_HVAC_WITH_MANUALLY_VERIFIED_REACHABLE_WEB_PRESENCE_NOT_ALL_TEXAS_HVAC",
+  "prior_sample_planned_state": "SUPERSEDED_BEFORE_PUBLIC_RESEARCH_DUE_TO_OWNER_DISCOVERED_HOST_VALIDITY_DEFECT",
+  "validation": {
+    "missing_or_blank_values": "REJECT_WHOLE_ATTEMPT",
+    "normalized_company_name_duplicates": "REJECT_WHOLE_ATTEMPT",
+    "normalized_hostname_duplicates": "REJECT_WHOLE_ATTEMPT",
+    "unsafe_or_prohibited_host": "REJECT_WHOLE_ATTEMPT",
+    "contact_shaped_values": "REJECT_WHOLE_ATTEMPT",
+    "row_exclusion": false,
+    "replacement": false
+  },
+  "ordering": {
+    "frame_frozen_before_seed": true,
+    "seed_bytes": 32,
+    "ordering_version": "m6.7.phase1.replacement100.seeded-order@1",
+    "slots": 24,
+    "frame_remainder": 76,
+    "redraws": 0,
+    "outcome_based_replacements": 0
+  },
+  "network_operations": 0,
+  "m1_m5_operations": 0,
+  "person_contact_operations": 0,
+  "ai_calls": 0,
+  "browser_sessions": 0,
+  "outreach_delivery_operations": 0,
+  "all_seven_m6_7_permissions": "NOT_AUTHORIZED"
+}
