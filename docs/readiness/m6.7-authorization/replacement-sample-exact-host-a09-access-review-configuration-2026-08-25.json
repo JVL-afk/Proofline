@@ -1,0 +1,82 @@
+{
+  "schema_version": "m67-replacement-sample-exact-host-a09-access-review-configuration-v1",
+  "event": "AUTHORIZE_REPLACEMENT_SAMPLE_EXACT_HOST_A09_ACCESS_REVIEW",
+  "account": "785072247535",
+  "region": "us-east-2",
+  "ordered_package_file_sha256": "0283f0a6956f6bd11e9326419d9671a61cc57dac0b6d376b9e2b7a11f0507a70",
+  "ordered_package_semantic_sha256": "3419a018a0cfb39c7fe6391c19b3acb43378b7b88e92337a2c70af305d345b5b",
+  "ordered_frame_evidence_sha256": "23a2efe438dcc51e2dc290da49d5d73f10cd8af9e94743ed8a6da62cfa09980a",
+  "window": {
+    "starts_at": "2026-08-25T14:00:00Z",
+    "expires_at": "2026-09-01T14:00:00Z",
+    "terminal_attempts": 1
+  },
+  "scope": {
+    "exact_hosts_in_slot_order": [
+      "903hvac.com", "webbair.com", "www.bncair.net", "allelementshvac.com",
+      "www.callfintastic.com", "www.calvinsclimate.com", "polarprosac.com",
+      "www.villasplumbing.com", "crhvacpro.com", "viconequip.com",
+      "www.callsinclair.com", "villageplumbing.com", "www.ntxplumbing.com",
+      "citysupplygroup.com", "www.hbmechanical.com", "meritsvc.com", "hch-inc.com",
+      "eliteaustinac.com", "www.aplusac.com", "www.emergencyac.org",
+      "www.comfort-air.com", "www.ramseyandco.com", "www.candsair.com",
+      "www.bluenorthernac.com"
+    ],
+    "scheme": "https",
+    "port": 443,
+    "mandatory_paths": ["/robots.txt", "/"],
+    "optional_path": "AT_MOST_ONE_SAME_HOST_QUERY_FREE_TERMS_OR_LEGAL_PATH_DETERMINISTICALLY_DISCOVERED_FROM_ROOT",
+    "redirects_followed": 0,
+    "current_system_dns_only": true,
+    "generic_search": false,
+    "whois": false,
+    "browser": false,
+    "ai": false,
+    "m1_m5": false,
+    "public_research": false
+  },
+  "limits": {
+    "logical_http_requests": 72,
+    "attempts": 72,
+    "max_response_bytes": 250000,
+    "max_total_response_bytes": 12000000,
+    "concurrency": 1,
+    "minimum_delay_seconds": 2,
+    "retries": 0,
+    "cost_usd": 0
+  },
+  "durable_evidence": {
+    "checkpoint_after_each_request_outcome": true,
+    "raw_bodies": false,
+    "person_contact_values": false,
+    "page_text": false,
+    "exception_messages": false,
+    "allowed": [
+      "slot_business_host_mapping",
+      "status_and_content_type",
+      "body_length_and_sha256",
+      "redirect_host_without_following",
+      "robots_root_access_classification",
+      "business_name_match_classification",
+      "same_host_legal_path",
+      "content_free_restriction_marker_flags",
+      "content_free_transport_failure_class"
+    ]
+  },
+  "decision_rule": {
+    "automatic_approval": false,
+    "robots_denial": "REJECTED",
+    "foreign_redirect": "REQUIRES_SUCCESSOR_HOST_REVIEW",
+    "transport_failure": "REQUIRES_FURTHER_HUMAN_REVIEW",
+    "otherwise": "REQUIRES_FURTHER_HUMAN_REVIEW",
+    "public_research_requires_later_exact_host_owner_decision": true,
+    "prior_a09_state_inherited": false
+  },
+  "unchanged_controls": {
+    "kill_switch": "TRIPPED",
+    "all_seven_m6_7_permissions": "NOT_AUTHORIZED",
+    "slot_mapping": "IMMUTABLE",
+    "replacements": 0,
+    "automated_tdlr_discovery_validated": false
+  }
+}
