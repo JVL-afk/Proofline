@@ -1,0 +1,27 @@
+{
+  "schema_version": "m67-replacement-sample-exact-host-a09-access-review-owner-approval-ready-v1",
+  "state": "READY_FOR_REPLACEMENT_SAMPLE_EXACT_HOST_A09_ACCESS_REVIEW_AUTHORIZATION",
+  "event": "AUTHORIZE_REPLACEMENT_SAMPLE_EXACT_HOST_A09_ACCESS_REVIEW",
+  "account": "785072247535",
+  "region": "us-east-2",
+  "preparation_commit": "2e742b5580fd7058a631b2683eb2a7e33a020ccb",
+  "configuration_sha256": "de948d089e0dc7e1dcd60397006ec4cc1584552fcd843509a1c0983022141041",
+  "exact_executable_sha256": "fdec09f64506e53fd018fd984c7b2c0cf11ce0f2488adfdffbfcec6cc7425bb4",
+  "deterministic_tests_sha256": "51990f1221949b6f0cab2e00977d43bd4626cdb42b35db34b2b59b32af560eaa",
+  "ordered_package_file_sha256": "0283f0a6956f6bd11e9326419d9671a61cc57dac0b6d376b9e2b7a11f0507a70",
+  "ordered_package_semantic_sha256": "3419a018a0cfb39c7fe6391c19b3acb43378b7b88e92337a2c70af305d345b5b",
+  "ordered_frame_evidence_sha256": "23a2efe438dcc51e2dc290da49d5d73f10cd8af9e94743ed8a6da62cfa09980a",
+  "ingestion_evidence_sha256": "9952bc8803ca850e66a1d1f68242206a0704ad88db94b028e5a2ccdb025d773c",
+  "prior_sample_supersession_evidence_sha256": "b7717da1ce97cefe6190af36224337799adf3f6f531896d32a4662637856f8f4",
+  "owner_approval_statement_clauses": [
+    "I approve AUTHORIZE_REPLACEMENT_SAMPLE_EXACT_HOST_A09_ACCESS_REVIEW for AWS account 785072247535 in us-east-2, binding preparation commit 2e742b5580fd7058a631b2683eb2a7e33a020ccb, exact-host review configuration SHA-256 de948d089e0dc7e1dcd60397006ec4cc1584552fcd843509a1c0983022141041, exact executable SHA-256 fdec09f64506e53fd018fd984c7b2c0cf11ce0f2488adfdffbfcec6cc7425bb4, deterministic tests SHA-256 51990f1221949b6f0cab2e00977d43bd4626cdb42b35db34b2b59b32af560eaa, replacement ordered-package file SHA-256 0283f0a6956f6bd11e9326419d9671a61cc57dac0b6d376b9e2b7a11f0507a70, ordered-package semantic SHA-256 3419a018a0cfb39c7fe6391c19b3acb43378b7b88e92337a2c70af305d345b5b, ordered-frame evidence SHA-256 23a2efe438dcc51e2dc290da49d5d73f10cd8af9e94743ed8a6da62cfa09980a, ingestion evidence SHA-256 9952bc8803ca850e66a1d1f68242206a0704ad88db94b028e5a2ccdb025d773c, and prior-sample supersession evidence SHA-256 b7717da1ce97cefe6190af36224337799adf3f6f531896d32a4662637856f8f4.",
+    "This authorizes exactly one terminal A-09 source-access review attempt between 2026-08-25T14:00:00Z and 2026-09-01T14:00:00Z against only the 24 immutable replacement-sample candidate hostnames bound in slot order by the configuration and ordered package, using current-system DNS solely as required for certificate-validated HTTPS on TCP/443.",
+    "For each exact host, the runner may make one no-retry GET of /robots.txt, one no-retry GET of /, and at most one no-retry GET of a same-host, query-free Terms or legal path deterministically discovered from the root page. Redirects must not be followed; a foreign redirect is preserved for successor-host review and does not replace or redraw a slot. Per-host DNS, TLS, or HTTP transport failure is preserved content-minimally without retry and does not abort or replace another immutable slot.",
+    "Global ceilings are 72 logical HTTPS requests and attempts, 250,000 bytes per response, 12,000,000 response bytes total, concurrency one, minimum two-second delay, USD 0, AI calls 0, and browser sessions 0.",
+    "Raw bodies remain ephemeral; durable evidence is limited to the immutable business/host mapping, transport/body hashes and lengths, content type, redirect hostname without following, robots classification, business-name-match classification, one same-host legal path, content-free restriction flags, and content-free transport failure class. The runner must checkpoint minimized evidence after every request outcome and must never persist page text, exception messages, person/contact values, credentials, cookies, forms, or raw bodies.",
+    "It may automatically reject robots-denied hosts but may not automatically approve any hostname; every non-rejected hostname remains pending an accountable exact-host human decision. No A-09 decision from the superseded sample may be inherited.",
+    "This authorization is only for A-09 source/access evidence collection. It does not authorize REAL_BUSINESS_DISCOVERY, REAL_PUBLIC_RESEARCH, M1-M5, Slot 1, person/contact processing, professional identity resolution, contact storage or verification, shadow evaluation/readiness, outreach, communication, AI, browser automation, AWS/Terraform mutation, slot replacement, redraw, or any other M6.7 permission change.",
+    "The kill switch remains TRIPPED, all seven M6.7 permissions remain NOT_AUTHORIZED, Slots 01-24 remain immutable, replacements remain 0, AUTOMATED_TDLR_DISCOVERY_VALIDATED remains FALSE, and the superseded sample and all consumed grants remain immutable historical evidence."
+  ],
+  "assembly_rule": "Join owner_approval_statement_clauses with one ASCII space, preserving clause text exactly."
+}
