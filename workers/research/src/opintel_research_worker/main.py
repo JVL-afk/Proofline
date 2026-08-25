@@ -14,11 +14,12 @@ from opintel_research import (
     ResearchWorkflowRunner,
     SocketResolver,
 )
-from opintel_research.ports import HttpTransport
+from opintel_research.ports import HttpTransport, ResearchAuthorization
 from opintel_research_local import (
     ControlledEgressTransport,
     DisabledBrowserFallback,
     IsolatedBrowserFallback,
+    RuntimeRobotsPolicy,
     SafeHttpFetcher,
     SqlAlchemyResearchRepository,
     StdlibPinnedTransport,
@@ -28,6 +29,10 @@ from opintel_research_local import (
     get_research_worker_settings,
 )
 
+from opintel_research_worker.authorization import (
+    AwsSsmResearchAuthorization,
+    SyntheticResearchAuthorization,
+)
 from opintel_research_worker.kill_switch import AwsSsmStopSignal
 from opintel_research_worker.minimization import ProductionPhaseOneCaptureMinimizer
 from opintel_research_worker.synthetic_validation import run_deployed_synthetic_validation
@@ -36,14 +41,21 @@ from opintel_research_worker.synthetic_validation import run_deployed_synthetic_
 def build_runner() -> ResearchWorkflowRunner:
     settings = get_research_worker_settings()
     transport: HttpTransport
+    research_authorization: ResearchAuthorization
     if settings.app_env == "phase1":
         if settings.controlled_egress_url is None or settings.egress_policy_revision is None:
             raise RuntimeError("phase1 controlled egress configuration is incomplete")
+        research_authorization = AwsSsmResearchAuthorization(
+            settings.research_release_parameter or "",
+            settings.aws_region,
+            settings.research_runtime_revision or "",
+        )
         transport = ControlledEgressTransport(
-            settings.controlled_egress_url, settings.egress_policy_revision
+            settings.controlled_egress_url, research_authorization.current_revision
         )
     else:
         transport = StdlibPinnedTransport()
+        research_authorization = SyntheticResearchAuthorization()
     clock = SystemClock()
     repository = SqlAlchemyResearchRepository(settings.resolved_database_url())
     repository.initialize()
@@ -61,7 +73,6 @@ def build_runner() -> ResearchWorkflowRunner:
             PublicUrlPolicy(SocketResolver()),
             transport,
             clock,
-            live_enabled=settings.research_live_enabled,
         ),
         browser=browser,
         extractor=ObservationalHtmlExtractor(),
@@ -69,6 +80,10 @@ def build_runner() -> ResearchWorkflowRunner:
         identifiers=UuidFactory(),
         sleeper=SystemSleeper(),
         capture_minimizer=ProductionPhaseOneCaptureMinimizer(),
+        robots_policy=RuntimeRobotsPolicy(
+            PublicUrlPolicy(SocketResolver()), transport, clock, UuidFactory()
+        ),
+        research_authorization=research_authorization,
         lease_duration=timedelta(seconds=settings.worker_lease_seconds),
         stop_signal=(
             AwsSsmStopSignal(settings.kill_switch_parameter or "", settings.aws_region)

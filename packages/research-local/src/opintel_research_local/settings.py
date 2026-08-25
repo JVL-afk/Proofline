@@ -25,6 +25,8 @@ class ResearchWorkerSettings(BaseSettings):
     controlled_egress_url: str | None = None
     egress_policy_revision: str | None = None
     kill_switch_parameter: str | None = None
+    research_release_parameter: str | None = None
+    research_runtime_revision: str | None = None
     aws_region: str = "us-east-2"
     database_host: str | None = None
     database_port: int = Field(default=5432, ge=1, le=65535)
@@ -49,6 +51,8 @@ class ResearchWorkerSettings(BaseSettings):
                 raise ValueError("Phase 1 requires the controlled egress boundary")
             if not self.kill_switch_parameter:
                 raise ValueError("Phase 1 requires an authoritative kill switch")
+            if not self.research_release_parameter or not self.research_runtime_revision:
+                raise ValueError("Phase 1 requires an exact research release boundary")
             if self.research_browser_enabled:
                 raise ValueError("Phase 1 browser execution is disabled")
         elif not self.database_url.startswith("sqlite:///"):

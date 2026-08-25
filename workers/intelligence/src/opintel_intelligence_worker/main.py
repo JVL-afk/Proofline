@@ -7,12 +7,12 @@ import logging
 import signal
 import time
 
+import boto3
 from opintel_audit import AuditWorkflowRunner, DeterministicAuditComposer
 from opintel_audit_local import CanonicalAuditSourceCatalog, SqlAlchemyAuditRepository
 from opintel_demo import DemoWorkflowRunner, DeterministicDemoComposer
 from opintel_demo_local import CanonicalDemoSourceCatalog, SqlAlchemyDemoRepository
 from opintel_m0_local import SystemClock, UuidFactory
-from opintel_m0_local.settings import get_local_settings
 from opintel_opportunity import OpportunityWorkflowRunner
 from opintel_opportunity_local import (
     EchoMockReasoner,
@@ -23,12 +23,15 @@ from opintel_outreach import DeterministicOutreachComposer, OutreachWorkflowRunn
 from opintel_outreach_local import CanonicalOutreachSourceCatalog, SqlAlchemyOutreachRepository
 from opintel_research_local import SqlAlchemyResearchRepository
 
+from opintel_intelligence_worker.settings import IntelligenceWorkerSettings
+
 
 def run() -> None:
-    settings = get_local_settings()
-    research = SqlAlchemyResearchRepository(settings.database_url)
+    settings = IntelligenceWorkerSettings()  # type: ignore[call-arg]
+    database_url = settings.database_url()
+    research = SqlAlchemyResearchRepository(database_url)
     research.initialize()
-    repository = SqlAlchemyOpportunityRepository(settings.database_url)
+    repository = SqlAlchemyOpportunityRepository(database_url)
     repository.initialize()
     opportunity_runner = OpportunityWorkflowRunner(
         repository,
@@ -37,7 +40,7 @@ def run() -> None:
         SystemClock(),
         UuidFactory(),
     )
-    audit_repository = SqlAlchemyAuditRepository(settings.database_url)
+    audit_repository = SqlAlchemyAuditRepository(database_url)
     audit_repository.initialize()
     audit_runner = AuditWorkflowRunner(
         audit_repository,
@@ -45,7 +48,7 @@ def run() -> None:
         DeterministicAuditComposer(UuidFactory()),
         SystemClock(),
     )
-    demo_repository = SqlAlchemyDemoRepository(settings.database_url)
+    demo_repository = SqlAlchemyDemoRepository(database_url)
     demo_repository.initialize()
     demo_runner = DemoWorkflowRunner(
         demo_repository,
@@ -53,7 +56,7 @@ def run() -> None:
         DeterministicDemoComposer(UuidFactory()),
         SystemClock(),
     )
-    outreach_repository = SqlAlchemyOutreachRepository(settings.database_url)
+    outreach_repository = SqlAlchemyOutreachRepository(database_url)
     outreach_repository.initialize()
     outreach_runner = OutreachWorkflowRunner(
         outreach_repository,
@@ -62,6 +65,16 @@ def run() -> None:
         SystemClock(),
     )
     stopped = False
+    ssm = boto3.client("ssm", region_name=settings.aws_region)
+
+    def kill_switch_tripped() -> bool:
+        try:
+            value = str(
+                ssm.get_parameter(Name=settings.kill_switch_parameter)["Parameter"]["Value"]
+            )
+        except Exception:
+            return True
+        return value != "RUN"
 
     def stop(signum: int, frame: object) -> None:
         nonlocal stopped
@@ -73,6 +86,9 @@ def run() -> None:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     logging.info(json.dumps({"event": "m5_intelligence_worker.started", "live_ai": False}))
     while not stopped:
+        if kill_switch_tripped():
+            time.sleep(settings.worker_poll_seconds)
+            continue
         if (
             not opportunity_runner.run_once()
             and not audit_runner.run_once()

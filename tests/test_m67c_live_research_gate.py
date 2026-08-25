@@ -18,6 +18,7 @@ from opintel_shadow.gate_application import (
 )
 from opintel_shadow.gate_domain import (
     ApprovalState,
+    AuthorizedResearchReleaseCommand,
     BackupHandling,
     BudgetExceeded,
     BudgetPolicyRevision,
@@ -332,6 +333,10 @@ def _release(
     state: PermissionState = PermissionState.AUTHORIZED,
 ) -> LiveResearchPermissionRelease:
     payload_hash = stable_hash((activity, registry.id, retention.id, environment.id, state))
+    exact_research = (
+        activity is PermissionActivity.REAL_PUBLIC_RESEARCH
+        and state is PermissionState.AUTHORIZED
+    )
     return LiveResearchPermissionRelease(
         id=uuid4(),
         workspace_id=WORKSPACE_ID,
@@ -353,6 +358,18 @@ def _release(
         approval_ids=("fixture-simulated-live-release",),
         kill_switch_id=kill.id,
         suspended_reason=("fixture suspension" if state is PermissionState.SUSPENDED else None),
+        slot_number=1 if exact_research else None,
+        business_identity="Fixture Research Business" if exact_research else None,
+        exact_hostname="synthetic-gate.invalid" if exact_research else None,
+        ordered_package_sha256="1" * 64 if exact_research else None,
+        research_runtime_revision="fixture-runtime@1" if exact_research else None,
+        max_logical_requests=5 if exact_research else None,
+        max_attempts=15 if exact_research else None,
+        max_response_bytes=512000 if exact_research else None,
+        max_total_bytes=1500000 if exact_research else None,
+        cost_ceiling_usd=Decimal("0") if exact_research else None,
+        allowed_source_scope=("synthetic-gate.invalid",) if exact_research else (),
+        owner_approval_sha256="2" * 64 if exact_research else None,
     )
 
 
@@ -364,7 +381,34 @@ def _request(release: LiveResearchPermissionRelease, source_id: str) -> EgressRe
         url="https://synthetic-gate.invalid/public",
         expected_release_id=release.id,
         expected_configuration_hash=release.configuration_hash,
+        slot_number=release.slot_number,
+        business_identity=release.business_identity,
+        ordered_package_sha256=release.ordered_package_sha256,
+        research_runtime_revision=release.research_runtime_revision,
     )
+
+
+def _authorized_command(current: LiveResearchPermissionRelease, clock: MutableClock, **updates):
+    values = {
+        "current_release_id": current.id,
+        "slot_number": 1,
+        "business_identity": "Fixture Research Business",
+        "exact_hostname": "synthetic-gate.invalid",
+        "ordered_package_sha256": "1" * 64,
+        "research_runtime_revision": "sha256:" + "2" * 64,
+        "starts_at": clock.now() - timedelta(minutes=1),
+        "expires_at": clock.now() + timedelta(minutes=15),
+        "max_logical_requests": 5,
+        "max_attempts": 15,
+        "max_response_bytes": 512000,
+        "max_total_bytes": 1500000,
+        "cost_ceiling_usd": Decimal("0"),
+        "allowed_source_scope": ("synthetic-gate.invalid",),
+        "owner_approval_id": "APPROVE_SYNTHETIC_EXACT_RESEARCH",
+        "owner_approval_sha256": "3" * 64,
+    }
+    values.update(updates)
+    return AuthorizedResearchReleaseCommand(**values)
 
 
 def _preflight(
@@ -569,7 +613,7 @@ def test_unregistered_host_and_redirect_escape_fail_closed(clock: MutableClock) 
         update={"url": "https://unregistered.invalid/public"}
     )
     direct_transport = FakeHttpTransport((fake_response(200),))
-    with pytest.raises(LiveResearchPolicyError, match="exact source"):
+    with pytest.raises(LiveResearchNotAuthorized, match="exact release scope"):
         ControlledEgressService(resolver, direct_transport, clock).fetch(
             direct, release, registry, retention, environment, kill
         )
@@ -1231,6 +1275,56 @@ def test_permission_suspension_is_independent_and_immutable(
     assert suspended.state is PermissionState.SUSPENDED
     assert discovery.state is PermissionState.AUTHORIZED
     assert research.state is PermissionState.AUTHORIZED
+
+
+def test_owner_command_creates_only_exact_expiring_public_research_release(
+    gate_service: LiveResearchGateService, clock: MutableClock
+) -> None:
+    registry, retention, environment, kill = (
+        _registry(clock), _retention(clock), _environment(clock), _kill(clock)
+    )
+    current = _release(
+        clock, registry, retention, environment, kill,
+        PermissionActivity.REAL_PUBLIC_RESEARCH, PermissionState.NOT_AUTHORIZED,
+    )
+    successor = gate_service.create_authorized_research_release(
+        current, _authorized_command(current, clock)
+    )
+    assert successor.state is PermissionState.AUTHORIZED
+    assert successor.slot_number == 1
+    assert successor.exact_hostname == "synthetic-gate.invalid"
+    assert successor.allowed_source_scope == ("synthetic-gate.invalid",)
+    assert successor.terminal_rollback_state == "NOT_AUTHORIZED"
+
+
+@pytest.mark.parametrize(
+    "update,match",
+    [
+        ({"current_release_id": uuid4()}, "current release"),
+        ({"expires_at": datetime(2020, 1, 1, tzinfo=UTC)}, "invalid slot or window"),
+        ({"allowed_source_scope": ("other.invalid",)}, "one exact hostname"),
+    ],
+)
+def test_malformed_or_mismatched_owner_command_fails_closed(
+    gate_service: LiveResearchGateService,
+    clock: MutableClock,
+    update: dict[str, object],
+    match: str,
+) -> None:
+    registry, retention, environment, kill = (
+        _registry(clock), _retention(clock), _environment(clock), _kill(clock)
+    )
+    current = _release(
+        clock, registry, retention, environment, kill,
+        PermissionActivity.REAL_PUBLIC_RESEARCH, PermissionState.NOT_AUTHORIZED,
+    )
+    if "current_release_id" in update:
+        command = _authorized_command(current, clock, **update)
+        with pytest.raises(LiveResearchNotAuthorized, match=match):
+            gate_service.create_authorized_research_release(current, command)
+    else:
+        with pytest.raises(ValidationError, match=match):
+            _authorized_command(current, clock, **update)
 
 
 def test_gate_repository_is_append_only_and_workspace_scoped(

@@ -433,6 +433,19 @@ class LiveResearchPermissionRelease(GateRecordBase):
     expires_at: datetime
     approval_ids: tuple[str, ...]
     kill_switch_id: UUID
+    slot_number: int | None = None
+    business_identity: str | None = None
+    exact_hostname: str | None = None
+    ordered_package_sha256: str | None = None
+    research_runtime_revision: str | None = None
+    max_logical_requests: int | None = None
+    max_attempts: int | None = None
+    max_response_bytes: int | None = None
+    max_total_bytes: int | None = None
+    cost_ceiling_usd: Decimal | None = None
+    allowed_source_scope: tuple[str, ...] = ()
+    terminal_rollback_state: Literal["NOT_AUTHORIZED"] = "NOT_AUTHORIZED"
+    owner_approval_sha256: str | None = None
     suspended_reason: str | None = None
     revoked_at: datetime | None = None
 
@@ -452,6 +465,77 @@ class LiveResearchPermissionRelease(GateRecordBase):
             raise ValueError("permission expiry must follow its start")
         if self.state is PermissionState.SUSPENDED and not self.suspended_reason:
             raise ValueError("suspended permission requires a reason")
+        if (
+            self.state is PermissionState.AUTHORIZED
+            and self.activity is PermissionActivity.REAL_PUBLIC_RESEARCH
+        ):
+            required_text = (
+                self.business_identity,
+                self.exact_hostname,
+                self.ordered_package_sha256,
+                self.research_runtime_revision,
+                self.owner_approval_sha256,
+            )
+            if self.slot_number is None or self.slot_number < 1:
+                raise ValueError("authorized research release requires an exact slot")
+            if any(not value or not value.strip() for value in required_text):
+                raise ValueError("authorized research release has incomplete immutable scope")
+            if self.allowed_source_scope != (self.exact_hostname,):
+                raise ValueError(
+                    "authorized research release must allow exactly its approved host"
+                )
+            ceilings = (
+                self.max_logical_requests,
+                self.max_attempts,
+                self.max_response_bytes,
+                self.max_total_bytes,
+            )
+            if any(value is None or value < 1 for value in ceilings):
+                raise ValueError("authorized research release requires positive exact ceilings")
+            if self.cost_ceiling_usd is None or self.cost_ceiling_usd < 0:
+                raise ValueError("authorized research release requires an exact cost ceiling")
+        return self
+
+
+class AuthorizedResearchReleaseCommand(FrozenModel):
+    current_release_id: UUID
+    slot_number: int
+    business_identity: str
+    exact_hostname: str
+    ordered_package_sha256: str
+    research_runtime_revision: str
+    starts_at: datetime
+    expires_at: datetime
+    max_logical_requests: int
+    max_attempts: int
+    max_response_bytes: int
+    max_total_bytes: int
+    cost_ceiling_usd: Decimal
+    allowed_source_scope: tuple[str, ...]
+    terminal_rollback_state: Literal["NOT_AUTHORIZED"] = "NOT_AUTHORIZED"
+    owner_approval_id: str
+    owner_approval_sha256: str
+
+    @model_validator(mode="after")
+    def exact_and_bounded(self) -> AuthorizedResearchReleaseCommand:
+        if self.slot_number < 1 or self.expires_at <= self.starts_at:
+            raise ValueError("authorized research command has an invalid slot or window")
+        if self.allowed_source_scope != (self.exact_hostname,):
+            raise ValueError("authorized research command must bind one exact hostname")
+        if any(
+            value < 1
+            for value in (
+                self.max_logical_requests,
+                self.max_attempts,
+                self.max_response_bytes,
+                self.max_total_bytes,
+            )
+        ):
+            raise ValueError("authorized research command ceilings must be positive")
+        if self.cost_ceiling_usd < 0:
+            raise ValueError("authorized research command cost ceiling cannot be negative")
+        if not self.owner_approval_id.strip() or len(self.owner_approval_sha256) != 64:
+            raise ValueError("authorized research command requires immutable owner approval")
         return self
 
 
@@ -475,6 +559,10 @@ class EgressRequest(FrozenModel):
     method: Literal["GET", "HEAD"] = "GET"
     expected_release_id: UUID
     expected_configuration_hash: str
+    slot_number: int | None = None
+    business_identity: str | None = None
+    ordered_package_sha256: str | None = None
+    research_runtime_revision: str | None = None
 
 
 class EgressReceipt(FrozenModel):

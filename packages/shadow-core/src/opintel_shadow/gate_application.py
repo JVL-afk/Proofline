@@ -15,6 +15,7 @@ from opintel_research.url_policy import PublicUrlPolicy, normalize_public_url
 from opintel_shadow.domain import PermissionActivity, PermissionState, stable_hash
 from opintel_shadow.gate_domain import (
     ApprovalState,
+    AuthorizedResearchReleaseCommand,
     BudgetExceeded,
     BudgetPolicyRevision,
     BudgetReservation,
@@ -112,7 +113,7 @@ def _record_hash(record: object) -> str:
 
 
 class LiveResearchGateService:
-    """M6.7C policy gate with no command capable of authorizing a live release."""
+    """M6.7C policy gate; authorization requires an immutable exact owner command."""
 
     def __init__(
         self,
@@ -176,6 +177,55 @@ class LiveResearchGateService:
             self._repository.save(release)
             records.append(release)
         return records[0], records[1]
+
+    def create_authorized_research_release(
+        self,
+        current: LiveResearchPermissionRelease,
+        command: AuthorizedResearchReleaseCommand,
+    ) -> LiveResearchPermissionRelease:
+        """Create one exact, expiring public-research release; never infer authority."""
+        now = self._clock.now()
+        if current.id != command.current_release_id:
+            raise LiveResearchNotAuthorized("owner command does not bind the current release")
+        if current.activity is not PermissionActivity.REAL_PUBLIC_RESEARCH:
+            raise LiveResearchNotAuthorized("only public research can use this command")
+        if current.state is not PermissionState.NOT_AUTHORIZED:
+            raise LiveResearchNotAuthorized("release predecessor is not locked")
+        if not command.starts_at <= now < command.expires_at:
+            raise LiveResearchNotAuthorized("owner-approved release window is not current")
+        payload = command.model_dump(mode="json")
+        successor = current.model_copy(
+            update={
+                "id": self._ids.new(),
+                "version": f"{current.version}.owner-authorized",
+                "configuration_hash": stable_hash(payload),
+                "created_at": now,
+                "state": PermissionState.AUTHORIZED,
+                "cohort_or_run_restriction": f"PHASE1_SLOT_{command.slot_number:02d}",
+                "starts_at": command.starts_at,
+                "expires_at": command.expires_at,
+                "approval_ids": (command.owner_approval_id,),
+                "slot_number": command.slot_number,
+                "business_identity": command.business_identity,
+                "exact_hostname": command.exact_hostname,
+                "ordered_package_sha256": command.ordered_package_sha256,
+                "research_runtime_revision": command.research_runtime_revision,
+                "max_logical_requests": command.max_logical_requests,
+                "max_attempts": command.max_attempts,
+                "max_response_bytes": command.max_response_bytes,
+                "max_total_bytes": command.max_total_bytes,
+                "cost_ceiling_usd": command.cost_ceiling_usd,
+                "allowed_source_scope": command.allowed_source_scope,
+                "terminal_rollback_state": command.terminal_rollback_state,
+                "owner_approval_sha256": command.owner_approval_sha256,
+            }
+        )
+        # Re-validate model_copy output because Pydantic does not validate copies by default.
+        successor = LiveResearchPermissionRelease.model_validate(
+            successor.model_dump(mode="python")
+        )
+        self._repository.save(successor)
+        return successor
 
     def trip_kill_switch(
         self,
@@ -698,6 +748,19 @@ class ControlledEgressService:
             raise LiveResearchNotAuthorized("request does not bind the exact permission")
         if request.expected_configuration_hash != release.configuration_hash:
             raise LiveResearchNotAuthorized("permission configuration hash mismatch")
+        if request.activity is PermissionActivity.REAL_PUBLIC_RESEARCH:
+            if (
+                request.slot_number != release.slot_number
+                or request.business_identity != release.business_identity
+                or request.ordered_package_sha256 != release.ordered_package_sha256
+                or request.research_runtime_revision != release.research_runtime_revision
+            ):
+                raise LiveResearchNotAuthorized("request does not bind the exact research scope")
+            request_host = (urlsplit(request.url).hostname or "").lower()
+            if request_host != release.exact_hostname or release.allowed_source_scope != (
+                request_host,
+            ):
+                raise LiveResearchNotAuthorized("request hostname is outside exact release scope")
         if not release.starts_at <= now < release.expires_at:
             raise LiveResearchNotAuthorized("permission is not currently effective")
         if (

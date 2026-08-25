@@ -24,6 +24,7 @@ from opintel_research.domain import (
     FetchTimeoutError,
     OversizedResponseError,
     RawHttpResponse,
+    RobotsPolicyEvidence,
     TransientFetchError,
     UrlPolicyError,
 )
@@ -88,6 +89,26 @@ class AdvancingSleeper:
         self.clock.advance(timedelta(seconds=seconds))
 
 
+class AllowRobots:
+    def __init__(self, clock: FakeClock) -> None:
+        self.clock = clock
+
+    def evaluate(self, research_run_id, url, permitted_host, policy):
+        del policy
+        return RobotsPolicyEvidence(
+            id=UuidFactory().new(), research_run_id=research_run_id, host=permitted_host,
+            requested_path="/", captured_at=self.clock.now(), http_status=200,
+            body_sha256="0" * 64, body_length=0, decision="ALLOW",
+            reason_code="synthetic_robots_allowed", allowed=True,
+        )
+
+
+class AllowResearch:
+    def authorize(self, run, business) -> None:
+        assert run.business_id == business.id
+        assert run.permitted_host == business.permitted_host
+
+
 class RecordingBrowser:
     def __init__(self, clock: FakeClock) -> None:
         self.clock = clock
@@ -126,7 +147,7 @@ def safe_fetcher(
     resolver: StaticResolver | None = None,
 ) -> SafeHttpFetcher:
     return SafeHttpFetcher(
-        PublicUrlPolicy(resolver or StaticResolver()), transport, clock, live_enabled=True
+        PublicUrlPolicy(resolver or StaticResolver()), transport, clock
     )
 
 
@@ -168,6 +189,8 @@ def build_runner(
             identifiers=UuidFactory(),
             sleeper=sleeper,
             capture_minimizer=ProductionPhaseOneCaptureMinimizer(),
+            robots_policy=AllowRobots(clock),
+            research_authorization=AllowResearch(),
         ),
         sleeper,
     )
@@ -477,6 +500,8 @@ def test_browser_fallback_is_used_only_for_insufficient_http_content(
         identifiers=UuidFactory(),
         sleeper=AdvancingSleeper(clock, []),
         capture_minimizer=ProductionPhaseOneCaptureMinimizer(),
+        robots_policy=AllowRobots(clock),
+        research_authorization=AllowResearch(),
     )
     assert runner.run_once() is True
     assert browser.calls == [("https://example.com/", "example.com")]
@@ -509,6 +534,8 @@ def test_phase1_requires_explicit_postgresql_and_local_remains_sqlite() -> None:
         controlled_egress_url="http://egress.internal:8080",
         egress_policy_revision="synthetic-policy-v1",
         kill_switch_parameter="/synthetic/kill-switch",
+        research_release_parameter="/synthetic/research-release",
+        research_runtime_revision="synthetic-runtime-v1",
     )
     assert production.resolved_database_url().startswith("postgresql+psycopg://")
 

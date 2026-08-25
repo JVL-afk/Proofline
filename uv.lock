@@ -546,6 +546,7 @@ name = "opintel-intelligence-worker"
 version = "0.1.0"
 source = { editable = "workers/intelligence" }
 dependencies = [
+    { name = "boto3" },
     { name = "opintel-audit-core" },
     { name = "opintel-audit-local" },
     { name = "opintel-demo-core" },
@@ -560,6 +561,7 @@ dependencies = [
 
 [package.metadata]
 requires-dist = [
+    { name = "boto3", specifier = ">=1.40,<2" },
     { name = "opintel-audit-core", editable = "packages/audit-core" },
     { name = "opintel-audit-local", editable = "packages/audit-local" },
     { name = "opintel-demo-core", editable = "packages/demo-core" },

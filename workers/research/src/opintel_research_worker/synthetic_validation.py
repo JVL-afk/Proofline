@@ -18,6 +18,7 @@ from opintel_research.domain import (
     MinimizedPageSnapshot,
     ResearchRun,
     ResearchRunStatus,
+    RobotsPolicyEvidence,
     contains_prohibited_contact_value,
 )
 from opintel_research.ports import StopSignal
@@ -28,6 +29,7 @@ from opintel_research_local import (
     SystemClock,
 )
 
+from opintel_research_worker.authorization import SyntheticResearchAuthorization
 from opintel_research_worker.kill_switch import AwsSsmStopSignal
 from opintel_research_worker.minimization import ProductionPhaseOneCaptureMinimizer
 
@@ -56,6 +58,33 @@ _PROHIBITED: Final = (
 class _NoSleep:
     def sleep(self, seconds: float) -> None:
         del seconds
+
+
+class _SyntheticRobotsPolicy:
+    def __init__(self, identifiers: _DeterministicIdentifiers) -> None:
+        self._identifiers = identifiers
+
+    def evaluate(
+        self,
+        research_run_id: UUID,
+        url: str,
+        permitted_host: str,
+        policy: CrawlPolicy,
+    ) -> RobotsPolicyEvidence:
+        del url, policy
+        return RobotsPolicyEvidence(
+            id=self._identifiers.new(),
+            research_run_id=research_run_id,
+            host=permitted_host,
+            requested_path="/",
+            captured_at=SystemClock().now(),
+            http_status=200,
+            body_sha256="0" * 64,
+            body_length=0,
+            decision="ALLOW",
+            reason_code="synthetic_robots_allowed",
+            allowed=True,
+        )
 
 
 class _DeterministicIdentifiers:
@@ -246,15 +275,18 @@ def execute_synthetic_validation(
     if not created:
         raise RuntimeError("synthetic validation id has already been consumed")
     fetcher = _SyntheticFetcher()
+    identifiers = _DeterministicIdentifiers(validation_id)
     runner = ResearchWorkflowRunner(
         repository=repository,
         fetcher=fetcher,
         browser=DisabledBrowserFallback(),
         extractor=ObservationalHtmlExtractor(),
         clock=SystemClock(),
-        identifiers=_DeterministicIdentifiers(validation_id),
+        identifiers=identifiers,
         sleeper=_NoSleep(),
         capture_minimizer=ProductionPhaseOneCaptureMinimizer(),
+        robots_policy=_SyntheticRobotsPolicy(identifiers),
+        research_authorization=SyntheticResearchAuthorization(),
         lease_duration=timedelta(seconds=30),
         stop_signal=stop_signal,
     )

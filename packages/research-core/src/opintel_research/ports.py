@@ -21,6 +21,7 @@ from opintel_research.domain import (
     ResearchEvidence,
     ResearchPage,
     ResearchRun,
+    RobotsPolicyEvidence,
     ValidatedUrl,
 )
 
@@ -62,10 +63,20 @@ class StopSignal(Protocol):
     def is_active(self) -> bool: ...
 
 
+class ResearchAuthorization(Protocol):
+    def authorize(self, run: ResearchRun, business: Business) -> None: ...
+
+
 class CaptureMinimizer(Protocol):
     def minimize(
         self, snapshot: PageSnapshot, business_name: str, observed_visible_text: str
     ) -> DurableMinimizedCapture | CaptureQuarantine: ...
+
+
+class RobotsPolicy(Protocol):
+    def evaluate(
+        self, research_run_id: UUID, url: str, permitted_host: str, policy: CrawlPolicy
+    ) -> RobotsPolicyEvidence: ...
 
 
 class ResearchRepository(Protocol):
@@ -79,6 +90,7 @@ class ResearchRepository(Protocol):
     def claim_run(self, now: datetime, lease: timedelta) -> ResearchRun | None: ...
     def recover_stale_runs(self, now: datetime) -> int: ...
     def record_attempt(self, attempt: FetchAttempt) -> None: ...
+    def record_robots_evidence(self, evidence: RobotsPolicyEvidence) -> None: ...
     def list_attempts(self, workspace_id: UUID, run_id: UUID) -> list[FetchAttempt]: ...
     def save_page_bundle(
         self,

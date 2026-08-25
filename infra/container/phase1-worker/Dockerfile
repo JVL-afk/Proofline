@@ -14,6 +14,7 @@ RUN python -m pip install --disable-pip-version-check --no-cache-dir "uv==${UV_V
     && uv export \
         --locked \
         --package opintel-research-worker \
+        --package opintel-intelligence-worker \
         --no-dev \
         --no-emit-workspace \
         --no-annotate \
@@ -35,18 +36,24 @@ LABEL org.opencontainers.image.source="opportunity-intelligence-platform" \
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PYTHONPATH=/app/m0-core:/app/research-core:/app/research-local:/app/opportunity-core:/app/audit-core:/app/demo-core:/app/outreach-core:/app/shadow-core:/app/research-worker
+    PYTHONPATH=/app/m0-core:/app/m0-local:/app/research-core:/app/research-local:/app/opportunity-core:/app/opportunity-local:/app/audit-core:/app/audit-local:/app/demo-core:/app/demo-local:/app/outreach-core:/app/outreach-local:/app/shadow-core:/app/research-worker:/app/intelligence-worker
 
 COPY --from=dependencies /runtime /usr/local
 COPY packages/m0-core/src /app/m0-core
+COPY packages/m0-local/src /app/m0-local
 COPY packages/research-core/src /app/research-core
 COPY packages/research-local/src /app/research-local
 COPY packages/opportunity-core/src /app/opportunity-core
+COPY packages/opportunity-local/src /app/opportunity-local
 COPY packages/audit-core/src /app/audit-core
+COPY packages/audit-local/src /app/audit-local
 COPY packages/demo-core/src /app/demo-core
+COPY packages/demo-local/src /app/demo-local
 COPY packages/outreach-core/src /app/outreach-core
+COPY packages/outreach-local/src /app/outreach-local
 COPY packages/shadow-core/src /app/shadow-core
 COPY workers/research/src /app/research-worker
+COPY workers/intelligence/src /app/intelligence-worker
 
 # The upstream Python runtime includes pip and its vendored build/network packages. The worker does
 # not install packages at runtime, so remove that tooling and its stale vendored metadata entirely.

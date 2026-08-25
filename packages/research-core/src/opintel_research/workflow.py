@@ -33,7 +33,9 @@ from opintel_research.ports import (
     CaptureMinimizer,
     HtmlExtractor,
     PublicFetcher,
+    ResearchAuthorization,
     ResearchRepository,
+    RobotsPolicy,
     Sleeper,
     StopSignal,
 )
@@ -51,6 +53,8 @@ class ResearchWorkflowRunner:
         identifiers: IdentifierFactory,
         sleeper: Sleeper,
         capture_minimizer: CaptureMinimizer,
+        robots_policy: RobotsPolicy,
+        research_authorization: ResearchAuthorization,
         lease_duration: timedelta = timedelta(seconds=60),
         stop_signal: StopSignal | None = None,
     ) -> None:
@@ -62,6 +66,8 @@ class ResearchWorkflowRunner:
         self._identifiers = identifiers
         self._sleeper = sleeper
         self._capture_minimizer = capture_minimizer
+        self._robots_policy = robots_policy
+        self._research_authorization = research_authorization
         self._lease = lease_duration
         self._stop_signal = stop_signal
 
@@ -79,6 +85,7 @@ class ResearchWorkflowRunner:
         business = self._repository.get_business(run.workspace_id, run.business_id)
         if business is None:
             raise RuntimeError("research business is missing")
+        self._research_authorization.authorize(run, business)
         queue: deque[tuple[str, int]] = deque([(run.start_url, 0)])
         visited: set[str] = set()
         pages_attempted = 0
@@ -106,6 +113,39 @@ class ResearchWorkflowRunner:
                 continue
             visited.add(normalized)
             pages_attempted += 1
+
+            robots = self._robots_policy.evaluate(run.id, normalized, run.permitted_host, policy)
+            self._repository.record_robots_evidence(robots)
+            if not robots.allowed:
+                first_error = first_error or robots.reason_code
+                now = self._clock.now()
+                self._repository.save_failed_page(
+                    ResearchPage(
+                        id=self._identifiers.new(),
+                        workspace_id=run.workspace_id,
+                        business_id=run.business_id,
+                        research_run_id=run.id,
+                        requested_url=requested_url,
+                        normalized_url=normalized,
+                        depth=depth,
+                        status=PageStatus.FAILED,
+                        snapshot_id=None,
+                        material_id=None,
+                        fetched_at=now,
+                        error_code=robots.reason_code,
+                    ),
+                    FetchAttempt(
+                        id=self._identifiers.new(),
+                        research_run_id=run.id,
+                        normalized_url=normalized,
+                        attempt_number=0,
+                        started_at=now,
+                        completed_at=now,
+                        outcome="robots_blocked",
+                        error_code=robots.reason_code,
+                    ),
+                )
+                continue
 
             cached = self._repository.find_cached_snapshot(
                 run.workspace_id,

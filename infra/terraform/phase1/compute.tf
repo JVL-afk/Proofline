@@ -72,6 +72,16 @@ resource "aws_ssm_parameter" "kill_switch" {
   }
 }
 
+resource "aws_ssm_parameter" "research_release" {
+  name  = "/${var.name_prefix}/research-release"
+  type  = "String"
+  value = jsonencode({ state = "NOT_AUTHORIZED" })
+
+  lifecycle {
+    ignore_changes = [value]
+  }
+}
+
 data "aws_iam_policy_document" "worker" {
   statement {
     sid       = "RestrictedCaptureObjects"
@@ -96,7 +106,7 @@ data "aws_iam_policy_document" "worker" {
   statement {
     sid       = "ReadKillSwitch"
     actions   = ["ssm:GetParameter"]
-    resources = [aws_ssm_parameter.kill_switch.arn]
+    resources = [aws_ssm_parameter.kill_switch.arn, aws_ssm_parameter.research_release.arn]
   }
 }
 
@@ -137,6 +147,8 @@ resource "aws_ecs_task_definition" "worker" {
         { name = "OPINTEL_CONTROLLED_EGRESS_URL", value = "http://egress.m67.internal:8080" },
         { name = "OPINTEL_EGRESS_POLICY_REVISION", value = "NOT_AUTHORIZED" },
         { name = "OPINTEL_RESEARCH_LIVE_ENABLED", value = "false" },
+        { name = "OPINTEL_RESEARCH_RELEASE_PARAMETER", value = aws_ssm_parameter.research_release.name },
+        { name = "OPINTEL_RESEARCH_RUNTIME_REVISION", value = var.research_runtime_revision },
         { name = "OPINTEL_RESEARCH_BROWSER_ENABLED", value = "false" }
       ]
       secrets = [
@@ -208,6 +220,7 @@ resource "aws_ecs_task_definition" "egress" {
   cpu                      = 256
   memory                   = 512
   execution_role_arn       = aws_iam_role.execution.arn
+  task_role_arn            = aws_iam_role.egress.arn
 
   runtime_platform {
     operating_system_family = "LINUX"
@@ -223,8 +236,9 @@ resource "aws_ecs_task_definition" "egress" {
     user                   = "65532"
     portMappings           = [{ containerPort = 8080, hostPort = 8080, protocol = "tcp" }]
     environment = [
-      { name = "OPINTEL_EGRESS_ALLOWED_HOSTS", value = "" },
-      { name = "OPINTEL_EGRESS_POLICY_REVISION", value = "NOT_AUTHORIZED" }
+      { name = "OPINTEL_RESEARCH_RELEASE_PARAMETER", value = aws_ssm_parameter.research_release.name },
+      { name = "OPINTEL_RESEARCH_RUNTIME_REVISION", value = var.research_runtime_revision },
+      { name = "OPINTEL_AWS_REGION", value = var.aws_region }
     ]
     logConfiguration = {
       logDriver = "awslogs"
@@ -251,6 +265,106 @@ resource "aws_ecs_service" "egress" {
   }
   service_registries {
     registry_arn = aws_service_discovery_service.egress.arn
+  }
+
+  depends_on = [aws_iam_service_linked_role.ecs]
+}
+
+resource "aws_iam_role" "egress" {
+  name               = "${var.name_prefix}-controlled-egress"
+  assume_role_policy = data.aws_iam_policy_document.ecs_assume.json
+}
+
+data "aws_iam_policy_document" "egress" {
+  statement {
+    sid       = "ReadExactResearchRelease"
+    actions   = ["ssm:GetParameter"]
+    resources = [aws_ssm_parameter.research_release.arn]
+  }
+}
+
+resource "aws_iam_role_policy" "egress" {
+  name   = "${var.name_prefix}-controlled-egress"
+  role   = aws_iam_role.egress.id
+  policy = data.aws_iam_policy_document.egress.json
+}
+
+resource "aws_iam_role" "intelligence" {
+  name               = "${var.name_prefix}-intelligence-worker"
+  assume_role_policy = data.aws_iam_policy_document.ecs_assume.json
+}
+
+data "aws_iam_policy_document" "intelligence" {
+  statement {
+    sid       = "ReadKillSwitchOnly"
+    actions   = ["ssm:GetParameter"]
+    resources = [aws_ssm_parameter.kill_switch.arn]
+  }
+}
+
+resource "aws_iam_role_policy" "intelligence" {
+  name   = "${var.name_prefix}-intelligence-worker"
+  role   = aws_iam_role.intelligence.id
+  policy = data.aws_iam_policy_document.intelligence.json
+}
+
+resource "aws_ecs_task_definition" "intelligence" {
+  family                   = "${var.name_prefix}-intelligence-worker"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = 512
+  memory                   = 1024
+  execution_role_arn       = aws_iam_role.execution.arn
+  task_role_arn            = aws_iam_role.intelligence.arn
+
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "X86_64"
+  }
+
+  container_definitions = jsonencode([{
+    name                   = "intelligence-worker"
+    image                  = var.worker_image_uri
+    essential              = true
+    entryPoint             = ["python", "-m", "opintel_intelligence_worker.main"]
+    readonlyRootFilesystem = true
+    user                   = "65532"
+    environment = [
+      { name = "OPINTEL_APP_ENV", value = "phase1" },
+      { name = "OPINTEL_AWS_REGION", value = var.aws_region },
+      { name = "OPINTEL_KILL_SWITCH_PARAMETER", value = aws_ssm_parameter.kill_switch.name },
+      { name = "OPINTEL_DATABASE_HOST", value = aws_db_instance.phase1.address },
+      { name = "OPINTEL_DATABASE_NAME", value = var.database_name },
+      { name = "OPINTEL_DATABASE_USERNAME", value = var.database_master_username },
+      { name = "OPINTEL_AI_ENABLED", value = "false" },
+      { name = "OPINTEL_DELIVERY_ENABLED", value = "false" }
+    ]
+    secrets = [{
+      name      = "OPINTEL_DATABASE_PASSWORD"
+      valueFrom = "${aws_db_instance.phase1.master_user_secret[0].secret_arn}:password::"
+    }]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        awslogs-group         = aws_cloudwatch_log_group.worker.name
+        awslogs-region        = var.aws_region
+        awslogs-stream-prefix = "intelligence-worker"
+      }
+    }
+  }])
+}
+
+resource "aws_ecs_service" "intelligence" {
+  name            = "${var.name_prefix}-intelligence-worker"
+  cluster         = aws_ecs_cluster.phase1.id
+  task_definition = aws_ecs_task_definition.intelligence.arn
+  desired_count   = var.intelligence_worker_desired_count
+  launch_type     = "FARGATE"
+
+  network_configuration {
+    assign_public_ip = false
+    subnets          = aws_subnet.private[*].id
+    security_groups  = [aws_security_group.intelligence.id]
   }
 
   depends_on = [aws_iam_service_linked_role.ecs]

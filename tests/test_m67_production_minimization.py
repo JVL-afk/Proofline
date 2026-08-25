@@ -18,6 +18,7 @@ from opintel_research.domain import (
     PageSnapshot,
     ResearchRun,
     ResearchRunStatus,
+    RobotsPolicyEvidence,
     UrlPolicyError,
 )
 from opintel_research.url_policy import normalize_public_url
@@ -52,6 +53,22 @@ class Clock:
 class NoSleep:
     def sleep(self, seconds: float) -> None:
         del seconds
+
+
+class AllowSyntheticRobots:
+    def evaluate(self, research_run_id, url, permitted_host, policy):
+        del url, policy
+        return RobotsPolicyEvidence(
+            id=uuid4(), research_run_id=research_run_id, host=permitted_host,
+            requested_path="/", captured_at=NOW, http_status=200,
+            body_sha256="0" * 64, body_length=0, decision="ALLOW",
+            reason_code="synthetic_robots_allowed", allowed=True,
+        )
+
+
+class AllowSyntheticResearch:
+    def authorize(self, run, business) -> None:
+        assert run.business_id == business.id
 
 
 class OneDocumentFetcher:
@@ -131,6 +148,8 @@ def _runner(
         identifiers=UuidFactory(),
         sleeper=NoSleep(),
         capture_minimizer=minimizer or ProductionPhaseOneCaptureMinimizer(),  # type: ignore[arg-type]
+        robots_policy=AllowSyntheticRobots(),
+        research_authorization=AllowSyntheticResearch(),
     )
     return run, runner
 

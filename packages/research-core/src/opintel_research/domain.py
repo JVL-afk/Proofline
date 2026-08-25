@@ -96,6 +96,23 @@ class FetchAttempt:
 
 
 @dataclass(frozen=True, slots=True)
+class RobotsPolicyEvidence:
+    """Content-minimized runtime robots decision captured before page fetch."""
+
+    id: UUID
+    research_run_id: UUID
+    host: str
+    requested_path: str
+    captured_at: datetime
+    http_status: int | None
+    body_sha256: str | None
+    body_length: int
+    decision: str
+    reason_code: str
+    allowed: bool
+
+
+@dataclass(frozen=True, slots=True)
 class PageSnapshot:
     """Raw ephemeral page used only while deterministic minimization runs."""
 

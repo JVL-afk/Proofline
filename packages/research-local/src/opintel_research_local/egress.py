@@ -22,7 +22,11 @@ from opintel_research_local.http import StdlibPinnedTransport
 class ControlledEgressTransport:
     """Delegates a validated GET to the private gateway; it never opens a public socket."""
 
-    def __init__(self, gateway_url: str, policy_revision: str) -> None:
+    def __init__(
+        self,
+        gateway_url: str,
+        policy_revision: str | Callable[[], str],
+    ) -> None:
         if not gateway_url.startswith("http://"):
             raise ValueError("controlled egress gateway must be a private HTTP endpoint")
         if not policy_revision:
@@ -36,7 +40,9 @@ class ControlledEgressTransport:
         payload = json.dumps(
             {
                 "url": target.normalized_url,
-                "policy_revision": self._revision,
+                "policy_revision": (
+                    self._revision() if callable(self._revision) else self._revision
+                ),
                 "max_bytes": max_bytes,
                 "timeout_seconds": timeout_seconds,
             },
@@ -72,8 +78,9 @@ def build_gateway_handler(
     policy_revision: str,
     transport: HttpTransport | None = None,
     policy: PublicUrlPolicy | None = None,
+    policy_provider: Callable[[], tuple[frozenset[str], str]] | None = None,
 ) -> type[BaseHTTPRequestHandler]:
-    if not allowed_hosts or not policy_revision:
+    if policy_provider is None and (not allowed_hosts or not policy_revision):
         raise ValueError("gateway requires a non-empty exact-host policy revision")
     gateway_transport = transport or StdlibPinnedTransport()
     gateway_policy = policy or PublicUrlPolicy(SocketResolver())
@@ -90,14 +97,19 @@ def build_gateway_handler(
                 if length <= 0 or length > 8192:
                     raise ValueError("invalid request size")
                 request_value = json.loads(self.rfile.read(length))
-                if request_value.get("policy_revision") != policy_revision:
+                current_hosts, current_revision = (
+                    policy_provider()
+                    if policy_provider is not None
+                    else (allowed_hosts, policy_revision)
+                )
+                if request_value.get("policy_revision") != current_revision:
                     raise PermissionError("policy revision mismatch")
                 normalized = normalize_public_url(str(request_value["url"]))
                 parsed_host = urlsplit(normalized).hostname
                 if parsed_host is None:
                     raise ValueError("URL host is required")
                 host = gateway_policy.validate(normalized, parsed_host).host
-                if host not in allowed_hosts:
+                if host not in current_hosts:
                     raise PermissionError("host is not authorized")
                 max_bytes = min(int(request_value["max_bytes"]), 524288)
                 timeout = min(float(request_value["timeout_seconds"]), 10.0)
@@ -122,7 +134,7 @@ def build_gateway_handler(
                         {
                             "event": "controlled_egress.fetch",
                             "host_sha256": hashlib.sha256(host.encode()).hexdigest(),
-                            "policy_revision": policy_revision,
+                            "policy_revision": current_revision,
                             "status_code": raw.status_code,
                         },
                         sort_keys=True,
@@ -132,6 +144,9 @@ def build_gateway_handler(
                 self.send_error(403)
             except (KeyError, TypeError, ValueError):
                 self.send_error(400)
+            except Exception:
+                # Runtime release lookup and transport failures are content-free and fail closed.
+                self.send_error(403)
 
         def log_message(self, format: str, *args: object) -> None:
             del format, args
@@ -145,9 +160,11 @@ def run_gateway(
     host: str = "0.0.0.0",
     port: int = 8080,
     server_factory: Callable[..., ThreadingHTTPServer] = ThreadingHTTPServer,
+    policy_provider: Callable[[], tuple[frozenset[str], str]] | None = None,
 ) -> None:
     server_factory(
-        (host, port), build_gateway_handler(allowed_hosts, policy_revision)
+        (host, port),
+        build_gateway_handler(allowed_hosts, policy_revision, policy_provider=policy_provider),
     ).serve_forever()
 
 

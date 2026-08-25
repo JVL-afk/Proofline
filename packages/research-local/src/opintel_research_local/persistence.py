@@ -23,6 +23,7 @@ from opintel_research.domain import (
     ResearchPage,
     ResearchRun,
     ResearchRunStatus,
+    RobotsPolicyEvidence,
 )
 from sqlalchemy import (
     Boolean,
@@ -130,6 +131,21 @@ class FetchAttemptRow(Base):
     completed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
     outcome: Mapped[str] = mapped_column(String(32))
     error_code: Mapped[str | None] = mapped_column(String(80), nullable=True)
+
+
+class RobotsPolicyEvidenceRow(Base):
+    __tablename__ = "research_robots_evidence"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    research_run_id: Mapped[str] = mapped_column(ForeignKey("research_runs.id"), index=True)
+    host: Mapped[str] = mapped_column(String(253))
+    requested_path: Mapped[str] = mapped_column(String(2048))
+    captured_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    http_status: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    body_sha256: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    body_length: Mapped[int] = mapped_column(Integer)
+    decision: Mapped[str] = mapped_column(String(16))
+    reason_code: Mapped[str] = mapped_column(String(80))
+    allowed: Mapped[bool] = mapped_column(Boolean)
 
 
 class SnapshotRow(Base):
@@ -379,6 +395,13 @@ class SqlAlchemyResearchRepository:
         data["research_run_id"] = _id(attempt.research_run_id)
         with self._sessions.begin() as session:
             session.add(FetchAttemptRow(**data))
+
+    def record_robots_evidence(self, evidence: RobotsPolicyEvidence) -> None:
+        data = asdict(evidence)
+        data["id"] = _id(evidence.id)
+        data["research_run_id"] = _id(evidence.research_run_id)
+        with self._sessions.begin() as session:
+            session.add(RobotsPolicyEvidenceRow(**data))
 
     def list_attempts(self, workspace_id: UUID, run_id: UUID) -> list[FetchAttempt]:
         with self._sessions() as session:

@@ -84,6 +84,13 @@ resource "aws_security_group" "controlled_egress" {
   tags        = { Name = "${var.name_prefix}-controlled-egress" }
 }
 
+resource "aws_security_group" "intelligence" {
+  name        = "${var.name_prefix}-intelligence-worker"
+  description = "Deterministic M2-M5 worker with no public or delivery egress"
+  vpc_id      = aws_vpc.phase1.id
+  tags        = { Name = "${var.name_prefix}-intelligence-worker" }
+}
+
 resource "aws_security_group" "endpoints" {
   name        = "${var.name_prefix}-aws-endpoints"
   description = "Private AWS service endpoints used by Phase 1 tasks"
@@ -138,6 +145,42 @@ resource "aws_vpc_security_group_egress_rule" "worker_dns_udp" {
 
 resource "aws_vpc_security_group_egress_rule" "worker_dns_tcp" {
   security_group_id = aws_security_group.worker.id
+  cidr_ipv4         = "${cidrhost(var.vpc_cidr, 2)}/32"
+  from_port         = 53
+  to_port           = 53
+  ip_protocol       = "tcp"
+  description       = "VPC resolver DNS fallback"
+}
+
+resource "aws_vpc_security_group_egress_rule" "intelligence_to_database" {
+  security_group_id            = aws_security_group.intelligence.id
+  referenced_security_group_id = aws_security_group.database.id
+  from_port                    = 5432
+  to_port                      = 5432
+  ip_protocol                  = "tcp"
+  description                  = "Private PostgreSQL only"
+}
+
+resource "aws_vpc_security_group_egress_rule" "intelligence_to_endpoints" {
+  security_group_id            = aws_security_group.intelligence.id
+  referenced_security_group_id = aws_security_group.endpoints.id
+  from_port                    = 443
+  to_port                      = 443
+  ip_protocol                  = "tcp"
+  description                  = "Private AWS API endpoints only"
+}
+
+resource "aws_vpc_security_group_egress_rule" "intelligence_dns_udp" {
+  security_group_id = aws_security_group.intelligence.id
+  cidr_ipv4         = "${cidrhost(var.vpc_cidr, 2)}/32"
+  from_port         = 53
+  to_port           = 53
+  ip_protocol       = "udp"
+  description       = "VPC resolver DNS"
+}
+
+resource "aws_vpc_security_group_egress_rule" "intelligence_dns_tcp" {
+  security_group_id = aws_security_group.intelligence.id
   cidr_ipv4         = "${cidrhost(var.vpc_cidr, 2)}/32"
   from_port         = 53
   to_port           = 53
@@ -215,6 +258,14 @@ resource "aws_vpc_security_group_ingress_rule" "endpoints_from_gateway" {
   ip_protocol                  = "tcp"
 }
 
+resource "aws_vpc_security_group_ingress_rule" "endpoints_from_intelligence" {
+  security_group_id            = aws_security_group.endpoints.id
+  referenced_security_group_id = aws_security_group.intelligence.id
+  from_port                    = 443
+  to_port                      = 443
+  ip_protocol                  = "tcp"
+}
+
 locals {
   interface_endpoint_services = toset(["ecr.api", "ecr.dkr", "logs", "secretsmanager", "ssm"])
 }
@@ -251,4 +302,13 @@ resource "aws_vpc_security_group_ingress_rule" "database_from_worker" {
   from_port                    = 5432
   to_port                      = 5432
   ip_protocol                  = "tcp"
+}
+
+resource "aws_vpc_security_group_ingress_rule" "database_from_intelligence" {
+  security_group_id            = aws_security_group.database.id
+  referenced_security_group_id = aws_security_group.intelligence.id
+  from_port                    = 5432
+  to_port                      = 5432
+  ip_protocol                  = "tcp"
+  description                  = "Deterministic M2-M5 worker only"
 }

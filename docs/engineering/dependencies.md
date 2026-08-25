@@ -124,3 +124,9 @@ The Phase 1 research-worker composition root also directly depends on the existi
 narrow `CaptureMinimizer` port; `research-core` remains independent of the M6.7 bounded context.
 This adds no third-party package, transport, credential, AI, browser, or delivery capability. The
 boundary is covered by hostile raw-input, quarantine, durable-sink, and adapter parity tests.
+
+The M6.7 Slot 01 runtime successor declares the already locked `boto3` 1.x dependency directly in
+the deterministic intelligence worker because that process must read only the exact SSM kill-switch
+parameter through the existing private endpoint. This does not add a new resolved package or any
+business-web, AI, browser, contact, sender, or delivery client. The worker fails closed on every SSM
+error and has an IAM policy containing only `ssm:GetParameter` for that one parameter.

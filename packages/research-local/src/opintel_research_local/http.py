@@ -97,12 +97,10 @@ class SafeHttpFetcher:
         url_policy: PublicUrlPolicy,
         transport: HttpTransport,
         clock: Clock,
-        live_enabled: bool,
     ) -> None:
         self._policy = url_policy
         self._transport = transport
         self._clock = clock
-        self._live_enabled = live_enabled
 
     def fetch(
         self,
@@ -112,8 +110,6 @@ class SafeHttpFetcher:
         attempt_number: int,
     ) -> FetchedDocument:
         del attempt_number
-        if not self._live_enabled:
-            raise FetchError("live public research is disabled")
         canonical = normalize_public_url(url)
         current = canonical
         for redirect_count in range(policy.max_redirects + 1):

@@ -92,6 +92,27 @@ variable "worker_desired_count" {
   }
 }
 
+variable "intelligence_worker_desired_count" {
+  description = "Deterministic M2-M5 worker count; zero until a separately authorized run."
+  type        = number
+  default     = 0
+
+  validation {
+    condition     = contains([0, 1], var.intelligence_worker_desired_count)
+    error_message = "Phase 1 permits zero or one deterministic intelligence worker only."
+  }
+}
+
+variable "research_runtime_revision" {
+  description = "Immutable successor runtime revision bound by future research releases."
+  type        = string
+
+  validation {
+    condition     = can(regex("^sha256:[0-9a-f]{64}$", var.research_runtime_revision))
+    error_message = "research_runtime_revision must be an immutable sha256 digest."
+  }
+}
+
 variable "capture_retention_days" {
   description = "Exact A-08 successful minimized-capture retention."
   type        = number
