@@ -1,0 +1,112 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_SUCCESSOR_V3_DEPLOYED_EVIDENCE",
+  "version": "2026-08-26.1",
+  "state": "DEPLOYED_DORMANT_AND_CONVERGED",
+  "observed_at": "2026-08-26T11:05:47.6390356Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "authorization": {
+    "record": "APPROVE_SLOT01_RUNTIME_SUCCESSOR_V3_DEPLOYMENT",
+    "saved_plan_sha256": "96a6d1a9b17454be721bef64d1df6f171fa5b950c140ce22ad16c92762bd91ad",
+    "plan_json_sha256": "eb869410c8cd4eb8e0956297be5de8200a612e20c51b6baf339ccc23dc93e529",
+    "configuration_sha256": "8c20f1ee1a62789fe6047866eff487f43f273c9b839c6bb143e569606ed32c34",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "status": "CONSUMED_SUCCESS",
+    "reusable": false
+  },
+  "preapply": {
+    "result": "PASS",
+    "registry_manifest_digest": "sha256:8970af60a32da73b56c80d39598d2324459475fa7c98cc43e4200c626f68edb7",
+    "registry_config_digest": "sha256:a11d67766fceaca77e4347b9cd70fa5d6dd1a93970f7efc851a593604d0cc754",
+    "ecr_scan_status": "COMPLETE",
+    "ecr_blocking_findings": 0,
+    "kill_switch": "TRIPPED",
+    "research_release": {"state": "NOT_AUTHORIZED"},
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "service_counts": "0/0/0",
+    "all_bound_hashes_match": true
+  },
+  "terraform_apply": {
+    "result": "PASS_EXACT_SAVED_PLAN",
+    "provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "protected_backend_profile": "m67-phase1-state-apply-backend",
+    "resources_added": 3,
+    "resources_changed": 3,
+    "resources_destroyed": 3,
+    "standalone_creates": 0,
+    "in_place_service_changes": 3,
+    "expected_task_definition_replacements": 3,
+    "unexpected_replacements": 0,
+    "standalone_destroys": 0
+  },
+  "deployed_state": {
+    "image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:8970af60a32da73b56c80d39598d2324459475fa7c98cc43e4200c626f68edb7",
+    "task_definitions": {
+      "research_worker": "m67-phase1-research-worker:5",
+      "controlled_egress": "m67-phase1-controlled-egress:3",
+      "intelligence_worker": "m67-phase1-intelligence-worker:2"
+    },
+    "services": {
+      "m67-phase1-research-worker": "0/0/0",
+      "m67-phase1-controlled-egress": "0/0/0",
+      "m67-phase1-intelligence-worker": "0/0/0"
+    },
+    "live_tasks": 0,
+    "kill_switch": "TRIPPED",
+    "research_release": {"state": "NOT_AUTHORIZED"},
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "browser": "OFF",
+    "ai": "UNAVAILABLE_USD_0",
+    "person_contact_processing": "NOT_AUTHORIZED",
+    "delivery": "STRUCTURALLY_UNAVAILABLE"
+  },
+  "deployed_runtime_controls": {
+    "ordered_package_file_sha256": "0283f0a6956f6bd11e9326419d9671a61cc57dac0b6d376b9e2b7a11f0507a70",
+    "ordered_package_semantic_sha256": "3419a018a0cfb39c7fe6391c19b3acb43378b7b88e92337a2c70af305d345b5b",
+    "frozen_slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "frozen_slot_registry_semantic_sha256": "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2",
+    "work_item_identity_schema_sha256": "d540c0017470188267b5331790571318262dbaffe70d405f7fdca6e4680b69e8",
+    "authorization_adapter_sha256": "c99f715ef6f52afabca3860c00c8a9ec0dd9ff16960ab90927cc3e8b3e1fcfc2",
+    "runtime_revision": "sha256:8970af60a32da73b56c80d39598d2324459475fa7c98cc43e4200c626f68edb7",
+    "slot_registry_path": "/app/config/phase1-frozen-slot-registry.json",
+    "exact_host_release_enforcement": "PRESENT",
+    "runtime_robots_enforcement": "PRESENT_BEFORE_PAGE_FETCH",
+    "minimization_boundary": "PRESENT",
+    "readonly_root_filesystem": "TRUE_ALL_CONTAINERS",
+    "assign_public_ip": "DISABLED_ALL_SERVICES"
+  },
+  "fail_closed_validation": {
+    "command": ".venv\\Scripts\\python.exe -m pytest -q tests/test_m67_phase1_sampled_slot_authorization.py tests/test_m67_slot01_runtime_successor.py tests/test_m67_runtime_robots.py",
+    "result": "20 passed in 0.68s",
+    "correct_slot_and_work_item": "SYNTHETIC_PERMITTED_PATH_PASS",
+    "wrong_slot": "BLOCKED_BEFORE_DNS",
+    "wrong_ordered_package": "BLOCKED_BEFORE_DNS",
+    "wrong_business": "BLOCKED_BEFORE_DNS",
+    "wrong_hostname": "BLOCKED_BEFORE_DNS",
+    "missing_slot_identity": "BLOCKED_BEFORE_DNS",
+    "malformed_slot_identity": "BLOCKED_BEFORE_DNS",
+    "forged_slot_identity": "BLOCKED_BEFORE_DNS",
+    "expired_release": "BLOCKED_BEFORE_DNS",
+    "no_release": "BLOCKED_BEFORE_DNS",
+    "kill_switch_tripped": "BLOCKED_BEFORE_DNS",
+    "requests_to_903hvac_com": 0
+  },
+  "terraform_convergence": {
+    "result": "NO_CHANGES",
+    "detailed_exit_code": 0,
+    "provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "warning": "Existing Cloud Map custom-health provider deprecation only; no drift"
+  },
+  "safety": {
+    "real_business_dns_http": 0,
+    "m1_m5_execution": 0,
+    "slot01_release_created": false,
+    "permission_mutations": 0,
+    "services_activated": false,
+    "slots_04_24_reopened": false
+  }
+}

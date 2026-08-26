@@ -1,0 +1,60 @@
+{
+  "record_type": "APPROVE_SLOT01_RUNTIME_SUCCESSOR_V3_DEPLOYMENT",
+  "version": "2026-08-26.1",
+  "state": "CONSUMED_SUCCESS",
+  "target": {"account_id": "785072247535", "region": "us-east-2"},
+  "bindings": {
+    "implementation_commit": "2e9bb32016ceb0b99013edf9c099e5eb413dcd80",
+    "artifact_pipeline_commit": "cc20055fd178d3bdb8e24fdffd0ecfb7fd699335",
+    "deployment_evidence_commit": "66904ea8e8fa5c4a248a9245a7f5d243f5a990c4",
+    "plan_review_sha256": "b5b3c2123cd2ebcc42e76341edef0676ee4ce4d3d41e0d6a19e513d1adb67c6f",
+    "registry_evidence_sha256": "1040ee772a192bd39b4ad722762ce3eab06da4df88c3419d1b5b3115730511c4",
+    "work_item_identity_schema_sha256": "d540c0017470188267b5331790571318262dbaffe70d405f7fdca6e4680b69e8",
+    "authorization_adapter_sha256": "c99f715ef6f52afabca3860c00c8a9ec0dd9ff16960ab90927cc3e8b3e1fcfc2",
+    "frozen_slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "frozen_slot_registry_semantic_sha256": "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2",
+    "registry_manifest_digest": "sha256:8970af60a32da73b56c80d39598d2324459475fa7c98cc43e4200c626f68edb7",
+    "registry_config_digest": "sha256:a11d67766fceaca77e4347b9cd70fa5d6dd1a93970f7efc851a593604d0cc754",
+    "saved_plan_sha256": "96a6d1a9b17454be721bef64d1df6f171fa5b950c140ce22ad16c92762bd91ad",
+    "plan_json_sha256": "eb869410c8cd4eb8e0956297be5de8200a612e20c51b6baf339ccc23dc93e529",
+    "configuration_sha256": "8c20f1ee1a62789fe6047866eff487f43f273c9b839c6bb143e569606ed32c34",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "managed_change_semantic_sha256": "80e112b6011b05b2374d88b55829282c199d4dcb92daef0ffff139cae3b8d40e"
+  },
+  "authorized_plan_semantics": {
+    "standalone_creates": 0,
+    "in_place_service_changes": 3,
+    "expected_task_definition_replacements": 3,
+    "unexpected_replacements": 0,
+    "standalone_destroys": 0,
+    "terraform_cli": "3 add, 3 change, 3 destroy"
+  },
+  "required_post_deployment_state": {
+    "services_desired_running_pending": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release_exists": false,
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "terraform_convergence": "NO_CHANGES"
+  },
+  "scope": "DORMANT_V3_CAPABILITY_DEPLOYMENT_ONLY",
+  "prohibited": [
+    "additional image publication, rebuild, retag, or deletion",
+    "Slot 01 release creation or execution",
+    "903 HVAC DNS or HTTP access",
+    "REAL_PUBLIC_RESEARCH or REAL_BUSINESS_DISCOVERY",
+    "M1-M5 execution",
+    "person/contact processing",
+    "AI or browser use",
+    "outreach, delivery, or external communication"
+  ],
+  "consumption": {
+    "consumed_at": "2026-08-26T10:42:00Z",
+    "apply_result": "PASS_EXACT_SAVED_PLAN",
+    "terraform_cli_result": "3 added, 3 changed, 3 destroyed",
+    "post_deployment_validation": "PASS_DEPLOYMENT_CONTROLS_WITH_SEPARATE_ACTIVATION_PATH_BLOCKER",
+    "terraform_convergence": "NO_CHANGES",
+    "reusable": false
+  },
+  "owner_signature": "APPROVED_IN_THREAD"
+}

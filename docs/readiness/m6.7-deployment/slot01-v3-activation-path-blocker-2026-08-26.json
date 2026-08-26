@@ -1,0 +1,68 @@
+{
+  "record_type": "M67_SLOT01_V3_ACTIVATION_PATH_BLOCKER",
+  "version": "2026-08-26.1",
+  "state": "BLOCKED_PENDING_SLOT01_IMMUTABLE_WORK_ITEM_ACTIVATION_SUCCESSOR",
+  "observed_at": "2026-08-26T11:05:47.6390356Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "slot": 1,
+    "business": "903 HVAC",
+    "hostname": "903hvac.com"
+  },
+  "accepted_immutable_inputs": {
+    "slot01_a09_decision_sha256": "1d938be8cf8946bd2b3d0d652500590652e031e056c69ddb0f9449b348261182",
+    "ordered_package_file_sha256": "0283f0a6956f6bd11e9326419d9671a61cc57dac0b6d376b9e2b7a11f0507a70",
+    "ordered_package_semantic_sha256": "3419a018a0cfb39c7fe6391c19b3acb43378b7b88e92337a2c70af305d345b5b",
+    "slot_registry_sha256": "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2",
+    "deployed_runtime_digest": "sha256:8970af60a32da73b56c80d39598d2324459475fa7c98cc43e4200c626f68edb7"
+  },
+  "proven_control": {
+    "description": "A V3 research worker accepts a work item only when its content-addressed SampledSlotIdentity is issued from the frozen registry and exactly matches release package, slot, business, hostname, runtime and work-item ID.",
+    "wrong_slot_before_dns": "PASS",
+    "ordinary_identity_less_run_before_dns": "BLOCKED_AS_DESIGNED"
+  },
+  "defect": {
+    "classification": "GENUINE_PRODUCTION_ACTIVATION_CONTROL_FAILURE",
+    "root_cause": "NO_DEPLOYED_AUTHORIZED_PRODUCER_FOR_IMMUTABLE_SAMPLED_SLOT_WORK_ITEM",
+    "evidence": [
+      "FrozenPhaseOneSampleRegistry.issue(work_item_id, slot_number) is present only in the research-worker library and tests.",
+      "ResearchApplicationService.start_run creates a ResearchRun without sampled_slot_identity.",
+      "The production Phase 1 image contains research and intelligence workers but no bounded Slot 01 work-item activation command.",
+      "No Phase 1 API or other deployed component creates a registry-derived sampled-slot work item.",
+      "The three ECS services are consumers only and remain desired/running/pending 0/0/0."
+    ],
+    "effect": "A live release and service scale-up could not create an executable, V3-valid Slot 01 run. An ordinary run would be rejected before DNS, so issuing REAL_PUBLIC_RESEARCH now would be non-executable and misleading."
+  },
+  "additional_chain_observation": {
+    "state": "REQUIRES_SUCCESSOR_CLOSURE_WITH_ACTIVATION_COMMAND",
+    "detail": "The deterministic M2-M5 worker consumes queued predecessor operations but the deployed runtime has no release-bound coordinator that creates the initial sampled M1 work item and advances only from accepted predecessor artifacts. The successor must preserve truthful terminal stops and must not auto-approve human review states."
+  },
+  "minimum_successor": {
+    "requirements": [
+      "Add one bounded production activation command that reads the current exact release and frozen slot registry, derives an immutable work-item ID and SampledSlotIdentity, verifies the complete binding, and creates exactly one idempotent Slot 01 business/research work item.",
+      "Run that command only as a separately authorized one-off task; no arbitrary caller slot identity and no arbitrary code override.",
+      "Add deterministic stage coordination that queues a downstream stage only from an accepted terminal predecessor artifact and stops at every human-review or truthful terminal state.",
+      "Bind activation to the same release window, request/byte/cost ceilings, kill switch, runtime digest and terminal rollback.",
+      "Prove no release, malformed release, wrong slot/package/business/host, expired release and TRIPPED kill switch all create zero work items and zero DNS calls.",
+      "Publish, scan, cryptographically bind and deploy a successor image under separate exact owner approvals."
+    ],
+    "prohibited_shortcuts": [
+      "direct database insertion from an unbound operator session",
+      "caller-supplied mutable sampled-slot identity",
+      "python -c or other arbitrary-code ECS override",
+      "using the identity-less ordinary API run",
+      "creating a release before an executable activation path is deployed"
+    ]
+  },
+  "terminal_state": {
+    "ready_for_slot01_real_public_research_authorization": false,
+    "slot01_release": "ABSENT",
+    "kill_switch": "TRIPPED",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "services": "0/0/0",
+    "real_business_dns_http": 0,
+    "m1_m5_execution": 0,
+    "slots_04_24": "NOT_REOPENED"
+  }
+}
