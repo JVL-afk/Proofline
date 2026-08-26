@@ -1,0 +1,79 @@
+{
+  "record_type": "AUTHORIZE_SLOT01_RUNTIME_SUCCESSOR_V3_IMAGE_PUBLICATION",
+  "version": "2026-08-26.1",
+  "state": "CONSUMED_SUCCESS",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "validity": {
+    "not_before": "2026-08-26T10:00:00Z",
+    "expires_at": "2026-09-02T10:00:00Z",
+    "attempts": 1,
+    "terminal": true
+  },
+  "bindings": {
+    "implementation_commit": "2e9bb32016ceb0b99013edf9c099e5eb413dcd80",
+    "artifact_pipeline_commit": "cc20055fd178d3bdb8e24fdffd0ecfb7fd699335",
+    "evidence_commit": "2d3174209a9444af76abd4d225b3e8b8c3738bed",
+    "image_publication_review_sha256": "3f3f867c285c44da9b1aafff6133e763165035652f186416bba70656636f1919",
+    "work_item_identity_schema_sha256": "d540c0017470188267b5331790571318262dbaffe70d405f7fdca6e4680b69e8",
+    "authorization_adapter_sha256": "c99f715ef6f52afabca3860c00c8a9ec0dd9ff16960ab90927cc3e8b3e1fcfc2",
+    "frozen_slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "frozen_slot_registry_semantic_sha256": "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2",
+    "v3_dockerfile_sha256": "34c6974ec4bab10730a5f6eb000017141e5f25f69a9430a47845cd6158ec4814",
+    "local_oci_config_digest": "sha256:a11d67766fceaca77e4347b9cd70fa5d6dd1a93970f7efc851a593604d0cc754",
+    "local_manifest_digest": "sha256:d16112ce3447140dfab326f476199fa45e20b2c6f8561152569e9e32045daaa1",
+    "local_archive_sha256": "f7d30c747ac0c6c7405be8e1ba2552a3da72a6c73e6f4c3de6f3f55e55831bbd",
+    "v2_parent_registry_digest": "sha256:0600eec77e9d1f1fd4e42e001bd416038f2d8c4cee91f56bdce5f2bf34f41ca3"
+  },
+  "publication": {
+    "publisher_role": "arn:aws:iam::785072247535:role/m67-phase1-worker-image-publisher",
+    "source_image": "localhost/m67-phase1-worker:git-cc20055fd178-v3",
+    "destination": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker:git-cc20055fd178-v3",
+    "rebuilds": 0,
+    "alternate_images": 0,
+    "other_tags": 0,
+    "deletions": 0
+  },
+  "post_publication_requirements": [
+    "derive the registry-consumable manifest or index digest and media type",
+    "bind platform, config digest, and ordered layer digests",
+    "cryptographically prove equivalence to the approved local image and exact V2 parent",
+    "require ECR provider scan COMPLETE with zero blocking findings",
+    "generate and review a fresh Terraform plan using the proven registry digest",
+    "stop before Terraform apply"
+  ],
+  "prohibited": [
+    "image rebuild",
+    "source or dependency change",
+    "alternate publication or retagging",
+    "image deletion",
+    "Terraform apply",
+    "service activation",
+    "Slot 01 authorization release",
+    "903 HVAC DNS or HTTP access",
+    "REAL_PUBLIC_RESEARCH",
+    "REAL_BUSINESS_DISCOVERY",
+    "M1-M5 execution",
+    "person or contact processing",
+    "AI or browser use",
+    "outreach, delivery, or external communication"
+  ],
+  "required_dormant_state": {
+    "services_desired_running_pending": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release_exists": false,
+    "all_seven_m67_permissions": "NOT_AUTHORIZED"
+  },
+  "consumption": {
+    "attempts_consumed": 1,
+    "published_at": "2026-08-26T10:06:08.377Z",
+    "registry_digest": "sha256:8970af60a32da73b56c80d39598d2324459475fa7c98cc43e4200c626f68edb7",
+    "representation_equivalence": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "provider_scan": "COMPLETE_ZERO_BLOCKING_FINDINGS",
+    "terraform_apply_performed": false
+  },
+  "owner_signature": "APPROVED_IN_THREAD"
+}

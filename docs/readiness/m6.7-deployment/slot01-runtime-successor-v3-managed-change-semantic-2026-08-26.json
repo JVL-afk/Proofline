@@ -1,0 +1,59 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_SUCCESSOR_V3_MANAGED_CHANGE_SEMANTIC",
+  "version": "2026-08-26.1",
+  "deployment_image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:8970af60a32da73b56c80d39598d2324459475fa7c98cc43e4200c626f68edb7",
+  "terraform_cli_counts": {
+    "add": 3,
+    "change": 3,
+    "destroy": 3
+  },
+  "semantic_counts": {
+    "standalone_creates": 0,
+    "in_place_changes": 3,
+    "expected_replacements": 3,
+    "unexpected_replacements": 0,
+    "standalone_destroys": 0,
+    "unexpected_destroys": 0
+  },
+  "expected_replacements": [
+    "aws_ecs_task_definition.worker",
+    "aws_ecs_task_definition.egress",
+    "aws_ecs_task_definition.intelligence"
+  ],
+  "in_place_changes": [
+    "aws_ecs_service.worker.task_definition",
+    "aws_ecs_service.egress.task_definition",
+    "aws_ecs_service.intelligence.task_definition"
+  ],
+  "task_definition_changes": {
+    "research_worker": [
+      "replace V2 image digest with V3 registry digest",
+      "replace research runtime revision with V3 registry digest",
+      "add OPINTEL_PHASE1_SLOT_REGISTRY_PATH=/app/config/phase1-frozen-slot-registry.json"
+    ],
+    "controlled_egress": [
+      "replace V2 image digest with V3 registry digest",
+      "replace research runtime revision with V3 registry digest",
+      "add OPINTEL_PHASE1_SLOT_REGISTRY_PATH=/app/config/phase1-frozen-slot-registry.json"
+    ],
+    "intelligence_worker": [
+      "replace V2 image digest with V3 registry digest"
+    ]
+  },
+  "unchanged": {
+    "service_desired_counts": 0,
+    "iam_resources": true,
+    "network_and_egress_resources": true,
+    "ssm_permission_and_release_values": true,
+    "kill_switch": true,
+    "browser_ai_contact_and_delivery_capabilities": true
+  },
+  "not_in_plan": [
+    "IAM policy or role changes",
+    "security-group or route changes",
+    "SSM parameter value changes",
+    "service desired-count changes",
+    "Slot 01 release creation",
+    "browser, AI, contact, outreach, or delivery infrastructure"
+  ]
+}

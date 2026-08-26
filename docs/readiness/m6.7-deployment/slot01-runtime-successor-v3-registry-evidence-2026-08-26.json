@@ -1,0 +1,92 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_SUCCESSOR_V3_REGISTRY_EVIDENCE",
+  "version": "2026-08-26.1",
+  "state": "REGISTRY_IDENTITY_AND_SCAN_ACCEPTABLE_FOR_PLAN_REVIEW",
+  "observed_at": "2026-08-26T10:09:32Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "repository": "m67-phase1-worker",
+    "tag": "git-cc20055fd178-v3"
+  },
+  "publication": {
+    "publisher_identity": "arn:aws:sts::785072247535:assumed-role/m67-phase1-worker-image-publisher/m67-v3-image-publication",
+    "attempts_consumed": 1,
+    "rebuilds": 0,
+    "alternate_images": 0,
+    "other_tags": 0,
+    "deletions": 0
+  },
+  "local_identity": {
+    "tag": "localhost/m67-phase1-worker:git-cc20055fd178-v3",
+    "docker_archive_sha256": "f7d30c747ac0c6c7405be8e1ba2552a3da72a6c73e6f4c3de6f3f55e55831bbd",
+    "local_manifest_digest": "sha256:d16112ce3447140dfab326f476199fa45e20b2c6f8561152569e9e32045daaa1",
+    "config_digest": "sha256:a11d67766fceaca77e4347b9cd70fa5d6dd1a93970f7efc851a593604d0cc754",
+    "platform": "linux/amd64",
+    "ordered_uncompressed_diff_ids": [
+      "sha256:0854555d70acaa318b38ee50bc667cb51ff6bf0757624624c7ff3b6fe17459a0",
+      "sha256:98899702eeeaf1257e200c38c53a35c7908e831b11ea31d8f2e27fef0c5b8e3c",
+      "sha256:3d538106e26b6c23fa9062243fe6d4aee2d373c4f928203cd76cacd51a0a51cd",
+      "sha256:44c1014e5162dcfb531c0eba5e0d87270b9b96204f8090e17f4f4b8036feba4d",
+      "sha256:ce57cf4ce41603010895d9f500deebb23d33bafda1e7b11e392c08809d9e9118",
+      "sha256:a433a1a55f7468bd5cd9614c0205f2c2e87c2c0e97b97ace896471e2dafb9651"
+    ]
+  },
+  "registry_identity_graph": {
+    "top_level_digest": "sha256:8970af60a32da73b56c80d39598d2324459475fa7c98cc43e4200c626f68edb7",
+    "top_level_media_type": "application/vnd.oci.image.manifest.v1+json",
+    "object_type": "SINGLE_PLATFORM_OCI_IMAGE_MANIFEST",
+    "child_manifests": [],
+    "platform": "linux/amd64",
+    "config": {
+      "media_type": "application/vnd.oci.image.config.v1+json",
+      "digest": "sha256:a11d67766fceaca77e4347b9cd70fa5d6dd1a93970f7efc851a593604d0cc754",
+      "size_bytes": 12760
+    },
+    "ordered_compressed_layers": [
+      {"digest": "sha256:41dad0242630a38b7248eae6e9a5c15660ccae64bd1365475addb3833d1b22fc", "size_bytes": 3924791},
+      {"digest": "sha256:904e98828af6963af07a12868a5e6335ffa83b98007256966a1d64caf2aa81bd", "size_bytes": 463254},
+      {"digest": "sha256:f0d2f8eb61740062d5cbef1a7d3923f1b16da095cc1ffbc2b93a2e1840ff6cb5", "size_bytes": 12912098},
+      {"digest": "sha256:c58c9e5629c87c46982664e95ee5ee9ac897518c4bdb67b67aa4dc14d0db1697", "size_bytes": 266},
+      {"digest": "sha256:05cf827b3988e34b1f5218d804c52dbb776b6c14668e999c848e5837a973b053", "size_bytes": 38046903},
+      {"digest": "sha256:fc8cb340f5f3a83f43d113f6bb0a1d1521193e65a24caa7c6cab64b910c7f5d5", "size_bytes": 133735}
+    ],
+    "index_or_manifest_list": false,
+    "provenance_sbom_or_attestation_wrapper": false
+  },
+  "parent_relationship": {
+    "v2_registry_digest": "sha256:0600eec77e9d1f1fd4e42e001bd416038f2d8c4cee91f56bdce5f2bf34f41ca3",
+    "first_five_registry_layers_equal_v2_in_order": true,
+    "first_five_diff_ids_equal_v2_in_order": true,
+    "v3_additional_layer_count": 1,
+    "v3_compressed_layer_digest": "sha256:fc8cb340f5f3a83f43d113f6bb0a1d1521193e65a24caa7c6cab64b910c7f5d5",
+    "v3_uncompressed_diff_id": "sha256:a433a1a55f7468bd5cd9614c0205f2c2e87c2c0e97b97ace896471e2dafb9651"
+  },
+  "equivalence": {
+    "classification": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "basis": [
+      "registry config digest exactly equals the approved local OCI config digest",
+      "the config binds the exact ordered uncompressed diff-ID sequence",
+      "the registry manifest preserves the exact five-layer V2 parent prefix",
+      "the sole sixth registry layer maps to the approved V3 diff ID",
+      "the registry object is a directly runnable single-platform linux/amd64 manifest"
+    ]
+  },
+  "provider_scan": {
+    "target_digest": "sha256:8970af60a32da73b56c80d39598d2324459475fa7c98cc43e4200c626f68edb7",
+    "status": "COMPLETE",
+    "completed_at": "2026-08-26T10:09:32Z",
+    "severity_counts": {},
+    "critical": 0,
+    "high": 0,
+    "blocking_findings": 0
+  },
+  "dormant_state_preserved": {
+    "services_desired_running_pending": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release_exists": false,
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "slot01_network_or_research_operations": 0
+  }
+}
