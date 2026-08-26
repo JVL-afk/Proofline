@@ -12,4 +12,6 @@
 !infra/container/phase1-worker/
 !infra/container/phase1-worker/Dockerfile
 !infra/container/phase1-worker/Dockerfile.v3-slot-binding
+!infra/container/phase1-worker/Dockerfile.v4-activation
 !infra/container/phase1-worker/phase1-frozen-slot-registry.json
+!infra/container/phase1-worker/phase1-a09-decision-registry.json

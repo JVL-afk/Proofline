@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from datetime import datetime
 from enum import StrEnum
 from uuid import UUID
@@ -62,6 +62,7 @@ class Business:
 
 
 SAMPLED_WORK_ITEM_REVISION = "m67.phase1.sampled-research-work-item@1"
+SAMPLED_ACTIVATION_REVISION = "m67.phase1.sampled-slot-activation@1"
 
 
 @dataclass(frozen=True, slots=True)
@@ -168,6 +169,82 @@ class SampledSlotIdentity:
 
 
 @dataclass(frozen=True, slots=True)
+class SampledSlotActivation:
+    """Immutable authority binding that creates exactly one sampled research work item."""
+
+    activation_id: UUID
+    authorization_release_id: UUID
+    authorization_configuration_hash: str
+    a09_decision_sha256: str
+    research_runtime_revision: str
+    execution_ceilings_sha256: str
+    activated_at: datetime
+    sampled_slot_identity: SampledSlotIdentity
+    activation_revision: str
+    activation_sha256: str
+
+    @classmethod
+    def create(
+        cls,
+        *,
+        activation_id: UUID,
+        authorization_release_id: UUID,
+        authorization_configuration_hash: str,
+        a09_decision_sha256: str,
+        research_runtime_revision: str,
+        execution_ceilings_sha256: str,
+        activated_at: datetime,
+        sampled_slot_identity: SampledSlotIdentity,
+    ) -> SampledSlotActivation:
+        value = cls(
+            activation_id=activation_id,
+            authorization_release_id=authorization_release_id,
+            authorization_configuration_hash=authorization_configuration_hash,
+            a09_decision_sha256=a09_decision_sha256,
+            research_runtime_revision=research_runtime_revision,
+            execution_ceilings_sha256=execution_ceilings_sha256,
+            activated_at=activated_at,
+            sampled_slot_identity=sampled_slot_identity,
+            activation_revision=SAMPLED_ACTIVATION_REVISION,
+            activation_sha256="0" * 64,
+        )
+        return replace(value, activation_sha256=value.computed_sha256())
+
+    def __post_init__(self) -> None:
+        hashes = (
+            self.authorization_configuration_hash,
+            self.a09_decision_sha256,
+            self.execution_ceilings_sha256,
+            self.activation_sha256,
+        )
+        if any(not re.fullmatch(r"[0-9a-f]{64}", item) for item in hashes):
+            raise ValueError("sampled activation requires lowercase SHA-256 values")
+        if self.activation_revision != SAMPLED_ACTIVATION_REVISION:
+            raise ValueError("sampled activation revision is not supported")
+        if self.activation_sha256 != "0" * 64 and self.activation_sha256 != self.computed_sha256():
+            raise ValueError("sampled activation hash mismatch")
+
+    def canonical_payload(self) -> dict[str, object]:
+        return {
+            "activation_id": str(self.activation_id),
+            "activation_revision": self.activation_revision,
+            "activated_at": self.activated_at.isoformat(),
+            "a09_decision_sha256": self.a09_decision_sha256,
+            "authorization_configuration_hash": self.authorization_configuration_hash,
+            "authorization_release_id": str(self.authorization_release_id),
+            "execution_ceilings_sha256": self.execution_ceilings_sha256,
+            "research_runtime_revision": self.research_runtime_revision,
+            "sampled_slot_identity_sha256": self.sampled_slot_identity.identity_sha256,
+        }
+
+    def computed_sha256(self) -> str:
+        encoded = json.dumps(
+            self.canonical_payload(), sort_keys=True, separators=(",", ":"), ensure_ascii=False
+        ).encode("utf-8")
+        return hashlib.sha256(encoded).hexdigest()
+
+
+@dataclass(frozen=True, slots=True)
 class ResearchRun:
     id: UUID
     workspace_id: UUID
@@ -190,6 +267,7 @@ class ResearchRun:
     last_error_code: str | None = None
     last_error_message: str | None = None
     sampled_slot_identity: SampledSlotIdentity | None = None
+    sampled_slot_activation: SampledSlotActivation | None = None
 
 
 @dataclass(frozen=True, slots=True)

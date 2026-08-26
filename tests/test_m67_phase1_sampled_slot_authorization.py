@@ -14,9 +14,15 @@ from opintel_research.domain import (
     FetchError,
     ResearchRun,
     ResearchRunStatus,
+    SampledSlotActivation,
     SampledSlotIdentity,
 )
 from opintel_research_worker.authorization import AwsSsmResearchAuthorization
+from opintel_research_worker.activation import (
+    A09_MARKER_PREFIX,
+    SampledSlotActivator,
+    release_execution_ceilings_sha256,
+)
 from opintel_research_worker.sample_registry import FrozenPhaseOneSampleRegistry
 from opintel_research_local import SqlAlchemyResearchRepository
 from opintel_shadow import LiveResearchPermissionRelease, PermissionActivity, PermissionState
@@ -25,6 +31,7 @@ from opintel_shadow import LiveResearchPermissionRelease, PermissionActivity, Pe
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "infra/container/phase1-worker/phase1-frozen-slot-registry.json"
 RUNTIME = "m67-slot01-runtime-successor-v3"
+A09_SHA256 = "1d938be8cf8946bd2b3d0d652500590652e031e056c69ddb0f9449b348261182"
 RUN_ID = UUID("00000000-0000-4000-8000-000000000101")
 BUSINESS_ID = UUID("00000000-0000-4000-8000-000000000201")
 WORKSPACE_ID = UUID("00000000-0000-4000-8000-000000000301")
@@ -49,7 +56,7 @@ def _release(**changes: object) -> LiveResearchPermissionRelease:
         "id": UUID("00000000-0000-4000-8000-000000000401"),
         "workspace_id": WORKSPACE_ID,
         "version": "1",
-        "configuration_hash": "release-config-v3",
+        "configuration_hash": "b" * 64,
         "created_at": now,
         "activity": PermissionActivity.REAL_PUBLIC_RESEARCH,
         "state": PermissionState.AUTHORIZED,
@@ -63,7 +70,7 @@ def _release(**changes: object) -> LiveResearchPermissionRelease:
         "cohort_or_run_restriction": "phase1-slot01",
         "starts_at": now - timedelta(minutes=1),
         "expires_at": now + timedelta(minutes=14),
-        "approval_ids": ("owner-slot01",),
+        "approval_ids": ("owner-slot01", f"{A09_MARKER_PREFIX}{A09_SHA256}"),
         "kill_switch_id": UUID("00000000-0000-4000-8000-000000000406"),
         "slot_number": 1,
         "business_identity": "903 HVAC",
@@ -106,8 +113,26 @@ def _business(name: str = "903 HVAC", host: str = "903hvac.com") -> Business:
     )
 
 
-def _run(identity: SampledSlotIdentity | None) -> ResearchRun:
+def _run(
+    identity: SampledSlotIdentity | None,
+    release: LiveResearchPermissionRelease | None = None,
+) -> ResearchRun:
     now = datetime.now(UTC)
+    release = release or _release()
+    activation = (
+        SampledSlotActivation.create(
+            activation_id=UUID("00000000-0000-4000-8000-000000000601"),
+            authorization_release_id=release.id,
+            authorization_configuration_hash=release.configuration_hash,
+            a09_decision_sha256=A09_SHA256,
+            research_runtime_revision=RUNTIME,
+            execution_ceilings_sha256=release_execution_ceilings_sha256(release),
+            activated_at=now,
+            sampled_slot_identity=identity,
+        )
+        if identity is not None
+        else None
+    )
     return ResearchRun(
         id=RUN_ID,
         workspace_id=WORKSPACE_ID,
@@ -116,12 +141,13 @@ def _run(identity: SampledSlotIdentity | None) -> ResearchRun:
         trace_id=UUID("00000000-0000-4000-8000-000000000502"),
         start_url="https://903hvac.com/",
         permitted_host="903hvac.com",
-        policy=CrawlPolicy(),
+        policy=SampledSlotActivator._policy(release),
         status=ResearchRunStatus.PENDING,
         created_by="synthetic-test",
         created_at=now,
         updated_at=now,
         sampled_slot_identity=identity,
+        sampled_slot_activation=activation,
     )
 
 
@@ -133,8 +159,9 @@ def _adapter(monkeypatch: pytest.MonkeyPatch, release: LiveResearchPermissionRel
 
 
 def test_correct_slot_release_and_work_item_are_permitted(monkeypatch: pytest.MonkeyPatch) -> None:
+    release = _release()
     identity = FrozenPhaseOneSampleRegistry(REGISTRY).issue(RUN_ID, 1)
-    _adapter(monkeypatch, _release()).authorize(_run(identity), _business())
+    _adapter(monkeypatch, release).authorize(_run(identity, release), _business())
 
 
 @pytest.mark.parametrize(
@@ -156,16 +183,18 @@ def test_release_mismatches_are_blocked_before_transport(
     monkeypatch: pytest.MonkeyPatch, release_changes: dict[str, object]
 ) -> None:
     identity = FrozenPhaseOneSampleRegistry(REGISTRY).issue(RUN_ID, 1)
+    release = _release(**release_changes)
     with pytest.raises(FetchError):
-        _adapter(monkeypatch, _release(**release_changes)).authorize(_run(identity), _business())
+        _adapter(monkeypatch, release).authorize(_run(identity, release), _business())
 
 
 def test_missing_malformed_and_forged_work_item_identity_are_blocked(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    adapter = _adapter(monkeypatch, _release())
+    release = _release()
+    adapter = _adapter(monkeypatch, release)
     with pytest.raises(FetchError):
-        adapter.authorize(_run(None), _business())
+        adapter.authorize(_run(None, release), _business())
     valid = FrozenPhaseOneSampleRegistry(REGISTRY).issue(RUN_ID, 1)
     with pytest.raises(ValueError):
         replace(valid, work_item_id=UUID("00000000-0000-4000-8000-000000000999"))
@@ -180,7 +209,7 @@ def test_missing_malformed_and_forged_work_item_identity_are_blocked(
         work_item_id=RUN_ID,
     )
     with pytest.raises(FetchError):
-        adapter.authorize(_run(forged), _business())
+        adapter.authorize(_run(forged, release), _business())
 
 
 def test_absent_and_expired_release_are_blocked(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -201,7 +230,9 @@ def test_sampled_identity_round_trips_without_a_schema_migration(tmp_path: Path)
     business = repository.create_business(_business())
     identity = FrozenPhaseOneSampleRegistry(REGISTRY).issue(RUN_ID, 1)
     expected = _run(identity)
-    actual, created = repository.create_or_get_run(expected, "sampled-slot01-v3")
+    actual, created = repository.activate_sampled_run(
+        business, expected, "sampled-slot01-v3"
+    )
     assert created is True
     assert actual.sampled_slot_identity == identity
     assert repository.get_run(WORKSPACE_ID, RUN_ID) == expected

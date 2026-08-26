@@ -1,4 +1,4 @@
-"""SQLite M3 persistence with immutable revision payloads and append-only review decisions."""
+"""SQLAlchemy M3 persistence for local SQLite and Phase 1 PostgreSQL."""
 
 from __future__ import annotations
 
@@ -146,13 +146,15 @@ class AuditReviewInvalidationRow(Base):
 
 class SqlAlchemyAuditRepository:
     def __init__(self, database_url: str) -> None:
-        if not database_url.startswith("sqlite:///"):
-            raise ValueError("local M3 repository accepts only sqlite:/// URLs")
-        path = database_url.removeprefix("sqlite:///")
-        if path != ":memory:":
-            Path(path).resolve().parent.mkdir(parents=True, exist_ok=True)
+        if database_url.startswith("sqlite:///"):
+            path = database_url.removeprefix("sqlite:///")
+            if path != ":memory:":
+                Path(path).resolve().parent.mkdir(parents=True, exist_ok=True)
+        elif not database_url.startswith("postgresql+psycopg://"):
+            raise ValueError("M3 repository requires sqlite or postgresql+psycopg")
         self.engine = create_engine(database_url, future=True)
-        event.listen(self.engine, "connect", self._configure_sqlite)
+        if database_url.startswith("sqlite"):
+            event.listen(self.engine, "connect", self._configure_sqlite)
         self._sessions = sessionmaker(bind=self.engine, expire_on_commit=False)
 
     @staticmethod

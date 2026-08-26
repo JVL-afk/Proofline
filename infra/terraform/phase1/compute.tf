@@ -191,6 +191,60 @@ resource "aws_ecs_service" "worker" {
   depends_on = [aws_iam_service_linked_role.ecs]
 }
 
+# No service is attached to this definition. A later exact owner authorization may run exactly one
+# task and may pass only --slot-number and --release-id to the fixed bounded entry point.
+resource "aws_ecs_task_definition" "sampled_slot_activator" {
+  family                   = "${var.name_prefix}-sampled-slot-activator"
+  requires_compatibilities = ["FARGATE"]
+  network_mode             = "awsvpc"
+  cpu                      = 256
+  memory                   = 512
+  execution_role_arn       = aws_iam_role.execution.arn
+  task_role_arn            = aws_iam_role.worker.arn
+
+  runtime_platform {
+    operating_system_family = "LINUX"
+    cpu_architecture        = "X86_64"
+  }
+
+  container_definitions = jsonencode([{
+    name                   = "sampled-slot-activator"
+    image                  = var.worker_image_uri
+    essential              = true
+    entryPoint             = ["python", "-m", "opintel_research_worker.activation_main"]
+    readonlyRootFilesystem = true
+    user                   = "65532"
+    environment = [
+      { name = "OPINTEL_APP_ENV", value = "phase1" },
+      { name = "OPINTEL_AWS_REGION", value = var.aws_region },
+      { name = "OPINTEL_KILL_SWITCH_PARAMETER", value = aws_ssm_parameter.kill_switch.name },
+      { name = "OPINTEL_RESEARCH_RELEASE_PARAMETER", value = aws_ssm_parameter.research_release.name },
+      { name = "OPINTEL_RESEARCH_RUNTIME_REVISION", value = var.research_runtime_revision },
+      { name = "OPINTEL_PHASE1_SLOT_REGISTRY_PATH", value = "/app/config/phase1-frozen-slot-registry.json" },
+      { name = "OPINTEL_PHASE1_A09_DECISION_REGISTRY_PATH", value = "/app/config/phase1-a09-decision-registry.json" },
+      { name = "OPINTEL_CONTROLLED_EGRESS_URL", value = "http://egress.m67.internal:8080" },
+      { name = "OPINTEL_EGRESS_POLICY_REVISION", value = "NOT_AUTHORIZED" },
+      { name = "OPINTEL_RESEARCH_LIVE_ENABLED", value = "false" },
+      { name = "OPINTEL_RESEARCH_BROWSER_ENABLED", value = "false" },
+      { name = "OPINTEL_DATABASE_HOST", value = aws_db_instance.phase1.address },
+      { name = "OPINTEL_DATABASE_NAME", value = var.database_name },
+      { name = "OPINTEL_DATABASE_USERNAME", value = var.database_master_username }
+    ]
+    secrets = [{
+      name      = "OPINTEL_DATABASE_PASSWORD"
+      valueFrom = "${aws_db_instance.phase1.master_user_secret[0].secret_arn}:password::"
+    }]
+    logConfiguration = {
+      logDriver = "awslogs"
+      options = {
+        awslogs-group         = aws_cloudwatch_log_group.worker.name
+        awslogs-region        = var.aws_region
+        awslogs-stream-prefix = "sampled-slot-activator"
+      }
+    }
+  }])
+}
+
 resource "aws_service_discovery_private_dns_namespace" "phase1" {
   name = "m67.internal"
   vpc  = aws_vpc.phase1.id

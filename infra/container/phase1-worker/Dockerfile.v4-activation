@@ -1,0 +1,24 @@
+# syntax=docker/dockerfile:1
+
+# V4 is a source-only activation/coordinator successor over the exact deployed V3 runtime.
+# Publication must bind the resulting registry manifest digest before any deployment plan.
+FROM 785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:8970af60a32da73b56c80d39598d2324459475fa7c98cc43e4200c626f68edb7
+
+ARG SOURCE_COMMIT
+LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}" \
+      org.opencontainers.image.base.digest="sha256:8970af60a32da73b56c80d39598d2324459475fa7c98cc43e4200c626f68edb7" \
+      org.opencontainers.image.title="M6.7 Phase 1 sampled-slot activation successor"
+
+COPY packages/research-core/src /app/research-core
+COPY packages/research-local/src /app/research-local
+COPY packages/opportunity-local/src /app/opportunity-local
+COPY packages/audit-local/src /app/audit-local
+COPY packages/demo-local/src /app/demo-local
+COPY packages/outreach-local/src /app/outreach-local
+COPY workers/research/src /app/research-worker
+COPY workers/intelligence/src /app/intelligence-worker
+COPY infra/container/phase1-worker/phase1-frozen-slot-registry.json /app/config/phase1-frozen-slot-registry.json
+COPY infra/container/phase1-worker/phase1-a09-decision-registry.json /app/config/phase1-a09-decision-registry.json
+
+USER 65532:65532
+ENTRYPOINT ["python", "-m", "opintel_research_worker.main"]

@@ -55,6 +55,7 @@ COPY packages/shadow-core/src /app/shadow-core
 COPY workers/research/src /app/research-worker
 COPY workers/intelligence/src /app/intelligence-worker
 COPY infra/container/phase1-worker/phase1-frozen-slot-registry.json /app/config/phase1-frozen-slot-registry.json
+COPY infra/container/phase1-worker/phase1-a09-decision-registry.json /app/config/phase1-a09-decision-registry.json
 
 # The upstream Python runtime includes pip and its vendored build/network packages. The worker does
 # not install packages at runtime, so remove that tooling and its stale vendored metadata entirely.

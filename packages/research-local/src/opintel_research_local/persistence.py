@@ -24,6 +24,7 @@ from opintel_research.domain import (
     ResearchRun,
     ResearchRunStatus,
     RobotsPolicyEvidence,
+    SampledSlotActivation,
     SampledSlotIdentity,
 )
 from sqlalchemy import (
@@ -335,6 +336,63 @@ class SqlAlchemyResearchRepository:
                     raise
                 return self._run(row), False
 
+    def activate_sampled_run(
+        self, business: Business, run: ResearchRun, idempotency_key: str
+    ) -> tuple[ResearchRun, bool]:
+        """Atomically persist the registry-derived business and its one immutable run."""
+
+        if run.sampled_slot_identity is None or run.sampled_slot_activation is None:
+            raise ValueError("sampled activation and identity are required")
+        if run.id != run.sampled_slot_identity.work_item_id:
+            raise ValueError("sampled work-item ID must equal the research-run ID")
+        try:
+            with self._sessions.begin() as session:
+                existing_business = session.get(BusinessRow, _id(business.id))
+                if existing_business is None:
+                    data = asdict(business)
+                    data["id"] = _id(business.id)
+                    data["workspace_id"] = _id(business.workspace_id)
+                    session.add(BusinessRow(**data))
+                elif self._business(existing_business) != business:
+                    raise ValueError("existing sampled business differs from frozen identity")
+                session.add(self._run_row(run, idempotency_key))
+            return run, True
+        except IntegrityError:
+            with self._sessions() as session:
+                row = session.scalar(
+                    select(RunRow).where(
+                        RunRow.workspace_id == _id(run.workspace_id),
+                        RunRow.business_id == _id(run.business_id),
+                        RunRow.idempotency_key == idempotency_key,
+                    )
+                )
+                if row is None:
+                    raise
+                existing = self._run(row)
+                existing_activation = existing.sampled_slot_activation
+                requested_activation = run.sampled_slot_activation
+                if (
+                    existing.sampled_slot_identity != run.sampled_slot_identity
+                    or existing.business_id != run.business_id
+                    or existing.start_url != run.start_url
+                    or existing.permitted_host != run.permitted_host
+                    or existing.policy != run.policy
+                    or existing_activation is None
+                    or requested_activation is None
+                    or existing_activation.authorization_release_id
+                    != requested_activation.authorization_release_id
+                    or existing_activation.authorization_configuration_hash
+                    != requested_activation.authorization_configuration_hash
+                    or existing_activation.a09_decision_sha256
+                    != requested_activation.a09_decision_sha256
+                    or existing_activation.research_runtime_revision
+                    != requested_activation.research_runtime_revision
+                    or existing_activation.execution_ceilings_sha256
+                    != requested_activation.execution_ceilings_sha256
+                ):
+                    raise ValueError("duplicate sampled activation differs from immutable run")
+                return existing, False
+
     def get_run(self, workspace_id: UUID, run_id: UUID) -> ResearchRun | None:
         with self._sessions() as session:
             row = session.scalar(
@@ -645,7 +703,7 @@ class SqlAlchemyResearchRepository:
     @staticmethod
     def _run_row(value: ResearchRun, key: str) -> RunRow:
         policy_payload: dict[str, object] = {
-            "schema_version": "research-run-policy@2-sampled-slot",
+            "schema_version": "research-run-policy@3-authorized-sampled-slot",
             "crawl_policy": asdict(value.policy),
             "sampled_slot_identity": (
                 {
@@ -653,6 +711,24 @@ class SqlAlchemyResearchRepository:
                     "work_item_id": str(value.sampled_slot_identity.work_item_id),
                 }
                 if value.sampled_slot_identity is not None
+                else None
+            ),
+            "sampled_slot_activation": (
+                {
+                    **asdict(value.sampled_slot_activation),
+                    "activation_id": str(value.sampled_slot_activation.activation_id),
+                    "authorization_release_id": str(
+                        value.sampled_slot_activation.authorization_release_id
+                    ),
+                    "activated_at": value.sampled_slot_activation.activated_at.isoformat(),
+                    "sampled_slot_identity": {
+                        **asdict(value.sampled_slot_activation.sampled_slot_identity),
+                        "work_item_id": str(
+                            value.sampled_slot_activation.sampled_slot_identity.work_item_id
+                        ),
+                    },
+                }
+                if value.sampled_slot_activation is not None
                 else None
             ),
         }
@@ -683,7 +759,11 @@ class SqlAlchemyResearchRepository:
     @staticmethod
     def _run(row: RunRow) -> ResearchRun:
         policy_payload = json.loads(row.policy_json)
-        if policy_payload.get("schema_version") == "research-run-policy@2-sampled-slot":
+        schema_version = policy_payload.get("schema_version")
+        if schema_version in {
+            "research-run-policy@2-sampled-slot",
+            "research-run-policy@3-authorized-sampled-slot",
+        }:
             identity_payload = policy_payload.get("sampled_slot_identity")
             identity = (
                 SampledSlotIdentity(
@@ -695,10 +775,36 @@ class SqlAlchemyResearchRepository:
                 if identity_payload is not None
                 else None
             )
+            activation_payload = policy_payload.get("sampled_slot_activation")
+            activation = (
+                SampledSlotActivation(
+                    **{
+                        **activation_payload,
+                        "activation_id": UUID(activation_payload["activation_id"]),
+                        "authorization_release_id": UUID(
+                            activation_payload["authorization_release_id"]
+                        ),
+                        "activated_at": datetime.fromisoformat(
+                            activation_payload["activated_at"]
+                        ),
+                        "sampled_slot_identity": SampledSlotIdentity(
+                            **{
+                                **activation_payload["sampled_slot_identity"],
+                                "work_item_id": UUID(
+                                    activation_payload["sampled_slot_identity"]["work_item_id"]
+                                ),
+                            }
+                        ),
+                    }
+                )
+                if activation_payload is not None
+                else None
+            )
             crawl_policy = policy_payload["crawl_policy"]
         else:
             # Historical V2 work items remain readable but fail closed at authorization.
             identity = None
+            activation = None
             crawl_policy = policy_payload
         return ResearchRun(
             id=UUID(row.id),
@@ -722,6 +828,7 @@ class SqlAlchemyResearchRepository:
             last_error_code=row.last_error_code,
             last_error_message=row.last_error_message,
             sampled_slot_identity=identity,
+            sampled_slot_activation=activation,
         )
 
     @staticmethod

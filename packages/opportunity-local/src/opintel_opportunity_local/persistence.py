@@ -1,4 +1,4 @@
-"""SQLite M2 persistence with append-only semantic revisions."""
+"""SQLAlchemy M2 persistence for local SQLite and Phase 1 PostgreSQL."""
 
 from __future__ import annotations
 
@@ -258,13 +258,15 @@ class ReviewInvalidationRow(Base):
 
 class SqlAlchemyOpportunityRepository:
     def __init__(self, database_url: str) -> None:
-        if not database_url.startswith("sqlite:///"):
-            raise ValueError("local M2 repository accepts only sqlite:/// URLs")
-        path = database_url.removeprefix("sqlite:///")
-        if path != ":memory:":
-            Path(path).resolve().parent.mkdir(parents=True, exist_ok=True)
+        if database_url.startswith("sqlite:///"):
+            path = database_url.removeprefix("sqlite:///")
+            if path != ":memory:":
+                Path(path).resolve().parent.mkdir(parents=True, exist_ok=True)
+        elif not database_url.startswith("postgresql+psycopg://"):
+            raise ValueError("M2 repository requires sqlite or postgresql+psycopg")
         self.engine = create_engine(database_url, future=True)
-        event.listen(self.engine, "connect", self._configure_sqlite)
+        if database_url.startswith("sqlite"):
+            event.listen(self.engine, "connect", self._configure_sqlite)
         self._sessions = sessionmaker(bind=self.engine, expire_on_commit=False)
 
     @staticmethod
