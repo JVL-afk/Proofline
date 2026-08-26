@@ -1,0 +1,141 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_ACTIVATION_SUCCESSOR_IMAGE_PUBLICATION_REVIEW",
+  "version": "2026-08-26.1",
+  "state": "READY_FOR_SLOT01_RUNTIME_ACTIVATION_SUCCESSOR_IMAGE_PUBLICATION_AUTHORIZATION",
+  "created_at": "2026-08-26T11:37:45Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "repository": "m67-phase1-worker",
+    "proposed_tag": "git-c1669b169fac-v4"
+  },
+  "root_cause_closure": {
+    "blocker": "V3 could validate immutable sampled-slot identity on a supplied work item but had no bounded production path that derived and atomically created that work item from the frozen registry and exact release.",
+    "closure": "The production activation command accepts only slot_number and release_id, derives package/slot/business/hostname/A-09 identity from image-bound frozen registries, validates current authority and the kill switch before atomic persistence, and makes duplicate activation deterministic and idempotent.",
+    "coordinator": "The successor adds exact activation/work-item/release/runtime lineage to the M1-M5 stage coordinator. It rejects stage skips, unaccepted or mismatched predecessor revisions, forged work items, duplicate divergence, absent authority, and a tripped kill switch.",
+    "ordinary_api": "No ordinary API accepts or creates this sampled-slot activation record; the only production entry point is the fixed sampled-slot activation command.",
+    "external_boundary": "Research workers revalidate the exact release, frozen registry identity, activation hash, runtime, ceilings and kill switch before DNS or transport. M2-M5 remain deterministic and offline."
+  },
+  "implementation": {
+    "implementation_commit": "e8e863e1da74dba32eaefbeecf71347167ddbc01",
+    "artifact_pipeline_commit": "c1669b169fac4db17fa4984639f16bb6edeb282e",
+    "sampled_slot_activation_adapter_sha256": "ef6180794dfd705243b518500e0544f631cf23d86a64c1046819ec003cd0ba79",
+    "activation_entry_point_sha256": "c0309ad814a8f0ca4695838eb165456abeebdc364f95e75acef048a6636d7d1f",
+    "stage_coordinator_sha256": "8819487a1655ae69601fe2c899683dddfd08a3001ad68708859b897eb5211a3a",
+    "research_domain_sha256": "8780902d628c44b8915eb70ed9ffb994361e0df9229be2d1239feb573e5e966a",
+    "research_persistence_sha256": "8c13401625e0e972ad8b734ef7aca6b91565e4cf3a62ed4a01329b0b3f781891",
+    "frozen_slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "accepted_v3_work_item_identity_schema_sha256": "d540c0017470188267b5331790571318262dbaffe70d405f7fdca6e4680b69e8",
+    "accepted_v3_authorization_adapter_sha256": "c99f715ef6f52afabca3860c00c8a9ec0dd9ff16960ab90927cc3e8b3e1fcfc2",
+    "terraform_compute_sha256": "64f36b3e24f00242bd4438fe0453f8e846b9d236679f9335cbacf78a238d416e",
+    "terraform_outputs_sha256": "7de0806ea987bcf5f04ded87e4c50d0632417b8547c000749f5b275ee2af7043"
+  },
+  "local_image": {
+    "tag": "localhost/m67-phase1-worker:git-c1669b169fac-v4",
+    "dockerfile_sha256": "46fa3081e19cf131372ed59ef56e84c4c8737d0b72cc072927fda655bd4553de",
+    "archive_sha256": "287e4e58ff941813a0444432c43ec07e7da3c9b9af2bead426263b9d75d50e2a",
+    "local_manifest_digest": "sha256:99050ddcfc9a64a9ed3dfc2b41b0478b38c9265d58841f3368a81cfbfc3c83a1",
+    "config_digest": "sha256:54b9977c631e117582bd118fce6d76cd44d0ca37a93bd61958836af1239d7beb",
+    "platform": "linux/amd64",
+    "parent_registry_digest": "sha256:8970af60a32da73b56c80d39598d2324459475fa7c98cc43e4200c626f68edb7",
+    "parent_local_config_digest": "sha256:a11d67766fceaca77e4347b9cd70fa5d6dd1a93970f7efc851a593604d0cc754",
+    "new_source_layer_diff_id": "sha256:861fe0f883a4bd70c648249b506e8a80a42eb5d5ef59bfde3195d1349f9df585",
+    "ordered_diff_ids": [
+      "sha256:0854555d70acaa318b38ee50bc667cb51ff6bf0757624624c7ff3b6fe17459a0",
+      "sha256:98899702eeeaf1257e200c38c53a35c7908e831b11ea31d8f2e27fef0c5b8e3c",
+      "sha256:3d538106e26b6c23fa9062243fe6d4aee2d373c4f928203cd76cacd51a0a51cd",
+      "sha256:44c1014e5162dcfb531c0eba5e0d87270b9b96204f8090e17f4f4b8036feba4d",
+      "sha256:ce57cf4ce41603010895d9f500deebb23d33bafda1e7b11e392c08809d9e9118",
+      "sha256:a433a1a55f7468bd5cd9614c0205f2c2e87c2c0e97b97ace896471e2dafb9651",
+      "sha256:861fe0f883a4bd70c648249b506e8a80a42eb5d5ef59bfde3195d1349f9df585"
+    ],
+    "network_disabled_build": true,
+    "registry_consumable_digest": "PENDING_SEPARATELY_AUTHORIZED_PUBLICATION"
+  },
+  "validation": {
+    "focused_activation_and_coordinator_tests": "39 passed",
+    "repository_tests": "614 passed, 2 PostgreSQL-dependent tests skipped because OPINTEL_TEST_POSTGRES_URL is absent",
+    "repository_check": "PASS",
+    "python_compileall": "PASS",
+    "git_diff_check": "PASS",
+    "terraform_validate": "PASS_WITH_EXISTING_CLOUD_MAP_DEPRECATION_WARNING",
+    "network_disabled_container_imports": "PASS",
+    "activation_cli_parameters": ["slot-number", "release-id"],
+    "offline_trivy_vulnerability_findings_high_or_critical": 0,
+    "offline_trivy_secret_findings": 0,
+    "offline_vulnerability_evidence_sha256": "44f51f67d7b6d6a4406cd4e679fb1c7133f294e88891e451fc47d96476cf3414",
+    "offline_secret_evidence_sha256": "9a297e2804fa0bc57970b946c40e18b44148175fe55d65f185578f97416f9e6f",
+    "negative_cases": [
+      "nonexistent slot",
+      "wrong release",
+      "wrong permission type",
+      "wrong slot",
+      "wrong ordered package",
+      "wrong business",
+      "wrong hostname",
+      "revoked release",
+      "expired release",
+      "malformed release",
+      "missing A-09 binding",
+      "wrong runtime revision",
+      "kill switch tripped",
+      "duplicate activation",
+      "identity-less API construction",
+      "direct M2 without accepted M1",
+      "direct M3 without accepted M2",
+      "stage skip",
+      "predecessor revision mismatch",
+      "forged work item",
+      "duplicate queue delivery"
+    ]
+  },
+  "validation_tooling_incident": {
+    "classification": "BLOCKED_UNAUTHENTICATED_REGISTRY_LOOKUP_WITH_ZERO_IMAGE_OR_SOURCE_CONTENT",
+    "description": "One initial Trivy invocation addressed the local Buildah tag directly. With no Docker/Podman socket, Trivy attempted an unauthenticated Docker Hub manifest lookup for the literal localhost repository name and received UNAUTHORIZED.",
+    "business_or_first_party_hosts_contacted": 0,
+    "image_or_source_payload_retrieved": false,
+    "credential_or_secret_sent": false,
+    "corrective_invariant": "All sealed scans use --input against the exact local archive with --offline-scan, --skip-db-update and --skip-version-check; direct image-name scan results are discarded and not evidence."
+  },
+  "publication_gate": {
+    "attempts": 1,
+    "terminal": true,
+    "publisher_role": "arn:aws:iam::785072247535:role/m67-phase1-worker-image-publisher",
+    "source_image": "localhost/m67-phase1-worker:git-c1669b169fac-v4",
+    "destination": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker:git-c1669b169fac-v4",
+    "rebuilds": 0,
+    "alternate_images": 0,
+    "other_tags": 0,
+    "deletions": 0,
+    "terraform_apply": false,
+    "post_publication_requirements": [
+      "obtain the exact registry-consumable manifest or index digest and media type",
+      "cryptographically bind platform, config digest, ordered compressed layers and the exact V3 parent prefix",
+      "require ECR provider scan COMPLETE with zero blocking findings",
+      "generate a fresh Terraform plan using only that registry digest",
+      "review the managed semantic diff and stop before deployment"
+    ]
+  },
+  "dormant_state_required": {
+    "deployed_baseline": "ACCEPTED_V3_DORMANT",
+    "services_desired_running_pending": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release_exists": false,
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "slot01_network_or_research_operations": 0
+  },
+  "prohibited": [
+    "image rebuild or source/dependency substitution",
+    "alternate tag or repository publication",
+    "image deletion",
+    "Terraform apply or service activation",
+    "Slot 01 authorization release or execution",
+    "903 HVAC DNS or HTTP access",
+    "REAL_PUBLIC_RESEARCH or REAL_BUSINESS_DISCOVERY",
+    "M1-M5 real-company execution",
+    "person/contact processing",
+    "AI or browser use",
+    "outreach, delivery or external communication"
+  ]
+}
