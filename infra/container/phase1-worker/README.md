@@ -17,6 +17,19 @@ After AWS SSO and the appropriate reviewed Terraform authority exist, the automa
    timestamps in an immutable image evidence record;
 10. inject the immutable `repository@sha256:<digest>` into the generated Phase 1 Terraform input.
 
+The deployment identity is always the digest returned by the target registry after publication:
+
+`DEPLOYMENT_IMAGE_DIGEST = REGISTRY_MANIFEST_OR_INDEX_DIGEST_PROVEN_AFTER_PUBLICATION`
+
+A local image-store digest, config digest, archive digest, or pre-publication manifest digest is
+supporting build evidence only. It must never be substituted for the registry-consumable digest in
+Terraform. Publication authorization and runtime-deployment authorization are separate gates when
+the registry digest is not already known. The immutable evidence retains the registry media type,
+single-platform manifest or index relationship, config digest, ordered layer descriptors, platform,
+source commit, SBOM, and scan result. Any representation transformation must be reproduced from the
+frozen local image and compared byte-for-byte with the registry manifest before equivalence may be
+accepted.
+
 The production Dockerfile pins the Linux/amd64 Python 3.13 Alpine 3.22 platform manifest at
 `sha256:7f7ee17311e0273954ffe76a7b84a2d8c8ecf16f9992e780e4d46c86175df431`.
 Its dependency stage exports only the `opintel-research-worker` runtime graph from `uv.lock` and
