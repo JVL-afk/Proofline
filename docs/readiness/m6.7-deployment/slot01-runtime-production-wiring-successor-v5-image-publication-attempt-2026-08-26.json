@@ -1,0 +1,76 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_PRODUCTION_WIRING_SUCCESSOR_V5_IMAGE_PUBLICATION_ATTEMPT",
+  "version": "2026-08-26.1",
+  "state": "BLOCKED_V5_IMAGE_PUBLICATION_ATTEMPT_CONSUMED_LOCAL_MANIFEST_REPRESENTATION_MISMATCH",
+  "terminal_recorded_at": "2026-08-26T16:30:06Z",
+  "authorization": {
+    "record_type": "AUTHORIZE_SLOT01_RUNTIME_PRODUCTION_WIRING_SUCCESSOR_V5_IMAGE_PUBLICATION",
+    "authorization_commit": "7e756c6",
+    "attempts_authorized": 1,
+    "attempts_consumed": 1,
+    "reusable": false
+  },
+  "preconditions_passed_before_failure": {
+    "bound_repository_file_hashes": "PASS",
+    "implementation_commit_ancestor": "PASS",
+    "evidence_commit_ancestor": "PASS",
+    "docker_archive_sha256": "44062ada552d41cbaa6a2d25a3a2fa90b3cfe968b15e82c31d75e008b902ee55",
+    "aws_account": "785072247535",
+    "region": "us-east-2",
+    "services_desired_running_pending": "0/0/0",
+    "live_tasks": 0,
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "destination_tag": "ABSENT"
+  },
+  "failure": {
+    "stage": "LOCAL_IMAGE_IDENTITY_BEFORE_PUBLISHER_SESSION",
+    "exception_classification": "LOCAL_MANIFEST_PRECONDITION_FAILED",
+    "expected_bound_manifest_identity": {
+      "source": "sealed OCI archive index.json descriptor",
+      "digest": "sha256:be13e69fbb9557c0f4eb07f374b1cfc529788a688d9ca1d01fe3f7a4a7784e8d",
+      "media_type": "application/vnd.oci.image.manifest.v1+json"
+    },
+    "observed_buildah_storage_manifest_identity": {
+      "source": "buildah inspect FromImageDigest and local containers-storage raw manifest",
+      "digest": "sha256:bfe65233fa650ef2e0d7871b84b5c9fcc17bc08b52288b2f0f7fb17af7bfcadd",
+      "media_type": "application/vnd.oci.image.manifest.v1+json",
+      "layer_representation": "eight uncompressed application/vnd.oci.image.layer.v1.tar descriptors"
+    },
+    "shared_config_digest": "sha256:a482c0cbf160d4b58bcb4248ffe62016ea9325844192a3940e6973c21b244efc",
+    "ordered_rootfs_diff_ids_match_bound_evidence": true,
+    "classification": "CONTENT_EQUIVALENCE_NOT_ADOPTED_UNDER_CONSUMED_AUTHORIZATION",
+    "reason": "The sealed OCI archive descriptor and local containers-storage manifest are representation-distinct. Although the config and rootfs diff-ID sequence match, the exact prepublication runner required equality between the archive manifest binding and Buildah storage FromImageDigest. That exact precondition failed, so no equivalence was adopted and the attempt stopped."
+  },
+  "effects": {
+    "publisher_role_assumed": false,
+    "ecr_login_attempts": 0,
+    "ecr_push_attempts": 0,
+    "image_bytes_published": 0,
+    "destination_tag_created": false,
+    "registry_digest_created": false,
+    "ecr_scan_started_by_attempt": false,
+    "terraform_plan_generated": false,
+    "terraform_apply_performed": false,
+    "aws_mutations": 0,
+    "slot01_release_created": false,
+    "requests_to_903hvac_com": 0,
+    "real_company_m1_m5_runs": 0
+  },
+  "preserved": {
+    "local_image_tag": "localhost/m67-phase1-worker:git-f1e1acfc3fce-v5",
+    "docker_archive_sha256": "44062ada552d41cbaa6a2d25a3a2fa90b3cfe968b15e82c31d75e008b902ee55",
+    "oci_archive_sha256": "cf7b9ad8d4f0959bdf7841f8b6a7a93468157c29c59db834ff18ab6b94772cd2",
+    "local_config_digest": "sha256:a482c0cbf160d4b58bcb4248ffe62016ea9325844192a3940e6973c21b244efc",
+    "accepted_v4_parent_registry_digest": "sha256:d0444158c2be7a6003ee4f9f351e320f8da05f01e4970c718d08d1f5310f1842",
+    "deployed_baseline": "V4_DORMANT",
+    "services_desired_running_pending": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED"
+  },
+  "next_required_action": "A new separately reviewed publication authorization must explicitly bind the correct local representation relationship and a corrected prepublication verifier. The consumed authorization may not be retried."
+}

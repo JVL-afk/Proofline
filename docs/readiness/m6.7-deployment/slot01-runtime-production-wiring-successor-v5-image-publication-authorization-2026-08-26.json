@@ -1,7 +1,7 @@
 {
   "record_type": "AUTHORIZE_SLOT01_RUNTIME_PRODUCTION_WIRING_SUCCESSOR_V5_IMAGE_PUBLICATION",
   "version": "2026-08-26.1",
-  "state": "APPROVED_NOT_CONSUMED",
+  "state": "CONSUMED_PREPUBLICATION_PRECONDITION_FAILURE",
   "target": {
     "account_id": "785072247535",
     "region": "us-east-2"
@@ -67,8 +67,18 @@
     "outreach, delivery or external communication"
   ],
   "consumption": {
-    "attempts_consumed": 0,
-    "reusable": true
+    "attempts_consumed": 1,
+    "terminal_recorded_at": "2026-08-26T16:30:06Z",
+    "failure_stage": "LOCAL_IMAGE_MANIFEST_PRECONDITION",
+    "expected_bound_oci_archive_manifest_digest": "sha256:be13e69fbb9557c0f4eb07f374b1cfc529788a688d9ca1d01fe3f7a4a7784e8d",
+    "observed_buildah_storage_manifest_digest": "sha256:bfe65233fa650ef2e0d7871b84b5c9fcc17bc08b52288b2f0f7fb17af7bfcadd",
+    "publisher_role_assumed": false,
+    "registry_login_attempted": false,
+    "image_push_attempted": false,
+    "destination_tag_created": false,
+    "terraform_plan_generated": false,
+    "terraform_apply_performed": false,
+    "reusable": false
   },
   "owner_signature": "APPROVED_IN_THREAD"
 }
