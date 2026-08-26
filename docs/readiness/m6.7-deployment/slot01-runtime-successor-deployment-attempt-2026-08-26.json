@@ -1,0 +1,75 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_SUCCESSOR_DEPLOYMENT_ATTEMPT",
+  "version": "2026-08-26.1",
+  "state": "BLOCKED_ECR_PUBLISHED_DIGEST_MISMATCH",
+  "observed_at": "2026-08-26T06:23:35.4394846Z",
+  "authorization": {
+    "event": "APPROVE_SLOT01_RUNTIME_SUCCESSOR_DEPLOYMENT",
+    "plan_review_sha256": "96be38f3d552e8eac658b3136884645eb431a2b9485e8deea412bdb644f81f41",
+    "approved_image_digest": "sha256:9cf0eee825e47a0fa8994c6449ff0774f5f68d2ab7e9b49869ae8d6d919457a5",
+    "status": "CONSUMED_TERMINAL_AT_IMAGE_DIGEST_GATE"
+  },
+  "publication": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "repository": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
+    "publisher_role": "arn:aws:iam::785072247535:role/m67-phase1-worker-image-publisher",
+    "tag": "git-c038c0542eb4",
+    "local_reviewed_manifest_digest": "sha256:9cf0eee825e47a0fa8994c6449ff0774f5f68d2ab7e9b49869ae8d6d919457a5",
+    "ecr_observed_manifest_digest": "sha256:0600eec77e9d1f1fd4e42e001bd416038f2d8c4cee91f56bdce5f2bf34f41ca3",
+    "digest_match": false,
+    "ecr_compressed_size_bytes": 55358170,
+    "ecr_pushed_at": "2026-08-26T06:22:21.2120000Z",
+    "provider_scan": "NOT_EVALUATED_STOPPED_BEFORE_SCAN_GATE",
+    "blocking_policy_result": "UNKNOWN_NOT_PASSED"
+  },
+  "failure": {
+    "stage": "POST_PUBLICATION_INDEPENDENT_DIGEST_VERIFICATION",
+    "root_cause": "ECR_ASSIGNED_MANIFEST_DIGEST_DIFFERS_FROM_HASH_BOUND_APPROVED_DIGEST",
+    "manifest_representation_cause": "NOT_YET_PROVEN",
+    "required_behavior": "STOP_BEFORE_TERRAFORM_APPLY",
+    "image_rebuild_retag_or_substitution": 0,
+    "terraform_apply_attempted": false,
+    "saved_plan_applied": false,
+    "task_definition_registered": false,
+    "ecs_service_changed": false,
+    "slot01_release_created": false,
+    "real_research_requests": 0
+  },
+  "locked_environment_verification": {
+    "kill_switch": "TRIPPED",
+    "research_release": "ABSENT_FAIL_CLOSED_NOT_AUTHORIZED",
+    "research_worker": {
+      "desired": 0,
+      "running": 0,
+      "pending": 0,
+      "task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-research-worker:3"
+    },
+    "controlled_egress": {
+      "desired": 0,
+      "running": 0,
+      "pending": 0,
+      "task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-controlled-egress:1"
+    },
+    "intelligence_service": "ABSENT_NOT_DEPLOYED",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "ai": "UNAVAILABLE",
+    "browser": "OFF",
+    "person_contact_processing": "NOT_AUTHORIZED",
+    "delivery": "STRUCTURALLY_UNAVAILABLE"
+  },
+  "aws_mutation_inventory": {
+    "created": [
+      "ECR image tag git-c038c0542eb4 resolving to sha256:0600eec77e9d1f1fd4e42e001bd416038f2d8c4cee91f56bdce5f2bf34f41ca3"
+    ],
+    "terraform_managed_resources_changed": 0,
+    "runtime_resources_changed": 0,
+    "cleanup_status": "PENDING_SEPARATE_EXACT_AUTHORIZATION",
+    "cleanup_reason": "The publisher role and consumed deployment approval do not authorize BatchDeleteImage, and the approved rollback record requires a separately reviewed action for image deletion."
+  },
+  "next_required_work": [
+    "Read-only compare the ECR manifest representation with the approved local archive/config/layer evidence.",
+    "Determine whether registry manifest canonicalization alone explains the digest change.",
+    "Prepare a separately hash-bound cleanup/adoption and successor Terraform plan; never reuse this consumed deployment authorization or silently substitute the ECR digest."
+  ]
+}
