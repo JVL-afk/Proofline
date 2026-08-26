@@ -1,0 +1,56 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_ACTIVATION_SUCCESSOR_V4_PREAPPLY_BACKEND_REJECTION",
+  "version": "2026-08-26.1",
+  "state": "BLOCKED_V4_SAVED_PLAN_EMBEDDED_BACKEND_IDENTITY_MISMATCH",
+  "observed_at": "2026-08-26T13:38:22.3126416Z",
+  "authorization_event": "APPROVE_SLOT01_RUNTIME_ACTIVATION_SUCCESSOR_V4_DEPLOYMENT",
+  "approved_plan_sha256": "586296967fd22e027dbc40aa10beb4f364096dccb2a7a45f2af7ccf725614828",
+  "approved_plan_json_sha256": "7139f4996cd9fe5978c3430edb2d10923b31388f04d49bc61fde873789641cfa",
+  "approved_plan_review_sha256": "ece294aa0e7bbb8e677a0b8c74c90d8ced7b042fc5c58d201b759c3a71f4b4ab",
+  "required_backend": {
+    "profile": "m67-phase1-state-apply-backend",
+    "identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply"
+  },
+  "observed_plan_time_backend": {
+    "identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-plan",
+    "session_name": "m67-phase1-state-plan",
+    "local_backend_metadata_sha256": "64bbde4852e7ab0ad93c72a6e276656df211fbc0d9ca7f32d127f5c56ed4501b",
+    "backend_configuration_sha256": "da1191cd2d107b9cab1c29ad58af9ab514eebf1dc12ef216eec1295721031242"
+  },
+  "governance_basis": {
+    "adr": "ADR-0075",
+    "rule": "Terraform restores the backend embedded at plan time. An application plan produced with state-plan cannot be converted to state-apply by reinitializing before apply.",
+    "plan_review_claim_refuted": "The V4 plan review recorded state-apply as embedded, but exact local backend metadata proves state-plan was active when the saved plan was generated."
+  },
+  "effect": {
+    "terraform_apply_attempted": false,
+    "aws_mutations": 0,
+    "deployment_authorization_consumed": false,
+    "deployment_authorization_reusable": false,
+    "saved_plan_reusable": false,
+    "successor_saved_plan_required": true,
+    "successor_requirements": [
+      "generate a fresh saved application plan with workload-plan provider reads and the protected state-apply backend embedded at plan time",
+      "independently verify both provider and embedded backend identities",
+      "perform a fresh semantic review and hash-bound owner deployment authorization"
+    ]
+  },
+  "preserved_state": {
+    "deployed_baseline": "V3_DORMANT",
+    "services_desired_running_pending": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": {
+      "REAL_BUSINESS_DISCOVERY": "NOT_AUTHORIZED",
+      "REAL_PUBLIC_RESEARCH": "NOT_AUTHORIZED",
+      "PROFESSIONAL_IDENTITY_RESOLUTION": "NOT_AUTHORIZED",
+      "REAL_CONTACT_STORAGE": "NOT_AUTHORIZED",
+      "CONTACT_VERIFICATION": "NOT_AUTHORIZED",
+      "SHADOW_ELIGIBILITY_EVALUATION": "NOT_AUTHORIZED",
+      "SHADOW_READY_ASSESSMENT": "NOT_AUTHORIZED"
+    },
+    "access_to_903hvac_com": 0,
+    "real_company_m1_m5_executions": 0
+  }
+}

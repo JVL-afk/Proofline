@@ -1,0 +1,50 @@
+{
+  "record_type": "APPROVE_SLOT01_RUNTIME_ACTIVATION_SUCCESSOR_V4_DEPLOYMENT",
+  "version": "2026-08-26.1",
+  "state": "PREAPPLY_REJECTED_AUTHORIZATION_NOT_CONSUMED_NON_REUSABLE",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "bindings": {
+    "implementation_commit": "e8e863e1da74dba32eaefbeecf71347167ddbc01",
+    "artifact_pipeline_commit": "c1669b169fac4db17fa4984639f16bb6edeb282e",
+    "deployment_evidence_commit": "9b9c81f0b9e98381b834e872515f0ff438c3e87c",
+    "plan_review_sha256": "ece294aa0e7bbb8e677a0b8c74c90d8ced7b042fc5c58d201b759c3a71f4b4ab",
+    "registry_evidence_sha256": "67741ca5789fb636aa35da2b57a10e3cd98aff2ec01d381ade0eb5d4a2c6b7c3",
+    "sampled_slot_activation_adapter_sha256": "ef6180794dfd705243b518500e0544f631cf23d86a64c1046819ec003cd0ba79",
+    "activation_entry_point_sha256": "c0309ad814a8f0ca4695838eb165456abeebdc364f95e75acef048a6636d7d1f",
+    "stage_coordinator_sha256": "8819487a1655ae69601fe2c899683dddfd08a3001ad68708859b897eb5211a3a",
+    "work_item_identity_schema_sha256": "d540c0017470188267b5331790571318262dbaffe70d405f7fdca6e4680b69e8",
+    "frozen_slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "saved_plan_sha256": "586296967fd22e027dbc40aa10beb4f364096dccb2a7a45f2af7ccf725614828",
+    "plan_json_sha256": "7139f4996cd9fe5978c3430edb2d10923b31388f04d49bc61fde873789641cfa",
+    "configuration_sha256": "4454ab7a4dd12faddea7d448aa0fc20bf84dc3382ea4d328c9ad2aad2983b2a3",
+    "terraform_tfvars_sha256": "2d42195793701034f9c7fe912058ab33f15e0812923b7bae6f6a05311964e07c",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "managed_change_semantic_sha256": "34ccc0993ff296e9721a428a035d0e9c56710f3784b4ac75713d1479bccefbb8",
+    "registry_digest": "sha256:d0444158c2be7a6003ee4f9f351e320f8da05f01e4970c718d08d1f5310f1842"
+  },
+  "authorized_operation": {
+    "apply_only_exact_saved_plan": true,
+    "required_provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "required_embedded_backend_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "terraform_cli_counts": {"add": 4, "change": 3, "destroy": 3},
+    "standalone_creates": 1,
+    "in_place_changes": 3,
+    "expected_task_definition_replacements": 3,
+    "unexpected_replacements": 0,
+    "standalone_destroys": 0
+  },
+  "preapply_result": {
+    "result": "REJECTED_BEFORE_TERRAFORM_APPLY",
+    "reason": "The exact saved V4 plan was created with the protected state-plan backend identity, not the owner-required protected state-apply backend identity.",
+    "authorization_consumed": false,
+    "authorization_reusable": false,
+    "terraform_apply_attempted": false,
+    "aws_mutations": 0,
+    "slot01_release_created": false,
+    "slot01_network_or_research_operations": 0
+  },
+  "owner_signature": "APPROVED_IN_THREAD"
+}
