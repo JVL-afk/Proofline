@@ -24,6 +24,7 @@ from opintel_research.domain import (
     ResearchRun,
     ResearchRunStatus,
     RobotsPolicyEvidence,
+    SampledSlotIdentity,
 )
 from sqlalchemy import (
     Boolean,
@@ -643,6 +644,18 @@ class SqlAlchemyResearchRepository:
 
     @staticmethod
     def _run_row(value: ResearchRun, key: str) -> RunRow:
+        policy_payload: dict[str, object] = {
+            "schema_version": "research-run-policy@2-sampled-slot",
+            "crawl_policy": asdict(value.policy),
+            "sampled_slot_identity": (
+                {
+                    **asdict(value.sampled_slot_identity),
+                    "work_item_id": str(value.sampled_slot_identity.work_item_id),
+                }
+                if value.sampled_slot_identity is not None
+                else None
+            ),
+        }
         return RunRow(
             id=_id(value.id),
             workspace_id=_id(value.workspace_id),
@@ -651,7 +664,7 @@ class SqlAlchemyResearchRepository:
             trace_id=_id(value.trace_id),
             start_url=value.start_url,
             permitted_host=value.permitted_host,
-            policy_json=_json(asdict(value.policy)),
+            policy_json=_json(policy_payload),
             status=value.status,
             idempotency_key=key,
             created_by=value.created_by,
@@ -669,6 +682,24 @@ class SqlAlchemyResearchRepository:
 
     @staticmethod
     def _run(row: RunRow) -> ResearchRun:
+        policy_payload = json.loads(row.policy_json)
+        if policy_payload.get("schema_version") == "research-run-policy@2-sampled-slot":
+            identity_payload = policy_payload.get("sampled_slot_identity")
+            identity = (
+                SampledSlotIdentity(
+                    **{
+                        **identity_payload,
+                        "work_item_id": UUID(identity_payload["work_item_id"]),
+                    }
+                )
+                if identity_payload is not None
+                else None
+            )
+            crawl_policy = policy_payload["crawl_policy"]
+        else:
+            # Historical V2 work items remain readable but fail closed at authorization.
+            identity = None
+            crawl_policy = policy_payload
         return ResearchRun(
             id=UUID(row.id),
             workspace_id=UUID(row.workspace_id),
@@ -677,7 +708,7 @@ class SqlAlchemyResearchRepository:
             trace_id=UUID(row.trace_id),
             start_url=row.start_url,
             permitted_host=row.permitted_host,
-            policy=CrawlPolicy(**json.loads(row.policy_json)),
+            policy=CrawlPolicy(**crawl_policy),
             status=ResearchRunStatus(row.status),
             created_by=row.created_by,
             created_at=_aware(row.created_at),
@@ -690,6 +721,7 @@ class SqlAlchemyResearchRepository:
             bytes_stored=row.bytes_stored,
             last_error_code=row.last_error_code,
             last_error_message=row.last_error_message,
+            sampled_slot_identity=identity,
         )
 
     @staticmethod

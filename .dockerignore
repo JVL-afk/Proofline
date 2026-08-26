@@ -11,4 +11,4 @@
 !infra/container/
 !infra/container/phase1-worker/
 !infra/container/phase1-worker/Dockerfile
-
+!infra/container/phase1-worker/phase1-frozen-slot-registry.json

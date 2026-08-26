@@ -9,16 +9,21 @@ import boto3
 from opintel_research.domain import Business, FetchError, ResearchRun
 from opintel_shadow import LiveResearchPermissionRelease, PermissionActivity, PermissionState
 
+from opintel_research_worker.sample_registry import FrozenPhaseOneSampleRegistry
+
 
 class AwsSsmResearchAuthorization:
     """Fail closed unless one current immutable release binds the exact business and host."""
 
-    def __init__(self, parameter_name: str, region: str, runtime_revision: str) -> None:
-        if not parameter_name or not runtime_revision:
-            raise ValueError("release parameter and runtime revision are required")
+    def __init__(
+        self, parameter_name: str, region: str, runtime_revision: str, slot_registry_path: str
+    ) -> None:
+        if not parameter_name or not runtime_revision or not slot_registry_path:
+            raise ValueError("release parameter, runtime revision, and slot registry are required")
         self._parameter_name = parameter_name
         self._client = boto3.client("ssm", region_name=region)
         self._runtime_revision = runtime_revision
+        self._slot_registry = FrozenPhaseOneSampleRegistry(slot_registry_path)
 
     def current_release(self) -> LiveResearchPermissionRelease:
         try:
@@ -43,11 +48,26 @@ class AwsSsmResearchAuthorization:
 
     def authorize(self, run: ResearchRun, business: Business) -> None:
         release = self.current_release()
+        identity = run.sampled_slot_identity
+        try:
+            if identity is None:
+                raise ValueError("sampled slot identity is missing")
+            self._slot_registry.verify_identity(identity, run.id)
+            self._slot_registry.verify_release(release)
+        except ValueError as error:
+            raise FetchError(
+                "research_sample_identity_mismatch", "research work item is outside exact authority"
+            ) from error
         if (
-            release.business_identity != business.name
+            release.ordered_package_sha256 != identity.ordered_package_semantic_sha256
+            or release.slot_number != identity.slot_number
+            or release.business_identity != identity.business_identity
+            or release.exact_hostname != identity.exact_hostname
+            or release.business_identity != business.name
             or release.exact_hostname != business.permitted_host
             or release.allowed_source_scope != (run.permitted_host,)
             or run.business_id != business.id
+            or run.permitted_host != identity.exact_hostname
         ):
             raise FetchError("research_scope_mismatch", "research run is outside exact authority")
 
@@ -56,6 +76,12 @@ class AwsSsmResearchAuthorization:
 
     def current_gateway_policy(self) -> tuple[frozenset[str], str]:
         release = self.current_release()
+        try:
+            self._slot_registry.verify_release(release)
+        except ValueError as error:
+            raise FetchError(
+                "research_sample_identity_mismatch", "research release is outside frozen sample"
+            ) from error
         return frozenset(release.allowed_source_scope), release.configuration_hash
 
 

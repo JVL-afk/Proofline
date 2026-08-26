@@ -536,6 +536,7 @@ def test_phase1_requires_explicit_postgresql_and_local_remains_sqlite() -> None:
         kill_switch_parameter="/synthetic/kill-switch",
         research_release_parameter="/synthetic/research-release",
         research_runtime_revision="synthetic-runtime-v1",
+        phase1_slot_registry_path="/synthetic/phase1-frozen-slot-registry.json",
     )
     assert production.resolved_database_url().startswith("postgresql+psycopg://")
 

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
 from dataclasses import dataclass, field
 from datetime import datetime
@@ -59,6 +61,112 @@ class Business:
     created_at: datetime
 
 
+SAMPLED_WORK_ITEM_REVISION = "m67.phase1.sampled-research-work-item@1"
+
+
+@dataclass(frozen=True, slots=True)
+class SampledSlotIdentity:
+    """Content-addressed identity of one work item in the frozen Phase 1 sample."""
+
+    ordered_package_file_sha256: str
+    ordered_package_semantic_sha256: str
+    slot_registry_sha256: str
+    slot_number: int
+    business_identity: str
+    exact_hostname: str
+    source_row_sha256: str
+    work_item_id: UUID
+    work_item_revision: str
+    identity_sha256: str
+
+    @classmethod
+    def create(
+        cls,
+        *,
+        ordered_package_file_sha256: str,
+        ordered_package_semantic_sha256: str,
+        slot_registry_sha256: str,
+        slot_number: int,
+        business_identity: str,
+        exact_hostname: str,
+        source_row_sha256: str,
+        work_item_id: UUID,
+    ) -> SampledSlotIdentity:
+        payload = {
+            "business_identity": business_identity,
+            "exact_hostname": exact_hostname,
+            "ordered_package_file_sha256": ordered_package_file_sha256,
+            "ordered_package_semantic_sha256": ordered_package_semantic_sha256,
+            "slot_number": slot_number,
+            "slot_registry_sha256": slot_registry_sha256,
+            "source_row_sha256": source_row_sha256,
+            "work_item_id": str(work_item_id),
+            "work_item_revision": SAMPLED_WORK_ITEM_REVISION,
+        }
+        digest = hashlib.sha256(
+            json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode(
+                "utf-8"
+            )
+        ).hexdigest()
+        return cls(
+            ordered_package_file_sha256=ordered_package_file_sha256,
+            ordered_package_semantic_sha256=ordered_package_semantic_sha256,
+            slot_registry_sha256=slot_registry_sha256,
+            slot_number=slot_number,
+            business_identity=business_identity,
+            exact_hostname=exact_hostname,
+            source_row_sha256=source_row_sha256,
+            work_item_id=work_item_id,
+            work_item_revision=SAMPLED_WORK_ITEM_REVISION,
+            identity_sha256=digest,
+        )
+
+    def __post_init__(self) -> None:
+        hashes = (
+            self.ordered_package_file_sha256,
+            self.ordered_package_semantic_sha256,
+            self.slot_registry_sha256,
+            self.source_row_sha256,
+            self.identity_sha256,
+        )
+        if any(not re.fullmatch(r"[0-9a-f]{64}", item) for item in hashes):
+            raise ValueError("sampled slot identity requires lowercase SHA-256 values")
+        if not 1 <= self.slot_number <= 24:
+            raise ValueError("sampled slot number is outside the frozen Phase 1 slots")
+        if not self.business_identity.strip():
+            raise ValueError("sampled slot business identity is required")
+        if (
+            self.exact_hostname != self.exact_hostname.lower()
+            or "://" in self.exact_hostname
+            or "/" in self.exact_hostname
+            or "." not in self.exact_hostname
+        ):
+            raise ValueError("sampled slot hostname is not an exact normalized hostname")
+        if self.work_item_revision != SAMPLED_WORK_ITEM_REVISION:
+            raise ValueError("sampled work-item revision is not supported")
+        if self.identity_sha256 != self.computed_sha256():
+            raise ValueError("sampled slot identity hash mismatch")
+
+    def canonical_payload(self) -> dict[str, object]:
+        return {
+            "business_identity": self.business_identity,
+            "exact_hostname": self.exact_hostname,
+            "ordered_package_file_sha256": self.ordered_package_file_sha256,
+            "ordered_package_semantic_sha256": self.ordered_package_semantic_sha256,
+            "slot_number": self.slot_number,
+            "slot_registry_sha256": self.slot_registry_sha256,
+            "source_row_sha256": self.source_row_sha256,
+            "work_item_id": str(self.work_item_id),
+            "work_item_revision": self.work_item_revision,
+        }
+
+    def computed_sha256(self) -> str:
+        encoded = json.dumps(
+            self.canonical_payload(), sort_keys=True, separators=(",", ":"), ensure_ascii=False
+        ).encode("utf-8")
+        return hashlib.sha256(encoded).hexdigest()
+
+
 @dataclass(frozen=True, slots=True)
 class ResearchRun:
     id: UUID
@@ -81,6 +189,7 @@ class ResearchRun:
     bytes_stored: int = 0
     last_error_code: str | None = None
     last_error_message: str | None = None
+    sampled_slot_identity: SampledSlotIdentity | None = None
 
 
 @dataclass(frozen=True, slots=True)

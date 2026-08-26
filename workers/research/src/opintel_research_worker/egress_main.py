@@ -14,6 +14,7 @@ def run() -> None:
         os.environ.get("OPINTEL_RESEARCH_RELEASE_PARAMETER", ""),
         os.environ.get("OPINTEL_AWS_REGION", "us-east-2"),
         os.environ.get("OPINTEL_RESEARCH_RUNTIME_REVISION", ""),
+        os.environ.get("OPINTEL_PHASE1_SLOT_REGISTRY_PATH", ""),
     )
     run_gateway(frozenset(), "", policy_provider=authorization.current_gateway_policy)
 

@@ -49,6 +49,7 @@ def build_runner() -> ResearchWorkflowRunner:
             settings.research_release_parameter or "",
             settings.aws_region,
             settings.research_runtime_revision or "",
+            settings.phase1_slot_registry_path or "",
         )
         transport = ControlledEgressTransport(
             settings.controlled_egress_url, research_authorization.current_revision

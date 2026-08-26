@@ -149,6 +149,7 @@ resource "aws_ecs_task_definition" "worker" {
         { name = "OPINTEL_RESEARCH_LIVE_ENABLED", value = "false" },
         { name = "OPINTEL_RESEARCH_RELEASE_PARAMETER", value = aws_ssm_parameter.research_release.name },
         { name = "OPINTEL_RESEARCH_RUNTIME_REVISION", value = var.research_runtime_revision },
+        { name = "OPINTEL_PHASE1_SLOT_REGISTRY_PATH", value = "/app/config/phase1-frozen-slot-registry.json" },
         { name = "OPINTEL_RESEARCH_BROWSER_ENABLED", value = "false" }
       ]
       secrets = [
@@ -238,6 +239,7 @@ resource "aws_ecs_task_definition" "egress" {
     environment = [
       { name = "OPINTEL_RESEARCH_RELEASE_PARAMETER", value = aws_ssm_parameter.research_release.name },
       { name = "OPINTEL_RESEARCH_RUNTIME_REVISION", value = var.research_runtime_revision },
+      { name = "OPINTEL_PHASE1_SLOT_REGISTRY_PATH", value = "/app/config/phase1-frozen-slot-registry.json" },
       { name = "OPINTEL_AWS_REGION", value = var.aws_region }
     ]
     logConfiguration = {

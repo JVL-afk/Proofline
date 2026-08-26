@@ -54,6 +54,7 @@ COPY packages/outreach-local/src /app/outreach-local
 COPY packages/shadow-core/src /app/shadow-core
 COPY workers/research/src /app/research-worker
 COPY workers/intelligence/src /app/intelligence-worker
+COPY infra/container/phase1-worker/phase1-frozen-slot-registry.json /app/config/phase1-frozen-slot-registry.json
 
 # The upstream Python runtime includes pip and its vendored build/network packages. The worker does
 # not install packages at runtime, so remove that tooling and its stale vendored metadata entirely.
