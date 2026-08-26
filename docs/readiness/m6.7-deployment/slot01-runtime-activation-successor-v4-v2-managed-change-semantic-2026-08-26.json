@@ -1,0 +1,60 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_ACTIVATION_SUCCESSOR_V4_V2_MANAGED_CHANGE_SEMANTIC",
+  "version": "2026-08-26.1",
+  "state": "SEMANTICALLY_EQUIVALENT_TO_ACCEPTED_V4_INTENT",
+  "deployment_image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:d0444158c2be7a6003ee4f9f351e320f8da05f01e4970c718d08d1f5310f1842",
+  "terraform_cli_counts": {
+    "add": 4,
+    "change": 3,
+    "destroy": 3
+  },
+  "semantic_counts": {
+    "standalone_creates": 1,
+    "in_place_changes": 3,
+    "expected_task_definition_replacements": 3,
+    "unexpected_replacements": 0,
+    "standalone_destroys": 0,
+    "unexpected_destroys": 0
+  },
+  "standalone_creates": [
+    "aws_ecs_task_definition.sampled_slot_activator"
+  ],
+  "expected_replacements": [
+    "aws_ecs_task_definition.worker",
+    "aws_ecs_task_definition.egress",
+    "aws_ecs_task_definition.intelligence"
+  ],
+  "in_place_changes": [
+    "aws_ecs_service.worker.task_definition",
+    "aws_ecs_service.egress.task_definition",
+    "aws_ecs_service.intelligence.task_definition"
+  ],
+  "explicit_zeros": {
+    "iam_changes": 0,
+    "network_or_egress_changes": 0,
+    "desired_count_changes": 0,
+    "permission_state_changes": 0,
+    "authorization_release_changes": 0,
+    "unexpected_replacements": 0,
+    "standalone_destroys": 0
+  },
+  "comparison_to_rejected_v4_plan": {
+    "prior_plan_sha256": "586296967fd22e027dbc40aa10beb4f364096dccb2a7a45f2af7ccf725614828",
+    "prior_plan_json_sha256": "7139f4996cd9fe5978c3430edb2d10923b31388f04d49bc61fde873789641cfa",
+    "prior_managed_semantic_sha256": "34ccc0993ff296e9721a428a035d0e9c56710f3784b4ac75713d1479bccefbb8",
+    "changed_resource_address_set_equal": true,
+    "resource_action_sequences_equal": true,
+    "complete_changed_resource_objects_equal": true,
+    "terraform_configuration_equal": true,
+    "terraform_variables_equal": true,
+    "only_material_package_difference": "The fresh saved plan embeds the protected state-apply backend at plan creation; the rejected predecessor embedded state-plan."
+  },
+  "unchanged_safety": {
+    "service_desired_counts": 0,
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "browser_ai_contact_delivery": "UNCHANGED_DISABLED_OR_STRUCTURALLY_UNAVAILABLE"
+  }
+}

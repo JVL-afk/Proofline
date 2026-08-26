@@ -1,0 +1,39 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_ACTIVATION_SUCCESSOR_V4_V2_BACKEND_IDENTITY_EVIDENCE",
+  "version": "2026-08-26.1",
+  "state": "STATE_APPLY_EMBEDDED_AT_PLAN_CREATION_PASS",
+  "observed_at": "2026-08-26T13:54:54Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "state_bucket": "m67-phase1-tfstate-785072247535-us-east-2",
+    "state_key": "m67/phase1/terraform.tfstate"
+  },
+  "provider_identity": {
+    "profile": "m67-phase1-workload-plan",
+    "observed_arn": "arn:aws:sts::785072247535:assumed-role/m67-phase1-terraform-workload-plan/m67-phase1-workload-plan",
+    "purpose": "provider-side read-only refresh and plan construction"
+  },
+  "embedded_backend_identity": {
+    "profile": "m67-phase1-state-apply-backend",
+    "observed_arn": "arn:aws:sts::785072247535:assumed-role/m67-phase1-terraform-state-apply/m67-phase1-state-apply-backend",
+    "role_arn": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "active_backend_metadata_profile": "m67-phase1-state-apply-backend",
+    "active_backend_metadata_assume_role": null,
+    "backend_configuration_sha256": "c736be3d6edf4d79456b1b611ccd6809c1c718f4c5c2402ef00e66973471bef0",
+    "active_backend_metadata_sha256": "6bd94602ccbfc8adbe232047498af19e454d80c8144943f45592729e3ce9fae0"
+  },
+  "plan_creation": {
+    "saved_plan": "slot01-runtime-activation-successor-v4-v2.tfplan",
+    "saved_plan_sha256": "dc133552c43ee22d51ea6235158c841db6e7eb09fc6f2e06a8e0bc96925d1785",
+    "terraform_locking": false,
+    "terraform_apply_performed": false,
+    "aws_mutations": 0,
+    "previous_saved_plan_rewritten": false
+  },
+  "adr_0075": {
+    "result": "PASS",
+    "provider_and_backend_identity_separation_preserved": true,
+    "state_apply_embedded_at_plan_creation": true
+  }
+}
