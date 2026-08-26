@@ -1,0 +1,125 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_IMAGE_REPRESENTATION_DIAGNOSIS",
+  "version": "2026-08-26.1",
+  "state": "REPRESENTATION_EQUIVALENT_PROVEN",
+  "observed_at": "2026-08-26T08:39:42.8063244Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "repository": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
+    "tag": "git-c038c0542eb4"
+  },
+  "consumed_predecessor": {
+    "deployment_authorization": "APPROVE_SLOT01_RUNTIME_SUCCESSOR_DEPLOYMENT",
+    "saved_plan_sha256": "bd04d4d11368d1a8538e83bf8a67b513855be92ebbba0224075617c8b6444c86",
+    "terminal_failure_record_sha256": "07a836a3753a1d135e3b99304fe882f360dce97021ab4f847d765177f1f96b72",
+    "status": "PERMANENTLY_CONSUMED_NON_REUSABLE"
+  },
+  "approved_prepublication_object": {
+    "digest": "sha256:9cf0eee825e47a0fa8994c6449ff0774f5f68d2ab7e9b49869ae8d6d919457a5",
+    "identity": "SINGLE_PLATFORM_OCI_IMAGE_MANIFEST_OVER_UNCOMPRESSED_OCI_TAR_LAYER_DESCRIPTORS",
+    "media_type": "application/vnd.oci.image.manifest.v1+json",
+    "not_a_config_digest": true,
+    "not_an_index_or_manifest_list": true,
+    "not_an_archive_digest": true,
+    "not_a_buildx_containerimage_digest": true,
+    "config": {
+      "media_type": "application/vnd.oci.image.config.v1+json",
+      "digest": "sha256:ad3b40b50af1fc6905384f3ad819e3189f091e178ec13476674b4feb2eaf8b9d",
+      "size": 10858
+    },
+    "ordered_uncompressed_layer_digests": [
+      "sha256:0854555d70acaa318b38ee50bc667cb51ff6bf0757624624c7ff3b6fe17459a0",
+      "sha256:98899702eeeaf1257e200c38c53a35c7908e831b11ea31d8f2e27fef0c5b8e3c",
+      "sha256:3d538106e26b6c23fa9062243fe6d4aee2d373c4f928203cd76cacd51a0a51cd",
+      "sha256:44c1014e5162dcfb531c0eba5e0d87270b9b96204f8090e17f4f4b8036feba4d",
+      "sha256:ce57cf4ce41603010895d9f500deebb23d33bafda1e7b11e392c08809d9e9118"
+    ]
+  },
+  "ecr_registry_object": {
+    "digest": "sha256:0600eec77e9d1f1fd4e42e001bd416038f2d8c4cee91f56bdce5f2bf34f41ca3",
+    "identity": "SINGLE_PLATFORM_OCI_IMAGE_MANIFEST_OVER_GZIP_COMPRESSED_OCI_TAR_LAYER_DESCRIPTORS",
+    "media_type": "application/vnd.oci.image.manifest.v1+json",
+    "object_type": "SINGLE_PLATFORM_IMAGE_MANIFEST",
+    "manifest_bytes_hash_to_reported_digest": true,
+    "index_or_manifest_list": false,
+    "child_manifests": [],
+    "provenance_sbom_or_attestation_manifests": [],
+    "subject": null,
+    "artifact_type": null,
+    "config": {
+      "media_type": "application/vnd.oci.image.config.v1+json",
+      "digest": "sha256:ad3b40b50af1fc6905384f3ad819e3189f091e178ec13476674b4feb2eaf8b9d",
+      "size": 10858
+    },
+    "ordered_compressed_layers": [
+      {"digest": "sha256:41dad0242630a38b7248eae6e9a5c15660ccae64bd1365475addb3833d1b22fc", "size": 3924791},
+      {"digest": "sha256:904e98828af6963af07a12868a5e6335ffa83b98007256966a1d64caf2aa81bd", "size": 463254},
+      {"digest": "sha256:f0d2f8eb61740062d5cbef1a7d3923f1b16da095cc1ffbc2b93a2e1840ff6cb5", "size": 12912098},
+      {"digest": "sha256:c58c9e5629c87c46982664e95ee5ee9ac897518c4bdb67b67aa4dc14d0db1697", "size": 266},
+      {"digest": "sha256:05cf827b3988e34b1f5218d804c52dbb776b6c14668e999c848e5837a973b053", "size": 38046903}
+    ]
+  },
+  "runtime_platform": {
+    "required_by_task_definition": "linux/amd64",
+    "observed_in_config": "linux/amd64",
+    "runnable_platform_count": 1,
+    "entrypoint": ["python", "-m", "opintel_research_worker.main"],
+    "user": "65532:65532"
+  },
+  "cryptographic_proof": {
+    "method": "LOCAL_NETWORK_FREE_SKOPEO_COPY_WITH_DESTINATION_COMPRESSION_FROM_THE_FROZEN_OCI_LAYOUT",
+    "reproduced_registry_manifest_digest": "sha256:0600eec77e9d1f1fd4e42e001bd416038f2d8c4cee91f56bdce5f2bf34f41ca3",
+    "reproduced_manifest_byte_equal_to_ecr_manifest": true,
+    "config_descriptor_equal": true,
+    "config_bytes_equal": true,
+    "rootfs_diff_ids_equal_to_prepublication_uncompressed_layers_in_order": true,
+    "annotations_equal": true,
+    "image_pull_or_run_performed": false,
+    "equivalence_evidence_sha256": "c2143417098c3781254bd52630d6cf54e6b4899dfe6eae352a957aa8c4a0e623"
+  },
+  "root_cause": {
+    "classification": "PUBLISHER_RECOMPRESSED_OCI_LAYERS_AND_REWROTE_MANIFEST_DESCRIPTORS",
+    "detail": "Buildah/Skopeo converted the five uncompressed OCI tar layer descriptors into gzip-compressed OCI tar descriptors during publication. The config digest and root filesystem diff-ID sequence were preserved. This was not a BuildKit index, provenance, SBOM, or attestation wrapper.",
+    "material_image_difference": false
+  },
+  "scan": {
+    "target_digest": "sha256:0600eec77e9d1f1fd4e42e001bd416038f2d8c4cee91f56bdce5f2bf34f41ca3",
+    "status": "COMPLETE",
+    "completed_at": "2026-08-26T06:22:29Z",
+    "provider_findings": 0,
+    "critical_findings": 0,
+    "high_findings": 0,
+    "blocking_findings": 0
+  },
+  "corrected_invariant": {
+    "deployment_image_digest": "REGISTRY_MANIFEST_OR_INDEX_DIGEST_PROVEN_AFTER_PUBLICATION",
+    "preserve_underlying_identities": [
+      "SOURCE_COMMIT",
+      "BUILD_METADATA",
+      "PLATFORM_MANIFEST_DIGEST",
+      "CONFIG_DIGEST",
+      "ORDERED_LAYER_DIGESTS",
+      "ORDERED_ROOTFS_DIFF_IDS"
+    ],
+    "future_gate_separation": [
+      "IMAGE_PUBLICATION_AUTHORIZATION",
+      "RUNTIME_DEPLOYMENT_AUTHORIZATION"
+    ],
+    "pipeline_correction_commit": "72f5b166e44d12f55075a0fe2bfc1595b1535b97",
+    "verifier_sha256": "43a67634be135de5bec64aaa3c82a21fefd0767339c1ef3571df1436d0319e01"
+  },
+  "preserved_state": {
+    "ecr_tag_deleted_or_retagged": false,
+    "new_image_publication": false,
+    "terraform_apply": false,
+    "kill_switch": "TRIPPED",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "research_release": "ABSENT_FAIL_CLOSED_NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "successor_research_service_counts": "0/0/0",
+    "controlled_egress_service_counts": "0/0/0",
+    "intelligence_service": "ABSENT",
+    "first_party_research_requests": 0
+  }
+}

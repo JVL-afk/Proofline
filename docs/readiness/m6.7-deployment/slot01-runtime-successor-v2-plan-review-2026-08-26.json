@@ -1,0 +1,151 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_SUCCESSOR_V2_DEPLOYMENT_PLAN_REVIEW",
+  "version": "2026-08-26.1",
+  "state": "READY_FOR_SLOT01_RUNTIME_SUCCESSOR_DEPLOYMENT_V2_AUTHORIZATION",
+  "required_owner_event": "APPROVE_SLOT01_RUNTIME_SUCCESSOR_DEPLOYMENT_V2",
+  "observed_at": "2026-08-26T08:39:42.8063244Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "source": {
+    "runtime_implementation_commit": "c038c0542eb467098574f703a9b3940ae64cf794",
+    "artifact_identity_correction_commit": "72f5b166e44d12f55075a0fe2bfc1595b1535b97",
+    "m1_runtime_sha256": "c851f0ac80df831a8a68e14cb7508a807c6f2922d6d20bd3b2a73113f3f7f3f4",
+    "m2_m5_runtime_sha256": "a2e28041cfcc682af633ed71715e92074dc2f2f2b37a23afcce186b3aa8874cc",
+    "permission_release_sha256": "c32cd5567da1afa8701ef999842821eca6485d1d5948402f8e8b4e957dc145c4",
+    "accepted_slot01_a09_decision_sha256": "1d938be8cf8946bd2b3d0d652500590652e031e056c69ddb0f9449b348261182"
+  },
+  "image": {
+    "repository": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
+    "tag_preserved_as_diagnostic_evidence": "git-c038c0542eb4",
+    "deployment_registry_digest": "sha256:0600eec77e9d1f1fd4e42e001bd416038f2d8c4cee91f56bdce5f2bf34f41ca3",
+    "registry_media_type": "application/vnd.oci.image.manifest.v1+json",
+    "registry_object_type": "SINGLE_PLATFORM_OCI_IMAGE_MANIFEST",
+    "prepublication_platform_manifest_digest": "sha256:9cf0eee825e47a0fa8994c6449ff0774f5f68d2ab7e9b49869ae8d6d919457a5",
+    "config_digest": "sha256:ad3b40b50af1fc6905384f3ad819e3189f091e178ec13476674b4feb2eaf8b9d",
+    "platform": "linux/amd64",
+    "provenance_sbom_attestation_relationship": "NONE_PRESENT_IN_REGISTRY_OBJECT",
+    "representation_classification": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "scan_status": "COMPLETE",
+    "scan_blocking_findings": 0,
+    "new_publication_required": false
+  },
+  "hashes": {
+    "image_representation_diagnosis_sha256": "14363da7bce78f0bb81a9a8b7828f96459ae6f6a9aba17475e3e50ceade9b3f1",
+    "equivalence_evidence_sha256": "c2143417098c3781254bd52630d6cf54e6b4899dfe6eae352a957aa8c4a0e623",
+    "terminal_failure_record_sha256": "07a836a3753a1d135e3b99304fe882f360dce97021ab4f847d765177f1f96b72",
+    "registry_identity_verifier_sha256": "43a67634be135de5bec64aaa3c82a21fefd0767339c1ef3571df1436d0319e01",
+    "saved_plan_sha256": "47a957a5df0cd987285c7810936d7d704d8107672beea9b911bf42cd92f2f808",
+    "plan_json_sha256": "086ae09e8f85056a65f0fb10d591d65209e0b3b78c11097109c78bab26c7508b",
+    "configuration_sha256": "eb0088df5c31ed5bd8a69940adc6c169dfbbfcb880741d0fc585fa293935ff9b",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "managed_change_semantic_sha256": "ced3387900cd6434b1fb5991dc5599525ba0dcec09a9adbe5b4e5a321273dd79"
+  },
+  "identity_boundary": {
+    "provider_plan_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "provider_apply_identity_required": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "embedded_backend_profile": "m67-phase1-state-apply-backend",
+    "embedded_backend_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply"
+  },
+  "changes": {
+    "new_creates": 14,
+    "in_place_changes": 3,
+    "expected_replacements": 2,
+    "unexpected_replacements": 0,
+    "standalone_destroys": 0,
+    "unexpected_destroys": 0,
+    "terraform_cli_counts": {"add": 16, "change": 3, "destroy": 2},
+    "expected_replacement_resources": [
+      "aws_ecs_task_definition.worker",
+      "aws_ecs_task_definition.egress"
+    ],
+    "in_place_resources": [
+      "aws_ecs_service.worker",
+      "aws_ecs_service.egress",
+      "aws_iam_role_policy.worker"
+    ],
+    "new_resources": [
+      "aws_ecs_service.intelligence",
+      "aws_ecs_task_definition.intelligence",
+      "aws_iam_role.egress",
+      "aws_iam_role.intelligence",
+      "aws_iam_role_policy.egress",
+      "aws_iam_role_policy.intelligence",
+      "aws_security_group.intelligence",
+      "aws_ssm_parameter.research_release",
+      "aws_vpc_security_group_egress_rule.intelligence_dns_tcp",
+      "aws_vpc_security_group_egress_rule.intelligence_dns_udp",
+      "aws_vpc_security_group_egress_rule.intelligence_to_database",
+      "aws_vpc_security_group_egress_rule.intelligence_to_endpoints",
+      "aws_vpc_security_group_ingress_rule.database_from_intelligence",
+      "aws_vpc_security_group_ingress_rule.endpoints_from_intelligence"
+    ],
+    "semantic_scope_changed_from_consumed_plan": "IMAGE_REFERENCE_ONLY_FROM_PREPUBLICATION_MANIFEST_DIGEST_TO_PROVEN_REGISTRY_MANIFEST_DIGEST",
+    "unrelated_rds_s3_kms_cloud_map_or_stable_network_changes": 0
+  },
+  "task_definition_and_service_diff": {
+    "research_worker": {
+      "image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:0600eec77e9d1f1fd4e42e001bd416038f2d8c4cee91f56bdce5f2bf34f41ca3",
+      "research_runtime_revision": "sha256:0600eec77e9d1f1fd4e42e001bd416038f2d8c4cee91f56bdce5f2bf34f41ca3",
+      "desired_count": 0
+    },
+    "controlled_egress": {
+      "image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:0600eec77e9d1f1fd4e42e001bd416038f2d8c4cee91f56bdce5f2bf34f41ca3",
+      "research_runtime_revision": "sha256:0600eec77e9d1f1fd4e42e001bd416038f2d8c4cee91f56bdce5f2bf34f41ca3",
+      "desired_count": 0
+    },
+    "intelligence_worker": {
+      "image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:0600eec77e9d1f1fd4e42e001bd416038f2d8c4cee91f56bdce5f2bf34f41ca3",
+      "desired_count": 0
+    }
+  },
+  "iam_diff": {
+    "worker": "Add ssm:GetParameter for only /m67-phase1/research-release.",
+    "controlled_egress": "Create dedicated task role with only ssm:GetParameter for /m67-phase1/research-release.",
+    "intelligence": "Create dedicated task role with only ssm:GetParameter for /m67-phase1/kill-switch.",
+    "wildcard_service_permissions_added": 0,
+    "delivery_or_contact_permissions_added": 0
+  },
+  "network_diff": {
+    "research_worker_public_egress_change": "NONE",
+    "controlled_egress_public_rule_change": "NONE",
+    "intelligence_worker": "Isolated security group allowing only VPC DNS, PostgreSQL 5432 to the existing database security group, and HTTPS to the existing private AWS endpoint security group.",
+    "arbitrary_public_egress": "DENIED",
+    "browser_or_delivery_infrastructure": "NONE"
+  },
+  "validation": {
+    "terraform_plan": "PASS_AUTHENTICATED_ACTUAL_AWS_STATE",
+    "terraform_apply_performed": false,
+    "terraform_format": "PASS",
+    "terraform_validate": "PASS_WITH_EXISTING_CLOUD_MAP_PROVIDER_DEPRECATION_WARNING",
+    "focused_registry_identity_tests": "PASS_15",
+    "full_suite": "PASS_579_SKIP_2_EXISTING_OPT_IN_POSTGRES",
+    "repository_check": "PASS",
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "deployment_constraints": {
+    "image_publication": "NOT_AUTHORIZED_AND_NOT_REQUIRED",
+    "ecr_tag_deletion_or_retag": "NOT_AUTHORIZED",
+    "apply_only_saved_v2_plan": true,
+    "services_desired_count": 0,
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "slot01_research": "NOT_AUTHORIZED"
+  },
+  "rollback_plan": {
+    "automatic_safety": "All services remain at desired count zero, the research release remains NOT_AUTHORIZED, and the kill switch remains TRIPPED.",
+    "failed_apply": "Stop, inventory actual state read-only, and generate a new hash-bound reconciliation or rollback plan; never retry a consumed saved plan.",
+    "post_deployment": "Under a separate exact authorization, restore the observed predecessor task-definition bindings and remove only successor resources through a freshly reviewed Terraform plan."
+  },
+  "cost": {
+    "deployment_incremental_usd_while_desired_counts_zero": "0.00",
+    "bounded_phase1_plus_validation_estimate_usd": "160.00",
+    "approved_ceiling_usd": "250.00",
+    "within_ceiling": true
+  },
+  "owner_signature": null
+}
