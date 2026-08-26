@@ -1,0 +1,74 @@
+{
+  "record_type": "AUTHORIZE_SLOT01_RUNTIME_PRODUCTION_WIRING_SUCCESSOR_V5_IMAGE_PUBLICATION",
+  "version": "2026-08-26.1",
+  "state": "APPROVED_NOT_CONSUMED",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "validity": {
+    "not_before": "2026-08-26T16:15:00Z",
+    "expires_at": "2026-09-02T16:15:00Z",
+    "attempts": 1,
+    "terminal": true
+  },
+  "bindings": {
+    "implementation_commit": "f1e1acfc3fcee66fb0e02791009cca0db16fcc87",
+    "evidence_commit": "a95c199a5a38f108ceffcaab4a4d3d6139aa54de",
+    "image_publication_review_sha256": "c201120cfffcdc0e4a71ffea531c8b02f2f7cb4d667c262b2e8f0b5fe1546200",
+    "validation_evidence_sha256": "4e5d5b69c18655e4bff818ce95f78eba8044715972b527e7e7ce5ab6d66801b7",
+    "release_applicator_sha256": "59584181316273bf6cc4f3b799eaea92ef1d19cc034046ad6e41c42082dd04f6",
+    "sampled_slot_activation_adapter_sha256": "95a0355637800d6e1309755bcb342a990ed8c506d6bbe1de28982c10f0e7cf7c",
+    "production_entry_point_sha256": "12eaf66bf6dc491c4376d1d42ee6bd794a38636d8c9ce93e4b13b1c6db0b6bf5",
+    "coordinator_bundle_sha256": "fe0f34c9ef67c1aa5158aad8cf21206a31f167093f1aaa6350e9ba8f1cc54801",
+    "m1_runtime_sha256": "884b1f271b21f9d0ff4e73557be0ec8c01fda30969fa256f1e555afb4d7f2a99",
+    "m2_m5_runtime_sha256": "40e6511a00738980a7604a7d60c1c3419b396e049748f06ec0dae8116a5ebed3",
+    "dockerfile_sha256": "b70ecf3754d86d7abbd2bc5196b929d24b636074e00a8c0fd9ded8489b0acd11",
+    "local_docker_archive_sha256": "44062ada552d41cbaa6a2d25a3a2fa90b3cfe968b15e82c31d75e008b902ee55",
+    "local_oci_manifest_digest": "sha256:be13e69fbb9557c0f4eb07f374b1cfc529788a688d9ca1d01fe3f7a4a7784e8d",
+    "local_oci_config_digest": "sha256:a482c0cbf160d4b58bcb4248ffe62016ea9325844192a3940e6973c21b244efc",
+    "accepted_v4_parent_registry_digest": "sha256:d0444158c2be7a6003ee4f9f351e320f8da05f01e4970c718d08d1f5310f1842"
+  },
+  "publication": {
+    "publisher_role": "arn:aws:iam::785072247535:role/m67-phase1-worker-image-publisher",
+    "source_image": "localhost/m67-phase1-worker:git-f1e1acfc3fce-v5",
+    "destination": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker:git-f1e1acfc3fce-v5",
+    "rebuilds": 0,
+    "alternate_images": 0,
+    "other_tags_or_repositories": 0,
+    "deletions": 0
+  },
+  "post_publication_requirements": [
+    "derive the exact registry-consumable digest and media type",
+    "bind linux/amd64, config digest, ordered compressed layers, local V5 identity and accepted V4 parent",
+    "require REPRESENTATION_EQUIVALENT_PROVEN",
+    "require ECR provider scan COMPLETE with zero critical, high and blocking findings",
+    "generate and review a fresh Terraform plan using only the proven registry digest",
+    "stop before Terraform apply"
+  ],
+  "required_dormant_state": {
+    "services_desired_running_pending": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release_exists": false,
+    "all_seven_m67_permissions": "NOT_AUTHORIZED"
+  },
+  "prohibited": [
+    "image rebuild, source change or dependency change",
+    "alternate image, repository or tag",
+    "retagging or deletion",
+    "Terraform apply or service activation",
+    "Slot 01 release or execution",
+    "903hvac.com access",
+    "REAL_PUBLIC_RESEARCH or REAL_BUSINESS_DISCOVERY",
+    "real-company M1-M5",
+    "person/contact processing",
+    "AI or browser use",
+    "outreach, delivery or external communication"
+  ],
+  "consumption": {
+    "attempts_consumed": 0,
+    "reusable": true
+  },
+  "owner_signature": "APPROVED_IN_THREAD"
+}
