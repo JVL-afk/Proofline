@@ -1,8 +1,10 @@
 # syntax=docker/dockerfile:1
 
-# V4 is a source-only activation/coordinator successor over the exact deployed V3 runtime.
+# V4 is a source-only activation/coordinator successor over the locally retained V3 image whose
+# config/layer representation was proven equivalent to the exact deployed registry digest below.
+# The local-only name prevents an accidental registry pull during this network-disabled build.
 # Publication must bind the resulting registry manifest digest before any deployment plan.
-FROM 785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:8970af60a32da73b56c80d39598d2324459475fa7c98cc43e4200c626f68edb7
+FROM localhost/m67-phase1-worker:git-cc20055fd178-v3
 
 ARG SOURCE_COMMIT
 LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}" \
