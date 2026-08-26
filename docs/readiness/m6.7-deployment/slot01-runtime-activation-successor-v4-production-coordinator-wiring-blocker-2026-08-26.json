@@ -1,0 +1,56 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_ACTIVATION_SUCCESSOR_V4_PRODUCTION_COORDINATOR_WIRING_BLOCKER",
+  "version": "2026-08-26.1",
+  "state": "BLOCKED_SLOT01_M1_M5_EXECUTION_AUTHORIZATION_PRODUCTION_COORDINATOR_NOT_WIRED",
+  "observed_at": "2026-08-26T14:39:41.3186887Z",
+  "classification": "GENUINE_STAGE_ORDER_AND_EXECUTION_PATH_CONTROL_FAILURE",
+  "facts": {
+    "deployed_v4_terraform": "APPLIED_AND_NO_CHANGES",
+    "deployed_v4_dormant": true,
+    "sampled_slot_activation_entry_point": "python -m opintel_research_worker.activation_main",
+    "sampled_slot_activation_behavior": "Derives and persists one registry-bound immutable research work item, then exits",
+    "deployed_intelligence_entry_point": "python -m opintel_intelligence_worker.main",
+    "deployed_intelligence_behavior": "Runs four legacy independent run_once pollers in sequence while the kill switch permits",
+    "bounded_coordinator_module": "opintel_intelligence_worker.orchestration.BoundedSampledSlotCoordinator",
+    "bounded_coordinator_deployed_in_image": true,
+    "bounded_coordinator_invoked_by_production_intelligence_entry_point": false,
+    "bounded_coordinator_production_command_or_adapter": "ABSENT",
+    "bounded_coordinator_durable_artifact_repository": "ABSENT",
+    "bounded_release_creation_command": "ABSENT",
+    "synthetic_tests": "PASS_CLASS_LEVEL_ONLY",
+    "requests_to_903hvac_com": 0,
+    "real_company_m1_m5_executions": 0
+  },
+  "evidence": {
+    "stage_coordinator_sha256": "8819487a1655ae69601fe2c899683dddfd08a3001ad68708859b897eb5211a3a",
+    "activation_entry_point_sha256": "c0309ad814a8f0ca4695838eb165456abeebdc364f95e75acef048a6636d7d1f",
+    "sampled_slot_activation_adapter_sha256": "ef6180794dfd705243b518500e0544f631cf23d86a64c1046819ec003cd0ba79",
+    "deterministic_matrix_sha256": "107362597d738c180fbe0c180423a809c6572cd172eec90886b2e75338599203",
+    "source_search_result": "BoundedSampledSlotCoordinator and accept_stage are referenced only by their defining module and tests; the production intelligence worker entry point does not import or instantiate them",
+    "terraform_entry_point_result": "aws_ecs_task_definition.intelligence starts opintel_intelligence_worker.main, not a bounded coordinator entry point"
+  },
+  "security_effect": {
+    "exact_chain_not_proven": "The deployed runtime cannot yet demonstrate that the registry-derived immutable Slot 01 activation is the exclusive input to M2-M5 or that every production stage consumes the exact accepted predecessor revision.",
+    "unsafe_claim_prohibited": "A local synthetic coordinator test cannot be represented as a deployed executable coordinator chain.",
+    "authority_gate": "READY_FOR_SLOT01_M1_M5_EXECUTION_AUTHORIZATION must not be issued until the production entry point and persistence path enforce the accepted coordinator."
+  },
+  "minimum_successor": {
+    "production_coordinator_entry_point": "Add one bounded production command that resolves the immutable activated work item and advances only the exact accepted predecessor chain.",
+    "durable_lineage": "Persist coordinator artifacts atomically and reload/validate exact work-item, release, slot, package, business, hostname, stage and predecessor revision identities.",
+    "release_application": "Add a bounded hash-verified single-use release applicator or define an equally exact existing control-plane path; arbitrary SSM writes are not an executable authority envelope.",
+    "network_authority": "Only M1 may use the exact release-bound network path; M2-M5 remain offline.",
+    "deployment": "Build, publish, scan, plan and deploy a new immutable successor under fresh exact owner authorities.",
+    "required_validation": "Run the production entry point with synthetic/network-blocked fixtures and prove one immutable chain, no stage injection, no skip, idempotent recovery, terminal rollback, and Terraform NO_CHANGES."
+  },
+  "preserved_state": {
+    "deployed_baseline": "DORMANT_V4",
+    "services": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "access_to_903hvac_com": 0,
+    "real_company_m1_m5_executions": 0,
+    "slots_04_24_reopened": false
+  }
+}

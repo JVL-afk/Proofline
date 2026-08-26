@@ -1,0 +1,107 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_ACTIVATION_SUCCESSOR_V4_V2_DEPLOYED_EVIDENCE",
+  "version": "2026-08-26.1",
+  "state": "DEPLOYED_DORMANT_AND_TERRAFORM_CONVERGED",
+  "observed_at": "2026-08-26T14:39:41.3186887Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "authorization": {
+    "record": "APPROVE_SLOT01_RUNTIME_ACTIVATION_SUCCESSOR_V4_DEPLOYMENT_V2",
+    "status": "CONSUMED_SUCCESS_CAPABILITY_DEPLOYED_NOT_ACCEPTED_FOR_SLOT01_EXECUTION",
+    "saved_plan_sha256": "dc133552c43ee22d51ea6235158c841db6e7eb09fc6f2e06a8e0bc96925d1785",
+    "plan_json_sha256": "ce7b88e3b7714b85b2a60bb605c33eeb5eef4e6ade5a2e04dff36da0d851f7fa",
+    "reusable": false
+  },
+  "preapply": {
+    "result": "PASS",
+    "evidence_sha256": "ac61e7026a6e066ede198b3750ace49f09a53f4626018c4094896fb7872e4795",
+    "provider_apply_identity": "arn:aws:sts::785072247535:assumed-role/m67-phase1-terraform-workload-apply/m67-phase1-workload-apply",
+    "backend_apply_identity": "arn:aws:sts::785072247535:assumed-role/m67-phase1-terraform-state-apply/m67-phase1-state-apply-backend",
+    "registry_digest": "sha256:d0444158c2be7a6003ee4f9f351e320f8da05f01e4970c718d08d1f5310f1842",
+    "ecr_scan_status": "COMPLETE",
+    "ecr_blocking_findings": 0,
+    "kill_switch": "TRIPPED",
+    "research_release": {"state": "NOT_AUTHORIZED"},
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "services": "0/0/0",
+    "all_bound_hashes_and_identities_match": true
+  },
+  "terraform_apply": {
+    "result": "PASS_EXACT_SAVED_PLAN",
+    "resources_added": 4,
+    "resources_changed": 3,
+    "resources_destroyed": 3,
+    "standalone_dormant_activator_creates": 1,
+    "in_place_service_updates": 3,
+    "expected_task_definition_replacements": 3,
+    "unexpected_replacements": 0,
+    "standalone_destroys": 0,
+    "iam_changes": 0,
+    "network_or_egress_changes": 0,
+    "desired_count_changes": 0,
+    "permission_state_changes": 0,
+    "authorization_release_changes": 0
+  },
+  "deployed_state": {
+    "inspection_evidence_sha256": "4889579cb470a3800f323a35666d139ce1e0042e0637f3bd407eaaed95aa520c",
+    "image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:d0444158c2be7a6003ee4f9f351e320f8da05f01e4970c718d08d1f5310f1842",
+    "task_definitions": {
+      "research_worker": "m67-phase1-research-worker:6",
+      "controlled_egress": "m67-phase1-controlled-egress:4",
+      "intelligence_worker": "m67-phase1-intelligence-worker:3",
+      "sampled_slot_activator": "m67-phase1-sampled-slot-activator:1"
+    },
+    "services": {
+      "m67-phase1-research-worker": "0/0/0",
+      "m67-phase1-controlled-egress": "0/0/0",
+      "m67-phase1-intelligence-worker": "0/0/0"
+    },
+    "live_tasks": 0,
+    "kill_switch": "TRIPPED",
+    "research_release": {"state": "NOT_AUTHORIZED"},
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "browser": "OFF",
+    "ai": "UNAVAILABLE_USD_0",
+    "person_contact_processing": "NOT_AUTHORIZED",
+    "delivery": "STRUCTURALLY_UNAVAILABLE",
+    "access_to_903hvac_com": 0,
+    "real_company_m1_m5_executions": 0
+  },
+  "offline_image_validation": {
+    "network": "BLOCKED",
+    "image_import": "PASS",
+    "frozen_slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "a09_registry_file_sha256": "ec1342217d8f34a2bb38da806515c580e02a68fd79d5be1b7f393c37c168a875"
+  },
+  "deterministic_acceptance_matrix": {
+    "result": "30 passed in 1.07s",
+    "evidence_sha256": "107362597d738c180fbe0c180423a809c6572cd172eec90886b2e75338599203",
+    "scope": "LOCAL_SYNTHETIC_CLASS_LEVEL",
+    "network": "FORBIDDEN",
+    "wrong_slot": "BLOCKED_BEFORE_DNS",
+    "wrong_package_business_hostname": "BLOCKED_BEFORE_DNS",
+    "absent_expired_malformed_revoked_release": "BLOCKED_BEFORE_DNS",
+    "kill_switch_tripped": "BLOCKED_BEFORE_DNS",
+    "duplicate_activation_and_delivery": "IDEMPOTENT",
+    "stage_skips_and_predecessor_mismatch": "BLOCKED",
+    "synthetic_m1_m5_chain": "CONTACT_PHASE_NOT_AUTHORIZED"
+  },
+  "terraform_convergence": {
+    "result": "NO_CHANGES",
+    "detailed_exit_code": 0,
+    "evidence_sha256": "12675b780a6e0226aab17fc99112a15bca880dbfa67ec6e89747d3a032d14b62",
+    "provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "warning": "Existing Cloud Map custom-health provider deprecation only; no drift"
+  },
+  "acceptance_disposition": {
+    "terraform_deployment": "ACCEPTED_AS_APPLIED_AND_CONVERGED",
+    "dormant_activation_entry_point": "DEPLOYED",
+    "slot01_complete_execution_chain": "NOT_ACCEPTED",
+    "reason_record": "slot01-runtime-activation-successor-v4-production-coordinator-wiring-blocker-2026-08-26.json",
+    "slot01_execution_authorization_prepared": false
+  }
+}

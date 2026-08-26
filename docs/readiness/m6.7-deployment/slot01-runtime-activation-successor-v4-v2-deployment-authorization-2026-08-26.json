@@ -1,7 +1,7 @@
 {
   "record_type": "APPROVE_SLOT01_RUNTIME_ACTIVATION_SUCCESSOR_V4_DEPLOYMENT_V2",
   "version": "2026-08-26.1",
-  "state": "ACCEPTED_UNCONSUMED",
+  "state": "CONSUMED_SUCCESS_CAPABILITY_DEPLOYED_NOT_ACCEPTED_FOR_SLOT01_EXECUTION",
   "target": {
     "account_id": "785072247535",
     "region": "us-east-2"
