@@ -1,0 +1,57 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_ACTIVATION_SUCCESSOR_V4_MANAGED_CHANGE_SEMANTIC",
+  "version": "2026-08-26.1",
+  "deployment_image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:d0444158c2be7a6003ee4f9f351e320f8da05f01e4970c718d08d1f5310f1842",
+  "terraform_cli_counts": {
+    "add": 4,
+    "change": 3,
+    "destroy": 3
+  },
+  "semantic_counts": {
+    "standalone_creates": 1,
+    "in_place_changes": 3,
+    "expected_task_definition_replacements": 3,
+    "unexpected_replacements": 0,
+    "standalone_destroys": 0,
+    "unexpected_destroys": 0
+  },
+  "standalone_creates": [
+    "aws_ecs_task_definition.sampled_slot_activator"
+  ],
+  "expected_replacements": [
+    "aws_ecs_task_definition.worker",
+    "aws_ecs_task_definition.egress",
+    "aws_ecs_task_definition.intelligence"
+  ],
+  "in_place_changes": [
+    "aws_ecs_service.worker.task_definition",
+    "aws_ecs_service.egress.task_definition",
+    "aws_ecs_service.intelligence.task_definition"
+  ],
+  "activation_task": {
+    "service_created": false,
+    "fixed_entry_point": ["python", "-m", "opintel_research_worker.activation_main"],
+    "caller_arguments": ["slot_number", "release_id"],
+    "arbitrary_business_hostname_or_url_arguments": false,
+    "readonly_root_filesystem": true,
+    "user": "65532",
+    "desired_running_pending": "0/0/0"
+  },
+  "unchanged": {
+    "iam_resources": true,
+    "network_and_egress_resources": true,
+    "service_desired_counts": 0,
+    "ssm_permission_and_release_values": true,
+    "kill_switch": "TRIPPED",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED"
+  },
+  "not_in_plan": [
+    "IAM policy or role changes",
+    "security-group, route, subnet, NAT, DNS, or egress changes",
+    "SSM parameter value changes",
+    "service desired-count changes",
+    "Slot 01 authorization release creation",
+    "browser, AI, contact, outreach, or delivery infrastructure"
+  ]
+}

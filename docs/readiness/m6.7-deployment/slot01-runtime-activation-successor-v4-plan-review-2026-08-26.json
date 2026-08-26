@@ -1,0 +1,131 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_ACTIVATION_SUCCESSOR_V4_DEPLOYMENT_PLAN_REVIEW",
+  "version": "2026-08-26.1",
+  "state": "READY_FOR_SLOT01_RUNTIME_ACTIVATION_SUCCESSOR_V4_DEPLOYMENT_AUTHORIZATION",
+  "required_owner_event": "APPROVE_SLOT01_RUNTIME_ACTIVATION_SUCCESSOR_V4_DEPLOYMENT",
+  "observed_at": "2026-08-26T12:29:17.1646351Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "source": {
+    "implementation_commit": "e8e863e1da74dba32eaefbeecf71347167ddbc01",
+    "artifact_pipeline_commit": "c1669b169fac4db17fa4984639f16bb6edeb282e",
+    "prepublication_evidence_commit": "d0e644baadf82a407c36e981c4ac51ab6ce5cdc8",
+    "authorization_freeze_commit": "3094e2e73b9df782b13653eeb35cc7099d966fff",
+    "sampled_slot_activation_adapter_sha256": "ef6180794dfd705243b518500e0544f631cf23d86a64c1046819ec003cd0ba79",
+    "activation_entry_point_sha256": "c0309ad814a8f0ca4695838eb165456abeebdc364f95e75acef048a6636d7d1f",
+    "stage_coordinator_sha256": "8819487a1655ae69601fe2c899683dddfd08a3001ad68708859b897eb5211a3a",
+    "work_item_identity_schema_sha256": "d540c0017470188267b5331790571318262dbaffe70d405f7fdca6e4680b69e8",
+    "frozen_slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2"
+  },
+  "image": {
+    "repository": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
+    "tag": "git-c1669b169fac-v4",
+    "deployment_registry_digest": "sha256:d0444158c2be7a6003ee4f9f351e320f8da05f01e4970c718d08d1f5310f1842",
+    "registry_media_type": "application/vnd.oci.image.manifest.v1+json",
+    "registry_object_type": "SINGLE_PLATFORM_OCI_IMAGE_MANIFEST",
+    "platform": "linux/amd64",
+    "config_digest": "sha256:54b9977c631e117582bd118fce6d76cd44d0ca37a93bd61958836af1239d7beb",
+    "ordered_compressed_layer_digests": [
+      "sha256:41dad0242630a38b7248eae6e9a5c15660ccae64bd1365475addb3833d1b22fc",
+      "sha256:904e98828af6963af07a12868a5e6335ffa83b98007256966a1d64caf2aa81bd",
+      "sha256:f0d2f8eb61740062d5cbef1a7d3923f1b16da095cc1ffbc2b93a2e1840ff6cb5",
+      "sha256:c58c9e5629c87c46982664e95ee5ee9ac897518c4bdb67b67aa4dc14d0db1697",
+      "sha256:05cf827b3988e34b1f5218d804c52dbb776b6c14668e999c848e5837a973b053",
+      "sha256:fc8cb340f5f3a83f43d113f6bb0a1d1521193e65a24caa7c6cab64b910c7f5d5",
+      "sha256:1e89e2810a399fd7cc33ce4961cf8307588f30f13228c07d5ea2957ecd445c14"
+    ],
+    "v3_parent_registry_digest": "sha256:8970af60a32da73b56c80d39598d2324459475fa7c98cc43e4200c626f68edb7",
+    "representation_classification": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "scan_status": "COMPLETE",
+    "scan_critical": 0,
+    "scan_high": 0,
+    "scan_blocking": 0
+  },
+  "hashes": {
+    "consumed_publication_authorization_record_sha256": "7ec418aac5e3d60c895dea22fefe8b2f6f53b4cdb7c8a77633c24648b3517487",
+    "registry_evidence_sha256": "67741ca5789fb636aa35da2b57a10e3cd98aff2ec01d381ade0eb5d4a2c6b7c3",
+    "saved_plan_sha256": "586296967fd22e027dbc40aa10beb4f364096dccb2a7a45f2af7ccf725614828",
+    "plan_json_sha256": "7139f4996cd9fe5978c3430edb2d10923b31388f04d49bc61fde873789641cfa",
+    "configuration_sha256": "4454ab7a4dd12faddea7d448aa0fc20bf84dc3382ea4d328c9ad2aad2983b2a3",
+    "terraform_tfvars_sha256": "2d42195793701034f9c7fe912058ab33f15e0812923b7bae6f6a05311964e07c",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "managed_change_semantic_sha256": "34ccc0993ff296e9721a428a035d0e9c56710f3784b4ac75713d1479bccefbb8"
+  },
+  "identity_boundary": {
+    "provider_plan_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "provider_apply_identity_required": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "embedded_backend_profile": "m67-phase1-state-apply-backend",
+    "embedded_backend_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply"
+  },
+  "changes": {
+    "standalone_creates": 1,
+    "in_place_changes": 3,
+    "expected_task_definition_replacements": 3,
+    "unexpected_replacements": 0,
+    "standalone_destroys": 0,
+    "unexpected_destroys": 0,
+    "terraform_cli_counts": {"add": 4, "change": 3, "destroy": 3},
+    "standalone_create_resources": ["aws_ecs_task_definition.sampled_slot_activator"],
+    "expected_replacement_resources": [
+      "aws_ecs_task_definition.worker",
+      "aws_ecs_task_definition.egress",
+      "aws_ecs_task_definition.intelligence"
+    ],
+    "in_place_resources": [
+      "aws_ecs_service.worker",
+      "aws_ecs_service.egress",
+      "aws_ecs_service.intelligence"
+    ],
+    "iam_changes": 0,
+    "network_or_egress_changes": 0,
+    "permission_state_changes": 0,
+    "desired_count_changes": 0,
+    "release_state_changes": 0
+  },
+  "activation_closure": {
+    "entry_point": "python -m opintel_research_worker.activation_main",
+    "caller_supplied_identity": "ONLY_SLOT_NUMBER_AND_RELEASE_ID",
+    "registry_derived_identity": "ORDERED_PACKAGE_SLOT_BUSINESS_HOSTNAME_A09_RUNTIME",
+    "atomic_authority_validation": "REQUIRED_BEFORE_WORK_ITEM_CREATION",
+    "immutable_work_item": true,
+    "duplicate_activation": "IDEMPOTENT_OR_DETERMINISTIC_REJECTION",
+    "stage_order": "M1_THEN_M2_THEN_M3_THEN_M4_THEN_M5",
+    "maximum_terminal_state": "CONTACT_PHASE_NOT_AUTHORIZED"
+  },
+  "validation": {
+    "terraform_plan": "PASS_AUTHENTICATED_ACTUAL_AWS_STATE",
+    "terraform_apply_performed": false,
+    "terraform_validate": "PASS_WITH_EXISTING_CLOUD_MAP_PROVIDER_DEPRECATION_WARNING",
+    "focused_activation_and_runtime_tests": "PASS_30",
+    "repository_check": "PASS",
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "dormant_state": {
+    "publication_precondition_services": "0/0/0",
+    "live_tasks": 0,
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "terraform_apply_performed": false,
+    "slot01_network_or_research_operations": 0
+  },
+  "deployment_constraints": {
+    "apply_only_saved_v4_plan": true,
+    "publication_authorization_consumed": true,
+    "additional_publication_rebuild_retag_or_delete": "NOT_AUTHORIZED",
+    "services_must_remain_dormant": true,
+    "no_slot01_release_during_deployment": true,
+    "postdeploy_negative_matrix_required": true,
+    "terraform_convergence_required": "NO_CHANGES"
+  },
+  "rollback_plan": {
+    "automatic_safety": "All services remain at desired count zero, research release NOT_AUTHORIZED, and kill switch TRIPPED.",
+    "failed_apply": "Stop, inventory actual state read-only, and prepare a new hash-bound reconciliation or rollback plan; never retry the consumed saved plan.",
+    "post_deployment_failure": "Keep all services dormant and, under separate exact authority, prepare a fresh plan restoring the accepted V3 task-definition bindings and removing the dormant V4 activator if required."
+  },
+  "owner_signature": null
+}

@@ -1,0 +1,75 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_ACTIVATION_SUCCESSOR_V4_REGISTRY_EVIDENCE",
+  "version": "2026-08-26.1",
+  "state": "REPRESENTATION_EQUIVALENT_PROVEN_SCAN_PASS",
+  "observed_at": "2026-08-26T12:24:30.175465+00:00",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "repository": "m67-phase1-worker",
+    "tag": "git-c1669b169fac-v4"
+  },
+  "publication": {
+    "attempts_consumed": 1,
+    "source_image": "localhost/m67-phase1-worker:git-c1669b169fac-v4",
+    "publisher_identity": "arn:aws:sts::785072247535:assumed-role/m67-phase1-worker-image-publisher/m67-v4-activation-image-publication",
+    "rebuilds": 0,
+    "alternate_images": 0,
+    "other_tags": 0,
+    "deletions": 0
+  },
+  "local_identity": {
+    "archive_sha256": "287e4e58ff941813a0444432c43ec07e7da3c9b9af2bead426263b9d75d50e2a",
+    "manifest_digest": "sha256:99050ddcfc9a64a9ed3dfc2b41b0478b38c9265d58841f3368a81cfbfc3c83a1",
+    "config_digest": "sha256:54b9977c631e117582bd118fce6d76cd44d0ca37a93bd61958836af1239d7beb",
+    "new_source_diff_id": "sha256:861fe0f883a4bd70c648249b506e8a80a42eb5d5ef59bfde3195d1349f9df585"
+  },
+  "registry_identity": {
+    "digest": "sha256:d0444158c2be7a6003ee4f9f351e320f8da05f01e4970c718d08d1f5310f1842",
+    "object_type": "SINGLE_PLATFORM_OCI_IMAGE_MANIFEST",
+    "media_type": "application/vnd.oci.image.manifest.v1+json",
+    "platform": "linux/amd64",
+    "config": {
+      "media_type": "application/vnd.oci.image.config.v1+json",
+      "digest": "sha256:54b9977c631e117582bd118fce6d76cd44d0ca37a93bd61958836af1239d7beb",
+      "size": 15634
+    },
+    "ordered_compressed_layer_digests": [
+      "sha256:41dad0242630a38b7248eae6e9a5c15660ccae64bd1365475addb3833d1b22fc",
+      "sha256:904e98828af6963af07a12868a5e6335ffa83b98007256966a1d64caf2aa81bd",
+      "sha256:f0d2f8eb61740062d5cbef1a7d3923f1b16da095cc1ffbc2b93a2e1840ff6cb5",
+      "sha256:c58c9e5629c87c46982664e95ee5ee9ac897518c4bdb67b67aa4dc14d0db1697",
+      "sha256:05cf827b3988e34b1f5218d804c52dbb776b6c14668e999c848e5837a973b053",
+      "sha256:fc8cb340f5f3a83f43d113f6bb0a1d1521193e65a24caa7c6cab64b910c7f5d5",
+      "sha256:1e89e2810a399fd7cc33ce4961cf8307588f30f13228c07d5ea2957ecd445c14"
+    ]
+  },
+  "identity_graph": {
+    "registry_manifest": "sha256:d0444158c2be7a6003ee4f9f351e320f8da05f01e4970c718d08d1f5310f1842",
+    "config": "sha256:54b9977c631e117582bd118fce6d76cd44d0ca37a93bd61958836af1239d7beb",
+    "v3_parent": "sha256:8970af60a32da73b56c80d39598d2324459475fa7c98cc43e4200c626f68edb7",
+    "v3_compressed_layer_prefix_preserved": true,
+    "new_compressed_layer": "sha256:1e89e2810a399fd7cc33ce4961cf8307588f30f13228c07d5ea2957ecd445c14",
+    "new_uncompressed_diff_id": "sha256:861fe0f883a4bd70c648249b506e8a80a42eb5d5ef59bfde3195d1349f9df585",
+    "classification": "REPRESENTATION_EQUIVALENT_PROVEN"
+  },
+  "scan": {
+    "target_digest": "sha256:d0444158c2be7a6003ee4f9f351e320f8da05f01e4970c718d08d1f5310f1842",
+    "status": "COMPLETE",
+    "critical": 0,
+    "high": 0,
+    "blocking": 0
+  },
+  "safety": {
+    "terraform_apply_performed": false,
+    "slot01_release_created": false,
+    "slot01_network_or_research_operations": 0,
+    "deployed_v3_baseline_remained_dormant": true
+  },
+  "validation_tooling_incident": {
+    "historical_lookup_result": "UNAUTHORIZED",
+    "payload_retrieved": false,
+    "repeated": false,
+    "follow_up_invariant": "Offline artifact validation must fail closed when local artifact access is unavailable and must never fall back to an external registry."
+  }
+}

@@ -1,7 +1,7 @@
 {
   "record_type": "AUTHORIZE_SLOT01_RUNTIME_ACTIVATION_SUCCESSOR_V4_IMAGE_PUBLICATION",
   "version": "2026-08-26.1",
-  "state": "ACCEPTED_UNCONSUMED",
+  "state": "CONSUMED_SUCCESS",
   "target": {
     "account_id": "785072247535",
     "region": "us-east-2"
@@ -72,5 +72,17 @@
     "AI or browser use",
     "outreach, delivery or external communication"
   ],
+  "consumption": {
+    "attempts_consumed": 1,
+    "published_at": "2026-08-26T12:24:30.175465+00:00",
+    "registry_digest": "sha256:d0444158c2be7a6003ee4f9f351e320f8da05f01e4970c718d08d1f5310f1842",
+    "representation_classification": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "scan_status": "COMPLETE",
+    "critical_findings": 0,
+    "high_findings": 0,
+    "blocking_findings": 0,
+    "terraform_apply_performed": false,
+    "reusable": false
+  },
   "owner_signature": "APPROVED_IN_THREAD"
 }
