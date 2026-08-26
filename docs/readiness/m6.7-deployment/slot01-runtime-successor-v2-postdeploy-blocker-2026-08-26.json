@@ -1,0 +1,123 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_SUCCESSOR_V2_POSTDEPLOY_BLOCKER",
+  "version": "2026-08-26.1",
+  "state": "BLOCKED_SLOT01_RUNTIME_SUCCESSOR_POSTDEPLOY_WRONG_SLOT_BINDING_DEFECT",
+  "observed_at": "2026-08-26T09:00:15.8631692Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "authorization": {
+    "event": "APPROVE_SLOT01_RUNTIME_SUCCESSOR_DEPLOYMENT_V2",
+    "status": "CONSUMED_TERMINAL_AT_POSTDEPLOY_RUNTIME_VALIDATION",
+    "saved_plan_sha256": "47a957a5df0cd987285c7810936d7d704d8107672beea9b911bf42cd92f2f808",
+    "plan_json_sha256": "086ae09e8f85056a65f0fb10d591d65209e0b3b78c11097109c78bab26c7508b",
+    "plan_review_sha256": "38944afd89be9ca699b6e916f40f36a1b508ec5fca09b5e38e068ebb4c73a27f",
+    "reusable": false
+  },
+  "preapply": {
+    "result": "PASS",
+    "ecr_digest": "sha256:0600eec77e9d1f1fd4e42e001bd416038f2d8c4cee91f56bdce5f2bf34f41ca3",
+    "ecr_scan_status": "COMPLETE",
+    "ecr_blocking_findings": 0,
+    "kill_switch": "TRIPPED",
+    "research_release": "ABSENT",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "existing_service_counts": "0/0/0",
+    "bound_hashes_match": true
+  },
+  "terraform_apply": {
+    "result": "PASS_EXACT_SAVED_PLAN",
+    "provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "protected_backend_profile": "m67-phase1-state-apply-backend",
+    "resources_added": 16,
+    "resources_changed": 3,
+    "resources_destroyed": 2,
+    "semantic_creates": 14,
+    "semantic_in_place_changes": 3,
+    "expected_task_definition_replacements": 2,
+    "unexpected_replacements": 0,
+    "standalone_destroys": 0
+  },
+  "deployed_state": {
+    "image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:0600eec77e9d1f1fd4e42e001bd416038f2d8c4cee91f56bdce5f2bf34f41ca3",
+    "task_definitions": {
+      "research_worker": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-research-worker:4",
+      "controlled_egress": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-controlled-egress:2",
+      "intelligence_worker": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-intelligence-worker:1"
+    },
+    "services": {
+      "m67-phase1-research-worker": "0/0/0",
+      "m67-phase1-controlled-egress": "0/0/0",
+      "m67-phase1-intelligence-worker": "0/0/0"
+    },
+    "assign_public_ip": "DISABLED_ALL_SERVICES",
+    "readonly_root_filesystem": "TRUE_ALL_CONTAINERS",
+    "kill_switch": "TRIPPED",
+    "research_release": {"state": "NOT_AUTHORIZED"},
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "browser": "OFF",
+    "ai": "UNAVAILABLE_USD_0",
+    "person_contact_processing": "NOT_AUTHORIZED",
+    "delivery": "STRUCTURALLY_UNAVAILABLE",
+    "live_tasks": 0,
+    "live_research_requests_after_deployment": 0
+  },
+  "deployed_control_observations": {
+    "exact_registry_image_bound_to_all_three_task_definitions": true,
+    "research_release_parameter_exact_value": {"state": "NOT_AUTHORIZED"},
+    "worker_release_read_resource": "arn:aws:ssm:us-east-2:785072247535:parameter/m67-phase1/research-release",
+    "egress_role_actions": ["ssm:GetParameter"],
+    "egress_role_resources": ["arn:aws:ssm:us-east-2:785072247535:parameter/m67-phase1/research-release"],
+    "intelligence_role_actions": ["ssm:GetParameter"],
+    "intelligence_role_resources": ["arn:aws:ssm:us-east-2:785072247535:parameter/m67-phase1/kill-switch"],
+    "intelligence_public_egress": "DENIED",
+    "controlled_egress_public_http_https": "NETWORK_PATH_PRESENT_BUT_SERVICE_STOPPED_AND_APPLICATION_RELEASE_GATED",
+    "no_delivery_iam_or_environment_capability": true
+  },
+  "fail_closed_validation": {
+    "probe_sha256": "a573d5e2bab36ce86d8b0a37c51f392798e5ff0a3a8b0337aa564ddb37a5b7fd",
+    "authorization_adapter_sha256": "523c2874eea02ece5c66ce976fe40d10e45dc7ba60a293fe10e1538a8019a28c",
+    "research_domain_sha256": "97e993be1eed3cb3c0029b76967a947ae26f2e3f62c65c91757892a8bac5322e",
+    "no_release_no_research": "PASS",
+    "malformed_release_no_research": "PASS",
+    "expired_release_no_research": "PASS",
+    "wrong_host_no_research": "PASS",
+    "kill_switch_tripped_no_research": "PASS",
+    "wrong_slot_no_research": "FAIL",
+    "requests_to_903hvac_com": 0
+  },
+  "defect": {
+    "root_cause": "AUTHORIZATION_ADAPTER_DOES_NOT_BIND_RELEASE_SLOT_TO_RESEARCH_RUN",
+    "evidence": "LiveResearchPermissionRelease contains slot_number, but ResearchRun and Business contain no immutable sample-slot identity and AwsSsmResearchAuthorization.authorize compares only business identity, business id, hostname and allowed source scope. A valid Slot 02 release carrying the Slot 01 business and hostname is accepted.",
+    "security_effect": "The deployed path cannot prove the required wrong-slot-to-zero-research invariant. Slot authority is therefore not sufficiently isolated even though the current NOT_AUTHORIZED release and TRIPPED kill switch keep all live work stopped.",
+    "classification": "GENUINE_RUNTIME_VALIDATION_CONTROL_FAILURE"
+  },
+  "terminal_actions": {
+    "terraform_convergence_plan_run": false,
+    "reason_convergence_not_run": "The owner required an immediate stop when any runtime validation defect exists; a fresh convergence plan is not evidence that would close this application-level authorization defect.",
+    "slot01_authorization_prepared": false,
+    "slot01_release_created": false,
+    "rollback_mutation_performed": false,
+    "rollback_reason": "The deployed capability remains fully dormant and fail closed under TRIPPED plus NOT_AUTHORIZED. The reviewed rollback design requires a separate exact authorization; no ad-hoc rollback is authorized.",
+    "real_business_dns_http": 0,
+    "m1_m5_execution": 0
+  },
+  "required_successor": {
+    "minimum_code_change": "Add immutable ordered-package slot identity to the research work item and require the worker authorization adapter to compare run slot, release slot, business identity, business id and exact hostname before DNS or transport.",
+    "required_negative_test": "A valid release for any other slot must fail before DNS even if its business and hostname fields are otherwise identical.",
+    "deployment_requirement": "Build and publish a new immutable runtime image, produce a fresh Terraform successor plan, and obtain a new hash-bound owner deployment authorization. Do not reuse this consumed plan or approval.",
+    "slot01_gate_requirement": "Repeat deployed fail-closed validation and require all cases to pass before preparing REAL_PUBLIC_RESEARCH authorization."
+  },
+  "final_safety_state": {
+    "kill_switch": "TRIPPED",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "service_counts": "0/0/0",
+    "slot01_research": "NOT_EXECUTED",
+    "slots_04_24": "NOT_REOPENED"
+  }
+}
