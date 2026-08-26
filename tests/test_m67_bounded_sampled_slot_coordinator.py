@@ -25,6 +25,7 @@ def _coordinator(existing: tuple[CoordinatedStageArtifact, ...] = ()):
         work_item_identity_sha256="4" * 64,
         activation_sha256="5" * 64,
         authorization_release_id=UUID("20000000-0000-4000-8000-000000000001"),
+        coordinator_run_id=UUID("30000000-0000-4000-8000-000000000001"),
         runtime_revision="sha256:" + "6" * 64,
         existing=existing,
     )

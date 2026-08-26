@@ -10,7 +10,6 @@ from uuid import UUID
 from opintel_research.domain import SampledSlotIdentity
 from opintel_shadow import LiveResearchPermissionRelease
 
-
 REGISTRY_SCHEMA = "m67-phase1-frozen-slot-registry-v1"
 ORDERED_PACKAGE_FILE_SHA256 = "0283f0a6956f6bd11e9326419d9671a61cc57dac0b6d376b9e2b7a11f0507a70"
 ORDERED_PACKAGE_SEMANTIC_SHA256 = (
@@ -45,6 +44,8 @@ class FrozenPhaseOneSampleRegistry:
         ):
             raise ValueError("frozen sampled-slot registry must contain exact slots 1-24")
         self.registry_sha256 = computed_hash
+        self.ordered_package_file_sha256 = ORDERED_PACKAGE_FILE_SHA256
+        self.ordered_package_semantic_sha256 = ORDERED_PACKAGE_SEMANTIC_SHA256
         self._slots = {int(item["slot_number"]): item for item in slots}
 
     def issue(self, work_item_id: UUID, slot_number: int) -> SampledSlotIdentity:
@@ -68,6 +69,8 @@ class FrozenPhaseOneSampleRegistry:
             raise ValueError("work item does not match the immutable sampled-slot registry")
 
     def verify_release(self, release: LiveResearchPermissionRelease) -> None:
+        if release.slot_number is None:
+            raise ValueError("release has no sampled-slot identity")
         slot = self._slots.get(release.slot_number)
         if (
             slot is None

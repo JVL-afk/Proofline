@@ -216,6 +216,7 @@ class SqlAlchemyDemoRepository:
             row = session.scalar(
                 select(DemoOperationRow)
                 .where(
+                    ~DemoOperationRow.idempotency_key.like("m67:%"),
                     or_(
                         DemoOperationRow.status.in_(("pending", "retry_scheduled")),
                         (DemoOperationRow.status == "running")
@@ -232,6 +233,39 @@ class SqlAlchemyDemoRepository:
             row.updated_at = now
             row.lease_expires_at = now + lease
             return self._operation(row)
+
+    def claim_exact_operation(
+        self, operation_id: UUID, expected_created_by: str, now: datetime, lease: timedelta
+    ) -> DemoOperation | None:
+        with self._sessions.begin() as session:
+            row = session.scalar(
+                select(DemoOperationRow).where(
+                    DemoOperationRow.id == str(operation_id),
+                    DemoOperationRow.idempotency_key.like("m67:%"),
+                    or_(
+                        DemoOperationRow.status.in_(("pending", "retry_scheduled")),
+                        (DemoOperationRow.status == "running")
+                        & (DemoOperationRow.lease_expires_at <= now),
+                    ),
+                )
+            )
+            if row is None:
+                return None
+            operation = self._operation(row)
+            if operation.created_by != expected_created_by:
+                raise ValueError("exact demo operation creator mismatch")
+            row.status = DemoOperationStatus.RUNNING
+            row.attempt_count += 1
+            row.updated_at = now
+            row.lease_expires_at = now + lease
+            session.flush()
+            return replace(
+                operation,
+                status=DemoOperationStatus.RUNNING,
+                attempt_count=row.attempt_count,
+                updated_at=now,
+                lease_expires_at=now + lease,
+            )
 
     def retry_operation(self, operation: DemoOperation, error_code: str, now: datetime) -> None:
         self._update_operation(operation.id, DemoOperationStatus.RETRY_SCHEDULED, error_code, now)

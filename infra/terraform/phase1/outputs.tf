@@ -25,14 +25,15 @@ output "evidence_manifest_inputs" {
       aws_kms_key.database.arn,
       aws_kms_key.logs.arn
     ]
-    workload_role_arn                 = aws_iam_role.worker.arn
-    operator_role_arn                 = aws_iam_role.operator.arn
-    kill_operator_role_arn            = aws_iam_role.kill_operator.arn
-    cloudtrail_arn                    = aws_cloudtrail.phase1.arn
-    operations_topic_arn              = aws_sns_topic.operations.arn
-    kill_switch_parameter             = aws_ssm_parameter.kill_switch.arn
-    research_release_parameter        = aws_ssm_parameter.research_release.arn
-    worker_desired_count              = var.worker_desired_count
-    intelligence_worker_desired_count = var.intelligence_worker_desired_count
+    workload_role_arn                         = aws_iam_role.worker.arn
+    operator_role_arn                         = aws_iam_role.operator.arn
+    kill_operator_role_arn                    = aws_iam_role.kill_operator.arn
+    cloudtrail_arn                            = aws_cloudtrail.phase1.arn
+    operations_topic_arn                      = aws_sns_topic.operations.arn
+    kill_switch_parameter                     = aws_ssm_parameter.kill_switch.arn
+    research_release_parameter                = aws_ssm_parameter.research_release.arn
+    sampled_slot_execution_approval_parameter = aws_ssm_parameter.sampled_slot_execution_approval.arn
+    worker_desired_count                      = var.worker_desired_count
+    intelligence_worker_desired_count         = var.intelligence_worker_desired_count
   }
 }

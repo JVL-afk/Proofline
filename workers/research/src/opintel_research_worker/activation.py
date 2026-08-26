@@ -23,7 +23,6 @@ from opintel_shadow import LiveResearchPermissionRelease, PermissionActivity, Pe
 
 from opintel_research_worker.sample_registry import FrozenPhaseOneSampleRegistry
 
-
 A09_MARKER_PREFIX = "A09_SHA256:"
 ACTIVATION_IDEMPOTENCY_REVISION = "m67.phase1.sampled-slot-activation@1"
 
@@ -45,6 +44,7 @@ def release_execution_ceilings_sha256(release: LiveResearchPermissionRelease) ->
             "max_logical_requests": release.max_logical_requests,
             "max_response_bytes": release.max_response_bytes,
             "max_total_bytes": release.max_total_bytes,
+            "max_duration_seconds": release.max_duration_seconds,
             "starts_at": release.starts_at.isoformat(),
             "terminal_rollback_state": release.terminal_rollback_state,
         }
@@ -150,7 +150,9 @@ class SampledSlotActivator:
             raise ValueError("requested release is not the current exact release")
         self._validate_release(release, slot_number)
 
-        run_id = uuid5(NAMESPACE_URL, f"{ACTIVATION_IDEMPOTENCY_REVISION}:{release.id}:{slot_number}")
+        run_id = uuid5(
+            NAMESPACE_URL, f"{ACTIVATION_IDEMPOTENCY_REVISION}:{release.id}:{slot_number}"
+        )
         identity = self._samples.issue(run_id, slot_number)
         decision = self._a09.require_approved(
             slot_number, identity.business_identity, identity.exact_hostname
@@ -235,6 +237,7 @@ class SampledSlotActivator:
             or release.max_attempts is None
             or release.max_response_bytes is None
             or release.max_total_bytes is None
+            or release.max_duration_seconds is None
             or release.cost_ceiling_usd != Decimal("0")
         ):
             raise ValueError("release is not an exact bounded sampled-slot authority")
@@ -246,7 +249,15 @@ class SampledSlotActivator:
         assert release.max_attempts is not None
         assert release.max_response_bytes is not None
         assert release.max_total_bytes is not None
-        duration = max(1, min(120, int((release.expires_at - release.starts_at).total_seconds())))
+        assert release.max_duration_seconds is not None
+        duration = max(
+            1,
+            min(
+                120,
+                release.max_duration_seconds,
+                int((release.expires_at - release.starts_at).total_seconds()),
+            ),
+        )
         return CrawlPolicy(
             max_pages=min(10, release.max_logical_requests),
             max_depth=1,

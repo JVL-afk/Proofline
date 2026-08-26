@@ -7,13 +7,16 @@ import json
 import os
 from uuid import UUID
 
-from opintel_research_local import SqlAlchemyResearchRepository, SystemClock
+from opintel_research_local import (
+    SqlAlchemyResearchRepository,
+    SystemClock,
+    get_research_worker_settings,
+)
 
 from opintel_research_worker.activation import FrozenA09DecisionRegistry, SampledSlotActivator
 from opintel_research_worker.authorization import AwsSsmResearchAuthorization
 from opintel_research_worker.kill_switch import AwsSsmStopSignal
 from opintel_research_worker.sample_registry import FrozenPhaseOneSampleRegistry
-from opintel_research_local import get_research_worker_settings
 
 
 def run() -> None:

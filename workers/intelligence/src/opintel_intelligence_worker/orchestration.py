@@ -116,6 +116,7 @@ class CoordinatedStageArtifact:
     work_item_identity_sha256: str
     activation_sha256: str
     authorization_release_id: UUID
+    coordinator_run_id: UUID
     runtime_revision: str
     stage: ShadowStage
     state: CoordinatorStageState
@@ -130,6 +131,7 @@ class CoordinatedStageArtifact:
             "activation_sha256": self.activation_sha256,
             "authorization_release_id": str(self.authorization_release_id),
             "business_identity": self.business_identity,
+            "coordinator_run_id": str(self.coordinator_run_id),
             "exact_hostname": self.exact_hostname,
             "ordered_package_sha256": self.ordered_package_sha256,
             "output_sha256": self.output_sha256,
@@ -162,6 +164,7 @@ class BoundedSampledSlotCoordinator:
         work_item_identity_sha256: str,
         activation_sha256: str,
         authorization_release_id: UUID,
+        coordinator_run_id: UUID,
         runtime_revision: str,
         existing: tuple[CoordinatedStageArtifact, ...] = (),
     ) -> None:
@@ -182,6 +185,7 @@ class BoundedSampledSlotCoordinator:
             work_item_identity_sha256,
             activation_sha256,
             authorization_release_id,
+            coordinator_run_id,
             runtime_revision,
         )
         self._artifacts: list[CoordinatedStageArtifact] = []
@@ -205,7 +209,11 @@ class BoundedSampledSlotCoordinator:
         expected = _ORDER[0] if predecessor is None else _ORDER[_ORDER.index(predecessor.stage) + 1]
         if stage is not expected:
             existing = next((item for item in self._artifacts if item.stage is stage), None)
-            if existing and existing.revision_id == revision_id and existing.output_sha256 == output_sha256:
+            if (
+                existing
+                and existing.revision_id == revision_id
+                and existing.output_sha256 == output_sha256
+            ):
                 return existing, False
             raise ValueError("stage skip, duplicate divergence, or replay is prohibited")
         if predecessor is not None and predecessor.state is not CoordinatorStageState.ACCEPTED:
@@ -220,7 +228,8 @@ class BoundedSampledSlotCoordinator:
             work_item_identity_sha256=self._binding[4],
             activation_sha256=self._binding[5],
             authorization_release_id=self._binding[6],
-            runtime_revision=self._binding[7],
+            coordinator_run_id=self._binding[7],
+            runtime_revision=self._binding[8],
             stage=stage,
             state=CoordinatorStageState.ACCEPTED,
             revision_id=revision_id,
@@ -244,6 +253,7 @@ class BoundedSampledSlotCoordinator:
             artifact.work_item_identity_sha256,
             artifact.activation_sha256,
             artifact.authorization_release_id,
+            artifact.coordinator_run_id,
             artifact.runtime_revision,
         )
         if binding != self._binding:

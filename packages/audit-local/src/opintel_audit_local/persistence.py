@@ -202,6 +202,7 @@ class SqlAlchemyAuditRepository:
             row = session.scalar(
                 select(AuditOperationRow)
                 .where(
+                    AuditOperationRow.created_by != "m67-bounded-sampled-slot-coordinator",
                     or_(
                         AuditOperationRow.status.in_(("pending", "retry_scheduled")),
                         (AuditOperationRow.status == "running")
@@ -217,6 +218,30 @@ class SqlAlchemyAuditRepository:
             row.attempt_count += 1
             row.updated_at = now
             row.lease_expires_at = now + lease
+            return self._operation(row)
+
+    def claim_exact_operation(
+        self, operation_id: UUID, expected_created_by: str, now: datetime, lease: timedelta
+    ) -> AuditOperation | None:
+        with self._sessions.begin() as session:
+            row = session.scalar(
+                select(AuditOperationRow).where(
+                    AuditOperationRow.id == str(operation_id),
+                    AuditOperationRow.created_by == expected_created_by,
+                    or_(
+                        AuditOperationRow.status.in_(("pending", "retry_scheduled")),
+                        (AuditOperationRow.status == "running")
+                        & (AuditOperationRow.lease_expires_at <= now),
+                    ),
+                )
+            )
+            if row is None:
+                return None
+            row.status = AuditOperationStatus.RUNNING
+            row.attempt_count += 1
+            row.updated_at = now
+            row.lease_expires_at = now + lease
+            session.flush()
             return self._operation(row)
 
     def retry_operation(self, operation: AuditOperation, error_code: str, now: datetime) -> None:

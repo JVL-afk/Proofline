@@ -442,6 +442,7 @@ class LiveResearchPermissionRelease(GateRecordBase):
     max_attempts: int | None = None
     max_response_bytes: int | None = None
     max_total_bytes: int | None = None
+    max_duration_seconds: int | None = None
     cost_ceiling_usd: Decimal | None = None
     allowed_source_scope: tuple[str, ...] = ()
     terminal_rollback_state: Literal["NOT_AUTHORIZED"] = "NOT_AUTHORIZED"

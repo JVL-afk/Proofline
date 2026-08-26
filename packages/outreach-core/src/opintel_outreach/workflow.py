@@ -3,11 +3,16 @@
 from __future__ import annotations
 
 from datetime import timedelta
+from uuid import UUID
 
 from opintel_m0.ports import Clock
 
 from opintel_outreach.composition import DeterministicOutreachComposer
-from opintel_outreach.domain import OutreachQcError, TransientOutreachCompositionError
+from opintel_outreach.domain import (
+    OutreachOperation,
+    OutreachQcError,
+    TransientOutreachCompositionError,
+)
 from opintel_outreach.ports import OutreachRepository, OutreachSourceCatalog
 
 
@@ -28,6 +33,15 @@ class OutreachWorkflowRunner:
 
     def run_once(self) -> bool:
         operation = self._repository.claim_operation(self._clock.now(), self._lease)
+        return self._run_claimed(operation)
+
+    def run_exact(self, operation_id: UUID, expected_created_by: str) -> bool:
+        operation = self._repository.claim_exact_operation(
+            operation_id, expected_created_by, self._clock.now(), self._lease
+        )
+        return self._run_claimed(operation)
+
+    def _run_claimed(self, operation: OutreachOperation | None) -> bool:
         if operation is None:
             return False
         try:

@@ -30,6 +30,12 @@ source commit, SBOM, and scan result. Any representation transformation must be 
 frozen local image and compared byte-for-byte with the registry manifest before equivalence may be
 accepted.
 
+The V5 production-wiring successor is deliberately source-only over the accepted V4 artifact. Its
+dedicated sampled-slot task accepts no company, hostname, URL, or package identity arguments. It
+reads one exact owner-approved artifact, derives the frozen slot identity, creates at most one
+release and work item, and advances only through the durable predecessor-linked coordinator. The
+ordinary M2-M5 pollers exclude the reserved sampled-slot execution namespace.
+
 The production Dockerfile pins the Linux/amd64 Python 3.13 Alpine 3.22 platform manifest at
 `sha256:7f7ee17311e0273954ffe76a7b84a2d8c8ecf16f9992e780e4d46c86175df431`.
 Its dependency stage exports only the `opintel-research-worker` runtime graph from `uv.lock` and

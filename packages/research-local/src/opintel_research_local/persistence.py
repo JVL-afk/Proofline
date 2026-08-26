@@ -357,7 +357,7 @@ class SqlAlchemyResearchRepository:
                     raise ValueError("existing sampled business differs from frozen identity")
                 session.add(self._run_row(run, idempotency_key))
             return run, True
-        except IntegrityError:
+        except IntegrityError as error:
             with self._sessions() as session:
                 row = session.scalar(
                     select(RunRow).where(
@@ -390,7 +390,9 @@ class SqlAlchemyResearchRepository:
                     or existing_activation.execution_ceilings_sha256
                     != requested_activation.execution_ceilings_sha256
                 ):
-                    raise ValueError("duplicate sampled activation differs from immutable run")
+                    raise ValueError(
+                        "duplicate sampled activation differs from immutable run"
+                    ) from error
                 return existing, False
 
     def get_run(self, workspace_id: UUID, run_id: UUID) -> ResearchRun | None:
@@ -406,7 +408,10 @@ class SqlAlchemyResearchRepository:
         with self._sessions.begin() as session:
             statement = (
                 select(RunRow)
-                .where(RunRow.status == ResearchRunStatus.PENDING)
+                .where(
+                    RunRow.status == ResearchRunStatus.PENDING,
+                    RunRow.created_by != "m67-sampled-slot-activator",
+                )
                 .order_by(RunRow.created_at)
                 .limit(1)
             )
@@ -432,6 +437,27 @@ class SqlAlchemyResearchRepository:
             session.flush()
             claimed_row = session.get(RunRow, claimed)
             return self._run(claimed_row) if claimed_row is not None else None
+
+    def claim_exact_sampled_run(
+        self, run_id: UUID, now: datetime, lease: timedelta
+    ) -> ResearchRun | None:
+        with self._sessions.begin() as session:
+            statement = select(RunRow).where(
+                RunRow.id == _id(run_id),
+                RunRow.created_by == "m67-sampled-slot-activator",
+                RunRow.status == ResearchRunStatus.PENDING,
+            )
+            if self.engine.dialect.name == "postgresql":
+                statement = statement.with_for_update(skip_locked=True)
+            row = session.scalar(statement)
+            if row is None:
+                return None
+            row.status = ResearchRunStatus.RUNNING
+            row.started_at = row.started_at or now
+            row.updated_at = now
+            row.lease_expires_at = now + lease
+            session.flush()
+            return self._run(row)
 
     def recover_stale_runs(self, now: datetime) -> int:
         with self._sessions.begin() as session:

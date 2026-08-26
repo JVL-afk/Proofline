@@ -92,6 +92,16 @@ class OpportunityApplicationService:
             raise OpportunityNotFoundError()
         return value
 
+    def get_bundle_by_hypothesis_revision(
+        self, principal: Principal, revision_id: UUID
+    ) -> OpportunityBundle:
+        value = self._repository.get_bundle_by_hypothesis_revision(
+            principal.workspace_id, revision_id
+        )
+        if value is None:
+            raise OpportunityNotFoundError()
+        return value
+
     def recalculate(
         self,
         principal: Principal,

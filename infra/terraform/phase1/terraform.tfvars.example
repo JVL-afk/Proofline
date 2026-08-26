@@ -1,6 +1,13 @@
 expected_aws_account_id                  = "REPLACE_WITH_12_DIGIT_ACCOUNT_ID"
 worker_image_uri                         = "REPLACE_WITH_ECR_URI@sha256:DIGEST"
 controlled_egress_image_uri              = "REPLACE_WITH_SEPARATELY_FROZEN_EGRESS_ECR_URI@sha256:DIGEST"
+research_runtime_revision                = "sha256:REPLACE_WITH_REGISTRY_DIGEST"
+sampled_slot_release_applicator_sha256     = "REPLACE_WITH_SHA256"
+sampled_slot_activation_adapter_sha256     = "REPLACE_WITH_SHA256"
+sampled_slot_activation_entry_point_sha256 = "REPLACE_WITH_SHA256"
+sampled_slot_stage_coordinator_sha256      = "REPLACE_WITH_SHA256"
+sampled_slot_m1_runtime_sha256             = "REPLACE_WITH_SHA256"
+sampled_slot_m2_m5_runtime_sha256          = "REPLACE_WITH_SHA256"
 operator_principal_arns                  = ["REPLACE_WITH_APPROVED_SHORT_LIVED_PRINCIPAL_ARN"]
 kill_switch_operator_principal_arn       = "REPLACE_WITH_APPROVED_KILL_OPERATOR_ARN"
 worker_desired_count                     = 0

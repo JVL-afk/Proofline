@@ -3,11 +3,12 @@
 from __future__ import annotations
 
 from datetime import timedelta
+from uuid import UUID
 
 from opintel_m0.ports import Clock
 
 from opintel_demo.composition import DeterministicDemoComposer
-from opintel_demo.domain import DemoQcError, TransientDemoCompositionError
+from opintel_demo.domain import DemoOperation, DemoQcError, TransientDemoCompositionError
 from opintel_demo.ports import DemoRepository, DemoSourceCatalog
 
 
@@ -28,6 +29,15 @@ class DemoWorkflowRunner:
 
     def run_once(self) -> bool:
         operation = self._repository.claim_operation(self._clock.now(), self._lease)
+        return self._run_claimed(operation)
+
+    def run_exact(self, operation_id: UUID, expected_created_by: str) -> bool:
+        operation = self._repository.claim_exact_operation(
+            operation_id, expected_created_by, self._clock.now(), self._lease
+        )
+        return self._run_claimed(operation)
+
+    def _run_claimed(self, operation: DemoOperation | None) -> bool:
         if operation is None:
             return False
         try:

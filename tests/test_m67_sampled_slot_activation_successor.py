@@ -1,8 +1,6 @@
 from __future__ import annotations
 
-import hashlib
 import socket
-from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
@@ -17,7 +15,6 @@ from opintel_research_worker.activation import (
 )
 from opintel_research_worker.sample_registry import FrozenPhaseOneSampleRegistry
 from opintel_shadow import LiveResearchPermissionRelease, PermissionActivity, PermissionState
-
 
 ROOT = Path(__file__).resolve().parents[1]
 SAMPLES = ROOT / "infra/container/phase1-worker/phase1-frozen-slot-registry.json"
@@ -65,12 +62,15 @@ def _release(**changes: object) -> LiveResearchPermissionRelease:
         "slot_number": 1,
         "business_identity": "903 HVAC",
         "exact_hostname": "903hvac.com",
-        "ordered_package_sha256": "3419a018a0cfb39c7fe6391c19b3acb43378b7b88e92337a2c70af305d345b5b",
+        "ordered_package_sha256": (
+            "3419a018a0cfb39c7fe6391c19b3acb43378b7b88e92337a2c70af305d345b5b"
+        ),
         "research_runtime_revision": RUNTIME,
         "max_logical_requests": 5,
         "max_attempts": 5,
         "max_response_bytes": 250_000,
         "max_total_bytes": 1_250_000,
+        "max_duration_seconds": 120,
         "cost_ceiling_usd": Decimal("0"),
         "allowed_source_scope": ("903hvac.com",),
         "owner_approval_sha256": "b" * 64,
@@ -192,7 +192,14 @@ def test_exact_release_derives_only_frozen_slot01_and_is_idempotent() -> None:
         (_release(slot_number=2), 1, _release().id),
         (_release(ordered_package_sha256="f" * 64), 1, _release().id),
         (_release(business_identity="Forged"), 1, _release().id),
-        (_release(exact_hostname="forged.example", allowed_source_scope=("forged.example",)), 1, _release().id),
+        (
+            _release(
+                exact_hostname="forged.example",
+                allowed_source_scope=("forged.example",),
+            ),
+            1,
+            _release().id,
+        ),
         (_release(state=PermissionState.NOT_AUTHORIZED), 1, _release().id),
         (_release(approval_ids=("owner",)), 1, _release().id),
         (_release(research_runtime_revision="sha256:" + "8" * 64), 1, _release().id),

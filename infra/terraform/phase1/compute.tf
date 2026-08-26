@@ -82,6 +82,16 @@ resource "aws_ssm_parameter" "research_release" {
   }
 }
 
+resource "aws_ssm_parameter" "sampled_slot_execution_approval" {
+  name  = "/${var.name_prefix}/sampled-slot-execution-approval"
+  type  = "String"
+  value = jsonencode({ state = "NOT_AUTHORIZED" })
+
+  lifecycle {
+    ignore_changes = [value]
+  }
+}
+
 data "aws_iam_policy_document" "worker" {
   statement {
     sid       = "RestrictedCaptureObjects"
@@ -192,7 +202,8 @@ resource "aws_ecs_service" "worker" {
 }
 
 # No service is attached to this definition. A later exact owner authorization may run exactly one
-# task and may pass only --slot-number and --release-id to the fixed bounded entry point.
+# task with no caller-supplied identity arguments. The command derives Slot 01 solely from the
+# frozen registry and the exact owner-approved execution artifact.
 resource "aws_ecs_task_definition" "sampled_slot_activator" {
   family                   = "${var.name_prefix}-sampled-slot-activator"
   requires_compatibilities = ["FARGATE"]
@@ -200,7 +211,7 @@ resource "aws_ecs_task_definition" "sampled_slot_activator" {
   cpu                      = 256
   memory                   = 512
   execution_role_arn       = aws_iam_role.execution.arn
-  task_role_arn            = aws_iam_role.worker.arn
+  task_role_arn            = aws_iam_role.sampled_slot_executor.arn
 
   runtime_platform {
     operating_system_family = "LINUX"
@@ -211,7 +222,7 @@ resource "aws_ecs_task_definition" "sampled_slot_activator" {
     name                   = "sampled-slot-activator"
     image                  = var.worker_image_uri
     essential              = true
-    entryPoint             = ["python", "-m", "opintel_research_worker.activation_main"]
+    entryPoint             = ["python", "-m", "opintel_intelligence_worker.sampled_slot_execution_main"]
     readonlyRootFilesystem = true
     user                   = "65532"
     environment = [
@@ -219,7 +230,14 @@ resource "aws_ecs_task_definition" "sampled_slot_activator" {
       { name = "OPINTEL_AWS_REGION", value = var.aws_region },
       { name = "OPINTEL_KILL_SWITCH_PARAMETER", value = aws_ssm_parameter.kill_switch.name },
       { name = "OPINTEL_RESEARCH_RELEASE_PARAMETER", value = aws_ssm_parameter.research_release.name },
+      { name = "OPINTEL_SLOT_EXECUTION_APPROVAL_PARAMETER", value = aws_ssm_parameter.sampled_slot_execution_approval.name },
       { name = "OPINTEL_RESEARCH_RUNTIME_REVISION", value = var.research_runtime_revision },
+      { name = "OPINTEL_RELEASE_APPLICATOR_SHA256", value = var.sampled_slot_release_applicator_sha256 },
+      { name = "OPINTEL_ACTIVATION_ADAPTER_SHA256", value = var.sampled_slot_activation_adapter_sha256 },
+      { name = "OPINTEL_ACTIVATION_ENTRY_POINT_SHA256", value = var.sampled_slot_activation_entry_point_sha256 },
+      { name = "OPINTEL_STAGE_COORDINATOR_SHA256", value = var.sampled_slot_stage_coordinator_sha256 },
+      { name = "OPINTEL_M1_RUNTIME_SHA256", value = var.sampled_slot_m1_runtime_sha256 },
+      { name = "OPINTEL_M2_M5_RUNTIME_SHA256", value = var.sampled_slot_m2_m5_runtime_sha256 },
       { name = "OPINTEL_PHASE1_SLOT_REGISTRY_PATH", value = "/app/config/phase1-frozen-slot-registry.json" },
       { name = "OPINTEL_PHASE1_A09_DECISION_REGISTRY_PATH", value = "/app/config/phase1-a09-decision-registry.json" },
       { name = "OPINTEL_CONTROLLED_EGRESS_URL", value = "http://egress.m67.internal:8080" },
@@ -243,6 +261,54 @@ resource "aws_ecs_task_definition" "sampled_slot_activator" {
       }
     }
   }])
+}
+
+resource "aws_iam_role" "sampled_slot_executor" {
+  name               = "${var.name_prefix}-sampled-slot-executor"
+  assume_role_policy = data.aws_iam_policy_document.ecs_assume.json
+}
+
+data "aws_iam_policy_document" "sampled_slot_executor" {
+  statement {
+    sid       = "RestrictedCaptureObjects"
+    actions   = ["s3:GetObject", "s3:PutObject", "s3:DeleteObject"]
+    resources = ["${aws_s3_bucket.captures.arn}/*"]
+  }
+  statement {
+    sid       = "RestrictedCaptureBucket"
+    actions   = ["s3:ListBucket"]
+    resources = [aws_s3_bucket.captures.arn]
+  }
+  statement {
+    sid       = "CaptureKey"
+    actions   = ["kms:Decrypt", "kms:Encrypt", "kms:GenerateDataKey"]
+    resources = [aws_kms_key.captures.arn]
+  }
+  statement {
+    sid       = "DatabaseIam"
+    actions   = ["rds-db:connect"]
+    resources = ["arn:${data.aws_partition.current.partition}:rds-db:${var.aws_region}:${data.aws_caller_identity.current.account_id}:dbuser:${aws_db_instance.phase1.resource_id}/${var.database_master_username}"]
+  }
+  statement {
+    sid     = "ReadExactSampledSlotAuthority"
+    actions = ["ssm:GetParameter"]
+    resources = [
+      aws_ssm_parameter.kill_switch.arn,
+      aws_ssm_parameter.research_release.arn,
+      aws_ssm_parameter.sampled_slot_execution_approval.arn,
+    ]
+  }
+  statement {
+    sid       = "ApplyAndTerminateExactSampledSlotAuthority"
+    actions   = ["ssm:PutParameter"]
+    resources = [aws_ssm_parameter.kill_switch.arn, aws_ssm_parameter.research_release.arn]
+  }
+}
+
+resource "aws_iam_role_policy" "sampled_slot_executor" {
+  name   = "${var.name_prefix}-sampled-slot-executor"
+  role   = aws_iam_role.sampled_slot_executor.id
+  policy = data.aws_iam_policy_document.sampled_slot_executor.json
 }
 
 resource "aws_service_discovery_private_dns_namespace" "phase1" {

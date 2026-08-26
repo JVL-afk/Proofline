@@ -361,6 +361,7 @@ class SqlAlchemyOpportunityRepository:
             row = session.scalar(
                 select(AnalysisRow)
                 .where(
+                    AnalysisRow.created_by != "m67-bounded-sampled-slot-coordinator",
                     or_(
                         AnalysisRow.status == AnalysisStatus.PENDING,
                         (
@@ -372,6 +373,32 @@ class SqlAlchemyOpportunityRepository:
                 )
                 .order_by(AnalysisRow.created_at)
                 .limit(1)
+            )
+            if row is None:
+                return None
+            row.status = AnalysisStatus.RUNNING
+            row.updated_at = now
+            row.lease_expires_at = now + lease
+            session.flush()
+            return self._run(row)
+
+    def claim_exact_run(
+        self, run_id: UUID, expected_created_by: str, now: datetime, lease: timedelta
+    ) -> OpportunityAnalysisRun | None:
+        with self._sessions.begin() as session:
+            row = session.scalar(
+                select(AnalysisRow).where(
+                    AnalysisRow.id == str(run_id),
+                    AnalysisRow.created_by == expected_created_by,
+                    or_(
+                        AnalysisRow.status == AnalysisStatus.PENDING,
+                        (
+                            (AnalysisRow.status == AnalysisStatus.RUNNING)
+                            & (AnalysisRow.lease_expires_at.is_not(None))
+                            & (AnalysisRow.lease_expires_at <= now)
+                        ),
+                    ),
+                )
             )
             if row is None:
                 return None
@@ -436,6 +463,22 @@ class SqlAlchemyOpportunityRepository:
                 select(AnalysisRow).where(
                     AnalysisRow.workspace_id == str(workspace_id),
                     AnalysisRow.hypothesis_id == str(hypothesis_id),
+                )
+            )
+            return self._load_bundle(self._run(row)) if row else None
+
+    def get_bundle_by_hypothesis_revision(
+        self, workspace_id: UUID, revision_id: UUID
+    ) -> OpportunityBundle | None:
+        with self._sessions() as session:
+            hypothesis = session.get(HypothesisRow, str(revision_id))
+            if hypothesis is None:
+                return None
+            row = session.scalar(
+                select(AnalysisRow).where(
+                    AnalysisRow.workspace_id == str(workspace_id),
+                    AnalysisRow.hypothesis_id == hypothesis.logical_id,
+                    AnalysisRow.current_hypothesis_revision_id == str(revision_id),
                 )
             )
             return self._load_bundle(self._run(row)) if row else None

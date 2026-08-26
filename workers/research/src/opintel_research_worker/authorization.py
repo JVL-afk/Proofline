@@ -5,15 +5,15 @@ from __future__ import annotations
 import json
 from datetime import UTC, datetime
 
-import boto3
+import boto3  # type: ignore[import-untyped]
 from opintel_research.domain import Business, FetchError, ResearchRun
 from opintel_shadow import LiveResearchPermissionRelease, PermissionActivity, PermissionState
 
-from opintel_research_worker.sample_registry import FrozenPhaseOneSampleRegistry
 from opintel_research_worker.activation import (
     A09_MARKER_PREFIX,
     release_execution_ceilings_sha256,
 )
+from opintel_research_worker.sample_registry import FrozenPhaseOneSampleRegistry
 
 
 class AwsSsmResearchAuthorization:

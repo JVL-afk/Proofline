@@ -113,6 +113,60 @@ variable "research_runtime_revision" {
   }
 }
 
+variable "sampled_slot_activation_adapter_sha256" {
+  description = "Exact bounded sampled-slot activation adapter source hash."
+  type        = string
+  validation {
+    condition     = can(regex("^[0-9a-f]{64}$", var.sampled_slot_activation_adapter_sha256))
+    error_message = "sampled_slot_activation_adapter_sha256 must be a lowercase SHA-256."
+  }
+}
+
+variable "sampled_slot_release_applicator_sha256" {
+  description = "Exact owner-approval-to-release applicator source hash."
+  type        = string
+  validation {
+    condition     = can(regex("^[0-9a-f]{64}$", var.sampled_slot_release_applicator_sha256))
+    error_message = "sampled_slot_release_applicator_sha256 must be a lowercase SHA-256."
+  }
+}
+
+variable "sampled_slot_activation_entry_point_sha256" {
+  description = "Exact no-arguments sampled-slot execution entry-point source hash."
+  type        = string
+  validation {
+    condition     = can(regex("^[0-9a-f]{64}$", var.sampled_slot_activation_entry_point_sha256))
+    error_message = "sampled_slot_activation_entry_point_sha256 must be a lowercase SHA-256."
+  }
+}
+
+variable "sampled_slot_stage_coordinator_sha256" {
+  description = "Exact durable predecessor-linked coordinator source hash."
+  type        = string
+  validation {
+    condition     = can(regex("^[0-9a-f]{64}$", var.sampled_slot_stage_coordinator_sha256))
+    error_message = "sampled_slot_stage_coordinator_sha256 must be a lowercase SHA-256."
+  }
+}
+
+variable "sampled_slot_m1_runtime_sha256" {
+  description = "Exact M1 production runtime source hash."
+  type        = string
+  validation {
+    condition     = can(regex("^[0-9a-f]{64}$", var.sampled_slot_m1_runtime_sha256))
+    error_message = "sampled_slot_m1_runtime_sha256 must be a lowercase SHA-256."
+  }
+}
+
+variable "sampled_slot_m2_m5_runtime_sha256" {
+  description = "Exact canonical M2-M5 runtime source hash."
+  type        = string
+  validation {
+    condition     = can(regex("^[0-9a-f]{64}$", var.sampled_slot_m2_m5_runtime_sha256))
+    error_message = "sampled_slot_m2_m5_runtime_sha256 must be a lowercase SHA-256."
+  }
+}
+
 variable "capture_retention_days" {
   description = "Exact A-08 successful minimized-capture retention."
   type        = number

@@ -4,10 +4,15 @@ from __future__ import annotations
 
 from dataclasses import replace
 from datetime import timedelta
+from uuid import UUID
 
 from opintel_m0.ports import Clock, IdentifierFactory
 
-from opintel_opportunity.domain import AnalysisStatus, OpportunityBundle
+from opintel_opportunity.domain import (
+    AnalysisStatus,
+    OpportunityAnalysisRun,
+    OpportunityBundle,
+)
 from opintel_opportunity.economics import calculate_economics
 from opintel_opportunity.ports import EvidenceCatalog, MockReasoner, OpportunityRepository
 from opintel_opportunity.rules import detect, score_snapshot
@@ -32,6 +37,15 @@ class OpportunityWorkflowRunner:
 
     def run_once(self) -> bool:
         run = self._repository.claim_run(self._clock.now(), self._lease)
+        return self._run_claimed(run)
+
+    def run_exact(self, run_id: UUID, expected_created_by: str) -> bool:
+        run = self._repository.claim_exact_run(
+            run_id, expected_created_by, self._clock.now(), self._lease
+        )
+        return self._run_claimed(run)
+
+    def _run_claimed(self, run: OpportunityAnalysisRun | None) -> bool:
         if run is None:
             return False
         try:

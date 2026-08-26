@@ -172,6 +172,7 @@ class SqlAlchemyOutreachRepository:
             row = session.scalar(
                 select(OutreachOperationRow)
                 .where(
+                    ~OutreachOperationRow.idempotency_key.like("m67:%"),
                     or_(
                         OutreachOperationRow.status.in_(("pending", "retry_scheduled")),
                         (OutreachOperationRow.status == "running")
@@ -185,6 +186,36 @@ class SqlAlchemyOutreachRepository:
                 return None
             value = replace(
                 self._operation(row),
+                status=OutreachOperationStatus.RUNNING,
+                attempt_count=row.attempt_count + 1,
+                updated_at=now,
+                lease_expires_at=now + lease,
+            )
+            self._update_operation_row(row, value)
+            return value
+
+    def claim_exact_operation(
+        self, operation_id: UUID, expected_created_by: str, now: datetime, lease: timedelta
+    ) -> OutreachOperation | None:
+        with self._sessions.begin() as session:
+            row = session.scalar(
+                select(OutreachOperationRow).where(
+                    OutreachOperationRow.id == str(operation_id),
+                    OutreachOperationRow.idempotency_key.like("m67:%"),
+                    or_(
+                        OutreachOperationRow.status.in_(("pending", "retry_scheduled")),
+                        (OutreachOperationRow.status == "running")
+                        & (OutreachOperationRow.lease_expires_at <= now),
+                    ),
+                )
+            )
+            if row is None:
+                return None
+            operation = self._operation(row)
+            if operation.created_by != expected_created_by:
+                raise ValueError("exact outreach operation creator mismatch")
+            value = replace(
+                operation,
                 status=OutreachOperationStatus.RUNNING,
                 attempt_count=row.attempt_count + 1,
                 updated_at=now,

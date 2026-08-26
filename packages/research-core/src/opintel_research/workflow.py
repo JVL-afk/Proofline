@@ -81,6 +81,15 @@ class ResearchWorkflowRunner:
         self._execute(run)
         return True
 
+    def run_exact_sampled(self, run_id: UUID) -> bool:
+        run = self._repository.claim_exact_sampled_run(
+            run_id, self._clock.now(), self._lease
+        )
+        if run is None:
+            return False
+        self._execute(run)
+        return True
+
     def _execute(self, run: ResearchRun) -> None:
         business = self._repository.get_business(run.workspace_id, run.business_id)
         if business is None:

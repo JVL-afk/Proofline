@@ -1,32 +1,30 @@
 from __future__ import annotations
 
+import socket
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
-import socket
 from uuid import UUID
 
 import pytest
 from opintel_research.domain import (
     Business,
-    CrawlPolicy,
     FetchError,
     ResearchRun,
     ResearchRunStatus,
     SampledSlotActivation,
     SampledSlotIdentity,
 )
-from opintel_research_worker.authorization import AwsSsmResearchAuthorization
+from opintel_research_local import SqlAlchemyResearchRepository
 from opintel_research_worker.activation import (
     A09_MARKER_PREFIX,
     SampledSlotActivator,
     release_execution_ceilings_sha256,
 )
+from opintel_research_worker.authorization import AwsSsmResearchAuthorization
 from opintel_research_worker.sample_registry import FrozenPhaseOneSampleRegistry
-from opintel_research_local import SqlAlchemyResearchRepository
 from opintel_shadow import LiveResearchPermissionRelease, PermissionActivity, PermissionState
-
 
 ROOT = Path(__file__).resolve().parents[1]
 REGISTRY = ROOT / "infra/container/phase1-worker/phase1-frozen-slot-registry.json"
@@ -83,6 +81,7 @@ def _release(**changes: object) -> LiveResearchPermissionRelease:
         "max_attempts": 5,
         "max_response_bytes": 250_000,
         "max_total_bytes": 1_250_000,
+        "max_duration_seconds": 120,
         "cost_ceiling_usd": Decimal("0"),
         "allowed_source_scope": ("903hvac.com",),
         "owner_approval_sha256": "a" * 64,

@@ -7,7 +7,7 @@ import logging
 import signal
 import time
 
-import boto3
+import boto3  # type: ignore[import-untyped]
 from opintel_audit import AuditWorkflowRunner, DeterministicAuditComposer
 from opintel_audit_local import CanonicalAuditSourceCatalog, SqlAlchemyAuditRepository
 from opintel_demo import DemoWorkflowRunner, DeterministicDemoComposer
