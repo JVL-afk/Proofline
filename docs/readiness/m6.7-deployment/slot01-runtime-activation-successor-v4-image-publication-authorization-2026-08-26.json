@@ -1,0 +1,76 @@
+{
+  "record_type": "AUTHORIZE_SLOT01_RUNTIME_ACTIVATION_SUCCESSOR_V4_IMAGE_PUBLICATION",
+  "version": "2026-08-26.1",
+  "state": "ACCEPTED_UNCONSUMED",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "validity": {
+    "not_before": "2026-08-26T12:00:00Z",
+    "expires_at": "2026-09-02T12:00:00Z",
+    "attempts": 1,
+    "terminal": true
+  },
+  "bindings": {
+    "implementation_commit": "e8e863e1da74dba32eaefbeecf71347167ddbc01",
+    "artifact_pipeline_commit": "c1669b169fac4db17fa4984639f16bb6edeb282e",
+    "evidence_commit": "d0e644baadf82a407c36e981c4ac51ab6ce5cdc8",
+    "image_publication_review_sha256": "19679175deaaf87c0fe3246dfb50e3dc5381d14dc400f8238e2218e5409c20bc",
+    "sampled_slot_activation_adapter_sha256": "ef6180794dfd705243b518500e0544f631cf23d86a64c1046819ec003cd0ba79",
+    "activation_entry_point_sha256": "c0309ad814a8f0ca4695838eb165456abeebdc364f95e75acef048a6636d7d1f",
+    "stage_coordinator_sha256": "8819487a1655ae69601fe2c899683dddfd08a3001ad68708859b897eb5211a3a",
+    "work_item_identity_schema_sha256": "d540c0017470188267b5331790571318262dbaffe70d405f7fdca6e4680b69e8",
+    "frozen_slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "v4_dockerfile_sha256": "46fa3081e19cf131372ed59ef56e84c4c8737d0b72cc072927fda655bd4553de",
+    "local_archive_sha256": "287e4e58ff941813a0444432c43ec07e7da3c9b9af2bead426263b9d75d50e2a",
+    "local_oci_config_digest": "sha256:54b9977c631e117582bd118fce6d76cd44d0ca37a93bd61958836af1239d7beb",
+    "local_manifest_digest": "sha256:99050ddcfc9a64a9ed3dfc2b41b0478b38c9265d58841f3368a81cfbfc3c83a1",
+    "new_source_diff_id": "sha256:861fe0f883a4bd70c648249b506e8a80a42eb5d5ef59bfde3195d1349f9df585",
+    "v3_parent_registry_digest": "sha256:8970af60a32da73b56c80d39598d2324459475fa7c98cc43e4200c626f68edb7"
+  },
+  "publication": {
+    "publisher_role": "arn:aws:iam::785072247535:role/m67-phase1-worker-image-publisher",
+    "source_image": "localhost/m67-phase1-worker:git-c1669b169fac-v4",
+    "destination": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker:git-c1669b169fac-v4",
+    "rebuilds": 0,
+    "alternate_images": 0,
+    "other_tags": 0,
+    "deletions": 0
+  },
+  "post_publication_requirements": [
+    "derive the exact registry-consumable manifest or index digest and media type",
+    "bind platform, config digest, ordered compressed layer digests and the accepted V3 parent prefix",
+    "cryptographically prove representation equivalence",
+    "require ECR provider scan COMPLETE with zero critical, high and blocking findings",
+    "generate and review a fresh Terraform plan using only the proven registry digest",
+    "stop before Terraform apply"
+  ],
+  "required_dormant_state": {
+    "services_desired_running_pending": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release_exists": false,
+    "all_seven_m67_permissions": "NOT_AUTHORIZED"
+  },
+  "validation_tooling_incident_preserved": {
+    "result": "UNAUTHORIZED",
+    "payload_retrieved": false,
+    "repeat_permitted": false,
+    "offline_scan_invariant": "Use only an exact archive input and fail closed without external registry fallback."
+  },
+  "prohibited": [
+    "image rebuild, source change or dependency change",
+    "alternate image, repository or tag",
+    "retagging or deletion",
+    "Terraform apply or service activation",
+    "Slot 01 release or execution",
+    "903 HVAC DNS or HTTP access",
+    "REAL_PUBLIC_RESEARCH or REAL_BUSINESS_DISCOVERY",
+    "M1-M5 real-company execution",
+    "person/contact processing",
+    "AI or browser use",
+    "outreach, delivery or external communication"
+  ],
+  "owner_signature": "APPROVED_IN_THREAD"
+}
