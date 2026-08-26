@@ -1,0 +1,19 @@
+# syntax=docker/dockerfile:1
+
+# The V3 successor is a source-only security revision over the exact deployed and scanned V2
+# runtime. This preserves V2's locked Python, OS packages, Python dependencies, config, and layers;
+# publication must still produce and bind a new registry manifest digest before deployment review.
+FROM 785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:0600eec77e9d1f1fd4e42e001bd416038f2d8c4cee91f56bdce5f2bf34f41ca3
+
+ARG SOURCE_COMMIT
+LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}" \
+      org.opencontainers.image.base.digest="sha256:0600eec77e9d1f1fd4e42e001bd416038f2d8c4cee91f56bdce5f2bf34f41ca3" \
+      org.opencontainers.image.title="M6.7 Phase 1 bounded research worker V3 slot binding"
+
+COPY packages/research-core/src /app/research-core
+COPY packages/research-local/src /app/research-local
+COPY workers/research/src /app/research-worker
+COPY infra/container/phase1-worker/phase1-frozen-slot-registry.json /app/config/phase1-frozen-slot-registry.json
+
+USER 65532:65532
+ENTRYPOINT ["python", "-m", "opintel_research_worker.main"]
