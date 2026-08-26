@@ -1,0 +1,175 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_SUCCESSOR_DEPLOYMENT_PLAN_REVIEW",
+  "version": "2026-08-26.1",
+  "state": "READY_FOR_SLOT01_RUNTIME_SUCCESSOR_DEPLOYMENT_AUTHORIZATION",
+  "required_owner_event": "APPROVE_SLOT01_RUNTIME_SUCCESSOR_DEPLOYMENT",
+  "observed_at": "2026-08-26T06:06:37.6805283Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "identity_boundary": {
+    "provider_plan_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "provider_apply_identity_required": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "embedded_backend_profile": "m67-phase1-state-apply-backend",
+    "embedded_backend_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply"
+  },
+  "source": {
+    "implementation_commit": "c038c0542eb467098574f703a9b3940ae64cf794",
+    "m1_runtime_sha256": "c851f0ac80df831a8a68e14cb7508a807c6f2922d6d20bd3b2a73113f3f7f3f4",
+    "m2_m5_runtime_sha256": "a2e28041cfcc682af633ed71715e92074dc2f2f2b37a23afcce186b3aa8874cc",
+    "permission_release_sha256": "c32cd5567da1afa8701ef999842821eca6485d1d5948402f8e8b4e957dc145c4",
+    "accepted_slot01_a09_decision_sha256": "1d938be8cf8946bd2b3d0d652500590652e031e056c69ddb0f9449b348261182",
+    "runtime_blocker_sha256": "897ff5229d7d465ab389c47bfb0e563011b0c2564ced5c39af58273ce209d068"
+  },
+  "image": {
+    "repository": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
+    "manifest_digest": "sha256:9cf0eee825e47a0fa8994c6449ff0774f5f68d2ab7e9b49869ae8d6d919457a5",
+    "archive_sha256": "c9529057ece0e695de86e592f2d10b17e2b0dcdaa609c5143742cb37f344f6f0",
+    "image_evidence_path": "docs/readiness/m6.7-deployment/slot01-runtime-successor-image-evidence-2026-08-26.json"
+  },
+  "hashes": {
+    "saved_plan_sha256": "bd04d4d11368d1a8538e83bf8a67b513855be92ebbba0224075617c8b6444c86",
+    "plan_json_sha256": "87a5bee6d7bb38f7ff99f4bf9fa5267753719f72cb4bf4f7a3903ba50ae274c4",
+    "configuration_sha256": "eb0088df5c31ed5bd8a69940adc6c169dfbbfcb880741d0fc585fa293935ff9b",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "managed_change_semantic_sha256": "9cf97ee502e2636effa101197abc8fadb0aafc0fb05f9cbc6b618d0c7ae3b80f"
+  },
+  "changes": {
+    "new_creates": 14,
+    "in_place_changes": 3,
+    "expected_replacements": 2,
+    "unexpected_replacements": 0,
+    "standalone_destroys": 0,
+    "unexpected_destroys": 0,
+    "terraform_cli_counts": {
+      "add": 16,
+      "change": 3,
+      "destroy": 2
+    },
+    "expected_replacement_resources": [
+      "aws_ecs_task_definition.worker",
+      "aws_ecs_task_definition.egress"
+    ],
+    "in_place_resources": [
+      "aws_ecs_service.worker",
+      "aws_ecs_service.egress",
+      "aws_iam_role_policy.worker"
+    ],
+    "new_capability_resources": [
+      "aws_ecs_service.intelligence",
+      "aws_ecs_task_definition.intelligence",
+      "aws_iam_role.egress",
+      "aws_iam_role.intelligence",
+      "aws_iam_role_policy.egress",
+      "aws_iam_role_policy.intelligence",
+      "aws_security_group.intelligence",
+      "aws_ssm_parameter.research_release",
+      "aws_vpc_security_group_egress_rule.intelligence_dns_tcp",
+      "aws_vpc_security_group_egress_rule.intelligence_dns_udp",
+      "aws_vpc_security_group_egress_rule.intelligence_to_database",
+      "aws_vpc_security_group_egress_rule.intelligence_to_endpoints",
+      "aws_vpc_security_group_ingress_rule.database_from_intelligence",
+      "aws_vpc_security_group_ingress_rule.endpoints_from_intelligence"
+    ]
+  },
+  "blocker_closure": {
+    "permission_release_not_representable": "Closed by an owner-hash-bound, exact-slot, exact-business, exact-host, exact-package, exact-runtime, bounded and expiring REAL_PUBLIC_RESEARCH release model. Missing, malformed, expired or mismatched releases fail closed.",
+    "locked_runtime_could_not_bind_exact_egress": "Closed by SSM-backed release lookup in both research worker and controlled-egress runtime. The deployed default remains NOT_AUTHORIZED and no hostname is hard-coded live.",
+    "m1_did_not_recheck_robots_at_runtime": "Closed by a pre-traversal runtime robots decision with minimized hash/length/status provenance and fail-closed deny, malformed, oversized, transport and redirect behavior.",
+    "m2_m5_absent_from_phase1_terraform": "Closed by a stopped, isolated deterministic intelligence task/service and strict M1-to-M5 predecessor-artifact orchestration terminating at CONTACT_PHASE_NOT_AUTHORIZED."
+  },
+  "task_definition_and_environment_diff": {
+    "research_worker": {
+      "action": "EXPECTED_TASK_DEFINITION_REPLACEMENT_AND_STOPPED_SERVICE_BINDING",
+      "image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:9cf0eee825e47a0fa8994c6449ff0774f5f68d2ab7e9b49869ae8d6d919457a5",
+      "added_environment": [
+        "OPINTEL_RESEARCH_RELEASE_PARAMETER=/m67-phase1/research-release",
+        "OPINTEL_RESEARCH_RUNTIME_REVISION=sha256:9cf0eee825e47a0fa8994c6449ff0774f5f68d2ab7e9b49869ae8d6d919457a5"
+      ],
+      "preserved_locked_environment": [
+        "OPINTEL_RESEARCH_LIVE_ENABLED=false",
+        "OPINTEL_RESEARCH_BROWSER_ENABLED=false",
+        "OPINTEL_EGRESS_POLICY_REVISION=NOT_AUTHORIZED"
+      ],
+      "desired_count": 0
+    },
+    "controlled_egress": {
+      "action": "EXPECTED_TASK_DEFINITION_REPLACEMENT_AND_STOPPED_SERVICE_BINDING",
+      "image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:9cf0eee825e47a0fa8994c6449ff0774f5f68d2ab7e9b49869ae8d6d919457a5",
+      "added_environment": [
+        "OPINTEL_RESEARCH_RELEASE_PARAMETER=/m67-phase1/research-release",
+        "OPINTEL_RESEARCH_RUNTIME_REVISION=sha256:9cf0eee825e47a0fa8994c6449ff0774f5f68d2ab7e9b49869ae8d6d919457a5"
+      ],
+      "desired_count": 0
+    },
+    "intelligence_worker": {
+      "action": "CREATE_STOPPED_TASK_DEFINITION_AND_SERVICE",
+      "image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:9cf0eee825e47a0fa8994c6449ff0774f5f68d2ab7e9b49869ae8d6d919457a5",
+      "environment": [
+        "OPINTEL_AI_ENABLED=false",
+        "OPINTEL_DELIVERY_ENABLED=false",
+        "OPINTEL_KILL_SWITCH_PARAMETER=/m67-phase1/kill-switch"
+      ],
+      "desired_count": 0
+    }
+  },
+  "iam_diff": {
+    "worker": "Add ssm:GetParameter for only /m67-phase1/research-release while preserving existing exact capture, KMS, RDS and kill-switch permissions.",
+    "controlled_egress": "Create dedicated task role with only ssm:GetParameter for /m67-phase1/research-release.",
+    "intelligence": "Create dedicated task role with only ssm:GetParameter for /m67-phase1/kill-switch.",
+    "wildcard_service_permissions_added": 0,
+    "delivery_permissions_added": 0,
+    "contact_or_enrichment_permissions_added": 0
+  },
+  "network_diff": {
+    "research_worker_public_egress_change": "NONE",
+    "controlled_egress_public_rule_change": "NONE",
+    "intelligence_worker": "New isolated SG permits only VPC DNS, PostgreSQL 5432 to the existing DB SG, and HTTPS to the existing private AWS endpoint SG.",
+    "arbitrary_intelligence_internet_egress": "DENIED",
+    "browser_infrastructure": "NONE",
+    "delivery_infrastructure": "NONE",
+    "stable_network_rds_s3_kms_cloud_map_changes": 0
+  },
+  "validation": {
+    "terraform_plan": "PASS_AUTHENTICATED_ACTUAL_AWS_STATE",
+    "terraform_validate": "PASS_WITH_EXISTING_CLOUD_MAP_PROVIDER_DEPRECATION_WARNING",
+    "terraform_format": "PASS",
+    "focused_deterministic_suite": "PASS_85_SKIP_1_EXISTING_OPT_IN_POSTGRES",
+    "full_suite": "PASS_576_SKIP_2_EXISTING_OPT_IN_POSTGRES",
+    "blocking_vulnerabilities": 0,
+    "secret_findings": 0,
+    "local_validation_path": "docs/readiness/m6.7-deployment/slot01-runtime-successor-local-validation-2026-08-26.json"
+  },
+  "deployment_preconditions": [
+    "Publish exactly the reviewed image manifest through the existing bounded m67-phase1-worker publisher path.",
+    "Independently verify the ECR manifest digest is sha256:9cf0eee825e47a0fa8994c6449ff0774f5f68d2ab7e9b49869ae8d6d919457a5.",
+    "Require ECR provider scan completion with zero blocking findings before applying the saved plan.",
+    "Verify account 785072247535, region us-east-2, kill switch TRIPPED and all desired/running task counts zero.",
+    "Apply only the saved plan under workload-apply with its embedded protected state-apply backend.",
+    "After apply verify the research-release parameter remains NOT_AUTHORIZED and no Slot 01 release exists."
+  ],
+  "rollback_plan": {
+    "automatic_safety": "All services remain desired count zero and the kill switch remains TRIPPED, so capability deployment starts no work.",
+    "failed_apply": "Stop, inventory actual state read-only, and generate a new hash-bound reconciliation or rollback plan; never retry this consumed saved plan.",
+    "post_deployment_rollback": "Under a separate exact authorization, bind research and egress services to their observed predecessor task definitions, keep intelligence desired count zero, and remove only successor IAM/SG/service/task/release resources through a freshly reviewed Terraform plan.",
+    "release_rollback": "Any later research execution must restore /m67-phase1/research-release to NOT_AUTHORIZED at its terminal outcome; deployment itself creates no authorized release."
+  },
+  "cost": {
+    "deployment_incremental_usd_while_desired_counts_zero": "0.00",
+    "bounded_phase1_plus_validation_estimate_usd": "160.00",
+    "approved_ceiling_usd": "250.00",
+    "within_ceiling": true
+  },
+  "final_locked_state": {
+    "kill_switch": "TRIPPED",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "slot01_research_release": "ABSENT",
+    "real_live_research": "NOT_AUTHORIZED",
+    "ai": "UNAVAILABLE_USD_0",
+    "browser": "OFF",
+    "person_contact_processing": "NOT_AUTHORIZED",
+    "delivery": "STRUCTURALLY_UNAVAILABLE"
+  },
+  "owner_signature": null
+}

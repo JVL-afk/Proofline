@@ -1,0 +1,33 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_SUCCESSOR_IMAGE_EVIDENCE",
+  "version": "2026-08-26.1",
+  "state": "LOCAL_IMMUTABLE_IMAGE_READY_FOR_BOUNDED_PUBLICATION",
+  "source_commit": "c038c0542eb467098574f703a9b3940ae64cf794",
+  "repository_clean_at_build": true,
+  "image": {
+    "local_tag": "localhost/m67-phase1-worker:c038c0542eb467098574f703a9b3940ae64cf794",
+    "target_repository": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
+    "manifest_digest": "sha256:9cf0eee825e47a0fa8994c6449ff0774f5f68d2ab7e9b49869ae8d6d919457a5",
+    "configuration_digest": "sha256:ad3b40b50af1fc6905384f3ad819e3189f091e178ec13476674b4feb2eaf8b9d",
+    "archive_sha256": "c9529057ece0e695de86e592f2d10b17e2b0dcdaa609c5143742cb37f344f6f0",
+    "archive_bytes": 134340608,
+    "dockerfile_sha256": "ae160551fa7b81aee9830918fca4c2e7c0c2c741517c1656428c802b66efa185",
+    "base_image_digest": "sha256:7f7ee17311e0273954ffe76a7b84a2d8c8ecf16f9992e780e4d46c86175df431",
+    "build_engine": "Buildah 1.33.7, VFS storage, chroot isolation"
+  },
+  "dependency_and_security_evidence": {
+    "cyclonedx_sbom_sha256": "4595fe9a8cc8f8c14593a4de87716999e866d51e262e12eff47865609f4c7897",
+    "trivy_full_sha256": "cdf73b845ba83511ab8a998141e0ca0f5847e4e1004cdc66fcf219feb42d2f0d",
+    "trivy_blocking_vulnerability_sha256": "e9f7a74121d6ad83da9967355eb5afd74f6660c33149228c038b67fc704ce63d",
+    "trivy_secret_scan_sha256": "00af6c95c20062b126b85ed26351a82b82a84212d1988538a4c5f0f152fa005f",
+    "blocking_high_or_critical_vulnerabilities": 0,
+    "secret_findings": 0,
+    "ecr_provider_scan": "PENDING_IMAGE_PUBLICATION_NO_AWS_MUTATION_AUTHORIZED"
+  },
+  "publication_preconditions": [
+    "Publish only this manifest through the existing bounded m67-phase1-worker publisher path.",
+    "Independently observe the ECR digest and require exact equality before Terraform apply.",
+    "Require the ECR provider scan to complete with zero blocking findings before Terraform apply.",
+    "Do not overwrite or treat a predecessor digest as the successor image."
+  ]
+}

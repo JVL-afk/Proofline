@@ -1,0 +1,68 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_SUCCESSOR_LOCAL_VALIDATION",
+  "version": "2026-08-26.1",
+  "state": "PASS_NETWORK_BLOCKED_NO_REAL_RESEARCH",
+  "observed_at": "2026-08-26T06:06:37.6805283Z",
+  "implementation_commit": "c038c0542eb467098574f703a9b3940ae64cf794",
+  "bundle_hashes": {
+    "m1_runtime_sha256": "c851f0ac80df831a8a68e14cb7508a807c6f2922d6d20bd3b2a73113f3f7f3f4",
+    "m2_m5_runtime_sha256": "a2e28041cfcc682af633ed71715e92074dc2f2f2b37a23afcce186b3aa8874cc",
+    "permission_release_sha256": "c32cd5567da1afa8701ef999842821eca6485d1d5948402f8e8b4e957dc145c4"
+  },
+  "focused_suite": {
+    "command": ".venv/Scripts/python.exe -m pytest -q tests/test_m67_slot01_runtime_successor.py tests/test_m67_runtime_robots.py tests/test_m67_production_minimization.py tests/test_m67c_live_research_gate.py tests/test_m1_research_engine.py",
+    "result": "PASS",
+    "passed": 85,
+    "skipped": 1,
+    "skip_reason": "Existing opt-in PostgreSQL execution requires OPINTEL_TEST_POSTGRES_URL; production-path PostgreSQL minimization was previously deployed and accepted under A-08."
+  },
+  "full_suite": {
+    "command": ".venv/Scripts/python.exe -m pytest -q",
+    "result": "PASS",
+    "passed": 576,
+    "skipped": 2,
+    "duration_seconds": 72.01,
+    "skip_reasons": [
+      "Existing opt-in PostgreSQL parity execution requires OPINTEL_TEST_POSTGRES_URL.",
+      "Existing opt-in PostgreSQL minimization execution requires OPINTEL_TEST_POSTGRES_URL."
+    ]
+  },
+  "negative_and_end_to_end_assertions": {
+    "no_release_zero_live_research": "PASS",
+    "malformed_release_zero_live_research": "PASS",
+    "wrong_slot_zero_live_research": "PASS",
+    "wrong_hostname_zero_live_research": "PASS",
+    "expired_release_zero_live_research": "PASS",
+    "kill_switch_tripped_zero_live_research": "PASS",
+    "cross_host_redirect_blocked": "PASS",
+    "robots_deny_blocked": "PASS",
+    "robots_missing_fail_closed": "PASS",
+    "robots_malformed_fail_closed": "PASS",
+    "robots_oversized_fail_closed": "PASS",
+    "robots_transport_failure_fail_closed": "PASS",
+    "robots_redirect_fail_closed": "PASS",
+    "robots_rule_change_rechecked_at_m1": "PASS",
+    "allowed_robots_and_exact_release_synthetic_path": "PASS",
+    "minimized_m1_to_deterministic_m2_m5": "PASS",
+    "raw_content_not_durable": "PASS",
+    "person_contact_content_not_durable": "PASS",
+    "m5_has_no_delivery_path": "PASS",
+    "business_isolation": "PASS",
+    "fixed_input_deterministic_replay": "PASS"
+  },
+  "safety_state": {
+    "kill_switch": "TRIPPED",
+    "real_public_research": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "desired_counts": {
+      "research_worker": 0,
+      "controlled_egress": 0,
+      "intelligence_worker": 0
+    },
+    "ai": "UNAVAILABLE_USD_0",
+    "browser": "OFF",
+    "person_contact_processing": "NOT_AUTHORIZED",
+    "delivery": "STRUCTURALLY_UNAVAILABLE",
+    "real_network_operations": 0
+  }
+}
