@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:m67:phase1:sampled-research-work-item:v1",
+  "additionalProperties": false,
+  "properties": {
+    "business_identity": {"minLength": 1, "type": "string"},
+    "exact_hostname": {"pattern": "^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$", "type": "string"},
+    "identity_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "ordered_package_file_sha256": {"const": "0283f0a6956f6bd11e9326419d9671a61cc57dac0b6d376b9e2b7a11f0507a70"},
+    "ordered_package_semantic_sha256": {"const": "3419a018a0cfb39c7fe6391c19b3acb43378b7b88e92337a2c70af305d345b5b"},
+    "slot_number": {"maximum": 24, "minimum": 1, "type": "integer"},
+    "slot_registry_sha256": {"const": "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2"},
+    "source_row_sha256": {"pattern": "^[0-9a-f]{64}$", "type": "string"},
+    "work_item_id": {"format": "uuid", "type": "string"},
+    "work_item_revision": {"const": "m67.phase1.sampled-research-work-item@1"}
+  },
+  "required": [
+    "ordered_package_file_sha256",
+    "ordered_package_semantic_sha256",
+    "slot_registry_sha256",
+    "slot_number",
+    "business_identity",
+    "exact_hostname",
+    "source_row_sha256",
+    "work_item_id",
+    "work_item_revision",
+    "identity_sha256"
+  ],
+  "title": "M6.7 Phase 1 immutable sampled research work item",
+  "type": "object"
+}

@@ -4,6 +4,7 @@ from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
+import socket
 from uuid import UUID
 
 import pytest
@@ -27,6 +28,19 @@ RUNTIME = "m67-slot01-runtime-successor-v3"
 RUN_ID = UUID("00000000-0000-4000-8000-000000000101")
 BUSINESS_ID = UUID("00000000-0000-4000-8000-000000000201")
 WORKSPACE_ID = UUID("00000000-0000-4000-8000-000000000301")
+
+
+@pytest.fixture(autouse=True)
+def _prove_no_dns(monkeypatch: pytest.MonkeyPatch):
+    calls: list[tuple[object, ...]] = []
+
+    def blocked_dns(*args: object, **kwargs: object):
+        calls.append((*args, kwargs))
+        raise AssertionError("authorization denial must precede DNS")
+
+    monkeypatch.setattr(socket, "getaddrinfo", blocked_dns)
+    yield
+    assert calls == []
 
 
 def _release(**changes: object) -> LiveResearchPermissionRelease:
