@@ -1,0 +1,76 @@
+{
+  "record_type": "APPROVE_SLOT01_RUNTIME_ACTIVATION_SUCCESSOR_V4_DEPLOYMENT_V2",
+  "version": "2026-08-26.1",
+  "state": "ACCEPTED_UNCONSUMED",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "bindings": {
+    "implementation_commit": "e8e863e1da74dba32eaefbeecf71347167ddbc01",
+    "artifact_pipeline_commit": "c1669b169fac4db17fa4984639f16bb6edeb282e",
+    "successor_evidence_commit": "fd71a61757216cac2e8effe361ad7d61018b0a51",
+    "plan_review_sha256": "a6f21f13bcbba0276bdaf733a5514b7fc222dc7956709073b4cc5914a2d6a75b",
+    "backend_identity_evidence_sha256": "3f464c1b1ef76806621c00ed040013a8973d8aaa4fd265ba08b1ca443e452c3a",
+    "managed_change_semantic_sha256": "5bd58d5406c1ea5dd467865077a0437140c395fb2d040b769e879cc0ff756b36",
+    "sampled_slot_activation_adapter_sha256": "ef6180794dfd705243b518500e0544f631cf23d86a64c1046819ec003cd0ba79",
+    "activation_entry_point_sha256": "c0309ad814a8f0ca4695838eb165456abeebdc364f95e75acef048a6636d7d1f",
+    "stage_coordinator_sha256": "8819487a1655ae69601fe2c899683dddfd08a3001ad68708859b897eb5211a3a",
+    "work_item_identity_schema_sha256": "d540c0017470188267b5331790571318262dbaffe70d405f7fdca6e4680b69e8",
+    "frozen_slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "saved_plan_sha256": "dc133552c43ee22d51ea6235158c841db6e7eb09fc6f2e06a8e0bc96925d1785",
+    "plan_json_sha256": "ce7b88e3b7714b85b2a60bb605c33eeb5eef4e6ade5a2e04dff36da0d851f7fa",
+    "backend_configuration_sha256": "c736be3d6edf4d79456b1b611ccd6809c1c718f4c5c2402ef00e66973471bef0",
+    "terraform_configuration_sha256": "4454ab7a4dd12faddea7d448aa0fc20bf84dc3382ea4d328c9ad2aad2983b2a3",
+    "terraform_tfvars_sha256": "2d42195793701034f9c7fe912058ab33f15e0812923b7bae6f6a05311964e07c",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "registry_evidence_sha256": "67741ca5789fb636aa35da2b57a10e3cd98aff2ec01d381ade0eb5d4a2c6b7c3",
+    "registry_digest": "sha256:d0444158c2be7a6003ee4f9f351e320f8da05f01e4970c718d08d1f5310f1842"
+  },
+  "identity_boundary": {
+    "provider_apply_profile": "m67-phase1-workload-apply",
+    "provider_apply_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "embedded_backend_profile": "m67-phase1-state-apply-backend",
+    "embedded_backend_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply"
+  },
+  "authorized_changes": {
+    "standalone_dormant_activator_create": 1,
+    "ecs_service_in_place_updates": 3,
+    "expected_task_definition_replacements": 3,
+    "unexpected_replacements": 0,
+    "standalone_destroys": 0,
+    "terraform_cli_counts": {"add": 4, "change": 3, "destroy": 3},
+    "iam_changes": 0,
+    "network_or_egress_changes": 0,
+    "desired_count_changes": 0,
+    "permission_state_changes": 0,
+    "authorization_release_changes": 0
+  },
+  "required_postdeploy_state": {
+    "services_desired_running_pending": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "access_to_903hvac_com": 0,
+    "real_company_m1_m5_executions": 0,
+    "terraform_convergence": "NO_CHANGES"
+  },
+  "postdeploy_authority": {
+    "accept_v4_only_after_complete_fail_closed_matrix": true,
+    "prepare_single_slot01_m1_m5_execution_authorization": true,
+    "create_slot01_release": false,
+    "execute_slot01": false
+  },
+  "prohibited": [
+    "image publication, rebuild, retag or deletion",
+    "Slot 01 release or activation",
+    "903 HVAC DNS or HTTP access",
+    "REAL_PUBLIC_RESEARCH or REAL_BUSINESS_DISCOVERY",
+    "real-company M1-M5 execution",
+    "person/contact processing",
+    "AI or browser use",
+    "outreach, delivery or external communication"
+  ],
+  "owner_signature": "APPROVED_IN_THREAD"
+}
