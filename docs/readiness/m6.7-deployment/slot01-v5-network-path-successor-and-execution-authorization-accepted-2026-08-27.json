@@ -1,0 +1,18 @@
+{
+  "record_type": "M67_SLOT01_V5_NETWORK_PATH_SUCCESSOR_AND_M1_M5_EXECUTION_AUTHORIZATION_ACCEPTED",
+  "version": "2026-08-27.1",
+  "state": "ACCEPTED_PENDING_EXECUTION",
+  "recorded_at": "2026-08-27T12:26:40Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "authorization_name": "AUTHORIZE_SLOT01_V5_NETWORK_PATH_SUCCESSOR_AND_M1_M5_EXECUTION",
+  "exact_statement_sha256": "c35248e5849bfed0821775d809afd0cdb45a66bca3e6b79ecf191095dde753c5",
+  "authorization_package_sha256": "5bb8a8c00eb8a7b0a5d846a56e4d815438b3539d4d180c6a6117e1024b63ea7f",
+  "authorization_package": "slot01-v5-network-path-successor-and-execution-authorization-ready-2026-08-27.json",
+  "network_validation_attempts_authorized": 1,
+  "slot01_execution_attempts_authorized_if_validation_passes": 1,
+  "valid_from": "2026-08-27T12:00:00Z",
+  "valid_until": "2026-09-03T12:00:00Z",
+  "predecessor_combined_authorization": "TERMINAL_NON_REUSABLE",
+  "slot02": "NOT_AUTHORIZED"
+}

@@ -1,0 +1,84 @@
+{
+  "record_type": "M67_SLOT01_V5_NETWORK_PATH_SUCCESSOR_VALIDATION_TERMINAL",
+  "version": "2026-08-27.1",
+  "state": "BLOCKED_SLOT01_V5_NETWORK_PATH_SUCCESSOR_VALIDATION_SAMPLED_APPROVAL_SENTINEL_INCOMPATIBLE",
+  "observed_at": "2026-08-27T12:29:37Z",
+  "authorization": {
+    "name": "AUTHORIZE_SLOT01_V5_NETWORK_PATH_SUCCESSOR_AND_M1_M5_EXECUTION",
+    "exact_statement_sha256": "c35248e5849bfed0821775d809afd0cdb45a66bca3e6b79ecf191095dde753c5",
+    "authorization_package_sha256": "5bb8a8c00eb8a7b0a5d846a56e4d815438b3539d4d180c6a6117e1024b63ea7f",
+    "accepted_record_sha256": "7a83f3406a411f142dedbf2e6ca1fb4ee1abcf983a82373ddae10ad77de8d3f3",
+    "network_validation_attempt": "CONSUMED_TERMINAL",
+    "conditional_slot01_execution": "NOT_STARTED_AND_NON_REUSABLE"
+  },
+  "validation_task": {
+    "task_arn": "arn:aws:ecs:us-east-2:785072247535:task/m67-phase1-research/3a837c1d98fa4221906a21a373adc88f",
+    "task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-sampled-slot-activator:2",
+    "image_digest": "sha256:db403f48e2a552d91af574e476ccc403cf0df91d5da9127b5d5c89a6d600cfc2",
+    "launch_type": "FARGATE",
+    "platform_version": "1.4.0",
+    "subnet": "subnet-0ed12f24100baf801",
+    "security_group": "sg-05543bd7e420818bf",
+    "assign_public_ip": "DISABLED",
+    "private_ipv4": "10.67.11.43",
+    "pull_started_at": "2026-08-27T12:27:49.628Z",
+    "pull_stopped_at": "2026-08-27T12:27:53.658Z",
+    "container_started_at": "2026-08-27T12:27:53.767Z",
+    "container_exit_code": 1,
+    "stop_code": "EssentialContainerExited"
+  },
+  "network_path_result": {
+    "state": "PASS",
+    "exact_image_digest_observed": true,
+    "image_pull_succeeded": true,
+    "container_started": true,
+    "public_ip_used": false,
+    "previous_s3_layer_timeout_recurred": false
+  },
+  "application_validation_result": {
+    "state": "FAIL_CLOSED_NEW_CONTROL_DEFECT",
+    "failure_stage": "SAMPLED_SLOT_EXECUTION_APPROVAL_ENVELOPE_PARSE_BEFORE_RELEASE_OR_WORK_ITEM",
+    "parameter": "/m67-phase1/sampled-slot-execution-approval",
+    "persisted_value": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "parser": "SampledSlotExecutionApprovalEnvelope.model_validate_json",
+    "failure_class": "PYDANTIC_VALIDATION_ERROR",
+    "content_minimized_error": {
+      "unexpected_field": "state",
+      "missing_required_fields": [
+        "approval",
+        "approval_artifact_sha256"
+      ]
+    },
+    "exact_interpretation": "The deployed research-release sentinel compatibility is present, but the separate sampled-slot execution-approval lock sentinel has no equivalent strict lock adapter and is passed directly to the live approval-envelope model.",
+    "release_created": false,
+    "work_item_created": false,
+    "application_dns_or_http": 0,
+    "requests_to_903hvac_com": 0,
+    "m1_m5_started": false
+  },
+  "unperformed_after_failure": [
+    "no retry",
+    "no alternate network binding",
+    "no ad-hoc repair",
+    "no Terraform convergence plan",
+    "no live approval artifact",
+    "no REAL_PUBLIC_RESEARCH release",
+    "no immutable Slot 01 work item",
+    "no M1-M5",
+    "no Slot 02"
+  ],
+  "terminal_safety_state": {
+    "services_desired_running_pending": "0/0/0",
+    "running_activator_tasks": 0,
+    "kill_switch": "TRIPPED",
+    "research_release": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "sampled_slot_execution_approval": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "real_public_research": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "requests_to_903hvac_com": 0,
+    "real_m1_m5_executions": 0,
+    "slot02": "NOT_AUTHORIZED"
+  },
+  "required_next_event": "A separately reviewed minimum successor must add strict compatibility for only the exact sampled-slot execution-approval NOT_AUTHORIZED sentinel; this consumed authorization cannot be retried."
+}
