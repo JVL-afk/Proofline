@@ -1,0 +1,73 @@
+{
+  "record_type": "SLOT01_V5_SAMPLED_APPROVAL_SENTINEL_SUCCESSOR_LOCAL_EVIDENCE",
+  "version": "2026-08-27.1",
+  "captured_at_utc": "2026-08-27T12:46:34Z",
+  "classification": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN",
+  "scope": "sampled-slot execution-approval sentinel normalization only",
+  "implementation_commit": "eef1899fb6de8820ae684ca919d07556d91c7de0",
+  "artifact_pipeline_commit": "2e7b52baedff3635775a2039f2de58bcb129811f",
+  "artifacts": {
+    "release_application_sha256": "011610016f076287831df5f1df785b4b317b3284f11ddc802064e3c19a3bf152",
+    "focused_test_sha256": "9f5fda6122d6260e26b8477e25941c5c74b83a3bb7db82ea439737795646405e",
+    "dockerfile_sha256": "03b00d75446ffc69b83d23cf2566206b020eff9198b161aec6446e3248a8ca48",
+    "local_image": "localhost/m67-phase1-worker:git-2e7b52baedff-v5-sampled-approval-sentinel",
+    "oci_archive_sha256": "a722d9f640ca5b7e4984a99f617bc3f53e51b76dc6b707c5e6b6dde45e5e1672",
+    "docker_archive_sha256": "9e16372f2e89e34597e9b49b7f8b6dd345f9b37f7f04a86146611e57f6e9fc8a",
+    "local_representation_evidence_sha256": "d35d58bc6e93901bbab1d829541b41202a314750f58f8d0f5a23357546ee28ac"
+  },
+  "local_image_identity": {
+    "archive_manifest_digest": "sha256:3579c10d81401476c92ab5d2e0db415c79db7d55fa2c9e7549aae6c102a4f43e",
+    "storage_manifest_digest": "sha256:f121e2102d6915c18dfabec19a70f3033db3afceafd2e144215a22c8d43f3ea6",
+    "config_digest": "sha256:894db8f789cbce32faa36f8765d61b11715700668060151cc72e0d42e137043d",
+    "platform": "linux/amd64",
+    "ordered_rootfs_diff_ids": [
+      "sha256:0854555d70acaa318b38ee50bc667cb51ff6bf0757624624c7ff3b6fe17459a0",
+      "sha256:98899702eeeaf1257e200c38c53a35c7908e831b11ea31d8f2e27fef0c5b8e3c",
+      "sha256:3d538106e26b6c23fa9062243fe6d4aee2d373c4f928203cd76cacd51a0a51cd",
+      "sha256:44c1014e5162dcfb531c0eba5e0d87270b9b96204f8090e17f4f4b8036feba4d",
+      "sha256:ce57cf4ce41603010895d9f500deebb23d33bafda1e7b11e392c08809d9e9118",
+      "sha256:a433a1a55f7468bd5cd9614c0205f2c2e87c2c0e97b97ace896471e2dafb9651",
+      "sha256:861fe0f883a4bd70c648249b506e8a80a42eb5d5ef59bfde3195d1349f9df585",
+      "sha256:2bbfa9254998b8be6e8d1b6bc6180f42238cb0d990f654a660ad9748b83add73",
+      "sha256:2eb0966b4834d459cda535cff06222cff6b34efc90a71102ba585ce3df986ef3",
+      "sha256:80ea7145a8cb82671d8b95a28e34068d594479656fbcc8994db58ad468e7dba7",
+      "sha256:b27fe9beef3a820ab5e0e27b3f76dec06e2b0d98ef8226c98957cec6d6628312"
+    ],
+    "relationship": "Each OCI gzip layer decompresses to the same-position Buildah storage digest and config rootfs diff ID; config bytes and platform are identical.",
+    "parent_registry_digest": "sha256:db403f48e2a552d91af574e476ccc403cf0df91d5da9127b5d5c89a6d600cfc2"
+  },
+  "sentinel_contract": {
+    "accepted_exact_bytes": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "accepted_exact_bytes_sha256": "fdb8e197e9ce7cf749cf4fe063908bc6c4e3066dce0a4adef302423d2381fa67",
+    "normalizes_to": "canonical typed NOT_AUTHORIZED sampled-slot approval",
+    "live_fields_synthesized": 0,
+    "release_created": false,
+    "work_item_created": false,
+    "dns_or_transport_reachable": false,
+    "all_nonexact_or_incomplete_documents": "REJECTED"
+  },
+  "validation": {
+    "focused_suite": "44 passed",
+    "full_suite": "653 passed, 2 skipped",
+    "skips": "only opt-in PostgreSQL parity/minimization tests lacking OPINTEL_TEST_POSTGRES_URL",
+    "repository_check": "PASS",
+    "compileall": "PASS",
+    "git_diff_check": "PASS",
+    "network_disabled_image_smoke": "SAMPLED_APPROVAL_SENTINEL_FAIL_CLOSED_PASS",
+    "image_module_sha256_matches_source": true,
+    "synthetic_m1_m5_terminal": "CONTACT_PHASE_NOT_AUTHORIZED",
+    "npm_validation": "UNAVAILABLE_LOCAL_NPM_INSTALLATION_MISSING_NPM_CLI; no repair attempted"
+  },
+  "preserved": {
+    "network_path": "ACCEPTED_UNCHANGED",
+    "security_remediation": "libcrypto3/libssl3 3.5.8-r0 unchanged",
+    "v5_architecture": "UNCHANGED",
+    "slot01_or_live_release_created": false,
+    "903hvac.com_requests": 0,
+    "aws_mutations": 0,
+    "image_publications": 0,
+    "kill_switch": "TRIPPED",
+    "real_public_research": "NOT_AUTHORIZED"
+  },
+  "consumed_predecessor_blocker_evidence_sha256": "d26091dc9478d18e60ab06e21826340381bd810b77e00da0f950b95d9fab2d41"
+}
