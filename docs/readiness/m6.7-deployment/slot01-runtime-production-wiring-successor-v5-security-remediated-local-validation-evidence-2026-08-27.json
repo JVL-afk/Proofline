@@ -1,0 +1,79 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_PRODUCTION_WIRING_SUCCESSOR_V5_SECURITY_REMEDIATED_LOCAL_VALIDATION_EVIDENCE",
+  "version": "2026-08-27.1",
+  "state": "READY_FOR_SEPARATELY_AUTHORIZED_IMAGE_PUBLICATION",
+  "created_at": "2026-08-27T06:22:37Z",
+  "scope": "Local, network-blocked validation of the minimum OpenSSL-remediated V5 successor. No image publication, Terraform plan/apply, Slot 01 release, company access, or real-company M1-M5 execution occurred.",
+  "security_remediation": {
+    "diagnosis_sha256": "5915afcb970e38159337eccd0efa863defb60871a2605a73a95d2175ec46f1f6",
+    "blocked_registry_digest": "sha256:be13e69fbb9557c0f4eb07f374b1cfc529788a688d9ca1d01fe3f7a4a7784e8d",
+    "root_cause": "One Alpine openssl origin package at 3.5.7-r0 produced seven ECR HIGH findings.",
+    "change": "Exact libcrypto3 and libssl3 subpackages upgraded to 3.5.8-r0 from Alpine edge/main; musl remains 1.2.5-r12.",
+    "dockerfile_sha256": "ae9cc861c3d0a82458f5174b298dcd0ba8ccdfbb29aad13c3b9e73c2d6600315",
+    "remediation_commit": "0ffe40b7b2e486ac0156c6a03e66eb8f743d0957"
+  },
+  "local_image": {
+    "tag": "localhost/m67-phase1-worker:git-0ffe40b-v5-openssl",
+    "platform": "linux/amd64",
+    "docker_archive_sha256": "c13dc2734e641304c99bea79805b5fab39d8027db1e40f245b7350f3903f9e96",
+    "oci_archive_sha256": "6456a9322ecc1dcd503778e63ceaed335560e527064f03127487d7c6f88625ee",
+    "archive_manifest_digest": "sha256:f36f3c298fbf8ba0aa790a3cfc06e30308c8a28b01ecfb7e945794e21e5ac673",
+    "storage_manifest_digest": "sha256:443389d612f9a82fb871a83a562fd50710c88b5c7a3dedbf6b24ace27080d6f1",
+    "config_digest": "sha256:d2a3a7b88b842d51d41fdeb67dc03d7b31fde41c727f05964f684fe9d299cd70",
+    "new_security_layer_compressed_digest": "sha256:926af23570992ee2123d6e53ed779db798a90494e59bf99a13b7428ca72388ce",
+    "new_security_layer_diff_id": "sha256:2eb0966b4834d459cda535cff06222cff6b34efc90a71102ba585ce3df986ef3",
+    "local_representation_evidence_sha256": "aa467d6123731df32beae35d6ebf74dabc9c6ae9c4fa906c997ff60c8c7cd0d2",
+    "local_representation_classification": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN",
+    "accepted_v5_rootfs_prefix_preserved": true,
+    "accepted_v5_rootfs_prefix_length": 8
+  },
+  "application_semantic_invariance": {
+    "accepted_v5_implementation_commit": "f1e1acfc3fcee66fb0e02791009cca0db16fcc87",
+    "release_applicator_sha256": "59584181316273bf6cc4f3b799eaea92ef1d19cc034046ad6e41c42082dd04f6",
+    "sampled_slot_activation_adapter_sha256": "95a0355637800d6e1309755bcb342a990ed8c506d6bbe1de28982c10f0e7cf7c",
+    "production_entry_point_sha256": "12eaf66bf6dc491c4376d1d42ee6bd794a38636d8c9ce93e4b13b1c6db0b6bf5",
+    "coordinator_bundle_sha256": "fe0f34c9ef67c1aa5158aad8cf21206a31f167093f1aaa6350e9ba8f1cc54801",
+    "m1_runtime_sha256": "884b1f271b21f9d0ff4e73557be0ec8c01fda30969fa256f1e555afb4d7f2a99",
+    "m2_m5_runtime_sha256": "40e6511a00738980a7604a7d60c1c3419b396e049748f06ec0dae8116a5ebed3",
+    "work_item_identity_schema_sha256": "d540c0017470188267b5331790571318262dbaffe70d405f7fdca6e4680b69e8",
+    "frozen_slot_registry_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "application_source_changes": 0
+  },
+  "validation": {
+    "network_blocked_container_runtime": "PASS",
+    "openssl_runtime": "OpenSSL 3.5.8 25 Aug 2026",
+    "production_entry_point_imports": "PASS",
+    "focused_activation_coordinator_authorization_tests": "91 passed",
+    "full_python_test_suite": "630 passed, 2 PostgreSQL-environment skips",
+    "synthetic_terminal_state": "CONTACT_PHASE_NOT_AUTHORIZED",
+    "repository_check": "PASS",
+    "python_compileall": "PASS",
+    "git_diff_check": "PASS",
+    "mypy": "PASS, 175 production source files",
+    "scoped_ruff": "PASS",
+    "terraform_fmt": "PASS",
+    "terraform_validate": "PASS",
+    "node": "v24.15.0",
+    "npm": "UNAVAILABLE_LOCAL_NPM_CLI_INSTALLATION_INCOMPLETE",
+    "broad_scripts_mypy_ruff": "PREEXISTING_UNRELATED_SCRIPT_ERRORS; production-source and scoped checks passed"
+  },
+  "publication_requirement": {
+    "authority": "FRESH_EXACT_OWNER_AUTHORIZATION_REQUIRED",
+    "publisher_source_representation": "Buildah containers-storage manifest sha256:443389d612f9a82fb871a83a562fd50710c88b5c7a3dedbf6b24ace27080d6f1",
+    "required_registry_classification": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "required_scan": "COMPLETE with CRITICAL=0, HIGH=0, BLOCKING=0",
+    "terraform_planning": "ONLY_AFTER_REGISTRY_IDENTITY_AND_SCAN_PASS"
+  },
+  "preserved_authority_state": {
+    "deployed_baseline": "V4_DORMANT",
+    "services_desired_running_pending": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "requests_to_903hvac_com": 0,
+    "real_company_m1_m5_runs": 0,
+    "image_publications_under_this_remediation": 0,
+    "terraform_mutations": 0
+  }
+}
