@@ -22,6 +22,10 @@ APPROVAL_STATE = "OWNER_APPROVED"
 RELEASE_APPLICATOR_REVISION = "m67.phase1.release-applicator@1"
 LEGACY_LOCK_SENTINEL = '{"state":"NOT_AUTHORIZED"}'
 LEGACY_LOCK_SENTINEL_SHA256 = hashlib.sha256(LEGACY_LOCK_SENTINEL.encode("utf-8")).hexdigest()
+SAMPLED_APPROVAL_LOCK_SENTINEL = '{"state":"NOT_AUTHORIZED"}'
+SAMPLED_APPROVAL_LOCK_SENTINEL_SHA256 = hashlib.sha256(
+    SAMPLED_APPROVAL_LOCK_SENTINEL.encode("utf-8")
+).hexdigest()
 LEGACY_LOCK_RELEASE_ID = uuid5(
     NAMESPACE_URL, f"m67.phase1.legacy-research-release-lock:{LEGACY_LOCK_SENTINEL_SHA256}"
 )
@@ -164,6 +168,29 @@ class SampledSlotExecutionApprovalEnvelope(BaseModel):
         return self
 
 
+class CanonicalNotAuthorizedSampledSlotApproval(BaseModel):
+    """Typed sampled-approval lock; it carries no owner or execution authority."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    state: Literal["NOT_AUTHORIZED"]
+
+
+StoredSampledSlotExecutionApproval = (
+    SampledSlotExecutionApprovalEnvelope | CanonicalNotAuthorizedSampledSlotApproval
+)
+
+
+def parse_stored_sampled_slot_execution_approval(
+    raw: str,
+) -> StoredSampledSlotExecutionApproval:
+    """Accept only the exact historical lock bytes or a complete live envelope."""
+
+    if raw == SAMPLED_APPROVAL_LOCK_SENTINEL:
+        return CanonicalNotAuthorizedSampledSlotApproval(state="NOT_AUTHORIZED")
+    return SampledSlotExecutionApprovalEnvelope.model_validate_json(raw)
+
+
 class ReleaseControlStore(Protocol):
     def read_approval_envelope(self) -> str: ...
     def read_release(self) -> str: ...
@@ -205,9 +232,12 @@ class BoundedSampledSlotReleaseApplicator:
         self._now = now
 
     def apply(self) -> tuple[LiveResearchPermissionRelease, SampledSlotExecutionApproval, bool]:
-        envelope = SampledSlotExecutionApprovalEnvelope.model_validate_json(
+        stored_approval = parse_stored_sampled_slot_execution_approval(
             self._store.read_approval_envelope()
         )
+        if isinstance(stored_approval, CanonicalNotAuthorizedSampledSlotApproval):
+            raise ValueError("sampled-slot execution approval is NOT_AUTHORIZED")
+        envelope = stored_approval
         approval = envelope.approval
         now = self._now()
         if now.tzinfo is None:

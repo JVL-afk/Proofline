@@ -35,12 +35,15 @@ from opintel_research_worker.release_application import (
     LEGACY_LOCK_RELEASE_ID,
     LEGACY_LOCK_SENTINEL,
     LEGACY_LOCK_SENTINEL_SHA256,
+    SAMPLED_APPROVAL_LOCK_SENTINEL,
     BoundedSampledSlotReleaseApplicator,
     CanonicalNotAuthorizedResearchRelease,
+    CanonicalNotAuthorizedSampledSlotApproval,
     SampledSlotExecutionApproval,
     SampledSlotExecutionApprovalEnvelope,
     canonical_sha256,
     parse_stored_research_release,
+    parse_stored_sampled_slot_execution_approval,
 )
 from opintel_research_worker.sample_registry import FrozenPhaseOneSampleRegistry
 from opintel_shadow import LiveResearchPermissionRelease, PermissionActivity, PermissionState
@@ -252,6 +255,60 @@ def test_partial_live_release_is_rejected() -> None:
             '{"record_kind":"live_research_permission","activity":"real_public_research",'
             '"state":"authorized","slot_number":1,"exact_hostname":"903hvac.com"}'
         )
+
+
+def test_exact_sampled_approval_lock_normalizes_only_to_typed_non_authorized() -> None:
+    locked = parse_stored_sampled_slot_execution_approval(SAMPLED_APPROVAL_LOCK_SENTINEL)
+    assert isinstance(locked, CanonicalNotAuthorizedSampledSlotApproval)
+    assert locked.model_dump() == {"state": "NOT_AUTHORIZED"}
+    assert not hasattr(locked, "approval")
+    assert not hasattr(locked, "approval_artifact_sha256")
+    assert not hasattr(locked, "slot_number")
+
+
+def test_canonical_sampled_approval_lock_type_remains_accepted() -> None:
+    locked = CanonicalNotAuthorizedSampledSlotApproval(state="NOT_AUTHORIZED")
+    assert locked.state == "NOT_AUTHORIZED"
+
+
+@pytest.mark.parametrize(
+    "raw",
+    [
+        '{"state":"not_authorized"}',
+        '{"state":"NOT_AUTHORIZED","approval":{}}',
+        '{ "state": "NOT_AUTHORIZED" }',
+        '{"state":"AUTHORIZED"}',
+        '{"state":"NOT_AUTHORIZED"',
+        '{}',
+    ],
+)
+def test_nonexact_or_malformed_sampled_approval_lock_is_rejected(raw: str) -> None:
+    with pytest.raises(ValueError):
+        parse_stored_sampled_slot_execution_approval(raw)
+
+
+@pytest.mark.parametrize(
+    "raw",
+    [
+        '{"approval_artifact_sha256":"' + "0" * 64 + '"}',
+        '{"approval":{}}',
+        '{"approval":{},"approval_artifact_sha256":"' + "0" * 64 + '"}',
+    ],
+)
+def test_partial_sampled_approval_envelope_is_rejected(raw: str) -> None:
+    with pytest.raises(ValueError):
+        parse_stored_sampled_slot_execution_approval(raw)
+
+
+def test_sampled_approval_lock_cannot_create_release_or_work_item() -> None:
+    store = _Store(_approval())
+    store.approval = SAMPLED_APPROVAL_LOCK_SENTINEL
+    initial_release = store.release
+    with pytest.raises(ValueError, match="approval is NOT_AUTHORIZED"):
+        _applicator(store).apply()
+    assert store.release == initial_release
+    assert store.release_writes == 0
+    assert store.kill == "TRIPPED"
 
 
 def test_legacy_lock_requires_exact_owner_bound_predecessor_and_stays_pre_dns() -> None:
