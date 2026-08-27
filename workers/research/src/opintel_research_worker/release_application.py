@@ -9,7 +9,7 @@ from collections.abc import Callable
 from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Literal, Protocol
-from uuid import UUID
+from uuid import NAMESPACE_URL, UUID, uuid5
 
 from opintel_shadow import LiveResearchPermissionRelease, PermissionActivity, PermissionState
 from pydantic import BaseModel, ConfigDict, field_validator, model_validator
@@ -17,9 +17,14 @@ from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 from opintel_research_worker.activation import A09_MARKER_PREFIX, FrozenA09DecisionRegistry
 from opintel_research_worker.sample_registry import FrozenPhaseOneSampleRegistry
 
-APPROVAL_SCHEMA = "m67.phase1.sampled-slot-execution-approval@1"
+APPROVAL_SCHEMA = "m67.phase1.sampled-slot-execution-approval@2"
 APPROVAL_STATE = "OWNER_APPROVED"
 RELEASE_APPLICATOR_REVISION = "m67.phase1.release-applicator@1"
+LEGACY_LOCK_SENTINEL = '{"state":"NOT_AUTHORIZED"}'
+LEGACY_LOCK_SENTINEL_SHA256 = hashlib.sha256(LEGACY_LOCK_SENTINEL.encode("utf-8")).hexdigest()
+LEGACY_LOCK_RELEASE_ID = uuid5(
+    NAMESPACE_URL, f"m67.phase1.legacy-research-release-lock:{LEGACY_LOCK_SENTINEL_SHA256}"
+)
 
 
 def canonical_sha256(value: object) -> str:
@@ -35,7 +40,7 @@ class SampledSlotExecutionApproval(BaseModel):
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
-    schema_version: Literal["m67.phase1.sampled-slot-execution-approval@1"]
+    schema_version: Literal["m67.phase1.sampled-slot-execution-approval@2"]
     state: Literal["OWNER_APPROVED"]
     approval_id: UUID
     owner_statement_sha256: str
@@ -43,7 +48,16 @@ class SampledSlotExecutionApproval(BaseModel):
     current_release_id: UUID
     authorized_release_id: UUID
     workspace_id: UUID
+    legacy_lock_sentinel_sha256: str
     permission_type: Literal["REAL_PUBLIC_RESEARCH"]
+    source_registry_id: UUID
+    source_registry_hash: str
+    retention_policy_id: UUID
+    retention_policy_hash: str
+    environment_id: UUID
+    environment_hash: str
+    cohort_policy_id: UUID
+    kill_switch_id: UUID
     ordered_package_file_sha256: str
     ordered_package_semantic_sha256: str
     slot_registry_sha256: str
@@ -71,6 +85,10 @@ class SampledSlotExecutionApproval(BaseModel):
 
     @field_validator(
         "owner_statement_sha256",
+        "legacy_lock_sentinel_sha256",
+        "source_registry_hash",
+        "retention_policy_hash",
+        "environment_hash",
         "ordered_package_file_sha256",
         "ordered_package_semantic_sha256",
         "slot_registry_sha256",
@@ -108,7 +126,28 @@ class SampledSlotExecutionApproval(BaseModel):
             raise ValueError("approval ceilings must be explicitly positive")
         if self.cost_ceiling_usd != Decimal("0"):
             raise ValueError("Phase 1 Slot 01 AI/source cost must remain USD 0")
+        if self.legacy_lock_sentinel_sha256 != LEGACY_LOCK_SENTINEL_SHA256:
+            raise ValueError("approval does not bind the exact historical lock sentinel")
         return self
+
+
+class CanonicalNotAuthorizedResearchRelease(BaseModel):
+    """Typed form of the one accepted historical lock; it carries no authority fields."""
+
+    model_config = ConfigDict(frozen=True, extra="forbid")
+
+    state: Literal["NOT_AUTHORIZED"]
+
+
+StoredResearchRelease = LiveResearchPermissionRelease | CanonicalNotAuthorizedResearchRelease
+
+
+def parse_stored_research_release(raw: str) -> StoredResearchRelease:
+    """Accept only the exact legacy bytes or a complete canonical current release."""
+
+    if raw == LEGACY_LOCK_SENTINEL:
+        return CanonicalNotAuthorizedResearchRelease(state="NOT_AUTHORIZED")
+    return LiveResearchPermissionRelease.model_validate_json(raw)
 
 
 class SampledSlotExecutionApprovalEnvelope(BaseModel):
@@ -188,8 +227,11 @@ class BoundedSampledSlotReleaseApplicator:
             raise ValueError("owner approval implementation binding mismatch")
         kill_state = self._store.read_kill_switch()
         current_raw = self._store.read_release()
-        current = LiveResearchPermissionRelease.model_validate(json.loads(current_raw))
-        if current.id == approval.authorized_release_id:
+        current = parse_stored_research_release(current_raw)
+        if (
+            isinstance(current, LiveResearchPermissionRelease)
+            and current.id == approval.authorized_release_id
+        ):
             if (
                 current.state is not PermissionState.AUTHORIZED
                 or current.configuration_hash
@@ -205,11 +247,23 @@ class BoundedSampledSlotReleaseApplicator:
             return current, approval, False
         if kill_state != "TRIPPED":
             raise ValueError("release application requires the locked pre-execution state")
-        if (
+        if isinstance(current, CanonicalNotAuthorizedResearchRelease):
+            if approval.current_release_id != LEGACY_LOCK_RELEASE_ID:
+                raise ValueError("owner approval does not bind the canonical legacy lock identity")
+        elif (
             current.id != approval.current_release_id
             or current.activity is not PermissionActivity.REAL_PUBLIC_RESEARCH
             or current.state is not PermissionState.NOT_AUTHORIZED
             or current.revoked_at is not None
+            or current.workspace_id != approval.workspace_id
+            or current.source_registry_id != approval.source_registry_id
+            or current.source_registry_hash != approval.source_registry_hash
+            or current.retention_policy_id != approval.retention_policy_id
+            or current.retention_policy_hash != approval.retention_policy_hash
+            or current.environment_id != approval.environment_id
+            or current.environment_hash != approval.environment_hash
+            or current.cohort_policy_id != approval.cohort_policy_id
+            or current.kill_switch_id != approval.kill_switch_id
         ):
             raise ValueError("current release is conflicting, revoked, or superseded")
 
@@ -219,7 +273,9 @@ class BoundedSampledSlotReleaseApplicator:
         return release, approval, True
 
     def enter_run(self, release: LiveResearchPermissionRelease) -> None:
-        current = LiveResearchPermissionRelease.model_validate_json(self._store.read_release())
+        current = parse_stored_research_release(self._store.read_release())
+        if not isinstance(current, LiveResearchPermissionRelease):
+            raise ValueError("cannot enter RUN without an exact live release")
         if current.configuration_hash != release.configuration_hash or current.id != release.id:
             raise ValueError("cannot enter RUN for a stale or different release")
         kill_state = self._store.read_kill_switch()
@@ -231,7 +287,9 @@ class BoundedSampledSlotReleaseApplicator:
 
     def consume(self, release: LiveResearchPermissionRelease, reason: str) -> None:
         self._store.write_kill_switch("TRIPPED")
-        current = LiveResearchPermissionRelease.model_validate_json(self._store.read_release())
+        current = parse_stored_research_release(self._store.read_release())
+        if not isinstance(current, LiveResearchPermissionRelease):
+            raise ValueError("cannot consume authority from a locked sentinel")
         if current.id != release.id or current.configuration_hash != release.configuration_hash:
             raise ValueError("terminal release differs from the executed authority")
         now = self._now()
@@ -273,10 +331,49 @@ class BoundedSampledSlotReleaseApplicator:
 
     def _build_release(
         self,
-        current: LiveResearchPermissionRelease,
+        current: StoredResearchRelease,
         approval: SampledSlotExecutionApproval,
     ) -> LiveResearchPermissionRelease:
         payload = approval.model_dump(mode="json")
+        if isinstance(current, CanonicalNotAuthorizedResearchRelease):
+            return LiveResearchPermissionRelease(
+                id=approval.authorized_release_id,
+                workspace_id=approval.workspace_id,
+                version=f"{RELEASE_APPLICATOR_REVISION}.slot01-owner-authorized",
+                configuration_hash=canonical_sha256(payload),
+                created_at=self._now(),
+                activity=PermissionActivity.REAL_PUBLIC_RESEARCH,
+                state=PermissionState.AUTHORIZED,
+                source_registry_id=approval.source_registry_id,
+                source_registry_hash=approval.source_registry_hash,
+                retention_policy_id=approval.retention_policy_id,
+                retention_policy_hash=approval.retention_policy_hash,
+                environment_id=approval.environment_id,
+                environment_hash=approval.environment_hash,
+                cohort_policy_id=approval.cohort_policy_id,
+                cohort_or_run_restriction="PHASE1_SLOT_01",
+                starts_at=approval.starts_at,
+                expires_at=approval.expires_at,
+                approval_ids=(
+                    str(approval.approval_id),
+                    f"{A09_MARKER_PREFIX}{approval.a09_decision_sha256}",
+                ),
+                kill_switch_id=approval.kill_switch_id,
+                slot_number=approval.slot_number,
+                business_identity=approval.business_identity,
+                exact_hostname=approval.exact_hostname,
+                ordered_package_sha256=approval.ordered_package_semantic_sha256,
+                research_runtime_revision=approval.research_runtime_revision,
+                max_logical_requests=approval.max_logical_requests,
+                max_attempts=approval.max_attempts,
+                max_response_bytes=approval.max_response_bytes,
+                max_total_bytes=approval.max_total_bytes,
+                max_duration_seconds=approval.max_duration_seconds,
+                cost_ceiling_usd=approval.cost_ceiling_usd,
+                allowed_source_scope=approval.allowed_source_scope,
+                terminal_rollback_state=approval.terminal_rollback_state,
+                owner_approval_sha256=approval.owner_statement_sha256,
+            )
         value = current.model_copy(
             update={
                 "id": approval.authorized_release_id,

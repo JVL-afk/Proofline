@@ -32,10 +32,15 @@ from opintel_research_worker.activation import (
     FrozenA09DecisionRegistry,
 )
 from opintel_research_worker.release_application import (
+    LEGACY_LOCK_RELEASE_ID,
+    LEGACY_LOCK_SENTINEL,
+    LEGACY_LOCK_SENTINEL_SHA256,
     BoundedSampledSlotReleaseApplicator,
+    CanonicalNotAuthorizedResearchRelease,
     SampledSlotExecutionApproval,
     SampledSlotExecutionApprovalEnvelope,
     canonical_sha256,
+    parse_stored_research_release,
 )
 from opintel_research_worker.sample_registry import FrozenPhaseOneSampleRegistry
 from opintel_shadow import LiveResearchPermissionRelease, PermissionActivity, PermissionState
@@ -46,6 +51,11 @@ A09 = ROOT / "infra/container/phase1-worker/phase1-a09-decision-registry.json"
 WORKSPACE = UUID("10000000-0000-4000-8000-000000000001")
 CURRENT_RELEASE = UUID("10000000-0000-4000-8000-000000000010")
 AUTHORIZED_RELEASE = UUID("10000000-0000-4000-8000-000000000011")
+SOURCE_REGISTRY = UUID("30000000-0000-4000-8000-000000000001")
+RETENTION_POLICY = UUID("30000000-0000-4000-8000-000000000002")
+ENVIRONMENT = UUID("30000000-0000-4000-8000-000000000003")
+COHORT_POLICY = UUID("30000000-0000-4000-8000-000000000004")
+KILL_SWITCH = UUID("30000000-0000-4000-8000-000000000005")
 NOW = datetime(2026, 8, 26, 15, 0, tzinfo=UTC)
 RUNTIME = "sha256:" + "9" * 64
 HASHES = tuple(character * 64 for character in "abcdef")
@@ -73,18 +83,18 @@ def _current_release() -> LiveResearchPermissionRelease:
         created_at=NOW - timedelta(days=1),
         activity=PermissionActivity.REAL_PUBLIC_RESEARCH,
         state=PermissionState.NOT_AUTHORIZED,
-        source_registry_id=uuid4(),
-        source_registry_hash="source",
-        retention_policy_id=uuid4(),
-        retention_policy_hash="retention",
-        environment_id=uuid4(),
-        environment_hash="environment",
-        cohort_policy_id=uuid4(),
+        source_registry_id=SOURCE_REGISTRY,
+        source_registry_hash="1" * 64,
+        retention_policy_id=RETENTION_POLICY,
+        retention_policy_hash="2" * 64,
+        environment_id=ENVIRONMENT,
+        environment_hash="3" * 64,
+        cohort_policy_id=COHORT_POLICY,
         cohort_or_run_restriction="LOCKED",
         starts_at=NOW - timedelta(days=1),
         expires_at=NOW + timedelta(days=1),
         approval_ids=(),
-        kill_switch_id=uuid4(),
+        kill_switch_id=KILL_SWITCH,
     )
 
 
@@ -92,7 +102,7 @@ def _approval(**changes: object) -> SampledSlotExecutionApproval:
     samples = FrozenPhaseOneSampleRegistry(SAMPLES)
     decision = FrozenA09DecisionRegistry(A09).require_approved(1, "903 HVAC", "903hvac.com")
     values: dict[str, object] = {
-        "schema_version": "m67.phase1.sampled-slot-execution-approval@1",
+        "schema_version": "m67.phase1.sampled-slot-execution-approval@2",
         "state": "OWNER_APPROVED",
         "approval_id": UUID("20000000-0000-4000-8000-000000000001"),
         "owner_statement_sha256": "f" * 64,
@@ -100,7 +110,16 @@ def _approval(**changes: object) -> SampledSlotExecutionApproval:
         "current_release_id": CURRENT_RELEASE,
         "authorized_release_id": AUTHORIZED_RELEASE,
         "workspace_id": WORKSPACE,
+        "legacy_lock_sentinel_sha256": LEGACY_LOCK_SENTINEL_SHA256,
         "permission_type": "REAL_PUBLIC_RESEARCH",
+        "source_registry_id": SOURCE_REGISTRY,
+        "source_registry_hash": "1" * 64,
+        "retention_policy_id": RETENTION_POLICY,
+        "retention_policy_hash": "2" * 64,
+        "environment_id": ENVIRONMENT,
+        "environment_hash": "3" * 64,
+        "cohort_policy_id": COHORT_POLICY,
+        "kill_switch_id": KILL_SWITCH,
         "ordered_package_file_sha256": samples.ordered_package_file_sha256,
         "ordered_package_semantic_sha256": samples.ordered_package_semantic_sha256,
         "slot_registry_sha256": samples.registry_sha256,
@@ -131,13 +150,15 @@ def _approval(**changes: object) -> SampledSlotExecutionApproval:
 
 
 class _Store:
-    def __init__(self, approval: SampledSlotExecutionApproval) -> None:
+    def __init__(
+        self, approval: SampledSlotExecutionApproval, release_raw: str | None = None
+    ) -> None:
         envelope = SampledSlotExecutionApprovalEnvelope(
             approval=approval,
             approval_artifact_sha256=canonical_sha256(approval.model_dump(mode="json")),
         )
         self.approval = envelope.model_dump_json()
-        self.release = _current_release().model_dump_json()
+        self.release = release_raw or _current_release().model_dump_json()
         self.kill = "TRIPPED"
         self.release_writes = 0
 
@@ -190,6 +211,75 @@ def test_owner_approval_applies_exact_release_once_and_restart_is_idempotent() -
     assert duplicate_created is False
     assert store.kill == "RUN"
     assert store.release_writes == 1
+
+
+def test_exact_legacy_lock_normalizes_to_typed_non_authorized_only() -> None:
+    locked = parse_stored_research_release(LEGACY_LOCK_SENTINEL)
+    assert isinstance(locked, CanonicalNotAuthorizedResearchRelease)
+    assert locked.model_dump() == {"state": "NOT_AUTHORIZED"}
+    assert not hasattr(locked, "slot_number")
+    assert not hasattr(locked, "exact_hostname")
+    assert not hasattr(locked, "starts_at")
+
+
+def test_canonical_complete_not_authorized_release_remains_accepted() -> None:
+    current = _current_release()
+    parsed = parse_stored_research_release(current.model_dump_json())
+    assert isinstance(parsed, LiveResearchPermissionRelease)
+    assert parsed == current
+    assert parsed.state is PermissionState.NOT_AUTHORIZED
+
+
+@pytest.mark.parametrize(
+    "raw",
+    [
+        '{"state":"not_authorized"}',
+        '{"state":"NOT_AUTHORIZED","slot_number":1}',
+        '{ "state": "NOT_AUTHORIZED" }',
+        '{"state":"AUTHORIZED"}',
+        '{"state":"NOT_AUTHORIZED"',
+        '{}',
+    ],
+)
+def test_nonexact_or_malformed_legacy_lock_is_rejected(raw: str) -> None:
+    with pytest.raises(ValueError):
+        parse_stored_research_release(raw)
+
+
+def test_partial_live_release_is_rejected() -> None:
+    with pytest.raises(ValueError):
+        parse_stored_research_release(
+            '{"record_kind":"live_research_permission","activity":"real_public_research",'
+            '"state":"authorized","slot_number":1,"exact_hostname":"903hvac.com"}'
+        )
+
+
+def test_legacy_lock_requires_exact_owner_bound_predecessor_and_stays_pre_dns() -> None:
+    approval = _approval(current_release_id=CURRENT_RELEASE)
+    store = _Store(approval, LEGACY_LOCK_SENTINEL)
+    with pytest.raises(ValueError, match="canonical legacy lock identity"):
+        _applicator(store).apply()
+    assert store.release == LEGACY_LOCK_SENTINEL
+    assert store.release_writes == 0
+    assert store.kill == "TRIPPED"
+
+
+def test_exact_owner_approval_can_replace_legacy_lock_once() -> None:
+    approval = _approval(current_release_id=LEGACY_LOCK_RELEASE_ID)
+    store = _Store(approval, LEGACY_LOCK_SENTINEL)
+    release, accepted, created = _applicator(store).apply()
+    assert created is True
+    assert accepted == approval
+    assert release.state is PermissionState.AUTHORIZED
+    assert release.slot_number == 1
+    assert release.exact_hostname == "903hvac.com"
+    assert release.source_registry_id == approval.source_registry_id
+    assert release.retention_policy_id == approval.retention_policy_id
+    assert release.environment_id == approval.environment_id
+    assert release.cohort_policy_id == approval.cohort_policy_id
+    assert release.kill_switch_id == approval.kill_switch_id
+    assert store.release_writes == 1
+    assert store.kill == "TRIPPED"
 
 
 @pytest.mark.parametrize(

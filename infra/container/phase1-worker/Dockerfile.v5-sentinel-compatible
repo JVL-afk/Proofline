@@ -1,0 +1,17 @@
+# syntax=docker/dockerfile:1
+
+# Minimal source-only successor to the provider-scanned V5 OpenSSL-remediated image. The only
+# runtime change is strict compatibility for the exact historical NOT_AUTHORIZED sentinel plus
+# the mandatory owner-artifact fields needed to construct a complete live release without defaults.
+FROM localhost/m67-phase1-worker:git-0ffe40b-v5-openssl
+
+ARG SOURCE_COMMIT
+LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}" \
+      org.opencontainers.image.base.digest="sha256:f36f3c298fbf8ba0aa790a3cfc06e30308c8a28b01ecfb7e945794e21e5ac673" \
+      org.opencontainers.image.title="M6.7 Phase 1 V5 strict sentinel-compatible worker"
+
+COPY workers/research/src/opintel_research_worker/release_application.py \
+     /app/research-worker/opintel_research_worker/release_application.py
+
+USER 65532:65532
+ENTRYPOINT ["python", "-m", "opintel_research_worker.main"]
