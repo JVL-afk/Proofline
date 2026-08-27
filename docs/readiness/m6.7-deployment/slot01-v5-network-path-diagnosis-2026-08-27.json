@@ -1,0 +1,146 @@
+{
+  "record_type": "M67_SLOT01_V5_ECS_IMAGE_PULL_NETWORK_PATH_DIAGNOSIS",
+  "version": "2026-08-27.1",
+  "state": "ROOT_CAUSE_PROVEN_MINIMUM_SUCCESSOR_PREPARED",
+  "observed_at": "2026-08-27T12:17:21Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "vpc_id": "vpc-0fb1cf5ea04162821",
+    "cluster": "arn:aws:ecs:us-east-2:785072247535:cluster/m67-phase1-research",
+    "task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-sampled-slot-activator:2",
+    "image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:db403f48e2a552d91af574e476ccc403cf0df91d5da9127b5d5c89a6d600cfc2"
+  },
+  "failed_attempt": {
+    "task_arn": "arn:aws:ecs:us-east-2:785072247535:task/m67-phase1-research/b64b24cca4004396a814d52a7334d58d",
+    "launch_type": "FARGATE",
+    "platform_version": "1.4.0",
+    "subnet_id": "subnet-0ed12f24100baf801",
+    "availability_zone": "us-east-2b",
+    "assign_public_ip": "DISABLED",
+    "security_group_id": "sg-05f63f7f8d0631539",
+    "security_group_name": "m67-phase1-intelligence-worker",
+    "container_started": false,
+    "application_code_executed": false,
+    "failure_class": "CannotPullContainerError",
+    "destination": "3.5.129.67:443",
+    "requests_to_903hvac_com": 0
+  },
+  "destination_identity": {
+    "ipv4": "3.5.129.67",
+    "aws_managed_prefix_list_id": "pl-7ba54012",
+    "aws_managed_prefix_list_name": "com.amazonaws.us-east-2.s3",
+    "matching_prefix": "3.5.128.0/22",
+    "membership_proven": true,
+    "purpose": "Amazon ECR image-layer retrieval through the regional S3 gateway path"
+  },
+  "deployed_path": {
+    "private_subnet": {
+      "id": "subnet-0ed12f24100baf801",
+      "cidr": "10.67.11.0/24",
+      "map_public_ip_on_launch": false
+    },
+    "route_table": {
+      "id": "rtb-06894942694b9773d",
+      "s3_prefix_list_route": "pl-7ba54012 -> vpce-0befcf2164095c3bb",
+      "s3_route_state": "active"
+    },
+    "s3_gateway_endpoint": {
+      "id": "vpce-0befcf2164095c3bb",
+      "service": "com.amazonaws.us-east-2.s3",
+      "state": "available",
+      "route_table_id": "rtb-06894942694b9773d"
+    },
+    "ecr_api_endpoint": {
+      "id": "vpce-02bb2f07f41f20314",
+      "state": "available",
+      "private_dns": true,
+      "subnet_present": true
+    },
+    "ecr_dkr_endpoint": {
+      "id": "vpce-08eee02bb3dbe5c42",
+      "state": "available",
+      "private_dns": true,
+      "subnet_present": true
+    },
+    "endpoint_security_group": {
+      "id": "sg-0a14d19927366ba5f",
+      "tcp_443_ingress_from_failed_intelligence_group": true,
+      "tcp_443_ingress_from_worker_group": true
+    },
+    "network_acl": {
+      "id": "acl-0bf578388978c8983",
+      "inbound": "ALLOW_ALL",
+      "outbound": "ALLOW_ALL"
+    },
+    "dns": {
+      "vpc_dns_support": true,
+      "vpc_dns_hostnames": true,
+      "dhcp_domain_name_servers": "AmazonProvidedDNS"
+    },
+    "execution_role": {
+      "arn": "arn:aws:iam::785072247535:role/m67-phase1-ecs-execution",
+      "managed_policy": "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy",
+      "required_ecr_permissions_present": true
+    }
+  },
+  "security_group_comparison": {
+    "failed_intelligence_group": {
+      "id": "sg-05f63f7f8d0631539",
+      "ecr_interface_endpoint_tcp_443": true,
+      "s3_prefix_list_tcp_443": false,
+      "controlled_egress_tcp_8080": false,
+      "public_tcp_443": false
+    },
+    "accepted_worker_group": {
+      "id": "sg-05543bd7e420818bf",
+      "ecr_interface_endpoint_tcp_443": true,
+      "s3_prefix_list_tcp_443": true,
+      "controlled_egress_tcp_8080": true,
+      "database_tcp_5432": true,
+      "vpc_dns_tcp_udp_53": true,
+      "public_tcp_443": false,
+      "previous_private_ecr_s3_pull": "PASS"
+    }
+  },
+  "root_cause": "ACTIVATOR_TASK_ENI_BOUND_TO_INTELLIGENCE_SECURITY_GROUP_WITHOUT_S3_GATEWAY_PREFIX_LIST_HTTPS_EGRESS",
+  "excluded_causes": {
+    "missing_ecr_api_endpoint": false,
+    "missing_ecr_dkr_endpoint": false,
+    "missing_s3_gateway_endpoint": false,
+    "missing_s3_route": false,
+    "endpoint_ingress_missing": false,
+    "nat_or_public_ip_required": false,
+    "dns_disabled_or_custom": false,
+    "network_acl_denial": false,
+    "task_execution_role_missing_ecr_permissions": false,
+    "container_or_application_defect": false
+  },
+  "minimum_successor": {
+    "kind": "EPHEMERAL_ECS_RUN_TASK_NETWORK_BINDING_CORRECTION",
+    "subnet_id": "subnet-0ed12f24100baf801",
+    "security_group_id": "sg-05543bd7e420818bf",
+    "assign_public_ip": "DISABLED",
+    "terraform_change_required": false,
+    "iam_change_required": false,
+    "endpoint_or_route_change_required": false,
+    "application_or_image_change_required": false,
+    "general_internet_egress_added": false,
+    "m1_egress_policy_changed": false
+  },
+  "source_bindings": {
+    "adr_0076_sha256": "719a8cca9d50c8383a88cfba9506f8abbe1415f09f9ace78d56a3a1be0a13f8d",
+    "network_tf_sha256": "ed0243da6810587370809ec777e09b55da69fee268c932b73430c9eba8a1333a",
+    "compute_tf_sha256": "7fd99a9a2ca221518cd4243ada93578b6b0733045c48db7da9fe8910899102ee",
+    "predecessor_blocker_sha256": "cb40ba3ec8a4de2977197400f67722e99047a7520e962adbaadbee8605d49a3a"
+  },
+  "authority_state": {
+    "services_desired_running_pending": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "real_public_research": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "requests_to_903hvac_com": 0,
+    "real_m1_m5_executions": 0
+  }
+}

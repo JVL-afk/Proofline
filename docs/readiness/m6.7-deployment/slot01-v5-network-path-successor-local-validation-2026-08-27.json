@@ -1,0 +1,31 @@
+{
+  "record_type": "M67_SLOT01_V5_NETWORK_PATH_SUCCESSOR_LOCAL_VALIDATION",
+  "version": "2026-08-27.1",
+  "state": "PASS",
+  "validated_at": "2026-08-27T12:17:21Z",
+  "application_source_changed": false,
+  "terraform_source_changed": false,
+  "image_changed": false,
+  "targeted_tests": {
+    "command": ".venv/Scripts/python.exe -m pytest -q tests/test_m67_sampled_slot_production_wiring.py tests/test_m67_bounded_sampled_slot_coordinator.py tests/test_m67_slot01_runtime_successor.py tests/test_m67_runtime_robots.py tests/test_m67_production_minimization.py tests/test_m67_terraform_deployment_prep.py",
+    "passed": 58,
+    "failed": 0,
+    "skipped": 1,
+    "skip_reason": "OPINTEL_TEST_POSTGRES_URL is not set for the opt-in PostgreSQL minimization execution"
+  },
+  "repository_validation": "PASS",
+  "compileall": "PASS",
+  "git_diff_check": "PASS",
+  "network_assertions": {
+    "worker_has_s3_gateway_prefix_list_https": true,
+    "worker_has_no_public_https": true,
+    "controlled_research_egress_unchanged": true
+  },
+  "live_operations": {
+    "terraform_apply": 0,
+    "ecs_tasks_started": 0,
+    "ssm_mutations": 0,
+    "requests_to_903hvac_com": 0,
+    "real_m1_m5_executions": 0
+  }
+}
