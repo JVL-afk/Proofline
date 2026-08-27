@@ -1,0 +1,77 @@
+{
+  "record_type": "M67_SLOT01_V5_SENTINEL_COMPATIBLE_POSTDEPLOY_VALIDATION_BLOCKER",
+  "version": "2026-08-27.1",
+  "state": "BLOCKED_SLOT01_V5_SENTINEL_COMPATIBLE_POSTDEPLOY_ECS_IMAGE_PULL_NETWORK_PATH",
+  "observed_at": "2026-08-27T12:05:00Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "authorization": {
+    "accepted_record_sha256": "dfcb1175be0125b3c2aaa4ba16267d475fdefdaf5d7ed7eb3eb0b81b7cc80294",
+    "exact_owner_statement_sha256": "e016740be79291955b01fb228b748fc4b9a4aec86ff2f479f8aa53c3271eab29",
+    "deployment_portion": "CONSUMED_SUCCESSFULLY",
+    "conditional_live_execution": "NOT_STARTED_AND_NOT_REUSABLE_AFTER_TERMINAL_ACCEPTANCE_FAILURE"
+  },
+  "deployment": {
+    "saved_plan_sha256": "372dec04c057ddfa91f2246f3f7f285d8d8bca2171a7fd830146a46261e60bed",
+    "apply_result": "7_ADDED_3_CHANGED_4_DESTROYED_AS_AUTHORIZED",
+    "registry_digest": "sha256:db403f48e2a552d91af574e476ccc403cf0df91d5da9127b5d5c89a6d600cfc2",
+    "task_definitions": {
+      "research": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-research-worker:7",
+      "intelligence": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-intelligence-worker:4",
+      "controlled_egress": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-controlled-egress:5",
+      "sampled_slot_activator": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-sampled-slot-activator:2"
+    },
+    "terraform_convergence": "NO_CHANGES",
+    "convergence_plan_sha256": "75d1712e8c34699bead3a8e2981e6916f21f35c25447e5f960b3e4db4255a650"
+  },
+  "passed_postdeploy_checks": [
+    "exact registry digest in all four task definitions",
+    "sampled-slot production entry point is opintel_intelligence_worker.sampled_slot_execution_main",
+    "release-applicator hash is the sentinel-compatible 509e7fb0 binding",
+    "activation adapter, entry point, coordinator, M1 and M2-M5 hashes match",
+    "browser disabled and AI unavailable",
+    "exact least-privilege sampled-slot executor role and policy deployed",
+    "services remain desired/running/pending 0/0/0",
+    "kill switch remains TRIPPED",
+    "research release remains the exact historical NOT_AUTHORIZED sentinel",
+    "execution approval parameter remains NOT_AUTHORIZED",
+    "Terraform convergence returned NO_CHANGES"
+  ],
+  "failed_acceptance_check": {
+    "check": "DEPLOYED_ACTIVATOR_REACHES_APPLICATION_FAIL_CLOSED_BOUNDARY",
+    "task_arn": "arn:aws:ecs:us-east-2:785072247535:task/m67-phase1-research/b64b24cca4004396a814d52a7334d58d",
+    "task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-sampled-slot-activator:2",
+    "launch_type": "FARGATE",
+    "subnet": "subnet-0ed12f24100baf801",
+    "security_group_used": "sg-05f63f7f8d0631539",
+    "assign_public_ip": "DISABLED",
+    "last_status": "STOPPED",
+    "stop_code": "TaskFailedToStart",
+    "failure_class": "CannotPullContainerError",
+    "exact_transport_blocker": "TCP_443_TIMEOUT_TO_3.5.129.67_DURING_REGISTRY_IMAGE_PULL",
+    "container_started": false,
+    "application_code_executed": false,
+    "application_dns_or_http": 0,
+    "requests_to_903hvac_com": 0
+  },
+  "interpretation": {
+    "proven": "The exact validation invocation could not pull the deployed immutable image through its selected private-subnet/security-group path and therefore could not prove the deployed application-level sentinel and fail-closed matrix.",
+    "not_proven": "Whether a separately reviewed worker-security-group or other exact activation network binding would pass.",
+    "no_ad_hoc_repair_or_retry": true
+  },
+  "terminal_authority_state": {
+    "services_desired_running_pending": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "research_release_raw": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "real_public_research": "NOT_AUTHORIZED",
+    "sampled_slot_execution_approval": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "m1_m5_slot01_executions": 0,
+    "requests_to_903hvac_com": 0,
+    "slot02": "NOT_AUTHORIZED"
+  },
+  "required_next_owner_event": "A separately reviewed successor authorization bound to an exact proven activator task network configuration; the consumed combined authorization cannot be retried."
+}
