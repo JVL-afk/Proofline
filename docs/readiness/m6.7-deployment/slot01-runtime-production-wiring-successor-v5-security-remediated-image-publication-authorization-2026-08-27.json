@@ -1,0 +1,67 @@
+{
+  "record_type": "AUTHORIZE_SLOT01_RUNTIME_PRODUCTION_WIRING_SUCCESSOR_V5_SECURITY_REMEDIATED_IMAGE_PUBLICATION",
+  "version": "2026-08-27.1",
+  "state": "APPROVED_UNCONSUMED",
+  "owner_signature": "APPROVED_IN_THREAD_2026-08-27",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "validity": {
+    "not_before": "2026-08-27T06:30:00Z",
+    "expires_at": "2026-09-03T06:30:00Z",
+    "attempts": 1,
+    "terminal": true
+  },
+  "bindings": {
+    "accepted_v5_implementation_commit": "f1e1acfc3fcee66fb0e02791009cca0db16fcc87",
+    "security_remediation_commit": "0ffe40b7b2e486ac0156c6a03e66eb8f743d0957",
+    "evidence_commit": "899a490c35f3b898b7164b974c1130d12172a3f7",
+    "review_commit": "677dd7c68f5ab3239a0f93c3b87a6f7a82620242",
+    "security_diagnosis_sha256": "5915afcb970e38159337eccd0efa863defb60871a2605a73a95d2175ec46f1f6",
+    "local_validation_evidence_sha256": "32fd9b38a8a02df48a506efa4e3c4c57b47aad648452b3129cb70fc5166515ab",
+    "image_publication_review_sha256": "af3b15bd5bb0625bdf2eab72dd7b82bd50e0f90d6c4008b35443ccd92bbefc27",
+    "representation_aware_verifier_sha256": "8bafdd07c05d6a720f47b56dbdd07594cfec481b9ac22d40dc36b2822354a933",
+    "remediated_dockerfile_sha256": "ae9cc861c3d0a82458f5174b298dcd0ba8ccdfbb29aad13c3b9e73c2d6600315",
+    "docker_archive_sha256": "c13dc2734e641304c99bea79805b5fab39d8027db1e40f245b7350f3903f9e96",
+    "oci_archive_sha256": "6456a9322ecc1dcd503778e63ceaed335560e527064f03127487d7c6f88625ee",
+    "oci_archive_manifest_digest": "sha256:f36f3c298fbf8ba0aa790a3cfc06e30308c8a28b01ecfb7e945794e21e5ac673",
+    "buildah_storage_manifest_digest": "sha256:443389d612f9a82fb871a83a562fd50710c88b5c7a3dedbf6b24ace27080d6f1",
+    "shared_config_digest": "sha256:d2a3a7b88b842d51d41fdeb67dc03d7b31fde41c727f05964f684fe9d299cd70",
+    "consumed_predecessor_failure_evidence_sha256": "8984e78bd30ee5db206c622e85e65720b74431523e360875d1ef2b7642877e8c"
+  },
+  "publication": {
+    "publisher_role": "arn:aws:iam::785072247535:role/m67-phase1-worker-image-publisher",
+    "source_image": "localhost/m67-phase1-worker:git-0ffe40b-v5-openssl",
+    "destination": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker:git-0ffe40b-v5-openssl",
+    "rebuilds": 0,
+    "source_or_dependency_changes": 0,
+    "retags_or_substitutions": 0,
+    "alternate_destinations": 0,
+    "deletions": 0
+  },
+  "required_post_publication": {
+    "representation": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "platform": "linux/amd64",
+    "ecr_scan_status": "COMPLETE",
+    "critical_high_blocking": "0/0/0",
+    "on_pass": "Generate an ADR-0075-compliant saved plan and prepare one combined security-remediated V5 deployment plus conditional Slot 01 M1-M5 authorization.",
+    "on_failure": "Stop terminally and preserve the genuine blocker."
+  },
+  "required_dormant_state": {
+    "deployed_baseline": "V4_DORMANT",
+    "services_desired_running_pending": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED"
+  },
+  "prohibited": [
+    "Terraform apply or service activation",
+    "Slot 01 release or execution",
+    "903hvac.com access",
+    "REAL_PUBLIC_RESEARCH or REAL_BUSINESS_DISCOVERY",
+    "real-company M1-M5",
+    "AI, browser, person/contact processing, outreach, delivery or external communication"
+  ]
+}
