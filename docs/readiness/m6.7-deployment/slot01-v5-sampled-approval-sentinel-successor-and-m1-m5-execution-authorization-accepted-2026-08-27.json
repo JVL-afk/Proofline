@@ -1,0 +1,23 @@
+{
+  "record_type": "AUTHORIZE_SLOT01_V5_SAMPLED_APPROVAL_SENTINEL_SUCCESSOR_AND_M1_M5_EXECUTION",
+  "version": "2026-08-27.1",
+  "state": "OWNER_ACCEPTED_SINGLE_USE",
+  "accepted_statement_sha256": "4f8b95dca3d5fcedf3eca82405a0f2386ebafe09e6d0a89edf261f2a8d8cf010",
+  "source_authorization_package_file_sha256": "6f307b5086d2c56124059b705412bcd1e700b3ab121e303ce2a736802993a23e",
+  "saved_plan_sha256": "a52065f35bfd4d6d7212e8eb746c45b632ebaff66a38300f45a1b10420649bd7",
+  "registry_digest": "sha256:3579c10d81401476c92ab5d2e0db415c79db7d55fa2c9e7549aae6c102a4f43e",
+  "execution_configuration_sha256": "1bb6fe3843d35204e99e68243d57649845e62c82c45553d97c1fa3e086c0905d",
+  "deployment_authority": "EXACT_SAVED_PLAN_ONLY",
+  "conditional_live_authority": "ONLY_AFTER_COMPLETE_POSTDEPLOY_ACCEPTANCE_AND_TERRAFORM_NO_CHANGES",
+  "slot": {
+    "number": 1,
+    "business": "903 HVAC",
+    "hostname": "903hvac.com"
+  },
+  "terminal": {
+    "maximum": "CONTACT_PHASE_NOT_AUTHORIZED",
+    "authority_consumed": true,
+    "kill_switch": "TRIPPED",
+    "slot02": "NOT_AUTHORIZED"
+  }
+}
