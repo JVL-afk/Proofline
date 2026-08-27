@@ -1,0 +1,62 @@
+{
+  "record_type": "M67_SLOT01_V5_COMBINED_AUTHORIZATION_RELEASE_SENTINEL_BLOCKER",
+  "version": "2026-08-27.1",
+  "state": "BLOCKED_BEFORE_DEPLOYMENT_OR_LIVE_AUTHORIZATION",
+  "proven_at": "2026-08-27T09:28:47Z",
+  "completed_preparation": {
+    "security_remediated_image_published": true,
+    "registry_digest": "sha256:f36f3c298fbf8ba0aa790a3cfc06e30308c8a28b01ecfb7e945794e21e5ac673",
+    "representation_equivalence": "PROVEN",
+    "ecr_scan": "COMPLETE_CRITICAL_HIGH_BLOCKING_0_0_0",
+    "adr0075_saved_plan_generated": true,
+    "saved_plan_sha256": "6a27993d57f43e150878d5379f3e42bd3acc10190c6539ecf87eac2de70971e4",
+    "plan_json_sha256": "7af6d72ede2271139fdf29996f6886cd3feadfc867c63613d3433ee933b6db67"
+  },
+  "exact_defect": {
+    "aws_parameter": "/m67-phase1/research-release",
+    "observed_value": {"state": "NOT_AUTHORIZED"},
+    "terraform_intended_locked_value": {"state": "NOT_AUTHORIZED"},
+    "deployed_v5_code_path": "BoundedSampledSlotReleaseApplicator.apply",
+    "failing_operation": "LiveResearchPermissionRelease.model_validate(json.loads(current_raw))",
+    "reason": "The production lock sentinel is not a complete LiveResearchPermissionRelease and cannot supply the current_release_id or immutable base fields required by _build_release.",
+    "direct_model_validation": "FAIL_19_VALIDATION_ERRORS",
+    "direct_model_validation_details": "The uppercase sentinel state is not the PermissionState enum value and 18 mandatory immutable release fields are absent.",
+    "failure_occurs": "BEFORE_RELEASE_CREATION_AND_BEFORE_DNS_OR_TRANSPORT",
+    "impact": "The proposed combined authorization could deploy V5 but could not mechanically apply its exact Slot 01 release, so the promised deployment-to-execution chain is not executable."
+  },
+  "proof": {
+    "aws_read_only_observation": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "terraform_resource": "aws_ssm_parameter.research_release initializes the same minimal sentinel and ignores later value changes",
+    "application_contract": "release_application.py validates the current value as LiveResearchPermissionRelease before any sentinel conversion",
+    "sentinel_conversion_present": false,
+    "existing_synthetic_tests_use_full_release_fixture": true
+  },
+  "required_minimum_successor": {
+    "scope": "Add an explicit fail-closed conversion from the exact minimal NOT_AUTHORIZED sentinel to one canonical immutable locked LiveResearchPermissionRelease, or provision that canonical locked release before the applicator runs.",
+    "must_bind": [
+      "stable current release id",
+      "source, retention, environment, cohort and kill-switch identities",
+      "REAL_PUBLIC_RESEARCH activity with NOT_AUTHORIZED state",
+      "valid non-live time window",
+      "no host, slot or network authority"
+    ],
+    "tests": [
+      "exact production sentinel plus exact approved artifact creates one exact release",
+      "any other incomplete or malformed sentinel creates no release",
+      "duplicate application remains idempotent",
+      "all denial paths remain before DNS or transport"
+    ],
+    "pipeline": "code correction -> deterministic tests -> new immutable image -> publication -> scan -> fresh Terraform plan -> combined deployment and conditional Slot 01 authorization",
+    "no_reuse": "The current saved plan may remain reviewed evidence but must not be presented as an executable combined deployment-plus-live chain."
+  },
+  "preserved_state": {
+    "terraform_apply": 0,
+    "slot01_release_created": false,
+    "access_to_903hvac_com": 0,
+    "real_company_m1_m5_runs": 0,
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED"
+  },
+  "terminal_state": "BLOCKED_SLOT01_V5_COMBINED_AUTHORIZATION_RELEASE_SENTINEL_INCOMPATIBLE"
+}

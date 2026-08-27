@@ -1,0 +1,50 @@
+{
+  "record_type": "M67_SLOT01_V5_SECURITY_REMEDIATED_MANAGED_CHANGE_SEMANTIC",
+  "version": "2026-08-27.1",
+  "state": "REVIEWED_NOT_APPLIED",
+  "saved_plan_sha256": "6a27993d57f43e150878d5379f3e42bd3acc10190c6539ecf87eac2de70971e4",
+  "plan_json_sha256": "7af6d72ede2271139fdf29996f6886cd3feadfc867c63613d3433ee933b6db67",
+  "terraform_representation": {
+    "add": 7,
+    "change": 3,
+    "destroy": 4
+  },
+  "semantic_actions": {
+    "standalone_creates": [
+      "aws_iam_role.sampled_slot_executor",
+      "aws_iam_role_policy.sampled_slot_executor",
+      "aws_ssm_parameter.sampled_slot_execution_approval"
+    ],
+    "in_place_service_updates": [
+      "aws_ecs_service.egress",
+      "aws_ecs_service.intelligence",
+      "aws_ecs_service.worker"
+    ],
+    "expected_task_definition_replacements": [
+      "aws_ecs_task_definition.egress",
+      "aws_ecs_task_definition.intelligence",
+      "aws_ecs_task_definition.sampled_slot_activator",
+      "aws_ecs_task_definition.worker"
+    ],
+    "unexpected_replacements": [],
+    "standalone_destroys": []
+  },
+  "review": {
+    "image_digest": "sha256:f36f3c298fbf8ba0aa790a3cfc06e30308c8a28b01ecfb7e945794e21e5ac673",
+    "iam_changes": "ONLY_EXACT_SAMPLED_SLOT_EXECUTOR_ROLE_AND_LEAST_PRIVILEGE_POLICY_REQUIRED_BY_V5",
+    "network_or_egress_rule_changes": 0,
+    "desired_count_changes": 0,
+    "permission_state_changes": 0,
+    "authorization_release_value_changes": 0,
+    "unrelated_changes": 0,
+    "destructive_changes": "ONLY_FOUR_EXPECTED_ECS_TASK_DEFINITION_REPLACEMENTS"
+  },
+  "v5_wiring": {
+    "sampled_slot_entry_point": "python -m opintel_intelligence_worker.sampled_slot_execution_main",
+    "approval_parameter_initial_value": "NOT_AUTHORIZED",
+    "services_remain_dormant": true,
+    "browser": "OFF",
+    "ai": "UNAVAILABLE_USD_0",
+    "delivery": "STRUCTURALLY_UNAVAILABLE"
+  }
+}

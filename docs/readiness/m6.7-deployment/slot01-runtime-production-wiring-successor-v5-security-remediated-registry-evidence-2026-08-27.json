@@ -1,0 +1,61 @@
+{
+  "record_type": "M67_SLOT01_V5_SECURITY_REMEDIATED_REGISTRY_EVIDENCE",
+  "version": "2026-08-27.1",
+  "state": "PUBLICATION_CONSUMED_SUCCESS_SCAN_PASS",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "repository": "m67-phase1-worker",
+    "tag": "git-0ffe40b-v5-openssl"
+  },
+  "authorization": {
+    "record_sha256": "5b3c178b703e770012e91cb204d9930f6f0d26e336757a3fa4837b206eb6841b",
+    "terminal_attempts_consumed": 1,
+    "reusable": false
+  },
+  "publication": {
+    "source": "localhost/m67-phase1-worker:git-0ffe40b-v5-openssl",
+    "destination": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker:git-0ffe40b-v5-openssl",
+    "publisher_identity": "arn:aws:sts::785072247535:assumed-role/m67-phase1-worker-image-publisher/m67-v5-openssl-image-publication",
+    "rebuilds": 0,
+    "retags": 0,
+    "deletions": 0,
+    "alternate_publications": 0
+  },
+  "registry_identity": {
+    "classification": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "object_type": "SINGLE_PLATFORM_IMAGE_MANIFEST",
+    "media_type": "application/vnd.oci.image.manifest.v1+json",
+    "registry_digest": "sha256:f36f3c298fbf8ba0aa790a3cfc06e30308c8a28b01ecfb7e945794e21e5ac673",
+    "platform": "linux/amd64",
+    "config_digest": "sha256:d2a3a7b88b842d51d41fdeb67dc03d7b31fde41c727f05964f684fe9d299cd70",
+    "ordered_compressed_layer_digests": [
+      "sha256:41dad0242630a38b7248eae6e9a5c15660ccae64bd1365475addb3833d1b22fc",
+      "sha256:904e98828af6963af07a12868a5e6335ffa83b98007256966a1d64caf2aa81bd",
+      "sha256:f0d2f8eb61740062d5cbef1a7d3923f1b16da095cc1ffbc2b93a2e1840ff6cb5",
+      "sha256:c58c9e5629c87c46982664e95ee5ee9ac897518c4bdb67b67aa4dc14d0db1697",
+      "sha256:05cf827b3988e34b1f5218d804c52dbb776b6c14668e999c848e5837a973b053",
+      "sha256:fc8cb340f5f3a83f43d113f6bb0a1d1521193e65a24caa7c6cab64b910c7f5d5",
+      "sha256:1e89e2810a399fd7cc33ce4961cf8307588f30f13228c07d5ea2957ecd445c14",
+      "sha256:454a2446d831a26bb9ee9f8d7949db5420e6661e6c2e5dc89861465efd2bfeb9",
+      "sha256:926af23570992ee2123d6e53ed779db798a90494e59bf99a13b7428ca72388ce"
+    ],
+    "index_or_manifest_list": false,
+    "attestations": []
+  },
+  "ecr_scan": {
+    "target_digest": "sha256:f36f3c298fbf8ba0aa790a3cfc06e30308c8a28b01ecfb7e945794e21e5ac673",
+    "status": "COMPLETE",
+    "critical": 0,
+    "high": 0,
+    "blocking": 0
+  },
+  "authority_state_preserved": {
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "access_to_903hvac_com": 0,
+    "real_company_m1_m5_runs": 0
+  }
+}
