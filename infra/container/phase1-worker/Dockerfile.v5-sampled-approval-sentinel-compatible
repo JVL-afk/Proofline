@@ -1,0 +1,17 @@
+# syntax=docker/dockerfile:1
+
+# Minimal source-only successor to the provider-scanned V5 sentinel-compatible image. The only
+# runtime change is strict compatibility for the exact sampled-slot execution-approval
+# NOT_AUTHORIZED sentinel. It cannot synthesize any owner or live execution authority.
+FROM localhost/m67-phase1-worker:git-b415fce-sentinel-v5
+
+ARG SOURCE_COMMIT
+LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}" \
+      org.opencontainers.image.base.digest="sha256:db403f48e2a552d91af574e476ccc403cf0df91d5da9127b5d5c89a6d600cfc2" \
+      org.opencontainers.image.title="M6.7 Phase 1 V5 sampled-approval sentinel-compatible worker"
+
+COPY workers/research/src/opintel_research_worker/release_application.py \
+     /app/research-worker/opintel_research_worker/release_application.py
+
+USER 65532:65532
+ENTRYPOINT ["python", "-m", "opintel_research_worker.main"]
