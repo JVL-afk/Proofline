@@ -1,0 +1,96 @@
+{
+  "record_type": "M67_SLOT01_V5_SAMPLED_APPROVAL_SENTINEL_SUCCESSOR_EXECUTION_CONFIGURATION",
+  "version": "2026-08-27.1",
+  "state": "PREPARED_NOT_AUTHORIZED",
+  "approval_schema": "m67.phase1.sampled-slot-execution-approval@2",
+  "approval_id": "f77c00ff-8e75-5797-bc37-7e851503b801",
+  "current_release_id": "1aff9800-f475-5136-8a7d-f7efa7c0c64f",
+  "authorized_release_id": "ef978a0e-dbf6-5638-a739-9aec526ab781",
+  "workspace_id": "7bb45ae7-dc2c-5529-a31c-82b157bc958d",
+  "sampled_approval_lock_sentinel_sha256": "fdb8e197e9ce7cf749cf4fe063908bc6c4e3066dce0a4adef302423d2381fa67",
+  "permission_type": "REAL_PUBLIC_RESEARCH",
+  "sample": {
+    "ordered_package_file_sha256": "0283f0a6956f6bd11e9326419d9671a61cc57dac0b6d376b9e2b7a11f0507a70",
+    "ordered_package_semantic_sha256": "3419a018a0cfb39c7fe6391c19b3acb43378b7b88e92337a2c70af305d345b5b",
+    "slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "slot_registry_semantic_sha256": "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2",
+    "slot_number": 1,
+    "business_identity": "903 HVAC",
+    "location": "Tyler / Smith County, Texas",
+    "exact_hostname": "903hvac.com",
+    "a09_decision_sha256": "1d938be8cf8946bd2b3d0d652500590652e031e056c69ddb0f9449b348261182"
+  },
+  "runtime": {
+    "implementation_commit": "eef1899fb6de8820ae684ca919d07556d91c7de0",
+    "registry_digest": "sha256:3579c10d81401476c92ab5d2e0db415c79db7d55fa2c9e7549aae6c102a4f43e",
+    "sampled_approval_adapter_release_application_sha256": "011610016f076287831df5f1df785b4b317b3284f11ddc802064e3c19a3bf152",
+    "release_applicator_contract_sha256": "509e7fb00b5953e1caef8d59508022f8f3ca5dcbe28b0c7b5c3f1829da06df5e",
+    "activation_adapter_sha256": "95a0355637800d6e1309755bcb342a990ed8c506d6bbe1de28982c10f0e7cf7c",
+    "activation_entry_point_sha256": "12eaf66bf6dc491c4376d1d42ee6bd794a38636d8c9ce93e4b13b1c6db0b6bf5",
+    "stage_coordinator_sha256": "fe0f34c9ef67c1aa5158aad8cf21206a31f167093f1aaa6350e9ba8f1cc54801",
+    "m1_runtime_sha256": "884b1f271b21f9d0ff4e73557be0ec8c01fda30969fa256f1e555afb4d7f2a99",
+    "m2_m5_runtime_sha256": "40e6511a00738980a7604a7d60c1c3419b396e049748f06ec0dae8116a5ebed3",
+    "work_item_identity_schema_sha256": "d540c0017470188267b5331790571318262dbaffe70d405f7fdca6e4680b69e8"
+  },
+  "validity": {
+    "starts_at": "2026-08-27T19:00:00Z",
+    "expires_at": "2026-09-03T19:00:00Z"
+  },
+  "authorization_ceilings": {
+    "max_logical_requests": 8,
+    "max_attempts": 8,
+    "max_response_bytes": 250000,
+    "max_total_bytes": 2000000,
+    "max_duration_seconds": 600,
+    "cost_ceiling_usd": "0",
+    "allowed_source_scope": ["903hvac.com"]
+  },
+  "runtime_effective_clamps": {
+    "max_pages": 8,
+    "max_transport_attempts": 3,
+    "max_operation_seconds": 120,
+    "request_timeout_seconds": 8,
+    "minimum_delay_seconds": 2,
+    "redirects_followed": 0
+  },
+  "network": {
+    "configuration_sha256": "045be6e3c51c2bd1bf5c6dfe3feedf1c6a7c61a93e8a9238e547c211adc84c74",
+    "subnet": "subnet-0ed12f24100baf801",
+    "worker_security_group": "sg-05543bd7e420818bf",
+    "assign_public_ip": "DISABLED",
+    "scheme": "https",
+    "port": 443,
+    "same_host_only": true,
+    "redirects_followed": 0,
+    "runtime_robots_before_research_pages": true,
+    "public_ip_ssrf_dns_rebinding_tls_sni_controls": true
+  },
+  "workflow": {
+    "chain": "RELEASE_APPLIED -> WORK_ITEM_DERIVED -> M1 -> M2 -> M3 -> M4 -> M5 -> CONTACT_PHASE_NOT_AUTHORIZED -> AUTHORITY_CONSUMED",
+    "m1_network_authority_only": true,
+    "m2_m5_network_authority": false,
+    "predecessor_revision_required": true,
+    "durable_raw_body": false,
+    "truth_taxonomy": ["FACT", "INFERENCE", "ESTIMATE", "RECOMMENDATION", "UNKNOWN"],
+    "maximum_terminal_state": "CONTACT_PHASE_NOT_AUTHORIZED"
+  },
+  "terminal_behavior": {
+    "single_use": true,
+    "kill_switch": "TRIPPED",
+    "real_public_research": "NOT_AUTHORIZED",
+    "release_consumed_or_revoked": true,
+    "stop_for_human_review": true,
+    "slot02": "NOT_AUTHORIZED"
+  },
+  "prohibited": [
+    "REAL_BUSINESS_DISCOVERY",
+    "professional identity resolution",
+    "person or contact storage or verification",
+    "contact eligibility or readiness",
+    "AI or browser use",
+    "outreach, delivery, sending, or external communication",
+    "Slot 02",
+    "slot replacement or redraw"
+  ],
+  "owner_statement_sha256": "COMPUTED_FROM_THE_EXACT_ACCEPTED_OWNER_STATEMENT_BEFORE_RELEASE_APPLICATION"
+}
