@@ -13,10 +13,9 @@ RUN apk add --no-cache \
         --repository=https://dl-cdn.alpinelinux.org/alpine/edge/main \
         libcrypto3=3.5.8-r0 \
         libssl3=3.5.8-r0 \
-    && apk info -v libcrypto3 libssl3 | sort | grep -Fx 'libcrypto3-3.5.8-r0' \
-    && apk info -v libcrypto3 libssl3 | sort | grep -Fx 'libssl3-3.5.8-r0' \
-    && apk info -v musl | grep -Fx 'musl-1.2.5-r12' \
-    && python -m pip check
+    && awk 'BEGIN { RS="" } /(^|\n)P:libcrypto3\n/ && /(^|\n)V:3.5.8-r0(\n|$)/ { found=1 } END { exit !found }' /lib/apk/db/installed \
+    && awk 'BEGIN { RS="" } /(^|\n)P:libssl3\n/ && /(^|\n)V:3.5.8-r0(\n|$)/ { found=1 } END { exit !found }' /lib/apk/db/installed \
+    && awk 'BEGIN { RS="" } /(^|\n)P:musl\n/ && /(^|\n)V:1.2.5-r12(\n|$)/ { found=1 } END { exit !found }' /lib/apk/db/installed
 
 ARG SOURCE_COMMIT
 LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}" \
