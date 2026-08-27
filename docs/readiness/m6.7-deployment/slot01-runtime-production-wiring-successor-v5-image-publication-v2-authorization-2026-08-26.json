@@ -1,0 +1,91 @@
+{
+  "record_type": "AUTHORIZE_SLOT01_RUNTIME_PRODUCTION_WIRING_SUCCESSOR_V5_IMAGE_PUBLICATION_V2",
+  "version": "2026-08-27.1",
+  "state": "APPROVED_NOT_CONSUMED",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "validity": {
+    "not_before": "2026-08-26T18:00:00Z",
+    "expires_at": "2026-09-02T18:00:00Z",
+    "attempts": 1,
+    "terminal": true
+  },
+  "bindings": {
+    "implementation_commit": "f1e1acfc3fcee66fb0e02791009cca0db16fcc87",
+    "representation_correction_commit": "5812bf563bc780edd2e9b5ab507bdc98ef6306e0",
+    "evidence_commit": "23894ebdde570e30a54430b05057ff2ed3b669a7",
+    "v2_publication_review_sha256": "f3c1196db461afedf37c4c2ed038a29cbd39cff4fb5d96bb4fe75009d0dbef93",
+    "local_representation_diagnosis_sha256": "5a91fc4fc492aa0a6671c1a0e9364c4762a70fb0e78c061d81ca1112f0d24947",
+    "corrected_verifier_sha256": "8bafdd07c05d6a720f47b56dbdd07594cfec481b9ac22d40dc36b2822354a933",
+    "corrected_one_shot_publisher_sha256": "a8c9b3ea0416c48abece19ec56e98c73f71aaacdb1a8dc0e95d15ed8613ad06a",
+    "verifier_tests_sha256": "43f56b97d96424ee13b715e0da2783de9a00ee6a19bc426ccdb58393e481ff34",
+    "full_equivalence_evidence_sha256": "fb826fd0502d0ec80de1b8cbd64b179ee9beed0ef30ad9f24db73fe48893963d",
+    "oci_archive_manifest_digest": "sha256:be13e69fbb9557c0f4eb07f374b1cfc529788a688d9ca1d01fe3f7a4a7784e8d",
+    "buildah_storage_manifest_digest": "sha256:bfe65233fa650ef2e0d7871b84b5c9fcc17bc08b52288b2f0f7fb17af7bfcadd",
+    "shared_config_digest": "sha256:a482c0cbf160d4b58bcb4248ffe62016ea9325844192a3940e6973c21b244efc",
+    "docker_archive_sha256": "44062ada552d41cbaa6a2d25a3a2fa90b3cfe968b15e82c31d75e008b902ee55",
+    "oci_archive_sha256": "cf7b9ad8d4f0959bdf7841f8b6a7a93468157c29c59db834ff18ab6b94772cd2",
+    "dockerfile_sha256": "b70ecf3754d86d7abbd2bc5196b929d24b636074e00a8c0fd9ded8489b0acd11",
+    "accepted_v4_parent_registry_digest": "sha256:d0444158c2be7a6003ee4f9f351e320f8da05f01e4970c718d08d1f5310f1842",
+    "consumed_predecessor_failure_evidence_sha256": "e18a0dbcdd5b9ef78ef6df5d8f6cddc3fc5707d484b9dbd583de81e341216df3",
+    "consumed_predecessor_authorization_sha256": "ded10fd9cde2802a607dfc597acabe44a2d5e2e11aed43503011cdd48c842186"
+  },
+  "local_image_identity": {
+    "classification": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN",
+    "platform": "linux/amd64",
+    "ordered_rootfs_diff_ids": [
+      "sha256:0854555d70acaa318b38ee50bc667cb51ff6bf0757624624c7ff3b6fe17459a0",
+      "sha256:98899702eeeaf1257e200c38c53a35c7908e831b11ea31d8f2e27fef0c5b8e3c",
+      "sha256:3d538106e26b6c23fa9062243fe6d4aee2d373c4f928203cd76cacd51a0a51cd",
+      "sha256:44c1014e5162dcfb531c0eba5e0d87270b9b96204f8090e17f4f4b8036feba4d",
+      "sha256:ce57cf4ce41603010895d9f500deebb23d33bafda1e7b11e392c08809d9e9118",
+      "sha256:a433a1a55f7468bd5cd9614c0205f2c2e87c2c0e97b97ace896471e2dafb9651",
+      "sha256:861fe0f883a4bd70c648249b506e8a80a42eb5d5ef59bfde3195d1349f9df585",
+      "sha256:2bbfa9254998b8be6e8d1b6bc6180f42238cb0d990f654a660ad9748b83add73"
+    ],
+    "relationship": "Each ordered gzip archive layer hashes to its archive descriptor and decompresses to the exact Buildah storage-layer digest and config rootfs diff ID. Config bytes, annotations and linux/amd64 platform match."
+  },
+  "publication": {
+    "publisher_role": "arn:aws:iam::785072247535:role/m67-phase1-worker-image-publisher",
+    "source_image": "localhost/m67-phase1-worker:git-f1e1acfc3fce-v5",
+    "destination": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker:git-f1e1acfc3fce-v5",
+    "rebuilds": 0,
+    "source_or_dependency_changes": 0,
+    "retags_or_substitutions": 0,
+    "alternate_destinations": 0,
+    "deletions": 0
+  },
+  "post_publication_requirements": [
+    "obtain the exact registry-consumable manifest or index digest and media type",
+    "prove exact platform, config and ordered layer identity against the accepted local representation graph and V4 parent",
+    "require REPRESENTATION_EQUIVALENT_PROVEN",
+    "require ECR scan COMPLETE with critical/high/blocking findings 0/0/0",
+    "generate a fresh Terraform saved application plan using workload-plan provider reads and the embedded protected state-apply backend",
+    "prepare one combined V5 deployment plus conditional Slot 01 M1-M5 authorization",
+    "stop before Terraform apply or Slot 01 release creation"
+  ],
+  "required_dormant_state": {
+    "services_desired_running_pending": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED"
+  },
+  "prohibited": [
+    "image rebuild, modification, dependency change, retag, substitution or deletion",
+    "publication outside the exact repository and tag",
+    "Terraform apply or service activation",
+    "Slot 01 release or execution",
+    "903hvac.com access",
+    "REAL_PUBLIC_RESEARCH or REAL_BUSINESS_DISCOVERY",
+    "real-company M1-M5",
+    "AI, browser, person/contact processing, outreach, delivery or external communication"
+  ],
+  "consumption": {
+    "attempts_consumed": 0,
+    "reusable": true
+  },
+  "owner_signature": "APPROVED_IN_THREAD_2026-08-27"
+}
