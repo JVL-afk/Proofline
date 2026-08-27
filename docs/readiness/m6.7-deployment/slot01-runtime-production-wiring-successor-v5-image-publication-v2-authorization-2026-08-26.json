@@ -1,7 +1,7 @@
 {
   "record_type": "AUTHORIZE_SLOT01_RUNTIME_PRODUCTION_WIRING_SUCCESSOR_V5_IMAGE_PUBLICATION_V2",
   "version": "2026-08-27.1",
-  "state": "APPROVED_NOT_CONSUMED",
+  "state": "CONSUMED_TERMINAL_ECR_SCAN_BLOCKING_FINDINGS",
   "target": {
     "account_id": "785072247535",
     "region": "us-east-2"
@@ -84,8 +84,9 @@
     "AI, browser, person/contact processing, outreach, delivery or external communication"
   ],
   "consumption": {
-    "attempts_consumed": 0,
-    "reusable": true
+    "attempts_consumed": 1,
+    "reusable": false,
+    "terminal_evidence": "docs/readiness/m6.7-deployment/slot01-runtime-production-wiring-successor-v5-image-publication-v2-attempt-2026-08-27.json"
   },
   "owner_signature": "APPROVED_IN_THREAD_2026-08-27"
 }

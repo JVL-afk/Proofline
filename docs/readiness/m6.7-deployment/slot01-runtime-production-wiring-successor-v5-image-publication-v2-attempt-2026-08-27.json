@@ -1,0 +1,153 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_PRODUCTION_WIRING_SUCCESSOR_V5_IMAGE_PUBLICATION_V2_ATTEMPT",
+  "version": "2026-08-27.1",
+  "state": "BLOCKED_V5_IMAGE_PUBLICATION_V2_ATTEMPT_CONSUMED_ECR_SCAN_BLOCKING_FINDINGS",
+  "terminal_recorded_at": "2026-08-27T06:02:16Z",
+  "authorization": {
+    "record_type": "AUTHORIZE_SLOT01_RUNTIME_PRODUCTION_WIRING_SUCCESSOR_V5_IMAGE_PUBLICATION_V2",
+    "authorization_commit": "283061b6b4cca600d137bbabfb968d18773ea34f",
+    "attempts_authorized": 1,
+    "attempts_consumed": 1,
+    "reusable": false
+  },
+  "preconditions_passed_before_publication": {
+    "bound_repository_file_hashes": "PASS",
+    "implementation_commit_ancestor": "PASS",
+    "evidence_commit_ancestor": "PASS",
+    "local_representation_classification": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN",
+    "aws_account": "785072247535",
+    "region": "us-east-2",
+    "services_desired_running_pending": "0/0/0",
+    "live_tasks": 0,
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "destination_tag_before_attempt": "ABSENT"
+  },
+  "publication": {
+    "source_image": "localhost/m67-phase1-worker:git-f1e1acfc3fce-v5",
+    "destination": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker:git-f1e1acfc3fce-v5",
+    "publisher_role_assumed": true,
+    "push_attempts": 1,
+    "rebuilds": 0,
+    "retags_or_substitutions": 0,
+    "alternate_destinations": 0,
+    "deletions": 0
+  },
+  "registry_identity": {
+    "classification": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "object_type": "SINGLE_PLATFORM_OCI_IMAGE_MANIFEST",
+    "media_type": "application/vnd.oci.image.manifest.v1+json",
+    "platform": "linux/amd64",
+    "registry_digest": "sha256:be13e69fbb9557c0f4eb07f374b1cfc529788a688d9ca1d01fe3f7a4a7784e8d",
+    "computed_manifest_digest": "sha256:be13e69fbb9557c0f4eb07f374b1cfc529788a688d9ca1d01fe3f7a4a7784e8d",
+    "config_digest": "sha256:a482c0cbf160d4b58bcb4248ffe62016ea9325844192a3940e6973c21b244efc",
+    "ordered_compressed_layer_digests": [
+      "sha256:41dad0242630a38b7248eae6e9a5c15660ccae64bd1365475addb3833d1b22fc",
+      "sha256:904e98828af6963af07a12868a5e6335ffa83b98007256966a1d64caf2aa81bd",
+      "sha256:f0d2f8eb61740062d5cbef1a7d3923f1b16da095cc1ffbc2b93a2e1840ff6cb5",
+      "sha256:c58c9e5629c87c46982664e95ee5ee9ac897518c4bdb67b67aa4dc14d0db1697",
+      "sha256:05cf827b3988e34b1f5218d804c52dbb776b6c14668e999c848e5837a973b053",
+      "sha256:fc8cb340f5f3a83f43d113f6bb0a1d1521193e65a24caa7c6cab64b910c7f5d5",
+      "sha256:1e89e2810a399fd7cc33ce4961cf8307588f30f13228c07d5ea2957ecd445c14",
+      "sha256:454a2446d831a26bb9ee9f8d7949db5420e6661e6c2e5dc89861465efd2bfeb9"
+    ],
+    "accepted_v4_layer_prefix_preserved": true,
+    "accepted_local_config_preserved": true,
+    "accepted_new_layer_diff_id_proven": true
+  },
+  "failure": {
+    "stage": "ECR_PROVIDER_SCAN_BLOCKING_POLICY",
+    "scan_target_digest": "sha256:be13e69fbb9557c0f4eb07f374b1cfc529788a688d9ca1d01fe3f7a4a7784e8d",
+    "scan_status": "COMPLETE",
+    "severity_counts": {
+      "CRITICAL": 0,
+      "HIGH": 7,
+      "MEDIUM": 1,
+      "UNDEFINED": 2
+    },
+    "blocking_findings": 7,
+    "blocking_finding_details": [
+      {
+        "name": "CVE-2026-63076",
+        "severity": "HIGH",
+        "cvss3_score": "7.5",
+        "package_name": "openssl",
+        "package_version": "3.5.7-r0",
+        "fixed_version_reported": null
+      },
+      {
+        "name": "CVE-2026-14457",
+        "severity": "HIGH",
+        "cvss3_score": "7.5",
+        "package_name": "openssl",
+        "package_version": "3.5.7-r0",
+        "fixed_version_reported": null
+      },
+      {
+        "name": "CVE-2026-14456",
+        "severity": "HIGH",
+        "cvss3_score": "7.5",
+        "package_name": "openssl",
+        "package_version": "3.5.7-r0",
+        "fixed_version_reported": null
+      },
+      {
+        "name": "CVE-2026-63072",
+        "severity": "HIGH",
+        "cvss3_score": "7.5",
+        "package_name": "openssl",
+        "package_version": "3.5.7-r0",
+        "fixed_version_reported": null
+      },
+      {
+        "name": "CVE-2026-54874",
+        "severity": "HIGH",
+        "cvss3_score": "7.5",
+        "package_name": "openssl",
+        "package_version": "3.5.7-r0",
+        "fixed_version_reported": null
+      },
+      {
+        "name": "CVE-2026-18798",
+        "severity": "HIGH",
+        "cvss3_score": "7.5",
+        "package_name": "openssl",
+        "package_version": "3.5.7-r0",
+        "fixed_version_reported": null
+      },
+      {
+        "name": "CVE-2026-63075",
+        "severity": "HIGH",
+        "cvss3_score": "7.5",
+        "package_name": "openssl",
+        "package_version": "3.5.7-r0",
+        "fixed_version_reported": null
+      }
+    ],
+    "required_policy": "CRITICAL_HIGH_BLOCKING_0_0_0",
+    "classification": "ECR_SCAN_BLOCKING_FINDINGS",
+    "reason": "The exact published registry digest passed cryptographic representation checks, but the ECR provider scan reported seven HIGH findings. The frozen publication policy treats every HIGH or CRITICAL finding as blocking, so Terraform planning and the combined deployment/execution package are prohibited."
+  },
+  "effects": {
+    "destination_tag_created": true,
+    "registry_digest_created": true,
+    "terraform_plan_generated": false,
+    "terraform_apply_performed": false,
+    "aws_mutations_after_publication": 0,
+    "slot01_release_created": false,
+    "requests_to_903hvac_com": 0,
+    "real_company_m1_m5_runs": 0
+  },
+  "preserved": {
+    "deployed_baseline": "V4_DORMANT",
+    "services_desired_running_pending": "0/0/0",
+    "live_tasks": 0,
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED"
+  },
+  "next_required_action": "Review the seven exact HIGH scan findings and prepare a separately authorized dependency/image remediation or an explicit evidence-based scan-policy disposition. Do not plan or deploy this V5 digest under the consumed publication authorization."
+}
