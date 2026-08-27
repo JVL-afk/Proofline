@@ -1,0 +1,42 @@
+{
+  "record_type": "M67_SLOT01_V5_SENTINEL_COMPATIBLE_DEPLOYMENT_AND_M1_M5_EXECUTION_AUTHORIZATION_ACCEPTED",
+  "version": "2026-08-27.1",
+  "state": "OWNER_APPROVED_SINGLE_USE_COMBINED_DEPLOYMENT_AND_CONDITIONAL_EXECUTION",
+  "accepted_at": "2026-08-27T10:15:00Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "authorization_ready_record": {
+    "path": "docs/readiness/m6.7-deployment/slot01-v5-sentinel-compatible-deployment-and-execution-authorization-ready-2026-08-27.json",
+    "sha256": "9ac4e98e349acc396a539dc57ed04572e0d2f0fa7b934e91b9a7665a3960a62e"
+  },
+  "exact_owner_statement": {
+    "source": "exact_owner_approval_statement in the bound ready record",
+    "byte_identity": "EXACT_UTF8_TEXT_ACCEPTED_IN_THREAD",
+    "sha256": "e016740be79291955b01fb228b748fc4b9a4aec86ff2f479f8aa53c3271eab29",
+    "event": "APPROVE_SLOT01_V5_SENTINEL_COMPATIBLE_DEPLOYMENT_AND_M1_M5_EXECUTION"
+  },
+  "deployment": {
+    "saved_plan_sha256": "372dec04c057ddfa91f2246f3f7f285d8d8bca2171a7fd830146a46261e60bed",
+    "registry_digest": "sha256:db403f48e2a552d91af574e476ccc403cf0df91d5da9127b5d5c89a6d600cfc2",
+    "authorized": true,
+    "consumption": "ONE_TERMINAL_ATTEMPT"
+  },
+  "conditional_execution": {
+    "slot": 1,
+    "business": "903 HVAC",
+    "hostname": "903hvac.com",
+    "authorized_only_after_complete_deployment_acceptance_and_no_changes": true,
+    "authorization_window": "2026-08-27T12:00:00Z/2026-09-03T12:00:00Z",
+    "single_use": true
+  },
+  "pre_execution_state": {
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "requests_to_903hvac_com": 0,
+    "real_company_m1_m5_runs": 0
+  }
+}
