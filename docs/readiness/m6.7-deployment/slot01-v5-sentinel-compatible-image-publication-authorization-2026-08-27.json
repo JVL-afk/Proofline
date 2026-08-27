@@ -1,0 +1,43 @@
+{
+  "record_type": "AUTHORIZE_SLOT01_V5_SENTINEL_COMPATIBLE_IMAGE_PUBLICATION",
+  "version": "2026-08-27.1",
+  "state": "OWNER_DIRECTED_THIS_THREAD_ONE_TERMINAL_ATTEMPT",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "implementation_commit": "b415fce2167ccad6b30f4554e9adf063b9204ee7",
+  "bindings": {
+    "release_applicator_sha256": "509e7fb00b5953e1caef8d59508022f8f3ca5dcbe28b0c7b5c3f1829da06df5e",
+    "dockerfile_sha256": "55e8887d654825575f2d70bfff847d62e4fe681d5fb1e012ba4e33fe79a11cf4",
+    "docker_archive_sha256": "e09271239ad31b6a4b523eaee8cd7617698889e0a5a6b3609fccc88020ffd27d",
+    "oci_archive_sha256": "d7dcd809557a39af926531c1ae0a6c23bc4345d52753dd335c4a7549c97eac19",
+    "archive_manifest_digest": "sha256:db403f48e2a552d91af574e476ccc403cf0df91d5da9127b5d5c89a6d600cfc2",
+    "storage_manifest_digest": "sha256:330e43e74cc12def3a802ced992dfa19642935d61d94ca2409928adebf9a67be",
+    "config_digest": "sha256:b7d22a59eb46bd191819d1725d798fee48ade9c11357a0239ef4ecc1e0ae1d06",
+    "local_representation_evidence_sha256": "62efa2ed1ce5df152cd79b2bde21b54943ebc8ecbd26a2520515fdb15e8da955",
+    "security_remediated_parent_registry_digest": "sha256:f36f3c298fbf8ba0aa790a3cfc06e30308c8a28b01ecfb7e945794e21e5ac673",
+    "legacy_lock_sentinel_sha256": "fdb8e197e9ce7cf749cf4fe063908bc6c4e3066dce0a4adef302423d2381fa67"
+  },
+  "publication": {
+    "source": "localhost/m67-phase1-worker:git-b415fce-sentinel-v5",
+    "destination": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker:git-b415fce-sentinel-v5",
+    "publisher_role": "arn:aws:iam::785072247535:role/m67-phase1-worker-image-publisher",
+    "attempts": 1,
+    "terminal": true,
+    "rebuilds": 0,
+    "retags_or_substitutions": 0,
+    "deletions": 0
+  },
+  "required_postconditions": {
+    "representation": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "platform": "linux/amd64",
+    "ecr_scan": "COMPLETE",
+    "critical_high_blocking": "0/0/0"
+  },
+  "prohibited": [
+    "Terraform apply",
+    "Slot 01 release or activation",
+    "903hvac.com access",
+    "real-company M1-M5",
+    "AI, browser, contact, outreach or delivery"
+  ]
+}
