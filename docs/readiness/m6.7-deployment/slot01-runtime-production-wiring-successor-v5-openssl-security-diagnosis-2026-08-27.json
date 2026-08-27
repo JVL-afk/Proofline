@@ -143,8 +143,10 @@
     "alpine_v3_24_version": "3.5.7-r0",
     "alpine_edge_version": "3.5.8-r0",
     "alpine_edge_package_commit": "25ed2a3d661b78da6fedcf9a1b36ce04dba3b2b4",
-    "selected_remediation": "Upgrade only libcrypto3 and libssl3 to signed Alpine edge/main 3.5.8-r0 over the accepted V5 image.",
-    "reason": "No patched stable Alpine package or stable official-Python Alpine base is currently available. The edge subpackages preserve the OpenSSL 3 ABI, depend only on musl/libcrypto as applicable, and avoid a broad distribution or Python migration."
+    "selected_remediation": "Install only libcrypto3 and libssl3 from signed Alpine edge/main at exact version 3.5.8-r0 over the accepted V5 image, without apk's broad upgrade mode.",
+    "preserved_musl_version": "1.2.5-r12",
+    "rejected_resolution": "The first local build formulation used apk --upgrade and attempted to move musl to 1.2.6-r2. It failed before image commit and was rejected as broader than necessary.",
+    "reason": "No patched stable Alpine package or stable official-Python Alpine base is currently available. The edge subpackages preserve the OpenSSL 3 ABI, are satisfiable by the existing musl runtime, and avoid a broad distribution, musl, or Python migration."
   },
   "application_semantics": {
     "release_applicator": "UNCHANGED",
