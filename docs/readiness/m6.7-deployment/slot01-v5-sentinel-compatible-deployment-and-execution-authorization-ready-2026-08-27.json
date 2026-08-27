@@ -1,0 +1,95 @@
+{
+  "record_type": "M67_SLOT01_V5_SENTINEL_COMPATIBLE_DEPLOYMENT_AND_M1_M5_EXECUTION_AUTHORIZATION_READY",
+  "version": "2026-08-27.1",
+  "state": "READY_FOR_SLOT01_V5_SENTINEL_COMPATIBLE_DEPLOYMENT_AND_M1_M5_EXECUTION_AUTHORIZATION",
+  "required_owner_event": "APPROVE_SLOT01_V5_SENTINEL_COMPATIBLE_DEPLOYMENT_AND_M1_M5_EXECUTION",
+  "prepared_at": "2026-08-27T10:10:00Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2"
+  },
+  "source": {
+    "implementation_commit": "b415fce2167ccad6b30f4554e9adf063b9204ee7",
+    "evidence_commit": "aa7c437b892194ebc46edf6a9c6e2922a60a6416",
+    "release_applicator_sha256": "509e7fb00b5953e1caef8d59508022f8f3ca5dcbe28b0c7b5c3f1829da06df5e",
+    "activation_adapter_sha256": "95a0355637800d6e1309755bcb342a990ed8c506d6bbe1de28982c10f0e7cf7c",
+    "production_entry_point_sha256": "12eaf66bf6dc491c4376d1d42ee6bd794a38636d8c9ce93e4b13b1c6db0b6bf5",
+    "stage_coordinator_sha256": "fe0f34c9ef67c1aa5158aad8cf21206a31f167093f1aaa6350e9ba8f1cc54801",
+    "m1_runtime_sha256": "884b1f271b21f9d0ff4e73557be0ec8c01fda30969fa256f1e555afb4d7f2a99",
+    "m2_m5_runtime_sha256": "40e6511a00738980a7604a7d60c1c3419b396e049748f06ec0dae8116a5ebed3",
+    "work_item_identity_schema_sha256": "d540c0017470188267b5331790571318262dbaffe70d405f7fdca6e4680b69e8"
+  },
+  "hashes": {
+    "registry_evidence_sha256": "bd7467d9a111fe4287237c55d8b007ec984569b841ab6e33f5155392227bd6b9",
+    "backend_identity_evidence_sha256": "a8fbc7d2c36870865f5a2a68e2ece7f797a38472ffa88d5e21c848ec00b2ba7c",
+    "managed_change_semantic_sha256": "5a29b74b38d07844127a4180f6be6b95fa2116e9c80ee3644f804e80426383f9",
+    "execution_configuration_sha256": "a84a323f354b3c15798f8f2e9dc710beb8791b83aa3d79323e8c974798a10e1a",
+    "fresh_saved_plan_sha256": "372dec04c057ddfa91f2246f3f7f285d8d8bca2171a7fd830146a46261e60bed",
+    "fresh_plan_json_sha256": "ce90d3c6e3de4f3be3fdd8573b5d9f108ab755ce52f07fabdcdea728adcad949",
+    "terraform_configuration_sha256": "f18a3ba9ba24b6c8c34b9973fe96917d7e11abb51020b158a2656af08ca5d07b",
+    "terraform_variables_sha256": "8ba78e7ab316b966f239dc42bb09764cab596b991bc94a1e7de872c4df3773ff",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "backend_configuration_sha256": "c736be3d6edf4d79456b1b611ccd6809c1c718f4c5c2402ef00e66973471bef0"
+  },
+  "deployment": {
+    "registry_digest": "sha256:db403f48e2a552d91af574e476ccc403cf0df91d5da9127b5d5c89a6d600cfc2",
+    "scan": "COMPLETE_CRITICAL_HIGH_BLOCKING_0_0_0",
+    "terraform_cli_counts": {"add": 7, "change": 3, "destroy": 4},
+    "standalone_creates": 3,
+    "in_place_service_updates": 3,
+    "expected_task_definition_replacements": 4,
+    "unexpected_replacements": 0,
+    "standalone_destroys": 0,
+    "provider_plan_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "apply_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "embedded_backend_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "apply_performed": false
+  },
+  "conditional_acceptance_before_live_access": [
+    "apply exactly the reviewed saved plan with no unexpected resource action",
+    "all V5 task definitions use the exact approved ECR digest",
+    "production entry point invokes only the bounded sampled-slot path",
+    "legacy pollers cannot consume real M6.7 sampled-slot work",
+    "exact legacy lock sentinel normalizes only to canonical NOT_AUTHORIZED",
+    "release applicator accepts only the exact signed approval artifact",
+    "wrong slot, package, business, hostname, malformed, absent, expired or revoked authority fails before work-item creation and DNS",
+    "arbitrary identity-less activation fails closed",
+    "duplicate activation is idempotent or safely rejected",
+    "M2 without exact accepted M1, stage skipping and predecessor substitution fail closed",
+    "kill-switch validation passes",
+    "services remain dormant until the exact execution transition",
+    "Terraform convergence returns NO_CHANGES"
+  ],
+  "execution": {
+    "slot": "01",
+    "business": "903 HVAC",
+    "location": "Tyler / Smith County, Texas",
+    "exact_hostname": "903hvac.com",
+    "validity": "2026-08-27T12:00:00Z/2026-09-03T12:00:00Z",
+    "chain": "apply exact release -> derive one immutable work item -> M1 -> M2 -> M3 -> M4 -> M5 -> CONTACT_PHASE_NOT_AUTHORIZED -> consume authority -> human review",
+    "single_use": true,
+    "slot02": "NOT_AUTHORIZED"
+  },
+  "validation": {
+    "terraform_validate": "PASS_WITH_EXISTING_CLOUD_MAP_PROVIDER_DEPRECATION_WARNING",
+    "terraform_fmt_check": "PASS",
+    "exact_approval_schema_and_envelope": "PASS",
+    "prospective_approval_artifact_sha256": "8eff88bb9fd50285cafd1bd3ded7b8420c21a2db10652cf4416d37aec3d188dc",
+    "focused_sentinel_and_production_wiring_tests": "23_PASS",
+    "full_python_suite": "641_PASS_2_EXPECTED_POSTGRES_ENV_SKIPS",
+    "repository_check": "PASS",
+    "compileall": "PASS",
+    "git_diff_check": "PASS",
+    "node": "24.19.0",
+    "npm": "UNAVAILABLE_IN_BUNDLED_RUNTIME"
+  },
+  "owner_statement_hash_derivation": {
+    "mechanical_after_acceptance": true,
+    "input": "the exact owner approval statement below, encoded as UTF-8",
+    "prepared_exact_statement_sha256": "e016740be79291955b01fb228b748fc4b9a4aec86ff2f479f8aa53c3271eab29",
+    "prospective_validated_approval_artifact_sha256": "8eff88bb9fd50285cafd1bd3ded7b8420c21a2db10652cf4416d37aec3d188dc",
+    "use": "populate owner_statement_sha256 and the approval envelope before the release applicator is invoked",
+    "does_not_broaden_authority": true
+  },
+  "exact_owner_approval_statement": "I approve APPROVE_SLOT01_V5_SENTINEL_COMPATIBLE_DEPLOYMENT_AND_M1_M5_EXECUTION for AWS account 785072247535 in us-east-2, binding implementation commit b415fce2167ccad6b30f4554e9adf063b9204ee7, evidence commit aa7c437b892194ebc46edf6a9c6e2922a60a6416, registry evidence SHA-256 bd7467d9a111fe4287237c55d8b007ec984569b841ab6e33f5155392227bd6b9, backend-identity evidence SHA-256 a8fbc7d2c36870865f5a2a68e2ece7f797a38472ffa88d5e21c848ec00b2ba7c, managed-change semantic SHA-256 5a29b74b38d07844127a4180f6be6b95fa2116e9c80ee3644f804e80426383f9, exact Slot 01 execution configuration SHA-256 a84a323f354b3c15798f8f2e9dc710beb8791b83aa3d79323e8c974798a10e1a, fresh saved Terraform plan SHA-256 372dec04c057ddfa91f2246f3f7f285d8d8bca2171a7fd830146a46261e60bed, plan-JSON SHA-256 ce90d3c6e3de4f3be3fdd8573b5d9f108ab755ce52f07fabdcdea728adcad949, Terraform configuration SHA-256 f18a3ba9ba24b6c8c34b9973fe96917d7e11abb51020b158a2656af08ca5d07b, Terraform variables SHA-256 8ba78e7ab316b966f239dc42bb09764cab596b991bc94a1e7de872c4df3773ff, provider-lock SHA-256 9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f, backend configuration SHA-256 c736be3d6edf4d79456b1b611ccd6809c1c718f4c5c2402ef00e66973471bef0, exact clean registry digest sha256:db403f48e2a552d91af574e476ccc403cf0df91d5da9127b5d5c89a6d600cfc2, release-applicator SHA-256 509e7fb00b5953e1caef8d59508022f8f3ca5dcbe28b0c7b5c3f1829da06df5e, frozen ordered-package file SHA-256 0283f0a6956f6bd11e9326419d9671a61cc57dac0b6d376b9e2b7a11f0507a70, frozen ordered-package semantic SHA-256 3419a018a0cfb39c7fe6391c19b3acb43378b7b88e92337a2c70af305d345b5b, frozen slot-registry file SHA-256 63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2, and accepted Slot 01 A-09 decision SHA-256 1d938be8cf8946bd2b3d0d652500590652e031e056c69ddb0f9449b348261182. This authorizes application only of that exact saved Terraform plan using m67-phase1-terraform-workload-apply and its plan-time embedded protected m67-phase1-terraform-state-apply backend. The reviewed plan creates only the exact dormant sampled-slot executor role and least-privilege policy plus the locked sampled-slot execution-approval parameter, updates three ECS service task-definition pointers in place, and performs four expected ECS task-definition replacements; Terraform represents this as 7 add, 3 change and 4 destroy, with zero unexpected replacement, zero standalone destroy, zero network/egress change, zero desired-count change, zero permission-state change and zero research-release value change. Before any 903hvac.com access, the deployment must match the saved plan exactly; deploy the exact approved image; prove the strict historical sentinel maps only to canonical NOT_AUTHORIZED; prove the bounded production entry point, release applicator, immutable activation path, predecessor-bound coordinator and durable lineage are present; prove legacy pollers cannot consume real M6.7 sampled-slot work; prove wrong slot/package/business/hostname, absent/malformed/expired/revoked authority and arbitrary identity-less activation fail before work-item creation and DNS; prove duplicate activation is safe; prove M2 without exact accepted M1, stage skipping and predecessor substitution fail closed; prove the kill switch; preserve services dormant; and obtain Terraform NO_CHANGES. If any condition fails, stop before live execution, leave the kill switch TRIPPED and all permissions NOT_AUTHORIZED, and perform no ad-hoc repair. IF AND ONLY IF every deployment, security, production-path, fail-closed and convergence condition passes, this same approval authorizes exactly one terminal execution between 2026-08-27T12:00:00Z and 2026-09-03T12:00:00Z for frozen Phase 1 Slot 01, 903 HVAC, Tyler / Smith County, Texas, using only exact hostname 903hvac.com. Codex may mechanically hash this exact accepted statement, populate the already-bound immutable approval envelope, transition the kill switch only under the bounded procedure, replace only the exact persisted legacy lock sentinel with one REAL_PUBLIC_RESEARCH release, derive exactly one registry-backed immutable Slot 01 work item, revalidate authority before DNS/transport, and execute M1 bounded first-party public research followed automatically by deterministic offline M2, M3, M4 and M5 from exact accepted predecessor revisions. M1 is limited to HTTPS port 443 on 903hvac.com, runtime robots evaluation before research pages, public-IP/SSRF/DNS-rebinding/TLS/SNI controls, no followed redirect, same-host paths only, at most 8 logical requests, 8 authorization attempts, 250000 bytes per response, 2000000 total bytes, 600 seconds authorization duration, and USD 0 cost; the runtime's stricter effective clamps of 8 pages, 3 transport attempts, 120 operation seconds, 8-second request timeout, two-second minimum delay and zero followed redirects remain binding. Raw bodies remain ephemeral and only minimized, redacted, provenance-safe company evidence may persist. M2-M5 inherit no Internet authority. FACT, INFERENCE, ESTIMATE, RECOMMENDATION and UNKNOWN remain distinct; public absence is not internal absence; no unsupported revenue, employee, lead-volume, CRM, response-time, conversion, workflow, complaint or other internal fact may be fabricated; truthful negative, insufficient-evidence and bounded-failure outcomes are valid. The maximum terminal state is CONTACT_PHASE_NOT_AUTHORIZED. At every terminal success, negative result, failure, expiry, revocation or safety stop, consume or revoke the execution authority, return REAL_PUBLIC_RESEARCH to NOT_AUTHORIZED, return the kill switch to TRIPPED and stop for human review. This authorizes zero REAL_BUSINESS_DISCOVERY, professional identity resolution, person/contact storage or verification, contact eligibility/readiness, AI, browser use, outreach, delivery, sending, external communication, Slot 02, replacement or redraw. No additional owner approval is required for exact release creation, immutable work-item derivation, activation, deterministic M1-to-M5 transitions, predecessor acceptance or terminal authority consumption within this one bound execution. Do not start Slot 02."
+}
