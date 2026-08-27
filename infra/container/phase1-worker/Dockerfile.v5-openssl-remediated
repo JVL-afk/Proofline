@@ -1,0 +1,29 @@
+# syntax=docker/dockerfile:1
+
+# Security-only successor to the accepted V5 production-wiring image. The Alpine v3.22-v3.24
+# repositories still expose OpenSSL 3.5.7-r0, while the signed Alpine edge/main repository carries
+# the upstream 3.5.8 security release. Upgrade only the two runtime shared-library subpackages from
+# their common Alpine openssl origin; application source, Python dependencies, entry point, and
+# Phase 1 control artifacts remain inherited byte-for-byte from V5.
+FROM localhost/m67-phase1-worker:git-f1e1acfc3fce-v5
+
+USER 0:0
+
+RUN apk add --no-cache --upgrade \
+        --repository=https://dl-cdn.alpinelinux.org/alpine/edge/main \
+        libcrypto3=3.5.8-r0 \
+        libssl3=3.5.8-r0 \
+    && test "$(apk info -e libcrypto3)" = "libcrypto3" \
+    && test "$(apk info -e libssl3)" = "libssl3" \
+    && apk info -v libcrypto3 libssl3 | sort | grep -Fx 'libcrypto3-3.5.8-r0' \
+    && apk info -v libcrypto3 libssl3 | sort | grep -Fx 'libssl3-3.5.8-r0' \
+    && python -m pip check
+
+ARG SOURCE_COMMIT
+LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}" \
+      org.opencontainers.image.base.digest="sha256:be13e69fbb9557c0f4eb07f374b1cfc529788a688d9ca1d01fe3f7a4a7784e8d" \
+      org.opencontainers.image.title="M6.7 Phase 1 V5 OpenSSL security-remediated worker" \
+      org.opencontainers.image.security.openssl="Alpine edge/main openssl 3.5.8-r0"
+
+USER 65532:65532
+ENTRYPOINT ["python", "-m", "opintel_research_worker.main"]

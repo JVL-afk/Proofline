@@ -1,0 +1,165 @@
+{
+  "record_type": "M67_SLOT01_RUNTIME_PRODUCTION_WIRING_SUCCESSOR_V5_OPENSSL_SECURITY_DIAGNOSIS",
+  "version": "2026-08-27.1",
+  "state": "CONCRETE_SECURITY_REMEDIATION_AVAILABLE",
+  "blocked_registry_digest": "sha256:be13e69fbb9557c0f4eb07f374b1cfc529788a688d9ca1d01fe3f7a4a7784e8d",
+  "root_cause": {
+    "classification": "ONE_ALPINE_OPENSSL_ORIGIN_PACKAGE_PRODUCING_SEVEN_FINDINGS",
+    "distribution": "Alpine Linux 3.22",
+    "distribution_release_package": "alpine-release-3.22.4-r0",
+    "origin_package": "openssl",
+    "origin_commit": "58adc2ae4608e2bab287a0d9ef60a9a8dc17fbf5",
+    "installed_runtime_subpackages": [
+      "libcrypto3-3.5.7-r0",
+      "libssl3-3.5.7-r0"
+    ],
+    "introduced_by": "The original Phase 1 Dockerfile explicitly pinned libcrypto3=3.5.7-r0 and libssl3=3.5.7-r0 on top of the pinned official Python Alpine 3.22 image. V4 and V5 inherited those packages unchanged.",
+    "independent_package_root_causes": 1
+  },
+  "runtime_dependency_analysis": {
+    "removal_safe": false,
+    "reason": "The worker performs certificate-validated HTTPS through Python's ssl stack. The Python _ssl extension requires the OpenSSL 3 runtime libraries, and removing them would make the accepted M1 TLS path non-executable.",
+    "accepted_runtime_reachability": {
+      "ordinary_tls_client": true,
+      "quic_server": false,
+      "dtls_endpoint": false,
+      "cmp_client_or_server": false,
+      "cms_decryption": false,
+      "rfc7250_raw_public_key_server": false
+    },
+    "finding_reachability_classification": "TECHNICALLY_PRESENT_BUT_THE_SEVEN_REPORTED_FEATURE_PATHS_ARE_NOT_REACHABLE_IN_THE_ACCEPTED_RUNTIME",
+    "policy_effect": "Reachability does not waive the existing zero-HIGH deployment rule; package remediation remains required."
+  },
+  "findings": [
+    {
+      "id": "CVE-2026-63076",
+      "package": "openssl",
+      "installed_version": "3.5.7-r0",
+      "ecr_severity": "HIGH",
+      "upstream_severity": "Moderate",
+      "cvss3_score": "7.5",
+      "cvss3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+      "affected_upstream_range": "OpenSSL >=3.5.0,<3.5.8",
+      "fixed_upstream_version": "3.5.8",
+      "fixed_version_reported_by_ecr": null,
+      "vendor_advisory": "OpenSSL 2026-08-25 vulnerability record: Invalid Pointer Dereference in CMP Server via Crafted protectionAlg",
+      "reachable_in_accepted_runtime": false
+    },
+    {
+      "id": "CVE-2026-14457",
+      "package": "openssl",
+      "installed_version": "3.5.7-r0",
+      "ecr_severity": "HIGH",
+      "upstream_severity": "Low",
+      "cvss3_score": "7.5",
+      "cvss3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+      "affected_upstream_range": "OpenSSL >=3.5.0,<3.5.8",
+      "fixed_upstream_version": "3.5.8",
+      "fixed_version_reported_by_ecr": null,
+      "vendor_advisory": "OpenSSL 2026-08-25 vulnerability record: RPK Server Signature Algorithm Selection Can Dereference a Missing Certificate",
+      "reachable_in_accepted_runtime": false
+    },
+    {
+      "id": "CVE-2026-14456",
+      "package": "openssl",
+      "installed_version": "3.5.7-r0",
+      "ecr_severity": "HIGH",
+      "upstream_severity": "Low",
+      "cvss3_score": "7.5",
+      "cvss3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+      "affected_upstream_range": "OpenSSL >=3.5.0,<3.5.8",
+      "fixed_upstream_version": "3.5.8",
+      "fixed_version_reported_by_ecr": null,
+      "vendor_advisory": "OpenSSL 2026-08-13 vulnerability record: Unbounded Memory Growth in QUIC Server Incoming Channel Queue",
+      "reachable_in_accepted_runtime": false
+    },
+    {
+      "id": "CVE-2026-63072",
+      "package": "openssl",
+      "installed_version": "3.5.7-r0",
+      "ecr_severity": "HIGH",
+      "upstream_severity": "Moderate",
+      "cvss3_score": "7.5",
+      "cvss3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+      "affected_upstream_range": "OpenSSL >=3.5.0,<3.5.8",
+      "fixed_upstream_version": "3.5.8",
+      "fixed_version_reported_by_ecr": null,
+      "vendor_advisory": "OpenSSL 2026-08-25 vulnerability record: Heap Buffer Overflow in CMS Key Unwrapping",
+      "reachable_in_accepted_runtime": false
+    },
+    {
+      "id": "CVE-2026-54874",
+      "package": "openssl",
+      "installed_version": "3.5.7-r0",
+      "ecr_severity": "HIGH",
+      "upstream_severity": "Low",
+      "cvss3_score": "7.5",
+      "cvss3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+      "affected_upstream_range": "OpenSSL >=3.5.0,<3.5.8",
+      "fixed_upstream_version": "3.5.8",
+      "fixed_version_reported_by_ecr": null,
+      "vendor_advisory": "OpenSSL 2026-08-25 vulnerability record: Excessive Memory Use Buffering DTLS Records for a Future Epoch",
+      "reachable_in_accepted_runtime": false
+    },
+    {
+      "id": "CVE-2026-18798",
+      "package": "openssl",
+      "installed_version": "3.5.7-r0",
+      "ecr_severity": "HIGH",
+      "upstream_severity": "Moderate",
+      "cvss3_score": "7.5",
+      "cvss3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+      "affected_upstream_range": "OpenSSL >=3.5.0,<3.5.8",
+      "fixed_upstream_version": "3.5.8",
+      "fixed_version_reported_by_ecr": null,
+      "vendor_advisory": "OpenSSL 2026-08-25 vulnerability record: QUIC Server May Trigger Double Free When Processing INITIAL Packet",
+      "reachable_in_accepted_runtime": false
+    },
+    {
+      "id": "CVE-2026-63075",
+      "package": "openssl",
+      "installed_version": "3.5.7-r0",
+      "ecr_severity": "HIGH",
+      "upstream_severity": "Low",
+      "cvss3_score": "7.5",
+      "cvss3_vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:N/A:H",
+      "affected_upstream_range": "OpenSSL >=3.5.0,<3.5.8",
+      "fixed_upstream_version": "3.5.8",
+      "fixed_version_reported_by_ecr": null,
+      "vendor_advisory": "OpenSSL 2026-08-25 vulnerability record: QUIC ACK-only Packet Retention Can Cause Memory Exhaustion",
+      "reachable_in_accepted_runtime": false
+    }
+  ],
+  "authoritative_sources": [
+    "https://openssl-library.org/news/vulnerabilities/index.html",
+    "https://mirror.openssl-library.org/news/openssl-3.6-notes/",
+    "https://pkgs.alpinelinux.org/package/v3.22/main/x86_64/libcrypto3",
+    "https://pkgs.alpinelinux.org/package/v3.22/main/x86_64/libssl3",
+    "https://pkgs.alpinelinux.org/package/edge/main/x86_64/libcrypto3"
+  ],
+  "availability_diagnosis": {
+    "alpine_v3_22_version": "3.5.7-r0",
+    "alpine_v3_23_version": "3.5.7-r0",
+    "alpine_v3_24_version": "3.5.7-r0",
+    "alpine_edge_version": "3.5.8-r0",
+    "alpine_edge_package_commit": "25ed2a3d661b78da6fedcf9a1b36ce04dba3b2b4",
+    "selected_remediation": "Upgrade only libcrypto3 and libssl3 to signed Alpine edge/main 3.5.8-r0 over the accepted V5 image.",
+    "reason": "No patched stable Alpine package or stable official-Python Alpine base is currently available. The edge subpackages preserve the OpenSSL 3 ABI, depend only on musl/libcrypto as applicable, and avoid a broad distribution or Python migration."
+  },
+  "application_semantics": {
+    "release_applicator": "UNCHANGED",
+    "activation_adapter": "UNCHANGED",
+    "production_entry_point": "UNCHANGED",
+    "bounded_coordinator": "UNCHANGED",
+    "m1_runtime": "UNCHANGED",
+    "m2_m5_runtime": "UNCHANGED",
+    "work_item_schema": "UNCHANGED",
+    "slot_registry": "UNCHANGED"
+  },
+  "policy": {
+    "scan_threshold_weakened": false,
+    "exception_requested": false,
+    "required_successor_scan": "COMPLETE with CRITICAL=0 and HIGH=0",
+    "publication_authority": "SEPARATELY_REQUIRED_AFTER_LOCAL_BUILD_AND_VALIDATION"
+  }
+}
