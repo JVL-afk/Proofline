@@ -1,0 +1,63 @@
+{
+  "record_type": "M67_SLOT01_V5_SENTINEL_COMPATIBLE_REGISTRY_EVIDENCE",
+  "version": "2026-08-27.1",
+  "state": "PUBLICATION_CONSUMED_SUCCESS_SCAN_PASS",
+  "observed_at": "2026-08-27T10:05:00Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "repository": "m67-phase1-worker",
+    "tag": "git-b415fce-sentinel-v5"
+  },
+  "source": {
+    "implementation_commit": "b415fce2167ccad6b30f4554e9adf063b9204ee7",
+    "publication_authorization_sha256": "9684d6990d3053ed47cd187d415745a0f707c4385242a9de562d7249a79d0b8e",
+    "local_representation_evidence_sha256": "62efa2ed1ce5df152cd79b2bde21b54943ebc8ecbd26a2520515fdb15e8da955",
+    "release_applicator_sha256": "509e7fb00b5953e1caef8d59508022f8f3ca5dcbe28b0c7b5c3f1829da06df5e",
+    "legacy_lock_sentinel_sha256": "fdb8e197e9ce7cf749cf4fe063908bc6c4e3066dce0a4adef302423d2381fa67"
+  },
+  "registry_identity": {
+    "classification": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "object_type": "SINGLE_PLATFORM_IMAGE_MANIFEST",
+    "media_type": "application/vnd.oci.image.manifest.v1+json",
+    "registry_digest": "sha256:db403f48e2a552d91af574e476ccc403cf0df91d5da9127b5d5c89a6d600cfc2",
+    "archive_manifest_digest": "sha256:db403f48e2a552d91af574e476ccc403cf0df91d5da9127b5d5c89a6d600cfc2",
+    "storage_manifest_digest": "sha256:330e43e74cc12def3a802ced992dfa19642935d61d94ca2409928adebf9a67be",
+    "platform": "linux/amd64",
+    "config_digest": "sha256:b7d22a59eb46bd191819d1725d798fee48ade9c11357a0239ef4ecc1e0ae1d06",
+    "ordered_compressed_layer_digests": [
+      "sha256:41dad0242630a38b7248eae6e9a5c15660ccae64bd1365475addb3833d1b22fc",
+      "sha256:904e98828af6963af07a12868a5e6335ffa83b98007256966a1d64caf2aa81bd",
+      "sha256:f0d2f8eb61740062d5cbef1a7d3923f1b16da095cc1ffbc2b93a2e1840ff6cb5",
+      "sha256:c58c9e5629c87c46982664e95ee5ee9ac897518c4bdb67b67aa4dc14d0db1697",
+      "sha256:05cf827b3988e34b1f5218d804c52dbb776b6c14668e999c848e5837a973b053",
+      "sha256:fc8cb340f5f3a83f43d113f6bb0a1d1521193e65a24caa7c6cab64b910c7f5d5",
+      "sha256:1e89e2810a399fd7cc33ce4961cf8307588f30f13228c07d5ea2957ecd445c14",
+      "sha256:454a2446d831a26bb9ee9f8d7949db5420e6661e6c2e5dc89861465efd2bfeb9",
+      "sha256:926af23570992ee2123d6e53ed779db798a90494e59bf99a13b7428ca72388ce",
+      "sha256:8363fa465092d9c8e6afbc6ee8fab80a15294571d10726e46ccd57165ea25943"
+    ],
+    "index_or_manifest_list": false,
+    "attestations": []
+  },
+  "security": {
+    "libcrypto3": "3.5.8-r0",
+    "libssl3": "3.5.8-r0",
+    "scan_target_digest": "sha256:db403f48e2a552d91af574e476ccc403cf0df91d5da9127b5d5c89a6d600cfc2",
+    "scan_status": "COMPLETE",
+    "critical": 0,
+    "high": 0,
+    "blocking": 0
+  },
+  "authority_state": {
+    "services_desired_running_pending": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "research_release_raw_sha256": "fdb8e197e9ce7cf749cf4fe063908bc6c4e3066dce0a4adef302423d2381fa67",
+    "research_release_interpretation": "NOT_AUTHORIZED",
+    "sampled_slot_execution_approval": "ABSENT",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "requests_to_903hvac_com": 0,
+    "real_company_m1_m5_runs": 0
+  }
+}

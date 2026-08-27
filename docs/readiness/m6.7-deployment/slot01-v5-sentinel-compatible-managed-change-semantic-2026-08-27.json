@@ -1,0 +1,50 @@
+{
+  "record_type": "M67_SLOT01_V5_SENTINEL_COMPATIBLE_MANAGED_CHANGE_SEMANTIC",
+  "version": "2026-08-27.1",
+  "state": "REVIEWED_NOT_APPLIED",
+  "saved_plan_sha256": "372dec04c057ddfa91f2246f3f7f285d8d8bca2171a7fd830146a46261e60bed",
+  "plan_json_sha256": "ce90d3c6e3de4f3be3fdd8573b5d9f108ab755ce52f07fabdcdea728adcad949",
+  "deployment_image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:db403f48e2a552d91af574e476ccc403cf0df91d5da9127b5d5c89a6d600cfc2",
+  "release_applicator_sha256": "509e7fb00b5953e1caef8d59508022f8f3ca5dcbe28b0c7b5c3f1829da06df5e",
+  "terraform_representation": {
+    "add": 7,
+    "change": 3,
+    "destroy": 4
+  },
+  "semantic_actions": {
+    "standalone_creates": [
+      "aws_iam_role.sampled_slot_executor",
+      "aws_iam_role_policy.sampled_slot_executor",
+      "aws_ssm_parameter.sampled_slot_execution_approval"
+    ],
+    "in_place_service_updates": [
+      "aws_ecs_service.egress",
+      "aws_ecs_service.intelligence",
+      "aws_ecs_service.worker"
+    ],
+    "expected_task_definition_replacements": [
+      "aws_ecs_task_definition.egress",
+      "aws_ecs_task_definition.intelligence",
+      "aws_ecs_task_definition.sampled_slot_activator",
+      "aws_ecs_task_definition.worker"
+    ],
+    "unexpected_replacements": [],
+    "standalone_destroys": []
+  },
+  "review": {
+    "iam_changes": "ONLY_EXACT_SAMPLED_SLOT_EXECUTOR_ROLE_AND_LEAST_PRIVILEGE_POLICY_REQUIRED_BY_ACCEPTED_V5",
+    "network_or_egress_rule_changes": 0,
+    "desired_count_changes": 0,
+    "permission_state_changes": 0,
+    "authorization_release_value_changes": 0,
+    "unrelated_changes": 0,
+    "destructive_changes": "ONLY_FOUR_EXPECTED_ECS_TASK_DEFINITION_REPLACEMENTS"
+  },
+  "dormant_posture": {
+    "sampled_slot_execution_approval_parameter_initial_value": "NOT_AUTHORIZED",
+    "services_desired_count": 0,
+    "browser": "OFF",
+    "ai": "UNAVAILABLE_USD_0",
+    "delivery": "STRUCTURALLY_UNAVAILABLE"
+  }
+}

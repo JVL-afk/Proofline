@@ -1,0 +1,104 @@
+{
+  "record_type": "M67_SLOT01_V5_SENTINEL_COMPATIBLE_EXECUTION_CONFIGURATION",
+  "version": "2026-08-27.1",
+  "state": "PREPARED_NOT_AUTHORIZED",
+  "approval_schema": "m67.phase1.sampled-slot-execution-approval@2",
+  "approval_id": "1511499b-db28-5ced-ab37-09c1e2f15b01",
+  "current_release_id": "1aff9800-f475-5136-8a7d-f7efa7c0c64f",
+  "authorized_release_id": "ab67c0b2-cb88-503d-be58-9468ed340c05",
+  "workspace_id": "7bb45ae7-dc2c-5529-a31c-82b157bc958d",
+  "legacy_lock_sentinel_sha256": "fdb8e197e9ce7cf749cf4fe063908bc6c4e3066dce0a4adef302423d2381fa67",
+  "permission_type": "REAL_PUBLIC_RESEARCH",
+  "authority_bindings": {
+    "source_registry_id": "2fccda0c-bc4c-5563-a523-0047c1a4d89d",
+    "source_registry_hash": "ec1342217d8f34a2bb38da806515c580e02a68fd79d5be1b7f393c37c168a875",
+    "retention_policy_id": "089c05e0-0e51-51cb-97af-668b5c7baf12",
+    "retention_policy_hash": "ec8489fcf64987de4767fc202824850a745d0e2124eb20d39857ca08f870a766",
+    "environment_id": "f3720f10-c7ee-502d-884c-6e6188c98719",
+    "environment_hash": "713062b65cdb340e8d552f6562cdd22431c2aee057bb3baa8a74411c06648103",
+    "cohort_policy_id": "1741cc1c-6896-55e0-b06d-528ce4214b67",
+    "kill_switch_id": "774aeb09-f2af-542a-bc09-6715d38658f9"
+  },
+  "sample": {
+    "ordered_package_file_sha256": "0283f0a6956f6bd11e9326419d9671a61cc57dac0b6d376b9e2b7a11f0507a70",
+    "ordered_package_semantic_sha256": "3419a018a0cfb39c7fe6391c19b3acb43378b7b88e92337a2c70af305d345b5b",
+    "slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "slot_registry_semantic_sha256": "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2",
+    "slot_number": 1,
+    "business_identity": "903 HVAC",
+    "location": "Tyler / Smith County, Texas",
+    "exact_hostname": "903hvac.com",
+    "a09_decision_sha256": "1d938be8cf8946bd2b3d0d652500590652e031e056c69ddb0f9449b348261182"
+  },
+  "runtime": {
+    "registry_digest": "sha256:db403f48e2a552d91af574e476ccc403cf0df91d5da9127b5d5c89a6d600cfc2",
+    "release_applicator_sha256": "509e7fb00b5953e1caef8d59508022f8f3ca5dcbe28b0c7b5c3f1829da06df5e",
+    "activation_adapter_sha256": "95a0355637800d6e1309755bcb342a990ed8c506d6bbe1de28982c10f0e7cf7c",
+    "activation_entry_point_sha256": "12eaf66bf6dc491c4376d1d42ee6bd794a38636d8c9ce93e4b13b1c6db0b6bf5",
+    "stage_coordinator_sha256": "fe0f34c9ef67c1aa5158aad8cf21206a31f167093f1aaa6350e9ba8f1cc54801",
+    "m1_runtime_sha256": "884b1f271b21f9d0ff4e73557be0ec8c01fda30969fa256f1e555afb4d7f2a99",
+    "m2_m5_runtime_sha256": "40e6511a00738980a7604a7d60c1c3419b396e049748f06ec0dae8116a5ebed3",
+    "work_item_identity_schema_sha256": "d540c0017470188267b5331790571318262dbaffe70d405f7fdca6e4680b69e8"
+  },
+  "validity": {
+    "starts_at": "2026-08-27T12:00:00Z",
+    "expires_at": "2026-09-03T12:00:00Z"
+  },
+  "authorization_ceilings": {
+    "max_logical_requests": 8,
+    "max_attempts": 8,
+    "max_response_bytes": 250000,
+    "max_total_bytes": 2000000,
+    "max_duration_seconds": 600,
+    "cost_ceiling_usd": "0",
+    "allowed_source_scope": ["903hvac.com"]
+  },
+  "runtime_effective_clamps": {
+    "max_pages": 8,
+    "max_transport_attempts": 3,
+    "max_operation_seconds": 120,
+    "request_timeout_seconds": 8,
+    "minimum_delay_seconds": 2,
+    "redirects_followed": 0
+  },
+  "network_policy": {
+    "scheme": "https",
+    "port": 443,
+    "exact_sni_and_hostname_validation": true,
+    "public_ip_only": true,
+    "ssrf_and_dns_rebinding_controls": true,
+    "runtime_robots_before_research_pages": true,
+    "cross_host_redirects": "FAIL_CLOSED",
+    "same_host_only": true,
+    "browser": "OFF",
+    "ai": "UNAVAILABLE_USD_0"
+  },
+  "workflow": {
+    "chain": "RELEASE_APPLIED -> WORK_ITEM_DERIVED -> M1 -> M2 -> M3 -> M4 -> M5 -> CONTACT_PHASE_NOT_AUTHORIZED -> AUTHORITY_CONSUMED",
+    "m1_network_authority_only": true,
+    "m2_m5_network_authority": false,
+    "predecessor_revision_required": true,
+    "durable_raw_body": false,
+    "truth_taxonomy": ["FACT", "INFERENCE", "ESTIMATE", "RECOMMENDATION", "UNKNOWN"],
+    "maximum_terminal_state": "CONTACT_PHASE_NOT_AUTHORIZED"
+  },
+  "terminal_behavior": {
+    "single_use": true,
+    "kill_switch": "TRIPPED",
+    "real_public_research": "NOT_AUTHORIZED",
+    "release_consumed_or_revoked": true,
+    "stop_for_human_review": true,
+    "slot02": "NOT_AUTHORIZED"
+  },
+  "prohibited": [
+    "REAL_BUSINESS_DISCOVERY",
+    "professional identity resolution",
+    "person or contact storage or verification",
+    "contact eligibility or readiness",
+    "AI or browser use",
+    "outreach, delivery, sending, or external communication",
+    "Slot 02",
+    "slot replacement or redraw"
+  ],
+  "owner_statement_sha256": "COMPUTED_FROM_THE_EXACT_ACCEPTED_OWNER_STATEMENT_BEFORE_RELEASE_APPLICATION"
+}
