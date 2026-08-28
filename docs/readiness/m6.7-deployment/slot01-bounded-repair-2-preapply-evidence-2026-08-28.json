@@ -1,0 +1,90 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_2_PREAPPLY_EVIDENCE",
+  "version": "2026-08-28.1",
+  "state": "ELIGIBLE_REPAIR_READY_FOR_BOUNDED_APPLY",
+  "recorded_at": "2026-08-28T09:47:22.6612055Z",
+  "owner_authorization_statement_sha256": "602f09f7f45bbe359fc186be54835af2cd3c15acc2e0e12a8242bdf55985ff36",
+  "repair_number": 2,
+  "predecessor": {
+    "initial_runtime_digest": "sha256:fd3446d335f809303a001d059c8d4010e2e10aa2e19c945a6337299e6e507077",
+    "initial_deployment": "APPLIED_VALIDATED_AND_CONVERGED",
+    "slot01_target_transport_before_repair": 0,
+    "research_release_predecessor_id": "02873c16-90de-53cc-ae43-b6e325e268d0",
+    "research_release_predecessor_state": "NOT_AUTHORIZED_CONSUMED_M1_RESEARCH_FAILED"
+  },
+  "diagnosis": {
+    "classification": "ELIGIBLE_STRICT_IDENTITY_BINDING_OPERATIONAL_DEFECT",
+    "summary": "The release applicator rejected every revoked predecessor, including the exact consumed NOT_AUTHORIZED predecessor from the separately authorized first Slot 01 attempt. That made a fresh separately approved attempt mechanically impossible even though no target transport occurred.",
+    "governance_scope_changed": false,
+    "target_scope_changed": false,
+    "request_attempt_byte_time_or_cost_ceiling_changed": false,
+    "network_scope_changed": false
+  },
+  "minimum_correction": {
+    "implementation_commit": "e0d898c3afd6694ea2a10f0083fe4e8e7c7ea7d8",
+    "release_application_sha256": "f7ffdf0cd47abec5e7627ef529d486ed71f09649dc41ffe3a642469ce9fcd420",
+    "test_file_sha256": "34c63646541340d49fa6c3e86b42b23c88f187123627e3f8df22e0f873dfa457",
+    "behavior": "Permit replacement only of an exact consumed NOT_AUTHORIZED predecessor when the new immutable approval has a different owner statement hash and all existing exact predecessor identity checks pass. Replays of the same approval and arbitrary revocations remain rejected."
+  },
+  "deterministic_validation": {
+    "focused": "52 passed",
+    "full": "672 passed, 2 expected skips",
+    "ruff": "PASS",
+    "mypy": "PASS",
+    "repository_check": "PASS",
+    "compileall": "PASS",
+    "git_diff_check": "PASS"
+  },
+  "local_image": {
+    "tag": "localhost/m67-phase1-worker:git-e0d898c-repair2",
+    "oci_archive_sha256": "13acb1bfdfb4e60441d61eefcc051b6b9927c56dfb90ef6547f3ae360e8b2fa3",
+    "docker_archive_sha256": "9f4d45fe994887f71d1b35ccbf4d2aff72debff0a13a499bb357415facafff50",
+    "archive_manifest_digest": "sha256:770d4248bbd7b5f915861331663dc68f5107cf87782a86bde5b7105488e16e50",
+    "storage_manifest_digest": "sha256:37046a604229edf8ab1ba870ebc2e212835f0afb64b4e6bb3ad06473e276b2fc",
+    "config_digest": "sha256:9d6f4ec08e847deb52831f3ed9489175c59add7f641cb93c4efcf2ab357227ee",
+    "local_representation_evidence_sha256": "425a6ed9e1814f3c978e0eec124dc17cb9c6d999f785e4a208e8cfa1f5a899ea",
+    "classification": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN"
+  },
+  "registry": {
+    "repository": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
+    "tag": "git-e0d898c-repair2",
+    "digest": "sha256:770d4248bbd7b5f915861331663dc68f5107cf87782a86bde5b7105488e16e50",
+    "platform": "linux/amd64",
+    "classification": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "provider_scan": "COMPLETE",
+    "critical_high_blocking": "0/0/0",
+    "publication_result_sha256": "8a5970ca9918e47cb93918e6edfa5332d28b65794ee106a08645e18dfe179c70"
+  },
+  "terraform": {
+    "saved_plan_sha256": "f5ceda308d958cf94ad8a97ebba08fdd78db5cd9217710694533dafb5615b793",
+    "plan_json_sha256": "c25b8015a97826d1101a8eaaf0c38077741caeabdb36ecde252de9e83c568196",
+    "variables_sha256": "9911f3c5ebfad974811b4f7298622fbcb2fd090802dad6c6d095e759c77723d5",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "identity_separation": "ADR-0075 workload-plan provider reads with the existing protected state-apply backend embedded at plan creation",
+    "actions": {
+      "terraform_add": 4,
+      "terraform_change": 3,
+      "terraform_destroy": 4,
+      "expected_task_definition_replacements": 4,
+      "service_pointer_updates": 3,
+      "standalone_creates": 0,
+      "standalone_destroys": 0,
+      "unexpected_replacements": 0,
+      "iam_changes": 0,
+      "network_or_egress_changes": 0,
+      "desired_count_changes": 0,
+      "authority_or_lock_value_changes": 0
+    },
+    "semantic_review": "PASS_MINIMUM_REPAIR_ONLY"
+  },
+  "authority_state": {
+    "services": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED",
+    "controlled_egress_lease": "NOT_AUTHORIZED",
+    "slot01_release_or_work_item": "ABSENT",
+    "slot01_target_requests": 0,
+    "slot02_execution": 0
+  }
+}
