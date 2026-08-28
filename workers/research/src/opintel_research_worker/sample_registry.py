@@ -21,7 +21,8 @@ class FrozenPhaseOneSampleRegistry:
     """Fail-closed verifier for caller work-item identities and permission releases."""
 
     def __init__(self, path: str | Path) -> None:
-        payload = json.loads(Path(path).read_text(encoding="utf-8"))
+        raw = Path(path).read_bytes()
+        payload = json.loads(raw.decode("utf-8"))
         supplied_hash = payload.pop("registry_sha256", None)
         computed_hash = hashlib.sha256(
             json.dumps(
@@ -43,6 +44,7 @@ class FrozenPhaseOneSampleRegistry:
             range(1, 25)
         ):
             raise ValueError("frozen sampled-slot registry must contain exact slots 1-24")
+        self.registry_file_sha256 = hashlib.sha256(raw).hexdigest()
         self.registry_sha256 = computed_hash
         self.ordered_package_file_sha256 = ORDERED_PACKAGE_FILE_SHA256
         self.ordered_package_semantic_sha256 = ORDERED_PACKAGE_SEMANTIC_SHA256

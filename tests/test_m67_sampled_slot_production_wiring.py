@@ -105,7 +105,7 @@ def _approval(**changes: object) -> SampledSlotExecutionApproval:
     samples = FrozenPhaseOneSampleRegistry(SAMPLES)
     decision = FrozenA09DecisionRegistry(A09).require_approved(1, "903 HVAC", "903hvac.com")
     values: dict[str, object] = {
-        "schema_version": "m67.phase1.sampled-slot-execution-approval@2",
+        "schema_version": "m67.phase1.sampled-slot-execution-approval@3",
         "state": "OWNER_APPROVED",
         "approval_id": UUID("20000000-0000-4000-8000-000000000001"),
         "owner_statement_sha256": "f" * 64,
@@ -125,7 +125,8 @@ def _approval(**changes: object) -> SampledSlotExecutionApproval:
         "kill_switch_id": KILL_SWITCH,
         "ordered_package_file_sha256": samples.ordered_package_file_sha256,
         "ordered_package_semantic_sha256": samples.ordered_package_semantic_sha256,
-        "slot_registry_sha256": samples.registry_sha256,
+        "slot_registry_file_sha256": samples.registry_file_sha256,
+        "slot_registry_semantic_sha256": samples.registry_sha256,
         "slot_number": 1,
         "business_identity": "903 HVAC",
         "exact_hostname": "903hvac.com",
@@ -346,6 +347,14 @@ def test_exact_owner_approval_can_replace_legacy_lock_once() -> None:
         {"business_identity": "Forged"},
         {"exact_hostname": "forged.example", "allowed_source_scope": ("forged.example",)},
         {"ordered_package_semantic_sha256": "1" * 64},
+        {"slot_registry_file_sha256": "1" * 64},
+        {"slot_registry_semantic_sha256": "2" * 64},
+        {
+            "slot_registry_file_sha256": FrozenPhaseOneSampleRegistry(SAMPLES).registry_sha256,
+            "slot_registry_semantic_sha256": FrozenPhaseOneSampleRegistry(
+                SAMPLES
+            ).registry_file_sha256,
+        },
         {"permission_type": "REAL_BUSINESS_DISCOVERY"},
         {"a09_decision_sha256": "2" * 64},
         {"research_runtime_revision": "sha256:" + "8" * 64},
@@ -365,6 +374,33 @@ def test_invalid_owner_artifact_creates_no_release(change: dict[str, object]) ->
     )
     assert store.kill == "TRIPPED"
     assert store.release_writes == 0
+
+
+@pytest.mark.parametrize(
+    "missing",
+    ["slot_registry_file_sha256", "slot_registry_semantic_sha256"],
+)
+def test_live_approval_requires_both_registry_identity_levels(missing: str) -> None:
+    values = _approval().model_dump(mode="python")
+    values.pop(missing)
+    with pytest.raises(ValueError):
+        SampledSlotExecutionApproval.model_validate(values)
+
+
+def test_registry_identity_levels_are_distinct_and_exact() -> None:
+    registry = FrozenPhaseOneSampleRegistry(SAMPLES)
+    approval = _approval()
+    assert registry.registry_file_sha256 == (
+        "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2"
+    )
+    assert registry.registry_sha256 == (
+        "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2"
+    )
+    assert approval.slot_registry_file_sha256 == registry.registry_file_sha256
+    assert approval.slot_registry_semantic_sha256 == registry.registry_sha256
+    assert approval.slot_registry_file_sha256 != approval.slot_registry_semantic_sha256
+    entry = registry.issue(UUID(int=0), 1)
+    assert (entry.business_identity, entry.exact_hostname) == ("903 HVAC", "903hvac.com")
 
 
 def _coordinator_binding() -> CoordinatorRunBinding:

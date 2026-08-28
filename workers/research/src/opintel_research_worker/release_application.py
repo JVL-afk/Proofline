@@ -17,7 +17,7 @@ from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 from opintel_research_worker.activation import A09_MARKER_PREFIX, FrozenA09DecisionRegistry
 from opintel_research_worker.sample_registry import FrozenPhaseOneSampleRegistry
 
-APPROVAL_SCHEMA = "m67.phase1.sampled-slot-execution-approval@2"
+APPROVAL_SCHEMA = "m67.phase1.sampled-slot-execution-approval@3"
 APPROVAL_STATE = "OWNER_APPROVED"
 RELEASE_APPLICATOR_REVISION = "m67.phase1.release-applicator@1"
 LEGACY_LOCK_SENTINEL = '{"state":"NOT_AUTHORIZED"}'
@@ -44,7 +44,7 @@ class SampledSlotExecutionApproval(BaseModel):
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
-    schema_version: Literal["m67.phase1.sampled-slot-execution-approval@2"]
+    schema_version: Literal["m67.phase1.sampled-slot-execution-approval@3"]
     state: Literal["OWNER_APPROVED"]
     approval_id: UUID
     owner_statement_sha256: str
@@ -64,7 +64,8 @@ class SampledSlotExecutionApproval(BaseModel):
     kill_switch_id: UUID
     ordered_package_file_sha256: str
     ordered_package_semantic_sha256: str
-    slot_registry_sha256: str
+    slot_registry_file_sha256: str
+    slot_registry_semantic_sha256: str
     slot_number: int
     business_identity: str
     exact_hostname: str
@@ -95,7 +96,8 @@ class SampledSlotExecutionApproval(BaseModel):
         "environment_hash",
         "ordered_package_file_sha256",
         "ordered_package_semantic_sha256",
-        "slot_registry_sha256",
+        "slot_registry_file_sha256",
+        "slot_registry_semantic_sha256",
         "a09_decision_sha256",
         "release_applicator_sha256",
         "activation_adapter_sha256",
@@ -344,7 +346,8 @@ class BoundedSampledSlotReleaseApplicator:
     def _validate_registry_bindings(self, approval: SampledSlotExecutionApproval) -> None:
         entry = self._samples.issue(UUID(int=0), approval.slot_number)
         if (
-            self._samples.registry_sha256 != approval.slot_registry_sha256
+            self._samples.registry_file_sha256 != approval.slot_registry_file_sha256
+            or self._samples.registry_sha256 != approval.slot_registry_semantic_sha256
             or self._samples.ordered_package_file_sha256
             != approval.ordered_package_file_sha256
             or self._samples.ordered_package_semantic_sha256
