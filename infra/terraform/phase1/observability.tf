@@ -251,6 +251,36 @@ resource "aws_iam_role_policy" "environment_validation" {
   policy = data.aws_iam_policy_document.environment_validation.json
 }
 
+# Bounded one-shot authority materialization. The exact single-use sampled-slot
+# approval envelope must be deterministically rebuilt from the accepted owner
+# statement plus the current predecessor research-release, which no deployed
+# runtime role may both read and write. The activator's sampled_slot_executor
+# role deliberately cannot PutParameter the approval; the operator gets exactly
+# the read scope the materializer needs plus write access to that one parameter.
+data "aws_iam_policy_document" "authority_materialization" {
+  statement {
+    sid     = "ReadExactPredecessorAuthorityForMaterialization"
+    actions = ["ssm:GetParameter"]
+    resources = [
+      aws_ssm_parameter.research_release.arn,
+      aws_ssm_parameter.kill_switch.arn,
+      aws_ssm_parameter.sampled_slot_execution_approval.arn,
+    ]
+  }
+
+  statement {
+    sid       = "WriteExactSampledSlotExecutionApprovalOnly"
+    actions   = ["ssm:PutParameter"]
+    resources = [aws_ssm_parameter.sampled_slot_execution_approval.arn]
+  }
+}
+
+resource "aws_iam_role_policy" "authority_materialization" {
+  name   = "${var.name_prefix}-authority-materialization"
+  role   = aws_iam_role.operator.id
+  policy = data.aws_iam_policy_document.authority_materialization.json
+}
+
 data "aws_iam_policy_document" "kill_operator_assume" {
   statement {
     actions = ["sts:AssumeRole"]

@@ -1,0 +1,116 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_REPAIR_1",
+  "schema_version": "1.0.0",
+  "state": "REPAIR_1_IMPLEMENTED_TESTED_PLANNED",
+  "observed_at_utc": "2026-08-28T14:40:00Z",
+  "window_2": {
+    "authorization_event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+    "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+    "repair_index": 1,
+    "repair_budget_max": 5,
+    "repairs_remaining_after_this": 4,
+    "additional_repair_infrastructure_cost_usd": "~0",
+    "elapsed_hours_used_estimate": "<3"
+  },
+  "predecessor": {
+    "relationship": "RETRY_OF_BLOCKED_M1_M5_CONTINUATION",
+    "predecessor_evidence": "docs/readiness/m6.7-deployment/slot01-bounded-repair-window-2-apply-and-execution-blocker-2026-08-28.json",
+    "predecessor_commit": "0f2e515",
+    "predecessor_terminal": "TERRAFORM_APPLIED_M1_M5_BLOCKED_ON_MISSING_OWNER_APPROVAL_ENVELOPE"
+  },
+  "diagnosis": {
+    "classification": "MISSING_DETERMINISTIC_PRODUCTION_AUTHORITY_MATERIALIZATION_PATH",
+    "eligible_repair_category": "identity/schema/orchestration compatibility correction",
+    "root_cause": "The activator (opintel_intelligence_worker.sampled_slot_execution_main) requires a valid m67.phase1.sampled-slot-execution-approval@3 SampledSlotExecutionApprovalEnvelope on /m67-phase1/sampled-slot-execution-approval before it can apply the release and derive the Slot 01 work item. The repository contained the accepted owner authority (statement + acceptance record with the experiment/approval/release/lease/work-item ids and the exact ceilings) and the frozen registries, but no code path that assembles the @3 envelope. Several immutable release-binding fields (workspace_id, source_registry_id/hash, retention_policy_id/hash, environment_id/hash, cohort_policy_id, kill_switch_id, current_release_id) exist only in the current predecessor research-release object in SSM, and no deployed runtime identity can both read that object and write the approval parameter.",
+    "not_opportunity_evidence": true,
+    "not_a_governance_change": "No ceiling, scope, host, slot, robots/TLS/SSRF/minimization/provenance/truth control is altered. The @3 approval validator is unchanged and is used, unmodified, to validate the materialized envelope."
+  },
+  "minimum_change": {
+    "new_module": "workers/research/src/opintel_research_worker/authority_materialization.py",
+    "new_entry_point": "workers/research/src/opintel_research_worker/authority_materialization_main.py",
+    "new_tests": "tests/test_m67_authority_materialization.py",
+    "terraform_change": "infra/terraform/phase1/observability.tf: add aws_iam_role_policy.authority_materialization (dedicated inline policy on the existing m67-phase1-operator role)",
+    "no_image_change": true,
+    "image_publication_required": false,
+    "image_publication_reason": "The materializer runs from the repository checkout under the bounded m67-phase1-operator identity as a one-shot; it is not part of any container image and the pinned worker image sha256:770d4248bbd7b5f915861331663dc68f5107cf87782a86bde5b7105488e16e50 is unchanged.",
+    "no_task_definition_change": true,
+    "lines_added": 1027
+  },
+  "field_source_classification": {
+    "constants": ["schema_version", "state=OWNER_APPROVED", "owner_signature_state=APPROVED_IN_THREAD", "permission_type=REAL_PUBLIC_RESEARCH", "legacy_lock_sentinel_sha256", "terminal_rollback_state=NOT_AUTHORIZED"],
+    "accepted_owner_authorization": ["approval_id", "owner_statement_sha256", "authorized_release_id", "starts_at", "expires_at", "max_logical_requests", "max_attempts", "max_response_bytes", "max_total_bytes", "max_duration_seconds", "cost_ceiling_usd"],
+    "frozen_registries": ["ordered_package_file_sha256", "ordered_package_semantic_sha256", "slot_registry_file_sha256", "slot_registry_semantic_sha256", "slot_number", "business_identity", "exact_hostname", "a09_decision_sha256"],
+    "current_predecessor_research_release_from_ssm": ["current_release_id", "workspace_id", "source_registry_id", "source_registry_hash", "retention_policy_id", "retention_policy_hash", "environment_id", "environment_hash", "cohort_policy_id", "kill_switch_id"],
+    "deployed_activator_task_definition_environment": ["research_runtime_revision", "release_applicator_sha256", "activation_adapter_sha256", "activation_entry_point_sha256", "stage_coordinator_sha256", "m1_runtime_sha256", "m2_m5_runtime_sha256"],
+    "derived": ["allowed_source_scope = (exact_hostname,)", "approval_artifact_sha256 = canonical_sha256(approval)"],
+    "cross_checks": "Every registry SHA and the deployed runtime revision must also appear verbatim in the accepted owner statement; statement-parsed identifiers must equal the acceptance record; a wrong/absent value fails closed before any SSM write."
+  },
+  "security_property": {
+    "possession_of_builder_creates_no_authority": true,
+    "requires": [
+      "accepted owner statement whose sha256 equals the acceptance record exact_statement_sha256 (3d1326a9...)",
+      "acceptance record state == ACCEPTED_UNCONSUMED and event == AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+      "statement-bound experiment/approval/authorized-release ids equal to the acceptance record",
+      "current predecessor research-release that is REAL_PUBLIC_RESEARCH + NOT_AUTHORIZED + revoked + suspended_reason CONSUMED:* and whose owner_approval_sha256 differs from this window's",
+      "kill switch == TRIPPED and stored approval == exact {\"state\":\"NOT_AUTHORIZED\"} sentinel",
+      "current time within [starts_at, expires_at)",
+      "slot 1 / 903 HVAC / 903hvac.com and A-09 decision 1d938be8..."
+    ],
+    "failure_is_pre_write": "Any stale, altered, reused, expired or mismatched input raises AuthorityMaterializationError before the approval parameter is written; no release, work item, coordinator, egress lease or DNS occurs.",
+    "production_consumer_dry_run": "materialize() instantiates the exact activator-side BoundedSampledSlotReleaseApplicator against an in-memory copy of (envelope, current research-release, kill switch) and requires it to return a fresh AUTHORIZED release whose id == authorized_release_id and whose configuration_hash == approval_artifact_sha256. The envelope is only returned/written if that production validator accepts it.",
+    "idempotency": "If the approval parameter already holds a byte-equal envelope the materializer returns it and writes nothing; if it holds a different envelope it fails closed.",
+    "single_use_preserved": "The activator still consumes the release and restores the kill switch; restore mode writes the exact NOT_AUTHORIZED sentinel back to the approval parameter after the bounded run."
+  },
+  "authority_identity": {
+    "chosen": "existing m67-phase1-operator role (already the bounded human-assumed orchestration identity for this exact experiment; already assumable by the approved operator principal; already granted ecs:DescribeTaskDefinition by the Window 2 apply)",
+    "rejected_alternative": "dedicated ecs-tasks-only m67-phase1-authority-materializer role + task definition + worker image rebuild + operator RunTask/PassRole grants",
+    "rejection_reason": "Disproportionate to a one-shot deterministic build; would require an image publication and new infrastructure. Preferred the smallest proven correction (repository principle) under an existing bounded role.",
+    "least_privilege": "New inline policy m67-phase1-authority-materialization grants ssm:GetParameter on exactly {research-release, kill-switch, sampled-slot-execution-approval} and ssm:PutParameter on exactly {sampled-slot-execution-approval}. No broad ssm:GetParameter/PutParameter. The activator's sampled_slot_executor role is unchanged and still cannot write the approval parameter."
+  },
+  "adr_0075": {
+    "identity_separation_preserved": true,
+    "provider_apply_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "backend_identity": "profile m67-phase1-state-apply-backend -> arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "artifact_backend_identity_rules": "unchanged"
+  },
+  "terraform_plan": {
+    "saved_plan_sha256": "921220839291d8167020677b67ef03e460f7a954de162654f3ca025ff3173700",
+    "plan_json_sha256": "3c97a1ea608cc8ce74ee4ab7caf72d811e47b32badbc1fb9e09c8a008628ca28",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "observability_tf_sha256": "0e0edf1155cf7203d48ec663432795f97fc738972d8cc5667fb541077b66f84d",
+    "actions": {"add": 1, "change": 0, "destroy": 0},
+    "only_change": "create aws_iam_role_policy.authority_materialization on role m67-phase1-operator",
+    "semantic_review": "The single new resource adds exactly the SSM read/write scope enumerated above and nothing else. All 102 pre-existing managed resources are no-op. No network, egress, desired-count, image, task-definition, release-value, lease-value or unrelated change. No prohibited Terraform construct. terraform validate passes with only the pre-existing failure_threshold deprecation warning.",
+    "fmt_check": "PASS",
+    "validate": "PASS_WITH_PREEXISTING_DEPRECATION_WARNING"
+  },
+  "tests": {
+    "focused": "tests/test_m67_authority_materialization.py: 18 passed",
+    "focused_cases": [
+      "exact authoritative inputs -> valid @3 envelope",
+      "repeated construction is byte-identical (deterministic)",
+      "constructed envelope accepted by the real production applicator (configuration_hash == artifact hash)",
+      "wrong owner-statement hash fails",
+      "altered statement body fails against record hash",
+      "statement/record identifier disagreement fails",
+      "non-ACCEPTED_UNCONSUMED record state fails",
+      "expired authorization window fails",
+      "not-yet-effective authorization window fails",
+      "kill switch not TRIPPED fails",
+      "predecessor is legacy sentinel fails",
+      "predecessor not in CONSUMED terminal state fails",
+      "predecessor already binding this window (already consumed) fails",
+      "missing deployed activator runtime SHA fails",
+      "activator revision not bound by statement fails",
+      "synthetic registry SHA not bound by statement fails",
+      "identical staged envelope is idempotent with no write",
+      "different staged envelope fails safely"
+    ],
+    "full_deterministic_suite": "693 passed, 2 skipped (PostgreSQL parity skips; baseline 675 + 18 new)",
+    "repository_check": "PASS",
+    "compileall": "PASS (packages services workers scripts)",
+    "ruff_focused": "PASS",
+    "mypy_focused": "PASS (2 source files)"
+  },
+  "next": "Apply the saved repair-1 plan (workload-apply / state-apply), confirm Terraform NO_CHANGES, then under the assumed m67-phase1-operator role run authority_materialization_main materialize -> run_m67_bounded_controlled_egress with bounded-ecs-execution-config.json -> activator :7 self-orchestrated M1..M5 -> CONTACT_PHASE_NOT_AUTHORIZED -> authority consumed -> restore approval sentinel -> dormant -> kill switch TRIPPED -> stop for human review."
+}
