@@ -1,0 +1,106 @@
+{
+  "record_type": "M67_SLOT01_REGISTRY_IDENTITY_CORRECTED_PLAN_REVIEW",
+  "version": "2026-08-28.1",
+  "state": "READY_FOR_COMBINED_DEPLOYMENT_AND_CONDITIONAL_SLOT01_EXECUTION_DECISION",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "provider_plan_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "embedded_backend_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply"
+  },
+  "source": {
+    "implementation_commit": "b3706bd871f84a70b0f55f380955bac5624021a6",
+    "artifact_pipeline_commit": "c60b6638caf6c01147179bb9ccba1d625de24f54",
+    "publication_evidence_commit": "ab8287a672b44a55361bc479842a0effa6b1ce29",
+    "plan_evidence_commit": "f633feeb8768f2fd298d1824cdd2f9371d12145e",
+    "registry_evidence_sha256": "a175dfa32d67d433f57e90545b2f85b5b6cd83f5543a8c02aaa755744db0a410",
+    "backend_identity_evidence_sha256": "61e74410cb456a70825eb1841f21905d3952dcb443c028360cea254bdfae069b",
+    "managed_change_semantic_sha256": "f199bf11593bc600a067e2780924cafc775f7850444cac7d6cc620f64346da1d",
+    "slot01_execution_configuration_sha256": "fd4f2106e9c1def37f2f0db350232d813d493a8427245dc02ee4b21ebcf1ae4c"
+  },
+  "terraform": {
+    "version": "1.15.9",
+    "saved_plan": "slot01-registry-identity-corrected.tfplan",
+    "saved_plan_sha256": "80408b91992866b7a68c3096428efde8f5be59eb0f7e61fb767a674937c370ba",
+    "plan_json_sha256": "67fea37af791e7f06be2b14bcdf1edb159b48491f246e14322dc3bb864a05f75",
+    "configuration_sha256": "f18a3ba9ba24b6c8c34b9973fe96917d7e11abb51020b158a2656af08ca5d07b",
+    "variables_sha256": "8255750981d127ae44e22fad14688356d8f8a353086def172e74876f04b049d7",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "backend_configuration_sha256": "c736be3d6edf4d79456b1b611ccd6809c1c718f4c5c2402ef00e66973471bef0",
+    "active_backend_metadata_sha256": "6bd94602ccbfc8adbe232047498af19e454d80c8144943f45592729e3ce9fae0",
+    "fmt": "PASS",
+    "validate": "PASS_WITH_PREEXISTING_CLOUD_MAP_DEPRECATION_WARNING",
+    "apply_performed": false
+  },
+  "registry_artifact": {
+    "image_uri": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79",
+    "representation": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "platform": "linux/amd64",
+    "config_digest": "sha256:ae137c009fc0ad46f8a56b47d329824da75e74325ef4f2e17b94995903f146ec",
+    "scan": "COMPLETE",
+    "critical_high_blocking": "0/0/0"
+  },
+  "registry_identity_contract": {
+    "approval_schema": "m67.phase1.sampled-slot-execution-approval@3",
+    "slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "slot_registry_semantic_sha256": "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2",
+    "file_compared_only_to_file": true,
+    "semantic_compared_only_to_semantic": true,
+    "missing_altered_or_swapped_identity": "REJECT_BEFORE_RELEASE_WORK_ITEM_OR_DNS"
+  },
+  "actions": {
+    "terraform_add": 3,
+    "terraform_change": 2,
+    "terraform_destroy": 3,
+    "standalone_creates": 0,
+    "in_place_service_updates": 2,
+    "expected_task_definition_replacements": 3,
+    "unexpected_replacements": 0,
+    "standalone_destroys": 0,
+    "iam_changes": 0,
+    "network_or_egress_changes": 0,
+    "desired_count_changes": 0,
+    "permission_or_release_state_changes": 0
+  },
+  "changed_resources": [
+    "aws_ecs_service.intelligence",
+    "aws_ecs_service.worker",
+    "aws_ecs_task_definition.intelligence",
+    "aws_ecs_task_definition.sampled_slot_activator",
+    "aws_ecs_task_definition.worker"
+  ],
+  "dormant_and_network_invariants": {
+    "services": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "subnet": "subnet-0ed12f24100baf801",
+    "worker_security_group": "sg-05543bd7e420818bf",
+    "assign_public_ip": "DISABLED",
+    "network_configuration_sha256": "045be6e3c51c2bd1bf5c6dfe3feedf1c6a7c61a93e8a9238e547c211adc84c74",
+    "network_path_revalidation_gate_required": false
+  },
+  "conditional_postdeploy_matrix_before_live_access": [
+    "apply exactly the reviewed saved plan with no unexpected action",
+    "observe exact image digest in all successor task definitions",
+    "services remain 0/0/0 and both controls remain exact NOT_AUTHORIZED",
+    "approval schema binds registry file and semantic identities separately",
+    "correct file plus correct semantic hashes is accepted synthetically",
+    "swapped, missing or altered registry identity is denied before release, work item and DNS",
+    "bounded entry point, release applicator, immutable activation and coordinator are present",
+    "legacy pollers cannot consume real M6.7 sampled-slot work",
+    "wrong slot/package/business/hostname and absent/malformed/expired/revoked authority fail before work-item creation and DNS",
+    "arbitrary identity-less and duplicate activation controls pass",
+    "predecessor lineage, stage-order and substitution controls pass",
+    "kill-switch test passes",
+    "Terraform convergence is NO_CHANGES",
+    "zero requests to 903hvac.com during validation"
+  ],
+  "cost": {
+    "phase1_estimate_usd": "160",
+    "owner_ceiling_usd": "250",
+    "slot01_execution_cost_ceiling_usd": "0"
+  },
+  "next_gate": "READY_FOR_SLOT01_REGISTRY_IDENTITY_CORRECTED_M1_M5_EXECUTION_AUTHORIZATION"
+}
