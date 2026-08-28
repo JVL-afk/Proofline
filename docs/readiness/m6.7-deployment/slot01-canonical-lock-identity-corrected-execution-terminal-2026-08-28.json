@@ -1,0 +1,184 @@
+{
+  "record_type": "M67_SLOT01_CANONICAL_LOCK_IDENTITY_CORRECTED_EXECUTION_TERMINAL",
+  "version": "2026-08-28.1",
+  "state": "TERMINAL_M1_RESEARCH_FAILED_AUTHORITY_CONSUMED",
+  "observed_at_utc": "2026-08-28T05:51:10.724Z",
+  "authorization": {
+    "name": "AUTHORIZE_SLOT01_CANONICAL_LOCK_IDENTITY_CORRECTED_M1_M5_EXECUTION",
+    "exact_statement_sha256": "72401ddabc44b37cc4d98e76c8d66021e3ed7fc0f29a87f41c05080f0694249b",
+    "accepted_record_commit": "4113aff",
+    "approval_id": "0938582d-7241-583c-809d-482096010089",
+    "canonical_predecessor_release_id": "1aff9800-f475-5136-8a7d-f7efa7c0c64f",
+    "authorized_release_id": "02873c16-90de-53cc-ae43-b6e325e268d0",
+    "single_use_authority": "CONSUMED_TERMINAL",
+    "reusable": false
+  },
+  "preconditions": {
+    "result": "PASS",
+    "deployed_image_digest": "sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79",
+    "research_task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-research-worker:9",
+    "intelligence_task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-intelligence-worker:6",
+    "sampled_slot_activator_task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-sampled-slot-activator:4",
+    "terraform_convergence": "NO_CHANGES",
+    "terraform_convergence_evidence_sha256": "76db49642d2bcae369330c9b4bc871f7aa21dadd6a00f86bcdba47e80b3c0b88",
+    "services_desired_running_pending": "0/0/0",
+    "running_tasks": 0,
+    "kill_switch": "TRIPPED",
+    "research_release_parameter_version": 1,
+    "research_release_exact_value": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "research_release_value_sha256": "fdb8e197e9ce7cf749cf4fe063908bc6c4e3066dce0a4adef302423d2381fa67",
+    "research_release_canonical_id": "1aff9800-f475-5136-8a7d-f7efa7c0c64f",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED",
+    "slot01_release_or_work_item_before_execution": "ABSENT",
+    "intervening_authority_mutation": false
+  },
+  "slot": {
+    "number": 1,
+    "business": "903 HVAC",
+    "location": "Tyler / Smith County, Texas",
+    "hostname": "903hvac.com",
+    "ordered_package_file_sha256": "0283f0a6956f6bd11e9326419d9671a61cc57dac0b6d376b9e2b7a11f0507a70",
+    "ordered_package_semantic_sha256": "3419a018a0cfb39c7fe6391c19b3acb43378b7b88e92337a2c70af305d345b5b",
+    "slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "slot_registry_semantic_sha256": "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2",
+    "a09_decision_sha256": "1d938be8cf8946bd2b3d0d652500590652e031e056c69ddb0f9449b348261182"
+  },
+  "authority_lifecycle": {
+    "sampled_approval_parameter": {
+      "predecessor_version": 5,
+      "authorized_envelope_version": 6,
+      "authorized_envelope_file_sha256": "5590e635482565b0c4f7d2cd9d599a5984b3ec3ce7af408b3591b3727ad1061c",
+      "restored_sentinel_version": 7,
+      "terminal_state": "NOT_AUTHORIZED"
+    },
+    "research_release_parameter": {
+      "predecessor_version": 1,
+      "authorized_version": 2,
+      "authorized_configuration_hash": "1bf82bda8eaa521136d12ebdb94c29aaba029895b9c429be9011896531e7b668",
+      "consumed_version": 3,
+      "consumed_release_id": "02873c16-90de-53cc-ae43-b6e325e268d1",
+      "consumed_configuration_hash": "f9539c7bdce1b64df84bd37e78aa6704fda3d924ea5b299cc413b3b2d06bcdb1",
+      "revoked_at_utc": "2026-08-28T05:48:13.304253Z",
+      "suspended_reason": "CONSUMED:M1_RESEARCH_FAILED",
+      "terminal_state": "NOT_AUTHORIZED"
+    },
+    "kill_switch": {
+      "predecessor_version_7": "TRIPPED",
+      "execution_version_8": "RUN",
+      "terminal_version_9": "TRIPPED"
+    }
+  },
+  "execution": {
+    "task_arn": "arn:aws:ecs:us-east-2:785072247535:task/m67-phase1-research/c8dcbde329254f5d8578eb34f404ef0d",
+    "task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-sampled-slot-activator:4",
+    "image_digest": "sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79",
+    "platform": "FARGATE_1.4.0_linux_amd64",
+    "subnet": "subnet-0ed12f24100baf801",
+    "security_group": "sg-05543bd7e420818bf",
+    "public_ip": "DISABLED",
+    "started_at_utc": "2026-08-28T05:47:53.416Z",
+    "stopped_at_utc": "2026-08-28T05:48:39.237Z",
+    "container_exit_code": 0,
+    "release_created": true,
+    "work_item_created": true,
+    "work_item_id": "318b8b7c-b700-5d04-8f9d-af17b67d1f52",
+    "coordinator_created": true,
+    "coordinator_run_id": "d36ed121-5332-528d-a439-b7b9053a6f0b",
+    "accepted_stage_count": 1,
+    "terminal_reason": "M1_RESEARCH_FAILED"
+  },
+  "m1": {
+    "status": "FAILED_TRUTHFUL_TERMINAL",
+    "start_url": "https://903hvac.com/",
+    "runtime_robots_evaluated_before_research_page": true,
+    "robots_decision": "DENY_FAIL_CLOSED",
+    "robots_reason": "robots_transport_failure",
+    "robots_http_status": null,
+    "robots_body_length": 0,
+    "robots_body_sha256": null,
+    "pages_attempted": 1,
+    "pages_succeeded": 0,
+    "durable_minimized_company_evidence_items": 0,
+    "durable_raw_bodies": 0,
+    "bytes_persisted": 0,
+    "derived_m1_output_sha256": "9427717ebd80013ef78b2c88a814a53c0021eab49974ae241a2b8adced1ef287",
+    "derivation_note": "The output hash is deterministically derived from the deployed canonical M1 contract, work-item ID, failed status, 1/0 page counters, zero stored bytes and an empty evidence list; the database row was not exported.",
+    "observed_failure_context": {
+      "controlled_egress_service_desired_running_pending": "0/0/0",
+      "controlled_egress_log_events_in_execution_window": 0,
+      "hostname_log_events_in_execution_window": 0,
+      "classification": "CONTROLLED_EGRESS_UNAVAILABLE_BEFORE_FIRST_PARTY_TRANSPORT",
+      "basis": "Deterministic inference from the deployed robots-first path, the durable M1 terminal reason, the dormant gateway state and absence of gateway/hostname log events."
+    }
+  },
+  "request_attempt_byte_time_ledger": {
+    "logical_research_pages_attempted": 1,
+    "robots_evaluations": 1,
+    "private_gateway_request_attempts": 1,
+    "first_party_https_transport_attempts": 0,
+    "requests_reaching_903hvac_com": 0,
+    "response_bytes_from_903hvac_com": 0,
+    "durable_content_bytes": 0,
+    "task_runtime_seconds": 45.821,
+    "live_authority_seconds": 0.781302,
+    "ledger_note": "The first-party count is proven zero by the dormant controlled-egress service and absence of controlled-egress fetch evidence. The private gateway attempt is an inference from the deterministic robots-first client path and robots_transport_failure."
+  },
+  "truth_taxonomy": {
+    "FACT": [
+      "The exact Slot 01 release and immutable work item were created.",
+      "Runtime robots evaluation failed closed before any research page fetch.",
+      "No request reached 903hvac.com and no first-party response body was received.",
+      "M1 terminated as M1_RESEARCH_FAILED and exactly one M1 stage artifact was accepted.",
+      "M2, M3, M4 and M5 did not run."
+    ],
+    "INFERENCE": [
+      "The immediate M1 failure was caused by the controlled-egress service remaining dormant, preventing the robots request from reaching the approved host."
+    ],
+    "ESTIMATE": [],
+    "RECOMMENDATION": [
+      "Treat this as a bounded research failure and preserve Slot 01 without replacement; any future attempt requires fresh authority and a separately reviewed way to make the already-approved controlled-egress dependency available."
+    ],
+    "UNKNOWN": [
+      "All facts about the current public contents of 903hvac.com remain UNKNOWN.",
+      "Revenue, employees, lead volume, CRM, response time, conversion, internal workflow and complaints remain UNKNOWN.",
+      "The exact AWS metered charge is not yet available from billing telemetry."
+    ]
+  },
+  "m2_m5": {
+    "m2_opportunity_and_economics": "NOT_STARTED_NO_ACCEPTED_SUCCESSFUL_M1_EVIDENCE",
+    "opportunity_decision": "NOT_EVALUATED_RESEARCH_FAILURE",
+    "economics": "NOT_CREATED",
+    "m3_audit": "NOT_CREATED",
+    "m4_demo": "NOT_CREATED",
+    "m5_outreach_artifact": "NOT_CREATED",
+    "stage_skip": false,
+    "predecessor_lineage": "M1_MINIMIZED_EVIDENCE_ACCEPTED_AS_TRUTHFUL_FAILED_TERMINAL; NO_DOWNSTREAM_PREDECESSOR_CREATED"
+  },
+  "cost": {
+    "source_cost_usd": "0",
+    "ai_cost_usd": "0",
+    "browser_cost_usd": "0",
+    "aws_metered_cost_usd": "UNKNOWN_NOT_YET_AVAILABLE"
+  },
+  "safety_events": [
+    "ROBOTS_TRANSPORT_FAILURE_FAIL_CLOSED",
+    "NO_FIRST_PARTY_TRANSPORT",
+    "NO_RAW_BODY_PERSISTED",
+    "DOWNSTREAM_STAGES_NOT_STARTED_WITHOUT_SUCCESSFUL_M1",
+    "AUTHORITY_CONSUMED",
+    "KILL_SWITCH_RETRIPPED"
+  ],
+  "terminal": {
+    "state": "M1_RESEARCH_FAILED",
+    "maximum_authority_not_exceeded": true,
+    "research_release": "NOT_AUTHORIZED_CONSUMED",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED",
+    "kill_switch": "TRIPPED",
+    "services_desired_running_pending": "0/0/0",
+    "running_tasks": 0,
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "slot02_execution": 0,
+    "replacement_or_redraw": 0,
+    "ai_browser_person_contact_outreach_delivery": "NOT_AUTHORIZED"
+  }
+}
