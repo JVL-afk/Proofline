@@ -96,10 +96,17 @@ class AllowRobots:
     def evaluate(self, research_run_id, url, permitted_host, policy):
         del policy
         return RobotsPolicyEvidence(
-            id=UuidFactory().new(), research_run_id=research_run_id, host=permitted_host,
-            requested_path="/", captured_at=self.clock.now(), http_status=200,
-            body_sha256="0" * 64, body_length=0, decision="ALLOW",
-            reason_code="synthetic_robots_allowed", allowed=True,
+            id=UuidFactory().new(),
+            research_run_id=research_run_id,
+            host=permitted_host,
+            requested_path="/",
+            captured_at=self.clock.now(),
+            http_status=200,
+            body_sha256="0" * 64,
+            body_length=0,
+            decision="ALLOW",
+            reason_code="synthetic_robots_allowed",
+            allowed=True,
         )
 
 
@@ -146,9 +153,7 @@ def safe_fetcher(
     transport: SequenceTransport,
     resolver: StaticResolver | None = None,
 ) -> SafeHttpFetcher:
-    return SafeHttpFetcher(
-        PublicUrlPolicy(resolver or StaticResolver()), transport, clock
-    )
+    return SafeHttpFetcher(PublicUrlPolicy(resolver or StaticResolver()), transport, clock)
 
 
 def create_research_run(
@@ -535,6 +540,7 @@ def test_phase1_requires_explicit_postgresql_and_local_remains_sqlite() -> None:
         egress_policy_revision="synthetic-policy-v1",
         kill_switch_parameter="/synthetic/kill-switch",
         research_release_parameter="/synthetic/research-release",
+        controlled_egress_lease_parameter="/synthetic/controlled-egress-lease",
         research_runtime_revision="synthetic-runtime-v1",
         phase1_slot_registry_path="/synthetic/phase1-frozen-slot-registry.json",
     )
@@ -575,6 +581,44 @@ def test_controlled_egress_gateway_enforces_exact_host_and_policy_revision() -> 
         )
         with pytest.raises(FetchError, match="controlled_egress_denied"):
             gateway.request(denied, 1, 1024)
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=2)
+
+
+def test_controlled_egress_readiness_requires_exact_work_item_capability() -> None:
+    capability = {
+        "authorization_release_id": "10000000-0000-4000-8000-000000000001",
+        "slot_number": 1,
+        "work_item_id": "20000000-0000-4000-8000-000000000001",
+        "work_item_identity_sha256": "a" * 64,
+        "exact_hostname": "example.com",
+    }
+    handler = build_gateway_handler(
+        frozenset({"example.com"}),
+        "synthetic-policy-v1",
+        transport=SequenceTransport({}),  # type: ignore[arg-type]
+        policy=PublicUrlPolicy(StaticResolver()),
+        capability_provider=lambda: capability,
+    )
+    server = ThreadingHTTPServer(("127.0.0.1", 0), handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    try:
+        gateway = ControlledEgressTransport(
+            f"http://127.0.0.1:{server.server_port}",
+            "synthetic-policy-v1",
+            lambda: capability,
+        )
+        gateway.await_ready(timeout_seconds=1, poll_seconds=0.05)
+        denied = ControlledEgressTransport(
+            f"http://127.0.0.1:{server.server_port}",
+            "synthetic-policy-v1",
+            lambda: {**capability, "slot_number": 2},
+        )
+        with pytest.raises(FetchError, match="readiness denied"):
+            denied.await_ready(timeout_seconds=1, poll_seconds=0.05)
     finally:
         server.shutdown()
         server.server_close()

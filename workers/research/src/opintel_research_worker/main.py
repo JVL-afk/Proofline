@@ -50,9 +50,13 @@ def build_runner() -> ResearchWorkflowRunner:
             settings.aws_region,
             settings.research_runtime_revision or "",
             settings.phase1_slot_registry_path or "",
+            settings.controlled_egress_lease_parameter,
+            require_egress_lease=True,
         )
         transport = ControlledEgressTransport(
-            settings.controlled_egress_url, research_authorization.current_revision
+            settings.controlled_egress_url,
+            research_authorization.current_revision,
+            research_authorization.current_gateway_capability,
         )
     else:
         transport = StdlibPinnedTransport()

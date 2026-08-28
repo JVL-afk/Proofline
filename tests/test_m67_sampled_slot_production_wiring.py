@@ -13,6 +13,9 @@ from opintel_audit.domain import AuditKind, AuditOperation, AuditOperationStatus
 from opintel_audit_local import SqlAlchemyAuditRepository
 from opintel_demo.domain import DemoOperation, DemoOperationStatus
 from opintel_demo_local import SqlAlchemyDemoRepository
+from opintel_intelligence_worker.controlled_egress_lifecycle import (
+    BoundedControlledEgressLifecycle,
+)
 from opintel_intelligence_worker.coordinator_persistence import (
     CoordinatorRunBinding,
     SqlAlchemyCoordinatorRepository,
@@ -30,6 +33,13 @@ from opintel_outreach_local import SqlAlchemyOutreachRepository
 from opintel_research.domain import CrawlPolicy, ResearchRun, ResearchRunStatus
 from opintel_research_worker.activation import (
     FrozenA09DecisionRegistry,
+)
+from opintel_research_worker.egress_lease import (
+    EGRESS_LEASE_LOCK_SENTINEL,
+    CanonicalNotAuthorizedEgressLease,
+    ControlledEgressLease,
+    build_egress_lease,
+    parse_stored_egress_lease,
 )
 from opintel_research_worker.release_application import (
     LEGACY_LOCK_RELEASE_ID,
@@ -242,7 +252,7 @@ def test_canonical_complete_not_authorized_release_remains_accepted() -> None:
         '{ "state": "NOT_AUTHORIZED" }',
         '{"state":"AUTHORIZED"}',
         '{"state":"NOT_AUTHORIZED"',
-        '{}',
+        "{}",
     ],
 )
 def test_nonexact_or_malformed_legacy_lock_is_rejected(raw: str) -> None:
@@ -280,7 +290,7 @@ def test_canonical_sampled_approval_lock_type_remains_accepted() -> None:
         '{ "state": "NOT_AUTHORIZED" }',
         '{"state":"AUTHORIZED"}',
         '{"state":"NOT_AUTHORIZED"',
-        '{}',
+        "{}",
     ],
 )
 def test_nonexact_or_malformed_sampled_approval_lock_is_rejected(raw: str) -> None:
@@ -539,6 +549,114 @@ class _SyntheticStages:
         )
 
 
+class _Egress:
+    def __init__(self) -> None:
+        self.active = False
+
+    def activate_and_await_ready(
+        self, release: LiveResearchPermissionRelease, run: ResearchRun
+    ) -> tuple[ControlledEgressLease, bool]:
+        assert not self.active
+        self.active = True
+        return build_egress_lease(release, run), True
+
+    def deactivate(self, lease: ControlledEgressLease) -> bool:
+        assert lease is not None and self.active
+        self.active = False
+        return True
+
+
+class _EgressStore:
+    def __init__(self) -> None:
+        self.value = EGRESS_LEASE_LOCK_SENTINEL
+        self.writes: list[str] = []
+
+    def read(self) -> str:
+        return self.value
+
+    def write(self, value: str) -> None:
+        self.value = value
+        self.writes.append(value)
+
+
+class _ReadyTransport:
+    def __init__(self, fail: bool = False) -> None:
+        self.calls = 0
+        self.fail = fail
+
+    def await_ready(self, *, timeout_seconds: float, poll_seconds: float = 0.5) -> None:
+        del poll_seconds
+        assert timeout_seconds <= 60
+        self.calls += 1
+        if self.fail:
+            raise ValueError("synthetic startup failure")
+
+
+def test_egress_lease_exact_authority_ready_then_m1_boundary_cleanup() -> None:
+    store = _Store(_approval())
+    release, _, _ = _applicator(store).apply()
+    _applicator(store).enter_run(release)
+    run = _Activator(release).run
+    lease_store = _EgressStore()
+    transport = _ReadyTransport()
+    lifecycle = BoundedControlledEgressLifecycle(
+        store=lease_store,
+        authority=_Authority(store),
+        stop_signal=_Stop(store),
+        transport=transport,  # type: ignore[arg-type]
+        readiness_timeout_seconds=5,
+    )
+    lease, created = lifecycle.activate_and_await_ready(release, run)
+    assert created is True
+    assert transport.calls == 1
+    assert isinstance(parse_stored_egress_lease(lease_store.value), ControlledEgressLease)
+    assert lifecycle.deactivate(lease) is True
+    assert isinstance(
+        parse_stored_egress_lease(lease_store.value),
+        CanonicalNotAuthorizedEgressLease,
+    )
+
+
+def test_egress_startup_failure_restores_lock_without_transport_target_access() -> None:
+    store = _Store(_approval())
+    release, _, _ = _applicator(store).apply()
+    _applicator(store).enter_run(release)
+    lease_store = _EgressStore()
+    lifecycle = BoundedControlledEgressLifecycle(
+        store=lease_store,
+        authority=_Authority(store),
+        stop_signal=_Stop(store),
+        transport=_ReadyTransport(fail=True),  # type: ignore[arg-type]
+        readiness_timeout_seconds=5,
+    )
+    with pytest.raises(ValueError, match="startup failure"):
+        lifecycle.activate_and_await_ready(release, _Activator(release).run)
+    assert lease_store.value == EGRESS_LEASE_LOCK_SENTINEL
+
+
+def test_egress_denies_kill_switch_and_wrong_work_item_before_readiness() -> None:
+    store = _Store(_approval())
+    release, _, _ = _applicator(store).apply()
+    run = _Activator(release).run
+    lease_store = _EgressStore()
+    transport = _ReadyTransport()
+    lifecycle = BoundedControlledEgressLifecycle(
+        store=lease_store,
+        authority=_Authority(store),
+        stop_signal=_Stop(store),
+        transport=transport,  # type: ignore[arg-type]
+    )
+    with pytest.raises(ValueError, match="kill switch"):
+        lifecycle.activate_and_await_ready(release, run)
+    assert lease_store.writes == []
+    store.kill = "RUN"
+    forged = replace(run, permitted_host="forged.example")
+    with pytest.raises(ValueError, match="outside exact release/work item"):
+        lifecycle.activate_and_await_ready(release, forged)
+    assert transport.calls == 0
+    assert lease_store.writes == []
+
+
 def test_complete_synthetic_production_chain_consumes_authority(tmp_path: Path) -> None:
     store = _Store(_approval())
     applicator = _applicator(store)
@@ -550,6 +668,7 @@ def test_complete_synthetic_production_chain_consumes_authority(tmp_path: Path) 
     repository = SqlAlchemyCoordinatorRepository(f"sqlite:///{tmp_path / 'execution.db'}")
     repository.initialize()
     stages = _SyntheticStages()
+    egress = _Egress()
     execution = BoundedSampledSlotExecution(
         release_applicator=applicator,
         activator=activator,
@@ -557,12 +676,15 @@ def test_complete_synthetic_production_chain_consumes_authority(tmp_path: Path) 
         stop_signal=_Stop(store),
         repository=repository,
         stage_runtime_factory=lambda run: stages,
+        controlled_egress=egress,
         now=lambda: NOW,
     )
     receipt = execution.run()
     assert receipt["terminal_reason"] == "CONTACT_PHASE_NOT_AUTHORIZED"
     assert receipt["accepted_stage_count"] == 6
     assert stages.calls == list(ShadowStage)
+    assert receipt["controlled_egress_deactivated_after_m1"] is True
+    assert egress.active is False
     assert store.kill == "TRIPPED"
     assert (
         LiveResearchPermissionRelease.model_validate_json(store.release).state
@@ -575,8 +697,7 @@ def test_complete_synthetic_production_chain_consumes_authority(tmp_path: Path) 
 
 def test_production_entry_point_accepts_no_identity_arguments() -> None:
     source = (
-        ROOT
-        / "workers/intelligence/src/opintel_intelligence_worker/sampled_slot_execution_main.py"
+        ROOT / "workers/intelligence/src/opintel_intelligence_worker/sampled_slot_execution_main.py"
     ).read_text(encoding="utf-8")
     assert "len(sys.argv) != 1" in source
     assert "BoundedSampledSlotExecution(" in source
@@ -619,9 +740,10 @@ def test_legacy_pollers_cannot_claim_reserved_sampled_slot_operations(
     )
     opportunity.create_or_get_run(opportunity_run, str(common["idempotency_key"]))
     assert opportunity.claim_run(NOW, timedelta(seconds=30)) is None
-    assert opportunity.claim_exact_run(
-        opportunity_run.id, created_by, NOW, timedelta(seconds=30)
-    ) is not None
+    assert (
+        opportunity.claim_exact_run(opportunity_run.id, created_by, NOW, timedelta(seconds=30))
+        is not None
+    )
 
     audit = SqlAlchemyAuditRepository(database_url)
     audit.initialize()
@@ -639,9 +761,10 @@ def test_legacy_pollers_cannot_claim_reserved_sampled_slot_operations(
     )
     audit.create_or_get_operation(audit_operation)
     assert audit.claim_operation(NOW, timedelta(seconds=30)) is None
-    assert audit.claim_exact_operation(
-        audit_operation.id, created_by, NOW, timedelta(seconds=30)
-    ) is not None
+    assert (
+        audit.claim_exact_operation(audit_operation.id, created_by, NOW, timedelta(seconds=30))
+        is not None
+    )
 
     demo = SqlAlchemyDemoRepository(database_url)
     demo.initialize()
@@ -658,9 +781,10 @@ def test_legacy_pollers_cannot_claim_reserved_sampled_slot_operations(
     )
     demo.create_or_get_operation(demo_operation)
     assert demo.claim_operation(NOW, timedelta(seconds=30)) is None
-    assert demo.claim_exact_operation(
-        demo_operation.id, created_by, NOW, timedelta(seconds=30)
-    ) is not None
+    assert (
+        demo.claim_exact_operation(demo_operation.id, created_by, NOW, timedelta(seconds=30))
+        is not None
+    )
 
     outreach = SqlAlchemyOutreachRepository(database_url)
     outreach.initialize()
@@ -677,6 +801,9 @@ def test_legacy_pollers_cannot_claim_reserved_sampled_slot_operations(
     )
     outreach.create_or_get_operation(outreach_operation)
     assert outreach.claim_operation(NOW, timedelta(seconds=30)) is None
-    assert outreach.claim_exact_operation(
-        outreach_operation.id, created_by, NOW, timedelta(seconds=30)
-    ) is not None
+    assert (
+        outreach.claim_exact_operation(
+            outreach_operation.id, created_by, NOW, timedelta(seconds=30)
+        )
+        is not None
+    )

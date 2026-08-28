@@ -1,0 +1,98 @@
+{
+  "schema_version": "m67.phase1.controlled-egress-successor-local-evidence@1",
+  "state": "LOCAL_IMPLEMENTATION_VALIDATED_AWS_MUTATION_NOT_AUTHORIZED",
+  "captured_on": "2026-08-28",
+  "predecessor_attempt": {
+    "terminal_state": "M1_RESEARCH_FAILED",
+    "terminal_evidence_sha256": "41670257a2c01083909f751ee69d4333289bf76d4e856c663d78f872a076ddc2",
+    "slot_number": 1,
+    "business_identity": "903 HVAC",
+    "exact_hostname": "903hvac.com",
+    "target_requests": 0,
+    "m2_m5_executed": false,
+    "replacement_or_redraw": false,
+    "authority_consumed": true
+  },
+  "diagnosis": {
+    "classification": "EXISTING_DORMANT_ECS_SERVICE_LIFECYCLE_NOT_ACTIVATED",
+    "intended_architecture": "existing aws_ecs_service.egress with Cloud Map service discovery",
+    "deployed_observation": "desired/running/pending 0/0/0",
+    "root_cause": "the exact authorized activator had no bounded mechanism to make the accepted controlled-egress service ready before runtime robots evaluation",
+    "selected_successor": "temporarily scale the existing service to one, require an exact M1-only lease and private readiness acknowledgement, remove the lease at the M1 boundary, and return the service to zero",
+    "new_egress_architecture_created": false,
+    "network_policy_broadened": false
+  },
+  "implementation": {
+    "gateway_transport_sha256": "700410b2edb0eeeaa977a14b4c786a1150e1473c8ce01e0913c92363dbfa018c",
+    "research_authorization_sha256": "929c045499169d172a5786bf826570311026ab1ee6ddcff69674042f0dce3aac",
+    "egress_lease_schema_and_store_sha256": "5829343312038c7d01f40faea3ff1116e5ae9b36f2ca9eae4d38cfbcb59656fc",
+    "egress_lifecycle_sha256": "cde03724c09c9e801c33568b7183cff9cf87bd8a984d48a620472f0ea613f07b",
+    "bounded_execution_sha256": "e0c299e007cc2808dfb25ddc24b57520edc186e665fff12a801d2b8001635a06",
+    "production_entry_point_sha256": "1fa20444480cd12b0049c0df4fac46865be1ffeb2addc8c97123136eb729fe9a",
+    "bounded_ecs_launcher_sha256": "bb7bfaa6cf0f0275075dbf88fea54819cad9e412248a37676fc65b12ff007157",
+    "terraform_compute_sha256": "6c00130936fc6219d0804506b19805c80ffacc59b5e9229e6d1dfe171f4b85e8",
+    "dockerfile_sha256": "ef3bfb47c7f96d1d85c0435637b871846332576418564b731f5e9d06ca49d331"
+  },
+  "authority_model": {
+    "infrastructure_availability_is_authority": false,
+    "live_gateway_requirement": "exact current REAL_PUBLIC_RESEARCH release plus exact controlled-egress lease plus kill switch RUN",
+    "lease_binds": [
+      "authorization release ID and configuration hash",
+      "ordered-package semantic identity",
+      "slot number",
+      "business identity",
+      "exact hostname",
+      "immutable work-item ID and identity hash",
+      "activation hash",
+      "execution ceilings hash",
+      "validity interval"
+    ],
+    "readiness_path": "/v1/readiness",
+    "readiness_external_target_access": false,
+    "m1_boundary_behavior": "lease returns to exact NOT_AUTHORIZED sentinel before M2",
+    "terminal_behavior": "bounded launcher returns existing ECS egress service to desired/running/pending 0/0/0"
+  },
+  "terraform_delta_intent": {
+    "new_resources": [
+      "one locked SSM controlled-egress lease parameter"
+    ],
+    "iam": [
+      "research worker reads exact release, kill switch, and egress lease",
+      "sampled-slot executor reads and writes exact egress lease",
+      "controlled-egress task reads exact release, kill switch, and egress lease"
+    ],
+    "task_environment": [
+      "exact controlled-egress lease parameter supplied to research worker, sampled-slot activator, and controlled-egress task",
+      "kill-switch parameter supplied to controlled-egress task"
+    ],
+    "network_or_egress_changes": 0,
+    "desired_count_changes": 0,
+    "permission_or_release_value_changes": 0,
+    "delivery_or_contact_changes": 0
+  },
+  "validation": {
+    "focused_tests": "63 passed",
+    "full_tests": "667 passed, 2 expected skips",
+    "mypy": "177 source files passed",
+    "repository_check": "PASS",
+    "compileall": "PASS",
+    "terraform_fmt": "PASS",
+    "terraform_validate": "PASS_WITH_EXISTING_CLOUD_MAP_DEPRECATION_WARNING",
+    "git_diff_check": "PASS",
+    "synthetic_chain_terminal": "CONTACT_PHASE_NOT_AUTHORIZED",
+    "real_target_access": 0,
+    "aws_mutations": 0
+  },
+  "preserved_state": {
+    "slot01_attempt_history_count": 1,
+    "slot01_replacement_or_redraw": 0,
+    "slot02_started": false,
+    "real_public_research": "NOT_AUTHORIZED",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED",
+    "kill_switch": "TRIPPED",
+    "ai": "UNAVAILABLE",
+    "browser": "OFF",
+    "person_contact_processing": "NOT_AUTHORIZED",
+    "outreach_delivery": "NOT_AUTHORIZED"
+  }
+}

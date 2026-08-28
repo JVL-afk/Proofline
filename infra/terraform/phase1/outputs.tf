@@ -33,6 +33,7 @@ output "evidence_manifest_inputs" {
     kill_switch_parameter                     = aws_ssm_parameter.kill_switch.arn
     research_release_parameter                = aws_ssm_parameter.research_release.arn
     sampled_slot_execution_approval_parameter = aws_ssm_parameter.sampled_slot_execution_approval.arn
+    controlled_egress_lease_parameter         = aws_ssm_parameter.controlled_egress_lease.arn
     worker_desired_count                      = var.worker_desired_count
     intelligence_worker_desired_count         = var.intelligence_worker_desired_count
   }

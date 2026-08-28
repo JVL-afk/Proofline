@@ -29,15 +29,23 @@ from opintel_outreach import (
     OutreachWorkflowRunner,
 )
 from opintel_outreach_local import CanonicalOutreachSourceCatalog, SqlAlchemyOutreachRepository
-from opintel_research_local import SqlAlchemyResearchRepository, get_research_worker_settings
+from opintel_research_local import (
+    ControlledEgressTransport,
+    SqlAlchemyResearchRepository,
+    get_research_worker_settings,
+)
 from opintel_research_worker.activation import FrozenA09DecisionRegistry, SampledSlotActivator
 from opintel_research_worker.authorization import AwsSsmResearchAuthorization
+from opintel_research_worker.egress_lease import SsmControlledEgressLeaseStore
 from opintel_research_worker.kill_switch import AwsSsmStopSignal
 from opintel_research_worker.main import build_runner
 from opintel_research_worker.release_application import BoundedSampledSlotReleaseApplicator
 from opintel_research_worker.release_store import AwsSsmReleaseControlStore
 from opintel_research_worker.sample_registry import FrozenPhaseOneSampleRegistry
 
+from opintel_intelligence_worker.controlled_egress_lifecycle import (
+    BoundedControlledEgressLifecycle,
+)
 from opintel_intelligence_worker.coordinator_persistence import SqlAlchemyCoordinatorRepository
 from opintel_intelligence_worker.execution import BoundedSampledSlotExecution
 from opintel_intelligence_worker.production_runtime import (
@@ -69,9 +77,7 @@ def run() -> None:
     database_url = settings.resolved_database_url()
     clock = SystemClock()
     sample_registry = FrozenPhaseOneSampleRegistry(settings.phase1_slot_registry_path or "")
-    a09_registry = FrozenA09DecisionRegistry(
-        _required("OPINTEL_PHASE1_A09_DECISION_REGISTRY_PATH")
-    )
+    a09_registry = FrozenA09DecisionRegistry(_required("OPINTEL_PHASE1_A09_DECISION_REGISTRY_PATH"))
     store = AwsSsmReleaseControlStore(
         approval_parameter=_required("OPINTEL_SLOT_EXECUTION_APPROVAL_PARAMETER"),
         release_parameter=settings.research_release_parameter or "",
@@ -83,18 +89,12 @@ def run() -> None:
         sample_registry=sample_registry,
         a09_registry=a09_registry,
         runtime_revision=settings.research_runtime_revision or "",
-        expected_release_applicator_sha256=_required_sha(
-            "OPINTEL_RELEASE_APPLICATOR_SHA256"
-        ),
-        expected_activation_adapter_sha256=_required_sha(
-            "OPINTEL_ACTIVATION_ADAPTER_SHA256"
-        ),
+        expected_release_applicator_sha256=_required_sha("OPINTEL_RELEASE_APPLICATOR_SHA256"),
+        expected_activation_adapter_sha256=_required_sha("OPINTEL_ACTIVATION_ADAPTER_SHA256"),
         expected_activation_entry_point_sha256=_required_sha(
             "OPINTEL_ACTIVATION_ENTRY_POINT_SHA256"
         ),
-        expected_stage_coordinator_sha256=_required_sha(
-            "OPINTEL_STAGE_COORDINATOR_SHA256"
-        ),
+        expected_stage_coordinator_sha256=_required_sha("OPINTEL_STAGE_COORDINATOR_SHA256"),
         expected_m1_runtime_sha256=_required_sha("OPINTEL_M1_RUNTIME_SHA256"),
         expected_m2_m5_runtime_sha256=_required_sha("OPINTEL_M2_M5_RUNTIME_SHA256"),
         now=clock.now,
@@ -104,10 +104,9 @@ def run() -> None:
         settings.aws_region,
         settings.research_runtime_revision or "",
         settings.phase1_slot_registry_path or "",
+        settings.controlled_egress_lease_parameter,
     )
-    stop_signal = AwsSsmStopSignal(
-        settings.kill_switch_parameter or "", settings.aws_region
-    )
+    stop_signal = AwsSsmStopSignal(settings.kill_switch_parameter or "", settings.aws_region)
     research_repository = SqlAlchemyResearchRepository(database_url)
     research_repository.initialize()
     activator = SampledSlotActivator(
@@ -122,6 +121,19 @@ def run() -> None:
     coordinator_repository = SqlAlchemyCoordinatorRepository(database_url)
     coordinator_repository.initialize()
     research_runner = build_runner()
+    egress_transport = ControlledEgressTransport(
+        settings.controlled_egress_url or "",
+        authority.current_revision,
+        authority.current_gateway_capability,
+    )
+    controlled_egress = BoundedControlledEgressLifecycle(
+        store=SsmControlledEgressLeaseStore(
+            settings.controlled_egress_lease_parameter or "", settings.aws_region
+        ),
+        authority=authority,
+        stop_signal=stop_signal,
+        transport=egress_transport,
+    )
 
     opportunity_repository = SqlAlchemyOpportunityRepository(database_url)
     opportunity_repository.initialize()
@@ -138,9 +150,7 @@ def run() -> None:
     audit_repository = SqlAlchemyAuditRepository(database_url)
     audit_repository.initialize()
     audit_source = CanonicalAuditSourceCatalog(opportunity_repository, research_repository)
-    audit_service = AuditApplicationService(
-        audit_repository, audit_source, clock, UuidFactory()
-    )
+    audit_service = AuditApplicationService(audit_repository, audit_source, clock, UuidFactory())
     audit_runner = AuditWorkflowRunner(
         audit_repository, audit_source, DeterministicAuditComposer(UuidFactory()), clock
     )
@@ -206,6 +216,7 @@ def run() -> None:
         stop_signal=stop_signal,
         repository=coordinator_repository,
         stage_runtime_factory=stage_runtime,
+        controlled_egress=controlled_egress,
         now=clock.now,
     )
     print(json.dumps(execution.run(), sort_keys=True, separators=(",", ":")))

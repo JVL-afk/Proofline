@@ -26,6 +26,7 @@ class ResearchWorkerSettings(BaseSettings):
     egress_policy_revision: str | None = None
     kill_switch_parameter: str | None = None
     research_release_parameter: str | None = None
+    controlled_egress_lease_parameter: str | None = None
     research_runtime_revision: str | None = None
     phase1_slot_registry_path: str | None = None
     aws_region: str = "us-east-2"
@@ -54,6 +55,8 @@ class ResearchWorkerSettings(BaseSettings):
                 raise ValueError("Phase 1 requires an authoritative kill switch")
             if not self.research_release_parameter or not self.research_runtime_revision:
                 raise ValueError("Phase 1 requires an exact research release boundary")
+            if not self.controlled_egress_lease_parameter:
+                raise ValueError("Phase 1 requires an exact controlled-egress lease boundary")
             if not self.phase1_slot_registry_path:
                 raise ValueError("Phase 1 requires the frozen sampled-slot registry")
             if self.research_browser_enabled:

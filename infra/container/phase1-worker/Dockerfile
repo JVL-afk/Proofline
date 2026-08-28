@@ -60,8 +60,8 @@ COPY infra/container/phase1-worker/phase1-a09-decision-registry.json /app/config
 # The upstream Python runtime includes pip and its vendored build/network packages. The worker does
 # not install packages at runtime, so remove that tooling and its stale vendored metadata entirely.
 RUN apk add --no-cache --upgrade \
-        libcrypto3=3.5.7-r0 \
-        libssl3=3.5.7-r0 \
+        libcrypto3=3.5.8-r0 \
+        libssl3=3.5.8-r0 \
         xz-libs=5.8.3-r0 \
     && python -m pip check \
     && rm -rf \

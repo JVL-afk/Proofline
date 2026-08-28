@@ -142,6 +142,24 @@ def test_research_worker_image_revision_cannot_replace_controlled_egress_image()
     assert "var.worker_image_uri" not in egress_definition
 
 
+def test_controlled_egress_lease_is_exact_m1_only_authority_boundary() -> None:
+    compute = (PHASE1 / "compute.tf").read_text(encoding="utf-8")
+    assert 'resource "aws_ssm_parameter" "controlled_egress_lease"' in compute
+    assert 'name  = "/${var.name_prefix}/controlled-egress-lease"' in compute
+    assert 'value = jsonencode({ state = "NOT_AUTHORIZED" })' in compute
+    for task_name in ("worker", "sampled_slot_activator", "egress"):
+        task = compute.split(
+            f'resource "aws_ecs_task_definition" "{task_name}"', maxsplit=1
+        )[1].split('resource "aws_', maxsplit=1)[0]
+        assert "OPINTEL_CONTROLLED_EGRESS_LEASE_PARAMETER" in task
+    egress_policy = compute.split(
+        'data "aws_iam_policy_document" "egress"', maxsplit=1
+    )[1].split('resource "aws_iam_role_policy" "egress"', maxsplit=1)[0]
+    assert "aws_ssm_parameter.kill_switch.arn" in egress_policy
+    assert "aws_ssm_parameter.research_release.arn" in egress_policy
+    assert "aws_ssm_parameter.controlled_egress_lease.arn" in egress_policy
+
+
 def test_worker_uses_s3_gateway_prefix_list_without_public_https_egress() -> None:
     network = (PHASE1 / "network.tf").read_text(encoding="utf-8")
 

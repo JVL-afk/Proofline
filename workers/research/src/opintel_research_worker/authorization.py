@@ -13,6 +13,12 @@ from opintel_research_worker.activation import (
     A09_MARKER_PREFIX,
     release_execution_ceilings_sha256,
 )
+from opintel_research_worker.egress_lease import (
+    ControlledEgressLease,
+    SsmControlledEgressLeaseStore,
+    build_egress_lease,
+    parse_stored_egress_lease,
+)
 from opintel_research_worker.sample_registry import FrozenPhaseOneSampleRegistry
 
 
@@ -20,7 +26,14 @@ class AwsSsmResearchAuthorization:
     """Fail closed unless one current immutable release binds the exact business and host."""
 
     def __init__(
-        self, parameter_name: str, region: str, runtime_revision: str, slot_registry_path: str
+        self,
+        parameter_name: str,
+        region: str,
+        runtime_revision: str,
+        slot_registry_path: str,
+        egress_lease_parameter: str | None = None,
+        egress_lease_store: SsmControlledEgressLeaseStore | None = None,
+        require_egress_lease: bool = False,
     ) -> None:
         if not parameter_name or not runtime_revision or not slot_registry_path:
             raise ValueError("release parameter, runtime revision, and slot registry are required")
@@ -28,6 +41,10 @@ class AwsSsmResearchAuthorization:
         self._client = boto3.client("ssm", region_name=region)
         self._runtime_revision = runtime_revision
         self._slot_registry = FrozenPhaseOneSampleRegistry(slot_registry_path)
+        self._egress_lease_store = egress_lease_store
+        if self._egress_lease_store is None and egress_lease_parameter:
+            self._egress_lease_store = SsmControlledEgressLeaseStore(egress_lease_parameter, region)
+        self._require_egress_lease = require_egress_lease
 
     def current_release(self) -> LiveResearchPermissionRelease:
         try:
@@ -72,10 +89,8 @@ class AwsSsmResearchAuthorization:
             or activation.authorization_release_id != release.id
             or activation.authorization_configuration_hash != release.configuration_hash
             or activation.research_runtime_revision != self._runtime_revision
-            or activation.execution_ceilings_sha256
-            != release_execution_ceilings_sha256(release)
-            or f"{A09_MARKER_PREFIX}{activation.a09_decision_sha256}"
-            not in release.approval_ids
+            or activation.execution_ceilings_sha256 != release_execution_ceilings_sha256(release)
+            or f"{A09_MARKER_PREFIX}{activation.a09_decision_sha256}" not in release.approval_ids
             or activation.activation_sha256 != activation.computed_sha256()
             or release.business_identity != business.name
             or release.exact_hostname != business.permitted_host
@@ -88,6 +103,13 @@ class AwsSsmResearchAuthorization:
             or run.policy.max_total_bytes != min(5_000_000, release.max_total_bytes or 0)
         ):
             raise FetchError("research_scope_mismatch", "research run is outside exact authority")
+        if self._require_egress_lease:
+            lease = self.current_egress_lease()
+            if lease != build_egress_lease(release, run):
+                raise FetchError(
+                    "controlled_egress_lease_mismatch",
+                    "research run has no exact controlled-egress capability",
+                )
 
     def current_revision(self) -> str:
         return self.current_release().configuration_hash
@@ -101,6 +123,44 @@ class AwsSsmResearchAuthorization:
                 "research_sample_identity_mismatch", "research release is outside frozen sample"
             ) from error
         return frozenset(release.allowed_source_scope), release.configuration_hash
+
+    def current_egress_lease(self) -> ControlledEgressLease:
+        if self._egress_lease_store is None:
+            raise FetchError(
+                "controlled_egress_lease_unavailable",
+                "controlled-egress authority is unavailable",
+            )
+        try:
+            lease = parse_stored_egress_lease(self._egress_lease_store.read())
+        except Exception as error:
+            raise FetchError(
+                "controlled_egress_lease_invalid",
+                "controlled-egress authority is invalid",
+            ) from error
+        if not isinstance(lease, ControlledEgressLease):
+            raise FetchError(
+                "controlled_egress_not_authorized",
+                "controlled-egress authority is not active",
+            )
+        release = self.current_release()
+        now = datetime.now(UTC)
+        if (
+            lease.authorization_release_id != release.id
+            or lease.authorization_configuration_hash != release.configuration_hash
+            or lease.slot_number != release.slot_number
+            or lease.business_identity != release.business_identity
+            or lease.exact_hostname != release.exact_hostname
+            or lease.ordered_package_semantic_sha256 != release.ordered_package_sha256
+            or not lease.starts_at <= now < lease.expires_at
+        ):
+            raise FetchError(
+                "controlled_egress_lease_mismatch",
+                "controlled-egress lease is outside exact current authority",
+            )
+        return lease
+
+    def current_gateway_capability(self) -> dict[str, object]:
+        return self.current_egress_lease().capability_payload()
 
 
 class SyntheticResearchAuthorization:

@@ -92,6 +92,16 @@ resource "aws_ssm_parameter" "sampled_slot_execution_approval" {
   }
 }
 
+resource "aws_ssm_parameter" "controlled_egress_lease" {
+  name  = "/${var.name_prefix}/controlled-egress-lease"
+  type  = "String"
+  value = jsonencode({ state = "NOT_AUTHORIZED" })
+
+  lifecycle {
+    ignore_changes = [value]
+  }
+}
+
 data "aws_iam_policy_document" "worker" {
   statement {
     sid       = "RestrictedCaptureObjects"
@@ -114,9 +124,13 @@ data "aws_iam_policy_document" "worker" {
     resources = ["arn:${data.aws_partition.current.partition}:rds-db:${var.aws_region}:${data.aws_caller_identity.current.account_id}:dbuser:${aws_db_instance.phase1.resource_id}/${var.database_master_username}"]
   }
   statement {
-    sid       = "ReadKillSwitch"
-    actions   = ["ssm:GetParameter"]
-    resources = [aws_ssm_parameter.kill_switch.arn, aws_ssm_parameter.research_release.arn]
+    sid     = "ReadKillSwitch"
+    actions = ["ssm:GetParameter"]
+    resources = [
+      aws_ssm_parameter.kill_switch.arn,
+      aws_ssm_parameter.research_release.arn,
+      aws_ssm_parameter.controlled_egress_lease.arn,
+    ]
   }
 }
 
@@ -158,6 +172,7 @@ resource "aws_ecs_task_definition" "worker" {
         { name = "OPINTEL_EGRESS_POLICY_REVISION", value = "NOT_AUTHORIZED" },
         { name = "OPINTEL_RESEARCH_LIVE_ENABLED", value = "false" },
         { name = "OPINTEL_RESEARCH_RELEASE_PARAMETER", value = aws_ssm_parameter.research_release.name },
+        { name = "OPINTEL_CONTROLLED_EGRESS_LEASE_PARAMETER", value = aws_ssm_parameter.controlled_egress_lease.name },
         { name = "OPINTEL_RESEARCH_RUNTIME_REVISION", value = var.research_runtime_revision },
         { name = "OPINTEL_PHASE1_SLOT_REGISTRY_PATH", value = "/app/config/phase1-frozen-slot-registry.json" },
         { name = "OPINTEL_RESEARCH_BROWSER_ENABLED", value = "false" }
@@ -230,6 +245,7 @@ resource "aws_ecs_task_definition" "sampled_slot_activator" {
       { name = "OPINTEL_AWS_REGION", value = var.aws_region },
       { name = "OPINTEL_KILL_SWITCH_PARAMETER", value = aws_ssm_parameter.kill_switch.name },
       { name = "OPINTEL_RESEARCH_RELEASE_PARAMETER", value = aws_ssm_parameter.research_release.name },
+      { name = "OPINTEL_CONTROLLED_EGRESS_LEASE_PARAMETER", value = aws_ssm_parameter.controlled_egress_lease.name },
       { name = "OPINTEL_SLOT_EXECUTION_APPROVAL_PARAMETER", value = aws_ssm_parameter.sampled_slot_execution_approval.name },
       { name = "OPINTEL_RESEARCH_RUNTIME_REVISION", value = var.research_runtime_revision },
       { name = "OPINTEL_RELEASE_APPLICATOR_SHA256", value = var.sampled_slot_release_applicator_sha256 },
@@ -296,12 +312,17 @@ data "aws_iam_policy_document" "sampled_slot_executor" {
       aws_ssm_parameter.kill_switch.arn,
       aws_ssm_parameter.research_release.arn,
       aws_ssm_parameter.sampled_slot_execution_approval.arn,
+      aws_ssm_parameter.controlled_egress_lease.arn,
     ]
   }
   statement {
-    sid       = "ApplyAndTerminateExactSampledSlotAuthority"
-    actions   = ["ssm:PutParameter"]
-    resources = [aws_ssm_parameter.kill_switch.arn, aws_ssm_parameter.research_release.arn]
+    sid     = "ApplyAndTerminateExactSampledSlotAuthority"
+    actions = ["ssm:PutParameter"]
+    resources = [
+      aws_ssm_parameter.kill_switch.arn,
+      aws_ssm_parameter.research_release.arn,
+      aws_ssm_parameter.controlled_egress_lease.arn,
+    ]
   }
 }
 
@@ -357,7 +378,9 @@ resource "aws_ecs_task_definition" "egress" {
     user                   = "65532"
     portMappings           = [{ containerPort = 8080, hostPort = 8080, protocol = "tcp" }]
     environment = [
+      { name = "OPINTEL_KILL_SWITCH_PARAMETER", value = aws_ssm_parameter.kill_switch.name },
       { name = "OPINTEL_RESEARCH_RELEASE_PARAMETER", value = aws_ssm_parameter.research_release.name },
+      { name = "OPINTEL_CONTROLLED_EGRESS_LEASE_PARAMETER", value = aws_ssm_parameter.controlled_egress_lease.name },
       { name = "OPINTEL_RESEARCH_RUNTIME_REVISION", value = var.research_runtime_revision },
       { name = "OPINTEL_PHASE1_SLOT_REGISTRY_PATH", value = "/app/config/phase1-frozen-slot-registry.json" },
       { name = "OPINTEL_AWS_REGION", value = var.aws_region }
@@ -399,9 +422,13 @@ resource "aws_iam_role" "egress" {
 
 data "aws_iam_policy_document" "egress" {
   statement {
-    sid       = "ReadExactResearchRelease"
-    actions   = ["ssm:GetParameter"]
-    resources = [aws_ssm_parameter.research_release.arn]
+    sid     = "ReadExactResearchRelease"
+    actions = ["ssm:GetParameter"]
+    resources = [
+      aws_ssm_parameter.kill_switch.arn,
+      aws_ssm_parameter.research_release.arn,
+      aws_ssm_parameter.controlled_egress_lease.arn,
+    ]
   }
 }
 

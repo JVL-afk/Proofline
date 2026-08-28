@@ -9,6 +9,7 @@ from typing import Protocol
 from uuid import NAMESPACE_URL, UUID, uuid5
 
 from opintel_research.domain import ResearchRun
+from opintel_research_worker.egress_lease import ControlledEgressLease
 from opintel_research_worker.release_application import (
     BoundedSampledSlotReleaseApplicator,
     SampledSlotExecutionApproval,
@@ -45,6 +46,14 @@ class StageRuntime(Protocol):
     ) -> StageResult: ...
 
 
+class ControlledEgressLifecycle(Protocol):
+    def activate_and_await_ready(
+        self, release: LiveResearchPermissionRelease, run: ResearchRun
+    ) -> tuple[ControlledEgressLease, bool]: ...
+
+    def deactivate(self, lease: ControlledEgressLease) -> bool: ...
+
+
 class BoundedSampledSlotExecution:
     """Apply authority, activate once, advance exact lineage, then consume authority."""
 
@@ -57,6 +66,7 @@ class BoundedSampledSlotExecution:
         stop_signal: StopSignal,
         repository: SqlAlchemyCoordinatorRepository,
         stage_runtime_factory: Callable[[ResearchRun], StageRuntime],
+        controlled_egress: ControlledEgressLifecycle,
         now: Callable[[], datetime],
     ) -> None:
         self._release_applicator = release_applicator
@@ -65,18 +75,20 @@ class BoundedSampledSlotExecution:
         self._stop = stop_signal
         self._repository = repository
         self._stage_runtime_factory = stage_runtime_factory
+        self._controlled_egress = controlled_egress
         self._now = now
 
     def run(self) -> dict[str, object]:
         release: LiveResearchPermissionRelease | None = None
         approval: SampledSlotExecutionApproval | None = None
+        egress_lease: ControlledEgressLease | None = None
+        egress_lease_created = False
+        egress_deactivated = False
         terminal_reason = "BOUNDED_EXECUTION_FAILED"
         try:
             release, approval, release_created = self._release_applicator.apply()
             self._release_applicator.enter_run(release)
-            run, work_item_created = self._activator.activate(
-                approval.slot_number, release.id
-            )
+            run, work_item_created = self._activator.activate(approval.slot_number, release.id)
             identity = run.sampled_slot_identity
             activation = run.sampled_slot_activation
             if identity is None or activation is None:
@@ -113,6 +125,10 @@ class BoundedSampledSlotExecution:
             )
             runtime = self._stage_runtime_factory(run)
             stages = tuple(ShadowStage)
+            if len(existing) == 0:
+                egress_lease, egress_lease_created = (
+                    self._controlled_egress.activate_and_await_ready(release, run)
+                )
             for stage in stages[len(existing) :]:
                 self._require_current_authority(release)
                 predecessor = coordinator.artifacts[-1] if coordinator.artifacts else None
@@ -128,10 +144,11 @@ class BoundedSampledSlotExecution:
                     )
                     self._repository.append(artifact, self._now())
                     terminal_reason = outcome.reason
+                    if stage is ShadowStage.M1_MINIMIZED_EVIDENCE and egress_lease:
+                        egress_deactivated = self._controlled_egress.deactivate(egress_lease)
+                        egress_lease = None
                     self._release_applicator.consume(release, terminal_reason)
-                    self._repository.mark_terminal(
-                        coordinator_run_id, terminal_reason, self._now()
-                    )
+                    self._repository.mark_terminal(coordinator_run_id, terminal_reason, self._now())
                     return self._receipt(
                         release,
                         approval,
@@ -141,6 +158,8 @@ class BoundedSampledSlotExecution:
                         coordinator_created,
                         terminal_reason,
                         len(coordinator.artifacts),
+                        egress_lease_created,
+                        egress_deactivated,
                     )
                 artifact, _ = coordinator.accept_stage(
                     stage=stage,
@@ -150,6 +169,9 @@ class BoundedSampledSlotExecution:
                     kill_switch_tripped=False,
                 )
                 self._repository.append(artifact, self._now())
+                if stage is ShadowStage.M1_MINIMIZED_EVIDENCE and egress_lease:
+                    egress_deactivated = self._controlled_egress.deactivate(egress_lease)
+                    egress_lease = None
             terminal_reason = "CONTACT_PHASE_NOT_AUTHORIZED"
             self._release_applicator.consume(release, terminal_reason)
             self._repository.mark_terminal(coordinator_run_id, terminal_reason, self._now())
@@ -162,8 +184,13 @@ class BoundedSampledSlotExecution:
                 coordinator_created,
                 terminal_reason,
                 len(coordinator.artifacts),
+                egress_lease_created,
+                egress_deactivated,
             )
         except Exception:
+            if egress_lease is not None:
+                with suppress(Exception):
+                    self._controlled_egress.deactivate(egress_lease)
             if release is not None:
                 # The store is designed to trip first. Never mask the original failure.
                 with suppress(Exception):
@@ -187,12 +214,16 @@ class BoundedSampledSlotExecution:
         coordinator_created: bool,
         terminal_reason: str,
         accepted_stage_count: int,
+        egress_lease_created: bool,
+        egress_deactivated: bool,
     ) -> dict[str, object]:
         return {
             "accepted_stage_count": accepted_stage_count,
             "approval_id": str(approval.approval_id),
             "coordinator_created": coordinator_created,
             "coordinator_run_id": str(coordinator_run_id),
+            "controlled_egress_deactivated_after_m1": egress_deactivated,
+            "controlled_egress_lease_created": egress_lease_created,
             "release_created": release_created,
             "release_id": str(release.id),
             "terminal_reason": terminal_reason,
