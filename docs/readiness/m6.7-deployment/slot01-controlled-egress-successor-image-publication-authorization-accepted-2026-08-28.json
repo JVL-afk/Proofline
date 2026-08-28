@@ -1,0 +1,25 @@
+{
+  "schema_version": "m67.phase1.controlled-egress-successor-image-publication-authorization-accepted@1",
+  "state": "OWNER_APPROVED_UNCONSUMED",
+  "accepted_on": "2026-08-28",
+  "authorization_ready_file_sha256": "d0a592ed9a146d4b0501b742f7f41d955c50bf000a76aa628b4a5c7a689e3be5",
+  "exact_owner_statement_sha256": "0d076f0ae20c5cd186873153071343e520c63013d91389c37eba321f4725d1f0",
+  "authorization": "AUTHORIZE_SLOT01_CONTROLLED_EGRESS_SUCCESSOR_IMAGE_PUBLICATION",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "attempts_authorized": 1,
+  "retries_authorized": 0,
+  "active_authority_interpretation": {
+    "research_release": "The prior Slot 01 release is durably consumed with state not_authorized and cannot authorize execution.",
+    "controlled_egress_lease": "The successor lease parameter is not yet deployed; absence is fail-closed and grants no capability.",
+    "slot01_work_item": "No active or executable Slot 01 work item exists. The immutable terminal work item from the consumed M1_RESEARCH_FAILED attempt remains historical evidence.",
+    "no_historical_evidence_deleted_or_reinterpreted": true
+  },
+  "successor_governance_instruction": {
+    "next_gate_after_clean_publication_scan_and_plan": "READY_FOR_SLOT01_BOUNDED_REPAIR_AND_M1_M5_EXECUTION_AUTHORIZATION",
+    "one_owner_signature_per_repair_step": false,
+    "publication_authority_expanded": false,
+    "terraform_apply_authorized": false,
+    "slot01_execution_authorized": false
+  }
+}
