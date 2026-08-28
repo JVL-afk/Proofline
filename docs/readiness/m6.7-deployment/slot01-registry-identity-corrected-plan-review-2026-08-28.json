@@ -16,7 +16,7 @@
     "registry_evidence_sha256": "a175dfa32d67d433f57e90545b2f85b5b6cd83f5543a8c02aaa755744db0a410",
     "backend_identity_evidence_sha256": "61e74410cb456a70825eb1841f21905d3952dcb443c028360cea254bdfae069b",
     "managed_change_semantic_sha256": "f199bf11593bc600a067e2780924cafc775f7850444cac7d6cc620f64346da1d",
-    "slot01_execution_configuration_sha256": "fd4f2106e9c1def37f2f0db350232d813d493a8427245dc02ee4b21ebcf1ae4c"
+    "slot01_execution_configuration_sha256": "3139049ecd0ff1de6d2d45cee94338a9ff33ae154387423be8b35b49afd3d538"
   },
   "terraform": {
     "version": "1.15.9",

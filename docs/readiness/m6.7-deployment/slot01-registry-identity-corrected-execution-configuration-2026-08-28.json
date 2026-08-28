@@ -35,8 +35,8 @@
     "work_item_identity_schema_sha256": "d540c0017470188267b5331790571318262dbaffe70d405f7fdca6e4680b69e8"
   },
   "validity": {
-    "starts_at": "2026-08-28T05:30:00Z",
-    "expires_at": "2026-09-04T05:30:00Z"
+    "starts_at": "2026-08-28T04:55:00Z",
+    "expires_at": "2026-09-04T04:55:00Z"
   },
   "authorization_ceilings": {
     "max_logical_requests": 8,
