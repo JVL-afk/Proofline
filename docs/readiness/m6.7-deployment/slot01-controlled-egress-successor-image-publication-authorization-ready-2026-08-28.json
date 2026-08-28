@@ -1,0 +1,71 @@
+{
+  "schema_version": "m67.phase1.controlled-egress-successor-image-publication-authorization-ready@1",
+  "state": "READY_FOR_SLOT01_CONTROLLED_EGRESS_SUCCESSOR_IMAGE_PUBLICATION_AUTHORIZATION",
+  "captured_on": "2026-08-28",
+  "why_publication_is_the_next_genuine_gate": "The registry-consumable digest and ECR provider scan identity do not exist until the bounded image publication occurs. Those values are required before an ADR-0075 application plan and the combined deployment plus second Slot 01 execution authorization can be cryptographically bound.",
+  "bindings": {
+    "runtime_commit": "ec4c23a76c4f755115f3964ed6773b77a0852957",
+    "artifact_pipeline_commit": "71c2ecf7e6b6666288f17c434a6be41f045862f1",
+    "bounded_operator_commit": "b6b638f38eeff0d1a38d44a1e1a61ca61a69c211",
+    "local_image_evidence_commit": "7a50bc2d72afacc297141e18527affad48e9273a",
+    "local_image_evidence_sha256": "ae15351855877d01ba04c2f4c4f6000a8f20263d6971b7e97d83e9efd9f138ce",
+    "predecessor_terminal_evidence_sha256": "41670257a2c01083909f751ee69d4333289bf76d4e856c663d78f872a076ddc2",
+    "gateway_transport_sha256": "700410b2edb0eeeaa977a14b4c786a1150e1473c8ce01e0913c92363dbfa018c",
+    "research_authorization_sha256": "929c045499169d172a5786bf826570311026ab1ee6ddcff69674042f0dce3aac",
+    "egress_lease_sha256": "5829343312038c7d01f40faea3ff1116e5ae9b36f2ca9eae4d38cfbcb59656fc",
+    "egress_lifecycle_sha256": "cde03724c09c9e801c33568b7183cff9cf87bd8a984d48a620472f0ea613f07b",
+    "execution_sha256": "e0c299e007cc2808dfb25ddc24b57520edc186e665fff12a801d2b8001635a06",
+    "production_entry_point_sha256": "1fa20444480cd12b0049c0df4fac46865be1ffeb2addc8c97123136eb729fe9a",
+    "bounded_ecs_launcher_sha256": "bb13c794e355253774636d3b940de889f5322ff3c775eeafe87a7f0e7f778357",
+    "terraform_compute_sha256": "6c00130936fc6219d0804506b19805c80ffacc59b5e9229e6d1dfe171f4b85e8",
+    "terraform_observability_sha256": "1200a81acb2803c56879d10f5e528bc39b56a64f6a98939b511bda6cf9ae2cfd",
+    "dockerfile_sha256": "f293c19f94bfb751c39a9ab52f8453514ebf8a92951313e418f125651d2856b1"
+  },
+  "publication": {
+    "source_image": "localhost/m67-phase1-worker:git-71c2ecf-egress-successor",
+    "repository": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
+    "destination_tag": "git-71c2ecf-egress-successor",
+    "attempts": 1,
+    "retries": 0,
+    "publisher_path": "m67-phase1-worker-image-publisher",
+    "valid_from": "2026-08-28T07:00:00Z",
+    "valid_until": "2026-09-04T07:00:00Z"
+  },
+  "local_image_identity": {
+    "platform": "linux/amd64",
+    "oci_archive_sha256": "e069fa016d729e23887d09a6e4975116d2ef6c5985fd9927a7b509cd2553424e",
+    "docker_archive_sha256": "282a9a0658fcf9f545166b419f07adf6c6be5916217cb2c2c17a530e951793cb",
+    "oci_archive_manifest_digest": "sha256:fd3446d335f809303a001d059c8d4010e2e10aa2e19c945a6337299e6e507077",
+    "buildah_storage_manifest_digest": "sha256:412ea306b962af21f376f7070a08de5097d839cd8294094798d78f7b7a59bcd7",
+    "config_digest": "sha256:92b18aa2f4310d945a2baec3c1e70d9d7da02e455b22cd1fd6012e61c4d3b13f",
+    "parent_registry_digest": "sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79",
+    "new_source_diff_id": "sha256:90b87653b7762286be8686389ef6c4e9806fb568a74b67dd4e7685eef5d11f3f",
+    "equivalence": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN",
+    "offline_high_critical_findings": "0/0"
+  },
+  "post_publication_required": {
+    "registry_representation": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "platform": "linux/amd64",
+    "ecr_scan_status": "COMPLETE",
+    "critical_high_blocking": "0/0/0",
+    "terraform_plan": "fresh ADR-0075 plan using workload-plan provider reads and state-apply backend embedded at plan creation",
+    "terraform_apply": "NOT_AUTHORIZED",
+    "next_target_gate": "READY_FOR_SLOT01_CONTROLLED_EGRESS_SUCCESSOR_AND_M1_M5_EXECUTION_AUTHORIZATION"
+  },
+  "preserved_state": {
+    "services": "0/0/0",
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED",
+    "controlled_egress_lease": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "slot01_work_item": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "target_requests": 0,
+    "real_m1_m5_runs_under_successor": 0,
+    "slot02_started": false,
+    "replacement_or_redraw": 0
+  },
+  "exact_owner_approval_statement_sha256": "0d076f0ae20c5cd186873153071343e520c63013d91389c37eba321f4725d1f0",
+  "exact_owner_approval_statement": "I approve AUTHORIZE_SLOT01_CONTROLLED_EGRESS_SUCCESSOR_IMAGE_PUBLICATION for AWS account 785072247535 in us-east-2, binding runtime implementation commit ec4c23a76c4f755115f3964ed6773b77a0852957, artifact-pipeline commit 71c2ecf7e6b6666288f17c434a6be41f045862f1, bounded-operator commit b6b638f38eeff0d1a38d44a1e1a61ca61a69c211, local-image evidence commit 7a50bc2d72afacc297141e18527affad48e9273a, local-image evidence SHA-256 ae15351855877d01ba04c2f4c4f6000a8f20263d6971b7e97d83e9efd9f138ce, consumed first Slot 01 terminal evidence SHA-256 41670257a2c01083909f751ee69d4333289bf76d4e856c663d78f872a076ddc2, bounded ECS launcher SHA-256 bb13c794e355253774636d3b940de889f5322ff3c775eeafe87a7f0e7f778357, gateway transport SHA-256 700410b2edb0eeeaa977a14b4c786a1150e1473c8ce01e0913c92363dbfa018c, research authorization SHA-256 929c045499169d172a5786bf826570311026ab1ee6ddcff69674042f0dce3aac, controlled-egress lease SHA-256 5829343312038c7d01f40faea3ff1116e5ae9b36f2ca9eae4d38cfbcb59656fc, lifecycle SHA-256 cde03724c09c9e801c33568b7183cff9cf87bd8a984d48a620472f0ea613f07b, execution SHA-256 e0c299e007cc2808dfb25ddc24b57520edc186e665fff12a801d2b8001635a06, production entry-point SHA-256 1fa20444480cd12b0049c0df4fac46865be1ffeb2addc8c97123136eb729fe9a, Terraform compute SHA-256 6c00130936fc6219d0804506b19805c80ffacc59b5e9229e6d1dfe171f4b85e8, Terraform observability SHA-256 1200a81acb2803c56879d10f5e528bc39b56a64f6a98939b511bda6cf9ae2cfd, and Dockerfile SHA-256 f293c19f94bfb751c39a9ab52f8453514ebf8a92951313e418f125651d2856b1. I accept LOCAL_REPRESENTATION_EQUIVALENT_PROVEN for linux/amd64 local image localhost/m67-phase1-worker:git-71c2ecf-egress-successor with OCI archive SHA-256 e069fa016d729e23887d09a6e4975116d2ef6c5985fd9927a7b509cd2553424e, Docker archive SHA-256 282a9a0658fcf9f545166b419f07adf6c6be5916217cb2c2c17a530e951793cb, OCI archive manifest digest sha256:fd3446d335f809303a001d059c8d4010e2e10aa2e19c945a6337299e6e507077, Buildah storage manifest digest sha256:412ea306b962af21f376f7070a08de5097d839cd8294094798d78f7b7a59bcd7, shared config digest sha256:92b18aa2f4310d945a2baec3c1e70d9d7da02e455b22cd1fd6012e61c4d3b13f, new source diff ID sha256:90b87653b7762286be8686389ef6c4e9806fb568a74b67dd4e7685eef5d11f3f and accepted parent registry digest sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79. This authorizes exactly one terminal publication attempt between 2026-08-28T07:00:00Z and 2026-09-04T07:00:00Z through only the existing m67-phase1-worker-image-publisher path, publishing only that exact local image to 785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker:git-71c2ecf-egress-successor. Before publisher-role assumption, reverify every bound local identity, require the destination tag to be absent, and independently prove services 0/0/0, kill switch TRIPPED, research release NOT_AUTHORIZED, sampled-slot execution approval NOT_AUTHORIZED, controlled-egress lease NOT_AUTHORIZED, no Slot 01 release or work item, and all seven M6.7 permissions NOT_AUTHORIZED. Any mismatch terminates this authorization without publication or retry. This authorizes no rebuild, source or dependency change, alternate image, tag or repository, retagging, deletion, Terraform apply, service scaling, release or lease creation, Slot 01 execution, DNS or HTTP access to 903hvac.com, real-company M1-M5, AI, browser, person/contact processing, outreach, delivery, external communication, Slot 02, replacement or redraw. After publication, obtain the exact registry-consumable digest, media type, linux/amd64 platform, config digest and ordered compressed layer digests; cryptographically prove registry equivalence to the accepted local identity graph; require REPRESENTATION_EQUIVALENT_PROVEN; and require ECR provider scanning of that exact digest to reach COMPLETE with critical/high/blocking findings 0/0/0. If any condition fails, stop. If all pass, Codex may generate without apply a fresh ADR-0075-compliant Terraform saved application plan referencing only the proven registry digest, using the approved workload-plan identity for provider reads and embedding the protected state-apply backend at plan creation. Review and freeze every action, including the exact lease parameter, task-definition, bounded operator IAM and service-pointer changes; reject any unexplained network, egress, desired-count, permission-state, release-value, destructive or unrelated mutation. Terraform apply remains unauthorized. After a clean plan, prepare one combined READY_FOR_SLOT01_CONTROLLED_EGRESS_SUCCESSOR_AND_M1_M5_EXECUTION_AUTHORIZATION binding exact deployment, synthetic postdeploy validation and, only if all acceptance and Terraform NO_CHANGES checks pass, one fresh separately accounted Slot 01 M1-to-M5 attempt. The prior M1_RESEARCH_FAILED attempt and authority remain immutable and consumed, and this publication authorization itself grants no live research authority."
+}
