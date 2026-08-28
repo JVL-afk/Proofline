@@ -1,0 +1,58 @@
+{
+  "record_type": "M67_SLOT01_REGISTRY_IDENTITY_CORRECTED_MANAGED_CHANGE_SEMANTIC",
+  "version": "2026-08-28.1",
+  "state": "REVIEWED_MINIMUM_RUNTIME_IMAGE_SUCCESSOR",
+  "from_registry_digest": "sha256:3579c10d81401476c92ab5d2e0db415c79db7d55fa2c9e7549aae6c102a4f43e",
+  "to_registry_digest": "sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79",
+  "terraform_representation": {
+    "add": 3,
+    "change": 2,
+    "destroy": 3
+  },
+  "semantic_actions": {
+    "standalone_creates": 0,
+    "in_place_service_task_definition_updates": 2,
+    "expected_task_definition_replacements": 3,
+    "unexpected_replacements": 0,
+    "standalone_destroys": 0
+  },
+  "resources": [
+    {"address": "aws_ecs_service.intelligence", "actions": ["update"], "desired_count": "0 -> 0"},
+    {"address": "aws_ecs_service.worker", "actions": ["update"], "desired_count": "0 -> 0"},
+    {"address": "aws_ecs_task_definition.intelligence", "actions": ["delete", "create"], "reason": "exact image digest replacement only"},
+    {"address": "aws_ecs_task_definition.sampled_slot_activator", "actions": ["delete", "create"], "reason": "exact image digest replacement only"},
+    {"address": "aws_ecs_task_definition.worker", "actions": ["delete", "create"], "reason": "exact image digest replacement only"}
+  ],
+  "explicit_zero_changes": {
+    "iam": 0,
+    "network": 0,
+    "egress": 0,
+    "security_groups": 0,
+    "vpc_endpoints": 0,
+    "desired_counts": 0,
+    "permission_state": 0,
+    "research_release_value": 0,
+    "sampled_slot_approval_value": 0,
+    "database_or_storage": 0,
+    "unrelated_resources": 0
+  },
+  "task_definition_invariants": {
+    "environment_equal": true,
+    "commands_equal": true,
+    "roles_equal": true,
+    "cpu_memory_network_mode_equal": true,
+    "only_intended_runtime_change": "container image digest"
+  },
+  "registry_identity_contract": {
+    "slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "slot_registry_semantic_sha256": "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2",
+    "file_compared_only_to_file": true,
+    "semantic_compared_only_to_semantic": true
+  },
+  "network_binding_preserved": {
+    "configuration_sha256": "045be6e3c51c2bd1bf5c6dfe3feedf1c6a7c61a93e8a9238e547c211adc84c74",
+    "subnet": "subnet-0ed12f24100baf801",
+    "worker_security_group": "sg-05543bd7e420818bf",
+    "assign_public_ip": "DISABLED"
+  }
+}
