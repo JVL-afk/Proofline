@@ -350,6 +350,47 @@ def test_exact_owner_approval_can_replace_legacy_lock_once() -> None:
     assert store.kill == "TRIPPED"
 
 
+def test_fresh_exact_approval_can_replace_consumed_terminal_predecessor() -> None:
+    consumed_id = UUID("10000000-0000-4000-8000-000000000012")
+    consumed = _current_release().model_copy(
+        update={
+            "id": consumed_id,
+            "state": PermissionState.NOT_AUTHORIZED,
+            "suspended_reason": "CONSUMED:M1_RESEARCH_FAILED",
+            "revoked_at": NOW - timedelta(minutes=5),
+        }
+    )
+    approval = _approval(current_release_id=consumed_id)
+    store = _Store(approval, consumed.model_dump_json())
+    release, accepted, created = _applicator(store).apply()
+    assert created is True
+    assert accepted == approval
+    assert release.id == AUTHORIZED_RELEASE
+    assert release.state is PermissionState.AUTHORIZED
+    assert release.suspended_reason is None
+    assert release.revoked_at is None
+    assert store.release_writes == 1
+
+
+@pytest.mark.parametrize("reason", [None, "REVOKED", "EXPIRED", "CONSUMED"])
+def test_arbitrary_revoked_predecessor_remains_rejected(reason: str | None) -> None:
+    revoked_id = UUID("10000000-0000-4000-8000-000000000013")
+    revoked = _current_release().model_copy(
+        update={
+            "id": revoked_id,
+            "state": PermissionState.NOT_AUTHORIZED,
+            "suspended_reason": reason,
+            "revoked_at": NOW - timedelta(minutes=5),
+        }
+    )
+    approval = _approval(current_release_id=revoked_id)
+    store = _Store(approval, revoked.model_dump_json())
+    with pytest.raises(ValueError, match="conflicting, revoked, or superseded"):
+        _applicator(store).apply()
+    assert store.release_writes == 0
+    assert store.kill == "TRIPPED"
+
+
 @pytest.mark.parametrize(
     "change",
     [

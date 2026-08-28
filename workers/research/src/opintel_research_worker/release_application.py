@@ -286,7 +286,7 @@ class BoundedSampledSlotReleaseApplicator:
             current.id != approval.current_release_id
             or current.activity is not PermissionActivity.REAL_PUBLIC_RESEARCH
             or current.state is not PermissionState.NOT_AUTHORIZED
-            or current.revoked_at is not None
+            or not self._replaceable_locked_predecessor(current, approval)
             or current.workspace_id != approval.workspace_id
             or current.source_registry_id != approval.source_registry_id
             or current.source_registry_hash != approval.source_registry_hash
@@ -303,6 +303,21 @@ class BoundedSampledSlotReleaseApplicator:
         release = self._build_release(current, approval)
         self._store.write_release(release.model_dump_json())
         return release, approval, True
+
+    @staticmethod
+    def _replaceable_locked_predecessor(
+        current: LiveResearchPermissionRelease,
+        approval: SampledSlotExecutionApproval,
+    ) -> bool:
+        """Accept an ordinary lock or the exact immutable terminal form of a consumed run."""
+
+        if current.revoked_at is None:
+            return current.suspended_reason is None
+        return bool(
+            current.suspended_reason
+            and current.suspended_reason.startswith("CONSUMED:")
+            and current.owner_approval_sha256 != approval.owner_statement_sha256
+        )
 
     def enter_run(self, release: LiveResearchPermissionRelease) -> None:
         current = parse_stored_research_release(self._store.read_release())
