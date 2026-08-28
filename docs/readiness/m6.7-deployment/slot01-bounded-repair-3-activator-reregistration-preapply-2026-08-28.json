@@ -1,0 +1,50 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_3_ACTIVATOR_REREGISTRATION_PREAPPLY",
+  "version": "2026-08-28.1",
+  "state": "FINAL_ELIGIBLE_REPAIR_READY_FOR_BOUNDED_APPLY",
+  "owner_authorization_statement_sha256": "602f09f7f45bbe359fc186be54835af2cd3c15acc2e0e12a8242bdf55985ff36",
+  "repair_number": 3,
+  "predecessor_repair_commit": "97e08a50ddeeae6f8ccb1fdd37a85602fa0271c3",
+  "diagnosis": {
+    "classification": "ECS_TASK_DEFINITION_CONTROL_PLANE_REGISTRATION_DEFECT",
+    "task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-sampled-slot-activator:6",
+    "owner_describe_status": "ACTIVE",
+    "bounded_operator_run_task_result": "InvalidParameterException: TaskDefinition is inactive",
+    "observations": 3,
+    "tasks_created": 0,
+    "target_transport": 0,
+    "authority_mutations": 0,
+    "service_cleanup": "0/0/0"
+  },
+  "minimum_correction": {
+    "operation": "REREGISTER_BYTE_IDENTICAL_ACTIVATOR_TASK_DEFINITION_THROUGH_TERRAFORM",
+    "image_digest": "sha256:770d4248bbd7b5f915861331663dc68f5107cf87782a86bde5b7105488e16e50",
+    "application_code_change": false,
+    "image_publication": false,
+    "iam_change": false,
+    "network_or_egress_change": false,
+    "service_change": false,
+    "desired_count_change": false,
+    "authority_or_lock_value_change": false
+  },
+  "terraform": {
+    "saved_plan_sha256": "976958911a9b7f38cea12c9371021ad6ec4527fb621cda1dbebfeff82819fe1b",
+    "plan_json_sha256": "610ec9549f07d206f9b3d5a28d7e65d81695425a8a46894d1038e8131d482385",
+    "actions": {
+      "terraform_add": 1,
+      "terraform_change": 0,
+      "terraform_destroy": 1,
+      "expected_task_definition_replacements": 1,
+      "standalone_creates": 0,
+      "standalone_destroys": 0,
+      "unexpected_replacements": 0
+    },
+    "semantic_review": "PASS_EXACT_IDENTICAL_ACTIVATOR_REREGISTRATION_ONLY"
+  },
+  "bounds": {
+    "repair_count_after_apply": "3_OF_3",
+    "slot01_target_requests": 0,
+    "slot02_execution": 0,
+    "substantive_governance_change": false
+  }
+}
