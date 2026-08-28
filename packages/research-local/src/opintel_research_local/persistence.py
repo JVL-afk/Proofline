@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import json
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import overload
@@ -353,8 +353,18 @@ class SqlAlchemyResearchRepository:
                     data["id"] = _id(business.id)
                     data["workspace_id"] = _id(business.workspace_id)
                     session.add(BusinessRow(**data))
-                elif self._business(existing_business) != business:
-                    raise ValueError("existing sampled business differs from frozen identity")
+                else:
+                    # The registry-derived business is content-addressed, but its
+                    # created_at is copied from the authorizing release. A freshly
+                    # authorized release re-activating the same frozen slot therefore
+                    # carries a newer created_at than a row an earlier authority
+                    # persisted. Compare the immutable frozen identity only; the
+                    # persisted timestamp is retained.
+                    stored = self._business(existing_business)
+                    if replace(stored, created_at=business.created_at) != business:
+                        raise ValueError(
+                            "existing sampled business differs from frozen identity"
+                        )
                 session.add(self._run_row(run, idempotency_key))
             return run, True
         except IntegrityError as error:

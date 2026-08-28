@@ -1,0 +1,14 @@
+# M6.7 Phase 1 Slot 01 Window 2 bounded Repair #2.
+#
+# Thin single-layer successor to the deployed activator image. It replaces only the
+# local research persistence module so a freshly authorized release can re-activate
+# the frozen Slot 01 business a consumed predecessor already persisted. No other file,
+# dependency, entry point, or configuration changes.
+FROM localhost/m67-phase1-worker:git-e0d898c-repair2
+
+ARG SOURCE_COMMIT
+LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}" \
+      org.opencontainers.image.title="M6.7 Phase 1 Window 2 repair 2 reactivation fix" \
+      org.opencontainers.image.base.digest="sha256:770d4248bbd7b5f915861331663dc68f5107cf87782a86bde5b7105488e16e50"
+
+COPY packages/research-local/src/opintel_research_local/persistence.py /app/research-local/opintel_research_local/persistence.py

@@ -236,3 +236,50 @@ def test_sampled_identity_round_trips_without_a_schema_migration(tmp_path: Path)
     assert actual.sampled_slot_identity == identity
     assert repository.get_run(WORKSPACE_ID, RUN_ID) == expected
     assert business.name == identity.business_identity
+
+
+RUN_ID_SECOND = UUID("00000000-0000-4000-8000-000000000102")
+
+
+def _second_authorized_run() -> ResearchRun:
+    """A second frozen-slot activation as a freshly authorized release would build it."""
+    identity = FrozenPhaseOneSampleRegistry(REGISTRY).issue(RUN_ID_SECOND, 1)
+    base = _run(identity)
+    activation = replace(base.sampled_slot_activation, sampled_slot_identity=identity)
+    return replace(
+        base,
+        id=RUN_ID_SECOND,
+        sampled_slot_identity=identity,
+        sampled_slot_activation=activation,
+    )
+
+
+def test_reactivation_with_newer_release_timestamp_reuses_frozen_business(tmp_path: Path) -> None:
+    repository = SqlAlchemyResearchRepository(f"sqlite:///{tmp_path / 'reactivate.db'}")
+    repository.initialize()
+    identity_one = FrozenPhaseOneSampleRegistry(REGISTRY).issue(RUN_ID, 1)
+    old_business = replace(_business(), created_at=datetime(2026, 8, 28, 5, 47, tzinfo=UTC))
+    repository.activate_sampled_run(old_business, _run(identity_one), "sampled-slot01-canonical")
+
+    new_business = replace(_business(), created_at=datetime(2026, 8, 28, 18, 19, tzinfo=UTC))
+    actual, created = repository.activate_sampled_run(
+        new_business, _second_authorized_run(), "sampled-slot01-window2"
+    )
+    assert created is True
+    assert actual.id == RUN_ID_SECOND
+    stored = repository.get_business(WORKSPACE_ID, BUSINESS_ID)
+    assert stored is not None
+    assert stored.created_at.astimezone(UTC).hour == 5  # original timestamp retained
+
+
+def test_reactivation_still_rejects_a_genuinely_different_business_identity(tmp_path: Path) -> None:
+    repository = SqlAlchemyResearchRepository(f"sqlite:///{tmp_path / 'reject.db'}")
+    repository.initialize()
+    identity_one = FrozenPhaseOneSampleRegistry(REGISTRY).issue(RUN_ID, 1)
+    repository.activate_sampled_run(_business(), _run(identity_one), "sampled-slot01-canonical")
+
+    forged = replace(
+        _business(), name="Forged Business", created_at=datetime(2027, 1, 1, tzinfo=UTC)
+    )
+    with pytest.raises(ValueError, match="differs from frozen identity"):
+        repository.activate_sampled_run(forged, _second_authorized_run(), "sampled-slot01-window2")
