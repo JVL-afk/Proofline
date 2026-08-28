@@ -195,6 +195,11 @@ def test_environment_validation_operator_is_bounded_to_synthetic_resources() -> 
 
     assert 'actions   = ["ecs:RunTask"]' in policy
     assert "task-definition/${var.name_prefix}-research-worker:*" in policy
+    assert "task-definition/${var.name_prefix}-sampled-slot-activator:*" in policy
+    assert 'sid     = "BoundExactControlledEgressLifecycle"' in policy
+    assert 'actions = ["ecs:DescribeServices", "ecs:UpdateService"]' in policy
+    assert "service/${var.name_prefix}-research/${var.name_prefix}-controlled-egress" in policy
+    assert "aws_iam_role.sampled_slot_executor.arn" in policy
     assert 'variable = "ecs:cluster"' in policy
     assert 'actions = ["iam:PassRole"]' in policy
     assert "aws_iam_role.execution.arn" in policy

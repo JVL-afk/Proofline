@@ -117,6 +117,47 @@ resource "aws_iam_role" "operator" {
 
 data "aws_iam_policy_document" "environment_validation" {
   statement {
+    sid       = "OperateExactBoundedSampledSlotTasks"
+    actions   = ["ecs:RunTask"]
+    resources = ["arn:${data.aws_partition.current.partition}:ecs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:task-definition/${var.name_prefix}-sampled-slot-activator:*"]
+
+    condition {
+      test     = "ArnEquals"
+      variable = "ecs:cluster"
+      values   = [aws_ecs_cluster.phase1.arn]
+    }
+  }
+
+  statement {
+    sid     = "BoundExactControlledEgressLifecycle"
+    actions = ["ecs:DescribeServices", "ecs:UpdateService"]
+    resources = [
+      "arn:${data.aws_partition.current.partition}:ecs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:service/${var.name_prefix}-research/${var.name_prefix}-controlled-egress"
+    ]
+  }
+
+  statement {
+    sid       = "ObserveExactBoundedSampledSlotTask"
+    actions   = ["ecs:DescribeTasks"]
+    resources = ["arn:${data.aws_partition.current.partition}:ecs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:task/${var.name_prefix}-research/*"]
+  }
+
+  statement {
+    sid     = "PassExactBoundedSampledSlotRoles"
+    actions = ["iam:PassRole"]
+    resources = [
+      aws_iam_role.execution.arn,
+      aws_iam_role.sampled_slot_executor.arn,
+    ]
+
+    condition {
+      test     = "StringEquals"
+      variable = "iam:PassedToService"
+      values   = ["ecs-tasks.amazonaws.com"]
+    }
+  }
+
+  statement {
     sid       = "RunExactSyntheticValidationTask"
     actions   = ["ecs:RunTask"]
     resources = ["arn:${data.aws_partition.current.partition}:ecs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:task-definition/${var.name_prefix}-research-worker:*"]

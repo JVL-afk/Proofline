@@ -14,7 +14,7 @@ import time
 from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Protocol
+from typing import Protocol, cast
 
 
 @dataclass(frozen=True, slots=True)
@@ -46,9 +46,9 @@ class BoundedEcsExecutionConfiguration:
             or config.aws_region != "us-east-2"
             or config.assign_public_ip != "DISABLED"
             or not config.exact_image_digest.startswith("sha256:")
-            or not 1 <= config.startup_timeout_seconds <= 60
+            or not 1 <= config.startup_timeout_seconds <= 600
             or not 1 <= config.execution_timeout_seconds <= 900
-            or not 1 <= config.shutdown_timeout_seconds <= 60
+            or not 1 <= config.shutdown_timeout_seconds <= 600
         ):
             raise ValueError("bounded ECS configuration is outside accepted Phase 1 constraints")
         return config
@@ -146,17 +146,16 @@ def _service(client: EcsClient, config: BoundedEcsExecutionConfiguration) -> dic
         cluster=config.cluster, services=[config.controlled_egress_service]
     )
     services = response.get("services", [])
-    if not isinstance(services, list) or len(services) != 1:
+    if not isinstance(services, list) or len(services) != 1 or not isinstance(services[0], dict):
         raise RuntimeError("controlled-egress service is unavailable")
-    return services[0]
+    return cast(dict[str, object], services[0])
 
 
 def _counts(service: dict[str, object]) -> tuple[int, int, int]:
-    return (
-        int(service.get("desiredCount", -1)),
-        int(service.get("runningCount", -1)),
-        int(service.get("pendingCount", -1)),
-    )
+    values = tuple(service.get(name) for name in ("desiredCount", "runningCount", "pendingCount"))
+    if any(type(value) is not int for value in values):
+        raise RuntimeError("controlled-egress service count shape is invalid")
+    return cast(tuple[int, int, int], values)
 
 
 def _wait_service(
@@ -186,9 +185,9 @@ def _wait_task(
     while True:
         response = client.describe_tasks(cluster=config.cluster, tasks=[task_arn])
         tasks = response.get("tasks", [])
-        if not isinstance(tasks, list) or len(tasks) != 1:
+        if not isinstance(tasks, list) or len(tasks) != 1 or not isinstance(tasks[0], dict):
             raise RuntimeError("sampled-slot task state is unavailable")
-        task = tasks[0]
+        task = cast(dict[str, object], tasks[0])
         if task.get("lastStatus") == "STOPPED":
             return task
         if now() >= deadline:
