@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import time
 from collections.abc import Callable
 from dataclasses import dataclass
@@ -27,9 +28,12 @@ class BoundedEcsExecutionConfiguration:
     sampled_slot_task_definition: str
     sampled_slot_container_name: str
     exact_image_digest: str
+    task_execution_role_arn: str
+    task_role_arn: str
     subnet_id: str
     security_group_id: str
     assign_public_ip: str
+    task_definition_readiness_timeout_seconds: int
     startup_timeout_seconds: int
     execution_timeout_seconds: int
     shutdown_timeout_seconds: int
@@ -41,11 +45,21 @@ class BoundedEcsExecutionConfiguration:
             raise ValueError("bounded ECS configuration has unexpected or missing fields")
         config = cls(**value)
         if (
-            config.schema_version != "m67.phase1.controlled-egress-execution@1"
+            config.schema_version != "m67.phase1.controlled-egress-execution@2"
             or config.aws_account_id != "785072247535"
             or config.aws_region != "us-east-2"
             or config.assign_public_ip != "DISABLED"
             or not config.exact_image_digest.startswith("sha256:")
+            or not re.fullmatch(
+                rf"arn:aws:ecs:us-east-2:{config.aws_account_id}:task-definition/"
+                r"m67-phase1-sampled-slot-activator:[1-9][0-9]*",
+                config.sampled_slot_task_definition,
+            )
+            or config.task_execution_role_arn
+            != f"arn:aws:iam::{config.aws_account_id}:role/m67-phase1-ecs-execution"
+            or config.task_role_arn
+            != f"arn:aws:iam::{config.aws_account_id}:role/m67-phase1-sampled-slot-executor"
+            or not 1 <= config.task_definition_readiness_timeout_seconds <= 120
             or not 1 <= config.startup_timeout_seconds <= 600
             or not 1 <= config.execution_timeout_seconds <= 900
             or not 1 <= config.shutdown_timeout_seconds <= 600
@@ -70,7 +84,7 @@ def execute_once(
     sleep: Callable[[float], None] = time.sleep,
 ) -> dict[str, object]:
     """Scale one existing gateway, run one activator, and always restore service dormancy."""
-    _verify_task_definition(client, config)
+    _wait_task_definition_ready(client, config, now, sleep)
     service = _service(client, config)
     if _counts(service) != (0, 0, 0):
         raise RuntimeError("controlled-egress service is not initially dormant")
@@ -127,9 +141,28 @@ def execute_once(
             _wait_service(client, config, (0, 0, 0), config.shutdown_timeout_seconds, now, sleep)
 
 
-def _verify_task_definition(client: EcsClient, config: BoundedEcsExecutionConfiguration) -> None:
+def _verify_task_definition(client: EcsClient, config: BoundedEcsExecutionConfiguration) -> bool:
     response = client.describe_task_definition(taskDefinition=config.sampled_slot_task_definition)
     task = response.get("taskDefinition", {})
+    if not isinstance(task, dict):
+        raise RuntimeError("sampled-slot task definition shape is invalid")
+    if task.get("status") != "ACTIVE":
+        return False
+    expected_family, expected_revision = config.sampled_slot_task_definition.rsplit(":", 1)
+    expected_family = expected_family.rsplit("/", 1)[1]
+    runtime_platform = task.get("runtimePlatform", {})
+    if (
+        task.get("taskDefinitionArn") != config.sampled_slot_task_definition
+        or task.get("family") != expected_family
+        or task.get("revision") != int(expected_revision)
+        or task.get("executionRoleArn") != config.task_execution_role_arn
+        or task.get("taskRoleArn") != config.task_role_arn
+        or "FARGATE" not in task.get("compatibilities", [])
+        or not isinstance(runtime_platform, dict)
+        or runtime_platform.get("cpuArchitecture") != "X86_64"
+        or runtime_platform.get("operatingSystemFamily") != "LINUX"
+    ):
+        raise RuntimeError("sampled-slot task definition immutable identity mismatch")
     definitions = task.get("containerDefinitions", []) if isinstance(task, dict) else []
     if not isinstance(definitions, list) or len(definitions) != 1:
         raise RuntimeError("sampled-slot task definition shape is invalid")
@@ -139,6 +172,20 @@ def _verify_task_definition(client: EcsClient, config: BoundedEcsExecutionConfig
         "@" + config.exact_image_digest
     ):
         raise RuntimeError("sampled-slot task definition image identity mismatch")
+    return True
+
+
+def _wait_task_definition_ready(
+    client: EcsClient,
+    config: BoundedEcsExecutionConfiguration,
+    now: Callable[[], float],
+    sleep: Callable[[float], None],
+) -> None:
+    deadline = now() + config.task_definition_readiness_timeout_seconds
+    while not _verify_task_definition(client, config):
+        if now() >= deadline:
+            raise RuntimeError("sampled-slot task definition ACTIVE readiness timed out")
+        sleep(min(2.0, max(0.0, deadline - now())))
 
 
 def _service(client: EcsClient, config: BoundedEcsExecutionConfiguration) -> dict[str, object]:

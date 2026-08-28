@@ -117,6 +117,12 @@ resource "aws_iam_role" "operator" {
 
 data "aws_iam_policy_document" "environment_validation" {
   statement {
+    sid       = "ReadExactSampledSlotTaskDefinition"
+    actions   = ["ecs:DescribeTaskDefinition"]
+    resources = ["*"]
+  }
+
+  statement {
     sid       = "OperateExactBoundedSampledSlotTasks"
     actions   = ["ecs:RunTask"]
     resources = ["arn:${data.aws_partition.current.partition}:ecs:${var.aws_region}:${data.aws_caller_identity.current.account_id}:task-definition/${var.name_prefix}-sampled-slot-activator:*"]
