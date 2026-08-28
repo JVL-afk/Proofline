@@ -1,0 +1,26 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_AND_M1_M5_EXECUTION_AUTHORIZATION_ACCEPTED",
+  "version": "2026-08-28.1",
+  "state": "AUTHORIZED_SINGLE_BOUNDED_EXPERIMENT_WITH_FINITE_REPAIR_POLICY",
+  "accepted_at": "2026-08-28",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "authorization_event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_AND_M1_M5_EXECUTION",
+  "exact_statement_source": "docs/readiness/m6.7-deployment/slot01-bounded-repair-and-m1-m5-execution-authorization-ready-2026-08-28.json#exact_owner_approval_statement",
+  "exact_statement_sha256": "602f09f7f45bbe359fc186be54835af2cd3c15acc2e0e12a8242bdf55985ff36",
+  "ready_package_file_sha256": "7933ffd9c5a2045ba8f5a45cd03bffda68a45c7a3439df82792ae0bb88846c81",
+  "ready_package_commit": "c94b3cb0e84081b6def764bf4ca269d8aa89cee0",
+  "saved_plan_sha256": "55c861e18f8cb125b36846ebb5b89b29becfaa1c2368418752f9928c82ebd72f",
+  "registry_digest": "sha256:fd3446d335f809303a001d059c8d4010e2e10aa2e19c945a6337299e6e507077",
+  "repair_policy_sha256": "4e0a946f1e8368d7a17ba4c31597e4f5e0fd6500ff4ff0dba370fb0680b30492",
+  "execution_configuration_sha256": "a613f60265bedee2285f85b649fac9ac586d5661459920dcb1850379f07441c8",
+  "finite_repair_bounds": {
+    "maximum_repairs": 3,
+    "maximum_elapsed_hours": 24,
+    "maximum_cumulative_repair_infrastructure_cost_usd": "40.00"
+  },
+  "slot": "01",
+  "business": "903 HVAC",
+  "exact_hostname": "903hvac.com",
+  "slot02": "NOT_AUTHORIZED"
+}
