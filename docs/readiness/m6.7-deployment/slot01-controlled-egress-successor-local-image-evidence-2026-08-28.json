@@ -1,0 +1,89 @@
+{
+  "schema_version": "m67.phase1.controlled-egress-successor-local-image-evidence@1",
+  "state": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN_PUBLICATION_NOT_AUTHORIZED",
+  "captured_on": "2026-08-28",
+  "implementation": {
+    "runtime_commit": "ec4c23a76c4f755115f3964ed6773b77a0852957",
+    "artifact_pipeline_commit": "71c2ecf7e6b6666288f17c434a6be41f045862f1",
+    "bounded_operator_commit": "b6b638f38eeff0d1a38d44a1e1a61ca61a69c211",
+    "parent_registry_digest": "sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79",
+    "local_tag": "localhost/m67-phase1-worker:git-71c2ecf-egress-successor",
+    "dockerfile_sha256": "f293c19f94bfb751c39a9ab52f8453514ebf8a92951313e418f125651d2856b1"
+  },
+  "local_identity": {
+    "platform": "linux/amd64",
+    "oci_archive_sha256": "e069fa016d729e23887d09a6e4975116d2ef6c5985fd9927a7b509cd2553424e",
+    "docker_archive_sha256": "282a9a0658fcf9f545166b419f07adf6c6be5916217cb2c2c17a530e951793cb",
+    "oci_archive_manifest_digest": "sha256:fd3446d335f809303a001d059c8d4010e2e10aa2e19c945a6337299e6e507077",
+    "buildah_storage_manifest_digest": "sha256:412ea306b962af21f376f7070a08de5097d839cd8294094798d78f7b7a59bcd7",
+    "shared_config_digest": "sha256:92b18aa2f4310d945a2baec3c1e70d9d7da02e455b22cd1fd6012e61c4d3b13f",
+    "manifest_media_type": "application/vnd.oci.image.manifest.v1+json",
+    "layer_media_type": "application/vnd.oci.image.layer.v1.tar+gzip",
+    "representation_relationship": "The OCI archive uses gzip-compressed layer descriptors while Buildah local storage identifies the uncompressed layer tar streams. Each ordered OCI descriptor was decompressed and SHA-256 hashed to the same-position config rootfs diff ID. The config digest, platform, ordered filesystem semantics, parent label and source revision are identical.",
+    "classification": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN"
+  },
+  "ordered_layers": [
+    {"compressed":"sha256:41dad0242630a38b7248eae6e9a5c15660ccae64bd1365475addb3833d1b22fc","diff_id":"sha256:0854555d70acaa318b38ee50bc667cb51ff6bf0757624624c7ff3b6fe17459a0"},
+    {"compressed":"sha256:904e98828af6963af07a12868a5e6335ffa83b98007256966a1d64caf2aa81bd","diff_id":"sha256:98899702eeeaf1257e200c38c53a35c7908e831b11ea31d8f2e27fef0c5b8e3c"},
+    {"compressed":"sha256:f0d2f8eb61740062d5cbef1a7d3923f1b16da095cc1ffbc2b93a2e1840ff6cb5","diff_id":"sha256:3d538106e26b6c23fa9062243fe6d4aee2d373c4f928203cd76cacd51a0a51cd"},
+    {"compressed":"sha256:c58c9e5629c87c46982664e95ee5ee9ac897518c4bdb67b67aa4dc14d0db1697","diff_id":"sha256:44c1014e5162dcfb531c0eba5e0d87270b9b96204f8090e17f4f4b8036feba4d"},
+    {"compressed":"sha256:05cf827b3988e34b1f5218d804c52dbb776b6c14668e999c848e5837a973b053","diff_id":"sha256:ce57cf4ce41603010895d9f500deebb23d33bafda1e7b11e392c08809d9e9118"},
+    {"compressed":"sha256:fc8cb340f5f3a83f43d113f6bb0a1d1521193e65a24caa7c6cab64b910c7f5d5","diff_id":"sha256:a433a1a55f7468bd5cd9614c0205f2c2e87c2c0e97b97ace896471e2dafb9651"},
+    {"compressed":"sha256:1e89e2810a399fd7cc33ce4961cf8307588f30f13228c07d5ea2957ecd445c14","diff_id":"sha256:861fe0f883a4bd70c648249b506e8a80a42eb5d5ef59bfde3195d1349f9df585"},
+    {"compressed":"sha256:454a2446d831a26bb9ee9f8d7949db5420e6661e6c2e5dc89861465efd2bfeb9","diff_id":"sha256:2bbfa9254998b8be6e8d1b6bc6180f42238cb0d990f654a660ad9748b83add73"},
+    {"compressed":"sha256:926af23570992ee2123d6e53ed779db798a90494e59bf99a13b7428ca72388ce","diff_id":"sha256:2eb0966b4834d459cda535cff06222cff6b34efc90a71102ba585ce3df986ef3"},
+    {"compressed":"sha256:8363fa465092d9c8e6afbc6ee8fab80a15294571d10726e46ccd57165ea25943","diff_id":"sha256:80ea7145a8cb82671d8b95a28e34068d594479656fbcc8994db58ad468e7dba7"},
+    {"compressed":"sha256:49c918b7b40dc363b8683764b3df2a052239e71cafefadd7fbd2e6d88236e96b","diff_id":"sha256:b27fe9beef3a820ab5e0e27b3f76dec06e2b0d98ef8226c98957cec6d6628312"},
+    {"compressed":"sha256:3d0a2ff28ad62d683876eacaa69369e997da23b13b326b489893b053d67e4162","diff_id":"sha256:2df0437fe08b20245e866aebd70693ea37c452d766ec7fa6dc774a81fd82e97a"},
+    {"compressed":"sha256:44ce038b19d74655a7c6beebe77f76368a31a645cb46cbad4f9c845927ba1689","diff_id":"sha256:90b87653b7762286be8686389ef6c4e9806fb568a74b67dd4e7685eef5d11f3f"}
+  ],
+  "local_validation": {
+    "network_disabled_import_smoke": "PASS",
+    "libcrypto3": "3.5.8-r0",
+    "libssl3": "3.5.8-r0",
+    "trivy_version": "0.72.0",
+    "trivy_database_updated_at": "2026-08-27T02:16:59.49157034Z",
+    "trivy_offline_high": 0,
+    "trivy_offline_critical": 0,
+    "full_tests": "667 passed, 2 expected skips",
+    "focused_tests": "75 passed",
+    "focused_mypy": "31 source files passed",
+    "ruff": "PASS",
+    "repository_check": "PASS",
+    "compileall": "PASS",
+    "terraform_fmt": "PASS",
+    "terraform_validate": "PASS_WITH_EXISTING_CLOUD_MAP_DEPRECATION_WARNING",
+    "git_diff_check": "PASS"
+  },
+  "production_delta": {
+    "existing_egress_architecture_reused": true,
+    "network_or_egress_rule_changes": 0,
+    "desired_count_default_changes": 0,
+    "permission_or_release_value_changes": 0,
+    "new_locked_parameter": "/m67-phase1/controlled-egress-lease",
+    "operator_scope": [
+      "ecs:UpdateService and ecs:DescribeServices on only m67-phase1-controlled-egress",
+      "ecs:RunTask on only m67-phase1-sampled-slot-activator:* in only m67-phase1-research",
+      "ecs:DescribeTasks on only tasks in m67-phase1-research",
+      "iam:PassRole on only the Phase 1 ECS execution and sampled-slot executor roles"
+    ],
+    "authority_boundary": "The gateway requires kill switch RUN plus the exact current REAL_PUBLIC_RESEARCH release and exact work-item-bound controlled-egress lease. A running ECS service without those identities cannot authorize readiness or target transport.",
+    "readiness_before_transport": true,
+    "m1_terminal_dormancy": "The lease returns to NOT_AUTHORIZED at the M1 boundary and the bounded ECS launcher restores the service to 0/0/0 in a finally block.",
+    "m2_m5_network_authority": false
+  },
+  "preserved_history": {
+    "first_slot01_attempt_terminal_state": "M1_RESEARCH_FAILED",
+    "first_slot01_attempt_evidence_sha256": "41670257a2c01083909f751ee69d4333289bf76d4e856c663d78f872a076ddc2",
+    "first_slot01_attempt_authority_consumed": true,
+    "opportunity_interpretation": "NONE",
+    "replacement_or_redraw": 0,
+    "slot02_started": false
+  },
+  "aws": {
+    "image_publications": 0,
+    "terraform_applies": 0,
+    "other_mutations": 0,
+    "target_requests": 0
+  }
+}
