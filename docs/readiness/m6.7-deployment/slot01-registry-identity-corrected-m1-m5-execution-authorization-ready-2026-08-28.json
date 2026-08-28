@@ -1,0 +1,74 @@
+{
+  "record_type": "M67_SLOT01_REGISTRY_IDENTITY_CORRECTED_M1_M5_EXECUTION_AUTHORIZATION_READY",
+  "version": "2026-08-28.1",
+  "state": "READY_FOR_SLOT01_REGISTRY_IDENTITY_CORRECTED_M1_M5_EXECUTION_AUTHORIZATION",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "slot": "01",
+    "business": "903 HVAC",
+    "location": "Tyler / Smith County, Texas",
+    "hostname": "903hvac.com"
+  },
+  "bindings": {
+    "implementation_commit": "b3706bd871f84a70b0f55f380955bac5624021a6",
+    "artifact_pipeline_commit": "c60b6638caf6c01147179bb9ccba1d625de24f54",
+    "publication_evidence_commit": "ab8287a672b44a55361bc479842a0effa6b1ce29",
+    "plan_evidence_commit": "f633feeb8768f2fd298d1824cdd2f9371d12145e",
+    "final_plan_review_commit": "c76c058c7171840818529e96de1452fe4f0e4a2d",
+    "plan_review_sha256": "07f112ee2f78c1b9825be6856bb2fd68ce82dce033471b2b51734dd68cee1e27",
+    "registry_evidence_sha256": "a175dfa32d67d433f57e90545b2f85b5b6cd83f5543a8c02aaa755744db0a410",
+    "backend_identity_evidence_sha256": "61e74410cb456a70825eb1841f21905d3952dcb443c028360cea254bdfae069b",
+    "managed_change_semantic_sha256": "f199bf11593bc600a067e2780924cafc775f7850444cac7d6cc620f64346da1d",
+    "execution_configuration_sha256": "3139049ecd0ff1de6d2d45cee94338a9ff33ae154387423be8b35b49afd3d538"
+  },
+  "terraform": {
+    "saved_plan_sha256": "80408b91992866b7a68c3096428efde8f5be59eb0f7e61fb767a674937c370ba",
+    "plan_json_sha256": "67fea37af791e7f06be2b14bcdf1edb159b48491f246e14322dc3bb864a05f75",
+    "configuration_sha256": "f18a3ba9ba24b6c8c34b9973fe96917d7e11abb51020b158a2656af08ca5d07b",
+    "variables_sha256": "8255750981d127ae44e22fad14688356d8f8a353086def172e74876f04b049d7",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "backend_configuration_sha256": "c736be3d6edf4d79456b1b611ccd6809c1c718f4c5c2402ef00e66973471bef0",
+    "active_backend_metadata_sha256": "6bd94602ccbfc8adbe232047498af19e454d80c8144943f45592729e3ce9fae0",
+    "actions": "3 add, 2 change, 3 destroy",
+    "semantic_scope": "three expected ECS task-definition replacements and two service-pointer updates only",
+    "unexpected_or_standalone_destructive_actions": 0,
+    "iam_network_egress_desired_permission_release_changes": 0
+  },
+  "runtime": {
+    "registry_digest": "sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79",
+    "platform": "linux/amd64",
+    "config_digest": "sha256:ae137c009fc0ad46f8a56b47d329824da75e74325ef4f2e17b94995903f146ec",
+    "scan": "COMPLETE_0_0_0",
+    "release_application_sha256": "1082373ada9514cb947b671793a391776a18542165b9deab4668eb4f72b5f08d",
+    "sample_registry_sha256": "36503cf1ea91ceeaa99bc4aa003d6c87adb7a22ab71d8d6a01ea8e59fd5910d3",
+    "release_applicator_contract_sha256": "509e7fb00b5953e1caef8d59508022f8f3ca5dcbe28b0c7b5c3f1829da06df5e",
+    "activation_adapter_sha256": "95a0355637800d6e1309755bcb342a990ed8c506d6bbe1de28982c10f0e7cf7c",
+    "activation_entry_point_sha256": "12eaf66bf6dc491c4376d1d42ee6bd794a38636d8c9ce93e4b13b1c6db0b6bf5",
+    "coordinator_sha256": "fe0f34c9ef67c1aa5158aad8cf21206a31f167093f1aaa6350e9ba8f1cc54801",
+    "m1_sha256": "884b1f271b21f9d0ff4e73557be0ec8c01fda30969fa256f1e555afb4d7f2a99",
+    "m2_m5_sha256": "40e6511a00738980a7604a7d60c1c3419b396e049748f06ec0dae8116a5ebed3",
+    "work_item_schema_sha256": "d540c0017470188267b5331790571318262dbaffe70d405f7fdca6e4680b69e8"
+  },
+  "sample": {
+    "ordered_package_file_sha256": "0283f0a6956f6bd11e9326419d9671a61cc57dac0b6d376b9e2b7a11f0507a70",
+    "ordered_package_semantic_sha256": "3419a018a0cfb39c7fe6391c19b3acb43378b7b88e92337a2c70af305d345b5b",
+    "slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "slot_registry_semantic_sha256": "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2",
+    "a09_decision_sha256": "1d938be8cf8946bd2b3d0d652500590652e031e056c69ddb0f9449b348261182",
+    "identity_levels_interchangeable": false
+  },
+  "validity": {
+    "starts_at": "2026-08-28T04:55:00Z",
+    "expires_at": "2026-09-04T04:55:00Z"
+  },
+  "network": {
+    "configuration_sha256": "045be6e3c51c2bd1bf5c6dfe3feedf1c6a7c61a93e8a9238e547c211adc84c74",
+    "subnet": "subnet-0ed12f24100baf801",
+    "worker_security_group": "sg-05543bd7e420818bf",
+    "assign_public_ip": "DISABLED"
+  },
+  "chain": "DEPLOY -> POSTDEPLOY_VALIDATE -> TERRAFORM_NO_CHANGES -> EXACT_RELEASE -> IMMUTABLE_WORK_ITEM -> M1 -> M2 -> M3 -> M4 -> M5 -> CONTACT_PHASE_NOT_AUTHORIZED -> AUTHORITY_CONSUMED -> HUMAN_REVIEW",
+  "exact_owner_approval_statement_sha256": "aaf92c35bdc07be8815b8be3fb3aeb349218c7a86e4290004624d519d96e5c79",
+  "exact_owner_approval_statement": "I approve AUTHORIZE_SLOT01_REGISTRY_IDENTITY_CORRECTED_M1_M5_EXECUTION for AWS account 785072247535 in us-east-2, binding implementation commit b3706bd871f84a70b0f55f380955bac5624021a6, artifact-pipeline commit c60b6638caf6c01147179bb9ccba1d625de24f54, publication-evidence commit ab8287a672b44a55361bc479842a0effa6b1ce29, plan-evidence commit f633feeb8768f2fd298d1824cdd2f9371d12145e, final plan-review commit c76c058c7171840818529e96de1452fe4f0e4a2d, plan-review SHA-256 07f112ee2f78c1b9825be6856bb2fd68ce82dce033471b2b51734dd68cee1e27, registry evidence SHA-256 a175dfa32d67d433f57e90545b2f85b5b6cd83f5543a8c02aaa755744db0a410, backend-identity evidence SHA-256 61e74410cb456a70825eb1841f21905d3952dcb443c028360cea254bdfae069b, managed-change semantic SHA-256 f199bf11593bc600a067e2780924cafc775f7850444cac7d6cc620f64346da1d, exact execution configuration SHA-256 3139049ecd0ff1de6d2d45cee94338a9ff33ae154387423be8b35b49afd3d538, saved Terraform plan SHA-256 80408b91992866b7a68c3096428efde8f5be59eb0f7e61fb767a674937c370ba, plan-JSON SHA-256 67fea37af791e7f06be2b14bcdf1edb159b48491f246e14322dc3bb864a05f75, Terraform configuration SHA-256 f18a3ba9ba24b6c8c34b9973fe96917d7e11abb51020b158a2656af08ca5d07b, variables SHA-256 8255750981d127ae44e22fad14688356d8f8a353086def172e74876f04b049d7, provider-lock SHA-256 9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f, backend configuration SHA-256 c736be3d6edf4d79456b1b611ccd6809c1c718f4c5c2402ef00e66973471bef0, active backend metadata SHA-256 6bd94602ccbfc8adbe232047498af19e454d80c8144943f45592729e3ce9fae0, exact clean linux/amd64 registry digest sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79 and config digest sha256:ae137c009fc0ad46f8a56b47d329824da75e74325ef4f2e17b94995903f146ec. I accept ECR scan COMPLETE with critical/high/blocking 0/0/0. I bind frozen ordered-package file/semantic SHA-256 0283f0a6956f6bd11e9326419d9671a61cc57dac0b6d376b9e2b7a11f0507a70 and 3419a018a0cfb39c7fe6391c19b3acb43378b7b88e92337a2c70af305d345b5b, frozen slot-registry file SHA-256 63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2, frozen slot-registry semantic SHA-256 aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2 and A-09 decision SHA-256 1d938be8cf8946bd2b3d0d652500590652e031e056c69ddb0f9449b348261182. File identity must compare only to file identity and semantic identity only to semantic identity; either missing, altered or swapped identity must fail before release, work item or DNS. This authorizes application only of the exact saved plan using m67-phase1-terraform-workload-apply and its plan-time embedded m67-phase1-terraform-state-apply backend. The plan is exactly three expected ECS task-definition replacements and two service-pointer updates, Terraform 3 add, 2 change and 3 destroy, with zero standalone create/destroy, unexpected replacement, IAM, network, egress, desired-count, permission-state, lock-value or unrelated change. After apply, keep services 0/0/0, kill switch TRIPPED, both controls NOT_AUTHORIZED, no Slot 01 release and all seven permissions NOT_AUTHORIZED. Before 903hvac.com access, synthetically prove the exact digest and separate registry identities, unchanged Slot 01 mapping 903 HVAC to 903hvac.com, bounded production entry point, release applicator, immutable activation, coordinator, durable predecessor lineage, exclusion of legacy real-work pollers, wrong identity and absent/malformed/expired/revoked authority denials before DNS, duplicate safety, stage-order and predecessor-revision enforcement, kill-switch enforcement, synthetic M1-to-M5 terminal CONTACT_PHASE_NOT_AUTHORIZED, zero 903hvac.com requests, and Terraform NO_CHANGES using the accepted subnet subnet-0ed12f24100baf801, security group sg-05543bd7e420818bf and public IP disabled. Any failure stops before live authority with both controls NOT_AUTHORIZED and kill switch TRIPPED. IF AND ONLY IF all checks pass, this same approval authorizes exactly one terminal execution between 2026-08-28T04:55:00Z and 2026-09-04T04:55:00Z for frozen Slot 01, 903 HVAC, Tyler / Smith County, Texas, on exact hostname 903hvac.com: create the exact single-use REAL_PUBLIC_RESEARCH approval/release, derive one immutable registry-backed work item, revalidate before DNS/transport, execute M1 then deterministic offline M2, M3, M4 and M5 from exact accepted predecessor revisions, terminate at or before CONTACT_PHASE_NOT_AUTHORIZED, consume authority, restore both controls to NOT_AUTHORIZED and kill switch to TRIPPED, and stop for human review. M1 is limited to certificate-validated same-host HTTPS/443, runtime robots before research pages, public-IP/SSRF/DNS-rebinding/TLS/SNI controls, zero followed redirects, 8 logical requests, 8 authorization attempts, 250000 bytes per response, 2000000 total bytes, 600 seconds and USD 0; stricter clamps of 8 pages, 3 transport attempts, 120 operation seconds, 8-second timeout and two-second delay bind. Raw bodies remain ephemeral; only minimized redacted provenance-safe company evidence persists. M2-M5 inherit no Internet authority. FACT, INFERENCE, ESTIMATE, RECOMMENDATION and UNKNOWN remain distinct; public absence is not internal absence; unsupported internal facts must not be fabricated; truthful negative, insufficient-evidence, robots-denial and bounded-failure outcomes are valid without replacement. This authorizes zero REAL_BUSINESS_DISCOVERY, professional identity resolution, person/contact processing, contact eligibility/readiness, AI, browser, outreach, delivery, sending, external communication, Slot 02, replacement or redraw. No additional approval is required for the bound postdeploy validation, release creation, work-item derivation, activation, deterministic stage transitions, predecessor acceptance or terminal authority consumption. Do not start Slot 02."
+}
