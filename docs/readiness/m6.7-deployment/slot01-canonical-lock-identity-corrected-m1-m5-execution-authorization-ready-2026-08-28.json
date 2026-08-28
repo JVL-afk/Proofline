@@ -1,0 +1,55 @@
+{
+  "record_type": "M67_SLOT01_CANONICAL_LOCK_IDENTITY_CORRECTED_M1_M5_EXECUTION_AUTHORIZATION_READY",
+  "version": "2026-08-28.1",
+  "state": "READY_FOR_SLOT01_CANONICAL_LOCK_IDENTITY_CORRECTED_M1_M5_EXECUTION_AUTHORIZATION",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "slot": 1,
+    "business": "903 HVAC",
+    "location": "Tyler / Smith County, Texas",
+    "hostname": "903hvac.com"
+  },
+  "bindings": {
+    "canonical_lock_identity_evidence_sha256": "6da82dbfbd82ce5a84835c861d865f346fb98f7bd36cc79646173c72c92ff4b8",
+    "execution_configuration_sha256": "ee220eca25924980f9298dab8cf1cd0fda3f1cf0b3f8f3c2204f604bbd69239e",
+    "consumed_predecessor_terminal_evidence_sha256": "3b1b7db46dba3eccdd9e985a67017143c0adaad09077bc2058c0abcee26bf4a2",
+    "registry_digest": "sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79",
+    "research_task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-research-worker:9",
+    "intelligence_task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-intelligence-worker:6",
+    "sampled_slot_activator_task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-sampled-slot-activator:4",
+    "ordered_package_file_sha256": "0283f0a6956f6bd11e9326419d9671a61cc57dac0b6d376b9e2b7a11f0507a70",
+    "ordered_package_semantic_sha256": "3419a018a0cfb39c7fe6391c19b3acb43378b7b88e92337a2c70af305d345b5b",
+    "slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "slot_registry_semantic_sha256": "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2",
+    "a09_decision_sha256": "1d938be8cf8946bd2b3d0d652500590652e031e056c69ddb0f9449b348261182",
+    "network_configuration_sha256": "045be6e3c51c2bd1bf5c6dfe3feedf1c6a7c61a93e8a9238e547c211adc84c74",
+    "terraform_convergence_plan_sha256": "76db49642d2bcae369330c9b4bc871f7aa21dadd6a00f86bcdba47e80b3c0b88"
+  },
+  "canonical_predecessor": {
+    "parameter": "/m67-phase1/research-release",
+    "parameter_version": 1,
+    "exact_value": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "value_sha256": "fdb8e197e9ce7cf749cf4fe063908bc6c4e3066dce0a4adef302423d2381fa67",
+    "typed_value": {
+      "state": "NOT_AUTHORIZED"
+    },
+    "current_release_id": "1aff9800-f475-5136-8a7d-f7efa7c0c64f",
+    "meaning": "CANONICAL_RELEASE_ID_OF_EXACT_PERSISTED_PREDECESSOR"
+  },
+  "terraform_apply_authorized": false,
+  "deployment_authorized": false,
+  "validity": {
+    "starts_at": "2026-08-28T05:40:00Z",
+    "expires_at": "2026-09-04T05:40:00Z"
+  },
+  "prospective_approval_envelope": {
+    "approval_id": "0938582d-7241-583c-809d-482096010089",
+    "authorized_release_id": "02873c16-90de-53cc-ae43-b6e325e268d0",
+    "approval_artifact_sha256": "1bf82bda8eaa521136d12ebdb94c29aaba029895b9c429be9011896531e7b668",
+    "strict_model_validation": "PASS",
+    "aws_authority_created": false
+  },
+  "exact_owner_approval_statement_sha256": "72401ddabc44b37cc4d98e76c8d66021e3ed7fc0f29a87f41c05080f0694249b",
+  "exact_owner_approval_statement": "I approve AUTHORIZE_SLOT01_CANONICAL_LOCK_IDENTITY_CORRECTED_M1_M5_EXECUTION for AWS account 785072247535 in us-east-2, binding canonical lock identity evidence SHA-256 6da82dbfbd82ce5a84835c861d865f346fb98f7bd36cc79646173c72c92ff4b8, exact execution configuration SHA-256 ee220eca25924980f9298dab8cf1cd0fda3f1cf0b3f8f3c2204f604bbd69239e, consumed predecessor terminal evidence SHA-256 3b1b7db46dba3eccdd9e985a67017143c0adaad09077bc2058c0abcee26bf4a2, exact deployed linux/amd64 image digest sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79, research task definition arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-research-worker:9, intelligence task definition arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-intelligence-worker:6, sampled-slot activator task definition arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-sampled-slot-activator:4, frozen ordered-package file/semantic SHA-256 0283f0a6956f6bd11e9326419d9671a61cc57dac0b6d376b9e2b7a11f0507a70 and 3419a018a0cfb39c7fe6391c19b3acb43378b7b88e92337a2c70af305d345b5b, frozen slot-registry file SHA-256 63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2, frozen slot-registry semantic SHA-256 aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2, accepted Slot 01 A-09 decision SHA-256 1d938be8cf8946bd2b3d0d652500590652e031e056c69ddb0f9449b348261182, accepted network configuration SHA-256 045be6e3c51c2bd1bf5c6dfe3feedf1c6a7c61a93e8a9238e547c211adc84c74, and fresh Terraform NO_CHANGES evidence SHA-256 76db49642d2bcae369330c9b4bc871f7aa21dadd6a00f86bcdba47e80b3c0b88. I accept that the exact current persisted research-release predecessor is SSM parameter version 1 with the exact 26-byte value {\"state\":\"NOT_AUTHORIZED\"}, value SHA-256 fdb8e197e9ce7cf749cf4fe063908bc6c4e3066dce0a4adef302423d2381fa67, canonical typed state NOT_AUTHORIZED, and canonical release identity 1aff9800-f475-5136-8a7d-f7efa7c0c64f derived by RFC 4122 UUIDv5 using namespace URL 6ba7b811-9dad-11d1-80b4-00c04fd430c8 and name m67.phase1.legacy-research-release-lock:fdb8e197e9ce7cf749cf4fe063908bc6c4e3066dce0a4adef302423d2381fa67. current_release_id means only that canonical predecessor release identity. This authorizes no Terraform apply, image publication, deployment or infrastructure change. It authorizes exactly one terminal execution between 2026-08-28T05:40:00Z and 2026-09-04T05:40:00Z for frozen Phase 1 Slot 01, 903 HVAC, Tyler / Smith County, Texas, using only exact hostname 903hvac.com. Before authority creation, reverify the exact deployed digest and task definitions, Terraform NO_CHANGES, services 0/0/0, kill switch TRIPPED, research release still exact parameter version 1 and locked predecessor value/hash/canonical ID, sampled-slot approval NOT_AUTHORIZED, no Slot 01 release or work item, and no intervening authority mutation. Any mismatch terminates this authorization without retry. If every precondition passes, Codex may mechanically hash this accepted statement, populate only the exact immutable approval envelope with approval ID 0938582d-7241-583c-809d-482096010089, canonical current release ID 1aff9800-f475-5136-8a7d-f7efa7c0c64f and authorized release ID 02873c16-90de-53cc-ae43-b6e325e268d0, atomically replace only the exact predecessor lock with one single-use REAL_PUBLIC_RESEARCH release, derive exactly one immutable registry-backed Slot 01 work item, revalidate before DNS or transport, execute M1 bounded first-party public research and then deterministic offline M2, M3, M4 and M5 from exact accepted predecessor revisions, terminate at or before CONTACT_PHASE_NOT_AUTHORIZED, consume authority, restore research release and sampled-slot approval to NOT_AUTHORIZED, restore kill switch to TRIPPED, and stop for human review. M1 is limited to certificate-validated same-host HTTPS/443 on 903hvac.com, runtime robots evaluation before research pages, public-IP/SSRF/DNS-rebinding/TLS/SNI controls, zero followed redirects, 8 logical requests, 8 authorization attempts, 250000 bytes per response, 2000000 total bytes, 600 seconds and USD 0; stricter runtime clamps of 8 pages, 3 transport attempts, 120 operation seconds, 8-second timeout and two-second delay bind. Raw bodies remain ephemeral and only minimized redacted provenance-safe company evidence may persist. M2-M5 inherit no Internet authority. FACT, INFERENCE, ESTIMATE, RECOMMENDATION and UNKNOWN remain distinct; public absence is not internal absence; unsupported internal facts must not be fabricated; truthful negative, insufficient-evidence, robots-denial and bounded-failure outcomes are valid without replacement. This authorizes zero REAL_BUSINESS_DISCOVERY, professional identity resolution, person/contact processing, contact eligibility/readiness, AI, browser, outreach, delivery, sending, external communication, Slot 02, replacement or redraw. No additional approval is required for exact release creation, work-item derivation, activation, deterministic stage transitions, predecessor acceptance or terminal authority consumption. Do not start Slot 02."
+}

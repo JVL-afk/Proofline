@@ -1,0 +1,64 @@
+{
+  "record_type": "M67_SLOT01_CANONICAL_LEGACY_RESEARCH_LOCK_IDENTITY_EVIDENCE",
+  "version": "2026-08-28.1",
+  "state": "CANONICAL_LOCK_IDENTITY_PROVEN",
+  "observed_at_utc": "2026-08-28T05:35:18.8560398Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "parameter": {
+    "name": "/m67-phase1/research-release",
+    "arn": "arn:aws:ssm:us-east-2:785072247535:parameter/m67-phase1/research-release",
+    "type": "String",
+    "data_type": "text",
+    "tier": "Standard",
+    "version": 1,
+    "labels": [],
+    "last_modified_at": "2026-08-26T08:55:37.913Z",
+    "last_modified_by": "arn:aws:sts::785072247535:assumed-role/m67-phase1-terraform-workload-apply/m67-phase1-workload-apply",
+    "history_versions": 1,
+    "intervening_mutation": false
+  },
+  "persisted_value": {
+    "exact_text": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "utf8_byte_length": 26,
+    "utf8_hex": "7b227374617465223a224e4f545f415554484f52495a4544227d",
+    "sha256": "fdb8e197e9ce7cf749cf4fe063908bc6c4e3066dce0a4adef302423d2381fa67"
+  },
+  "canonical_normalization": {
+    "parser": "parse_stored_research_release",
+    "typed_class": "CanonicalNotAuthorizedResearchRelease",
+    "typed_value": {
+      "state": "NOT_AUTHORIZED"
+    },
+    "live_authority_fields": 0,
+    "can_authorize_release_work_item_or_dns": false
+  },
+  "canonical_identity_derivation": {
+    "algorithm_version": "m67.phase1.legacy-research-release-lock@1",
+    "algorithm": "RFC_4122_UUIDv5_SHA1",
+    "namespace": "UUID_NAMESPACE_URL",
+    "namespace_uuid": "6ba7b811-9dad-11d1-80b4-00c04fd430c8",
+    "name": "m67.phase1.legacy-research-release-lock:fdb8e197e9ce7cf749cf4fe063908bc6c4e3066dce0a4adef302423d2381fa67",
+    "canonical_release_id": "1aff9800-f475-5136-8a7d-f7efa7c0c64f",
+    "independent_standard_library_derivation_matches_deployed_constant": true
+  },
+  "identity_semantics": {
+    "current_release_id_means": "CANONICAL_RELEASE_ID_OF_THE_EXACT_PERSISTED_PREDECESSOR",
+    "not_a_file_hash": true,
+    "not_a_semantic_hash": true,
+    "not_an_approval_id": true,
+    "not_the_sentinel_sha256": true,
+    "not_an_unrelated_uuid": true,
+    "expected_compare_and_replace_predecessor_identity": "1aff9800-f475-5136-8a7d-f7efa7c0c64f"
+  },
+  "authority_state": {
+    "slot01_release": "ABSENT",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED",
+    "kill_switch": "TRIPPED",
+    "running_tasks": 0,
+    "services_desired_running_pending": "0/0/0",
+    "requests_to_903hvac_com": 0,
+    "real_company_m1_m5_runs": 0
+  },
+  "conclusion": "FRESH_AUTHORIZATION_ENVELOPE_CORRECTION_ONLY_NO_RUNTIME_IMAGE_TERRAFORM_OR_DEPLOYMENT_CHANGE_REQUIRED"
+}
