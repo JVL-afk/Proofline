@@ -1,0 +1,71 @@
+{
+  "record_type": "M67_SLOT01_V5_REGISTRY_IDENTITY_CORRECTED_LOCAL_EVIDENCE",
+  "version": "2026-08-28.1",
+  "state": "READY_FOR_BOUNDED_IMAGE_PUBLICATION_DECISION",
+  "scope": "explicit non-interchangeable slot-registry file and canonical semantic identities",
+  "source": {
+    "implementation_commit": "b3706bd871f84a70b0f55f380955bac5624021a6",
+    "artifact_pipeline_commit": "c60b6638caf6c01147179bb9ccba1d625de24f54",
+    "release_application_sha256": "1082373ada9514cb947b671793a391776a18542165b9deab4668eb4f72b5f08d",
+    "sample_registry_sha256": "36503cf1ea91ceeaa99bc4aa003d6c87adb7a22ab71d8d6a01ea8e59fd5910d3",
+    "focused_test_sha256": "53433018934e625e9df4e3c0c2088e0ff59195188ddcb74b881fb16ed60ad053",
+    "dockerfile_sha256": "d6fefe23bee1beddc4a17e3f79597746778e7e934000ccdd592e7a7f94d9cdcf"
+  },
+  "approval_contract": {
+    "schema": "m67.phase1.sampled-slot-execution-approval@3",
+    "slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "slot_registry_semantic_sha256": "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2",
+    "identity_levels_interchangeable": false,
+    "both_required_for_live_authority": true,
+    "frozen_slot01": "903 HVAC -> 903hvac.com"
+  },
+  "deterministic_validation": {
+    "correct_file_and_semantic": "ACCEPTED",
+    "file_as_semantic": "REJECTED_BEFORE_RELEASE_WORK_ITEM_OR_DNS",
+    "semantic_as_file": "REJECTED_BEFORE_RELEASE_WORK_ITEM_OR_DNS",
+    "missing_file": "REJECTED",
+    "missing_semantic": "REJECTED",
+    "altered_file": "REJECTED_BEFORE_RELEASE_WORK_ITEM_OR_DNS",
+    "altered_semantic": "REJECTED_BEFORE_RELEASE_WORK_ITEM_OR_DNS",
+    "focused_suite": "50 passed",
+    "full_suite": "659 passed, 2 expected PostgreSQL environment skips",
+    "repository_check": "PASS",
+    "compileall": "PASS",
+    "git_diff_check": "PASS",
+    "synthetic_terminal": "CONTACT_PHASE_NOT_AUTHORIZED"
+  },
+  "local_image": {
+    "tag": "localhost/m67-phase1-worker:git-c60b6638caf6-v5-registry-identity",
+    "parent_registry_digest": "sha256:3579c10d81401476c92ab5d2e0db415c79db7d55fa2c9e7549aae6c102a4f43e",
+    "platform": "linux/amd64",
+    "archive_manifest_digest": "sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79",
+    "storage_manifest_digest": "sha256:2269db91173bb15641cc4554c58bb29498c7899db202a48b7181a0cea45c8776",
+    "config_digest": "sha256:ae137c009fc0ad46f8a56b47d329824da75e74325ef4f2e17b94995903f146ec",
+    "oci_archive_sha256": "00047db0216104aa6fa6196351074976a9e8f9f60937b20e03d7aa8a2f41b36a",
+    "docker_archive_sha256": "740f9cad74db690287a784400ca26e6649e0ced7118df5ef524345562f57289d",
+    "local_representation_evidence_sha256": "a3a80eaa1a3728765decafe9275913f1697ea408acb1d17f8ff98f3836b45fe3",
+    "classification": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN",
+    "new_uncompressed_layer_digest": "sha256:2df0437fe08b20245e866aebd70693ea37c452d766ec7fa6dc774a81fd82e97a",
+    "openssl": "libcrypto3/libssl3 3.5.8-r0",
+    "offline_smoke": "PASS"
+  },
+  "preserved": {
+    "v5_runtime_architecture": "UNCHANGED",
+    "sentinel_adapters": "UNCHANGED",
+    "network": "UNCHANGED",
+    "activator_coordinator_m1_m5": "UNCHANGED",
+    "frozen_registry_file": "BYTE_IDENTICAL",
+    "slot01_a09": "UNCHANGED",
+    "aws_mutations": 0,
+    "image_publications": 0,
+    "requests_to_903hvac_com": 0,
+    "slot02": "NOT_AUTHORIZED"
+  },
+  "cloud_revalidation": {
+    "attempted_after_eight_hour_pause": true,
+    "result": "BLOCKED_SSO_SESSION_EXPIRED",
+    "state_not_inferred": true,
+    "publication_precondition": "re-authenticate and independently prove services 0/0/0, kill switch TRIPPED, both controls exact NOT_AUTHORIZED, no Slot 01 release, and all permissions NOT_AUTHORIZED before publisher-role assumption"
+  },
+  "consumed_predecessor_terminal_evidence_sha256": "0836faa608710b66ee65f9c2d3062a9b5979bb1dfc4ef3a7a23b1e12c0f12756"
+}
