@@ -1,0 +1,82 @@
+{
+  "record_type": "M67_SLOT01_REGISTRY_IDENTITY_CORRECTED_REGISTRY_EVIDENCE",
+  "version": "2026-08-28.1",
+  "state": "PUBLICATION_CONSUMED_SUCCESS_SCAN_PASS",
+  "observed_at_utc": "2026-08-28T04:42:05.589423Z",
+  "authorization": {
+    "name": "AUTHORIZE_SLOT01_REGISTRY_IDENTITY_CORRECTED_IMAGE_PUBLICATION",
+    "exact_statement_sha256": "25491c4bb2ec011de0e3fdfa1ce8e208e87ad646992ed4f0fda9518f24ef909e",
+    "ready_record_sha256": "9b496b46f41fdd3a56865f5fa6118fb2d7c2b24ff5a07cce79a1680555207b27",
+    "accepted_record_sha256": "a7c862cfc4c484fa16163c0d529c7b7c8883f1c6498d54ede05852cb945005f8",
+    "attempts_consumed": 1,
+    "retries": 0,
+    "reusable": false
+  },
+  "publication": {
+    "source": "localhost/m67-phase1-worker:git-c60b6638caf6-v5-registry-identity",
+    "destination": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker:git-c60b6638caf6-v5-registry-identity",
+    "publisher_identity": "arn:aws:sts::785072247535:assumed-role/m67-phase1-worker-image-publisher/m67-registry-identity-image-publication",
+    "publication_result_sha256": "c5a3dfa0f67361f4401893a57e6d84f2850df9ba3765aeb05ba61f54a31ce71d",
+    "rebuilds": 0,
+    "retags_or_substitutions": 0,
+    "alternate_destinations": 0,
+    "deletions": 0
+  },
+  "registry_identity": {
+    "classification": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "object_type": "SINGLE_PLATFORM_IMAGE_MANIFEST",
+    "media_type": "application/vnd.oci.image.manifest.v1+json",
+    "registry_digest": "sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79",
+    "local_archive_manifest_digest": "sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79",
+    "local_storage_manifest_digest": "sha256:2269db91173bb15641cc4554c58bb29498c7899db202a48b7181a0cea45c8776",
+    "archive_manifest_byte_equal_to_registry": true,
+    "platform": "linux/amd64",
+    "config_digest": "sha256:ae137c009fc0ad46f8a56b47d329824da75e74325ef4f2e17b94995903f146ec",
+    "ordered_compressed_layer_digests": [
+      "sha256:41dad0242630a38b7248eae6e9a5c15660ccae64bd1365475addb3833d1b22fc",
+      "sha256:904e98828af6963af07a12868a5e6335ffa83b98007256966a1d64caf2aa81bd",
+      "sha256:f0d2f8eb61740062d5cbef1a7d3923f1b16da095cc1ffbc2b93a2e1840ff6cb5",
+      "sha256:c58c9e5629c87c46982664e95ee5ee9ac897518c4bdb67b67aa4dc14d0db1697",
+      "sha256:05cf827b3988e34b1f5218d804c52dbb776b6c14668e999c848e5837a973b053",
+      "sha256:fc8cb340f5f3a83f43d113f6bb0a1d1521193e65a24caa7c6cab64b910c7f5d5",
+      "sha256:1e89e2810a399fd7cc33ce4961cf8307588f30f13228c07d5ea2957ecd445c14",
+      "sha256:454a2446d831a26bb9ee9f8d7949db5420e6661e6c2e5dc89861465efd2bfeb9",
+      "sha256:926af23570992ee2123d6e53ed779db798a90494e59bf99a13b7428ca72388ce",
+      "sha256:8363fa465092d9c8e6afbc6ee8fab80a15294571d10726e46ccd57165ea25943",
+      "sha256:49c918b7b40dc363b8683764b3df2a052239e71cafefadd7fbd2e6d88236e96b",
+      "sha256:3d0a2ff28ad62d683876eacaa69369e997da23b13b326b489893b053d67e4162"
+    ],
+    "index_or_manifest_list": false,
+    "attestations": []
+  },
+  "ecr_scan": {
+    "target_digest": "sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79",
+    "status": "COMPLETE",
+    "critical": 0,
+    "high": 0,
+    "blocking": 0,
+    "all_severity_counts": {}
+  },
+  "prepublication_state": {
+    "services_desired_running_pending": "0/0/0",
+    "live_tasks": 0,
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED",
+    "slot01_release": "ABSENT",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "destination_tag_before_attempt": "ABSENT"
+  },
+  "registry_identity_contract": {
+    "slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "slot_registry_semantic_sha256": "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2",
+    "identity_levels_interchangeable": false
+  },
+  "authority_preserved": {
+    "terraform_apply": false,
+    "slot01_release_created": false,
+    "requests_to_903hvac_com": 0,
+    "real_company_m1_m5_runs": 0,
+    "slot02": "NOT_AUTHORIZED"
+  }
+}
