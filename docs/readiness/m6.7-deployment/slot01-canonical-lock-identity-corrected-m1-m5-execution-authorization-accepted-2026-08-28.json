@@ -1,0 +1,30 @@
+{
+  "record_type": "AUTHORIZE_SLOT01_CANONICAL_LOCK_IDENTITY_CORRECTED_M1_M5_EXECUTION",
+  "version": "2026-08-28.1",
+  "state": "OWNER_ACCEPTED_SINGLE_USE_UNCONSUMED",
+  "accepted_at": "2026-08-28T05:40:00Z",
+  "accepted_statement_sha256": "72401ddabc44b37cc4d98e76c8d66021e3ed7fc0f29a87f41c05080f0694249b",
+  "exact_statement_source": "exact_owner_approval_statement in slot01-canonical-lock-identity-corrected-m1-m5-execution-authorization-ready-2026-08-28.json",
+  "canonical_lock_identity_evidence_sha256": "6da82dbfbd82ce5a84835c861d865f346fb98f7bd36cc79646173c72c92ff4b8",
+  "execution_configuration_sha256": "ee220eca25924980f9298dab8cf1cd0fda3f1cf0b3f8f3c2204f604bbd69239e",
+  "consumed_predecessor_terminal_evidence_sha256": "3b1b7db46dba3eccdd9e985a67017143c0adaad09077bc2058c0abcee26bf4a2",
+  "current_release_id": "1aff9800-f475-5136-8a7d-f7efa7c0c64f",
+  "authorized_release_id": "02873c16-90de-53cc-ae43-b6e325e268d0",
+  "approval_id": "0938582d-7241-583c-809d-482096010089",
+  "terraform_apply_authorized": false,
+  "deployment_authorized": false,
+  "conditional_live_authority": "ONLY_AFTER_ALL_EXACT_CURRENT_STATE_PRECONDITIONS_PASS",
+  "validity": {
+    "starts_at": "2026-08-28T05:40:00Z",
+    "expires_at": "2026-09-04T05:40:00Z"
+  },
+  "slot": {
+    "number": 1,
+    "business": "903 HVAC",
+    "hostname": "903hvac.com"
+  },
+  "attempts_authorized": 1,
+  "retries_authorized": 0,
+  "slot02_authorized": false,
+  "maximum_terminal_state": "CONTACT_PHASE_NOT_AUTHORIZED"
+}
