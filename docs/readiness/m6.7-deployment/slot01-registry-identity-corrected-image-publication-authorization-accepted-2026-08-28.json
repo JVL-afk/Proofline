@@ -1,0 +1,16 @@
+{
+  "record_type": "M67_SLOT01_REGISTRY_IDENTITY_CORRECTED_IMAGE_PUBLICATION_AUTHORIZATION_ACCEPTED",
+  "version": "2026-08-28.1",
+  "state": "AUTHORIZED_UNCONSUMED",
+  "accepted_at": "2026-08-28T04:35:00Z",
+  "authorization_name": "AUTHORIZE_SLOT01_REGISTRY_IDENTITY_CORRECTED_IMAGE_PUBLICATION",
+  "exact_statement_source": "exact_owner_approval_statement in slot01-registry-identity-corrected-image-publication-authorization-ready-2026-08-28.json",
+  "exact_statement_sha256": "25491c4bb2ec011de0e3fdfa1ce8e208e87ad646992ed4f0fda9518f24ef909e",
+  "ready_record_sha256": "9b496b46f41fdd3a56865f5fa6118fb2d7c2b24ff5a07cce79a1680555207b27",
+  "owner_instruction": "Record and execute the exact accepted authorization; restore AWS SSO, re-prove every bound precondition, publish exactly once, require registry equivalence and clean scan, generate and review a fresh ADR-0075 plan, and prepare the combined deployment and conditional Slot 01 execution gate without accessing 903hvac.com.",
+  "attempts_authorized": 1,
+  "retries_authorized": 0,
+  "terraform_apply_authorized": false,
+  "slot01_execution_authorized": false,
+  "requests_to_903hvac_com_authorized": 0
+}
