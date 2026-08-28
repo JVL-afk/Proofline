@@ -1,0 +1,19 @@
+# syntax=docker/dockerfile:1
+
+# Minimal source-only successor to the clean, deployed V5 sampled-approval sentinel image.
+# It makes the frozen registry file and canonical semantic identities explicit and validates
+# each against the corresponding immutable artifact. No M1-M5 or network behavior changes.
+FROM localhost/m67-phase1-worker:git-2e7b52baedff-v5-sampled-approval-sentinel
+
+ARG SOURCE_COMMIT
+LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}" \
+      org.opencontainers.image.base.digest="sha256:3579c10d81401476c92ab5d2e0db415c79db7d55fa2c9e7549aae6c102a4f43e" \
+      org.opencontainers.image.title="M6.7 Phase 1 V5 registry-identity-corrected worker"
+
+COPY workers/research/src/opintel_research_worker/release_application.py \
+     /app/research-worker/opintel_research_worker/release_application.py
+COPY workers/research/src/opintel_research_worker/sample_registry.py \
+     /app/research-worker/opintel_research_worker/sample_registry.py
+
+USER 65532:65532
+ENTRYPOINT ["python", "-m", "opintel_research_worker.main"]
