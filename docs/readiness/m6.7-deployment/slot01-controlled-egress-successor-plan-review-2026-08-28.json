@@ -1,0 +1,56 @@
+{
+  "record_type": "M67_SLOT01_CONTROLLED_EGRESS_SUCCESSOR_PLAN_REVIEW",
+  "version": "2026-08-28.1",
+  "state": "READY_FOR_COMBINED_BOUNDED_REPAIR_AND_EXECUTION_DECISION",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "registry_digest": "sha256:fd3446d335f809303a001d059c8d4010e2e10aa2e19c945a6337299e6e507077"
+  },
+  "identity_separation": {
+    "provider_reads_profile": "m67-phase1-workload-plan",
+    "provider_reads_arn": "arn:aws:sts::785072247535:assumed-role/m67-phase1-terraform-workload-plan/m67-phase1-workload-plan",
+    "embedded_backend_profile": "m67-phase1-state-apply-backend",
+    "embedded_backend_role": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "backend_identity_evidence_sha256": "4e41e2120092430aeed1dac3736f9451096ae793e0bfb42769b4c7d48088f12c",
+    "adr_0075": "PASS"
+  },
+  "hashes": {
+    "saved_plan_sha256": "55c861e18f8cb125b36846ebb5b89b29becfaa1c2368418752f9928c82ebd72f",
+    "plan_json_sha256": "bf7b392676f7fcda778135a754d5384bc4b0c02ec783c51ff3a6a86a6e940984",
+    "configuration_sha256": "73fd4c9d4f8d00e616789806085944c4cdeeef2b1aafe03023dde3ef865ccfc1",
+    "variables_sha256": "0d7ed680d711b3bc5e61d8574d8c010ad05e17ce4c08d65bbe3a08bf9a1adf08",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "backend_configuration_sha256": "c736be3d6edf4d79456b1b611ccd6809c1c718f4c5c2402ef00e66973471bef0",
+    "active_backend_metadata_sha256": "6bd94602ccbfc8adbe232047498af19e454d80c8144943f45592729e3ce9fae0",
+    "managed_change_semantic_sha256": "5cbdae7f79610a9a8b71aa57de6b131feb6e4bdbd48d2b33e2f1c5963e41cac8",
+    "registry_evidence_sha256": "1de1daf3291aaa104e6b6dc580228fb345398312917f4feda5917ed737b1723f"
+  },
+  "terraform_actions": {
+    "representation": {"add": 5, "change": 7, "destroy": 4},
+    "standalone_creates": 1,
+    "expected_task_definition_replacements": 4,
+    "service_pointer_updates": 3,
+    "bounded_iam_policy_updates": 4,
+    "unexpected_replacements": 0,
+    "standalone_destroys": 0
+  },
+  "review": {
+    "controlled_egress_lease_parameter": "EXPECTED_LOCKED_CREATE",
+    "task_definitions": "EXPECTED_REPLACEMENTS",
+    "service_pointers": "EXPECTED_DORMANT_UPDATES",
+    "operator_iam": "EXPECTED_EXACT_SERVICE_LIFECYCLE_AUTHORITY",
+    "worker_and_gateway_iam": "EXPECTED_EXACT_LEASE_PARAMETER_ACCESS",
+    "network_or_route_changes": 0,
+    "general_egress_changes": 0,
+    "desired_count_changes": 0,
+    "live_permission_or_release_value_changes": 0,
+    "unrelated_changes": 0
+  },
+  "validation": {
+    "terraform_fmt": "PASS",
+    "terraform_validate": "PASS_WITH_EXISTING_CLOUD_MAP_DEPRECATION_WARNING",
+    "git_diff_check": "PASS",
+    "apply_performed": false
+  }
+}

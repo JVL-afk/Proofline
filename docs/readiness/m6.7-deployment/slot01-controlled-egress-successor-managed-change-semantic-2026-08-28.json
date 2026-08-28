@@ -1,0 +1,56 @@
+{
+  "record_type": "M67_SLOT01_CONTROLLED_EGRESS_SUCCESSOR_MANAGED_CHANGE_SEMANTIC",
+  "version": "2026-08-28.1",
+  "state": "REVIEWED_MINIMUM_CONTROLLED_EGRESS_LIFECYCLE_SUCCESSOR",
+  "from_registry_digest": "sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79",
+  "to_registry_digest": "sha256:fd3446d335f809303a001d059c8d4010e2e10aa2e19c945a6337299e6e507077",
+  "terraform_representation": {"add": 5, "change": 7, "destroy": 4},
+  "semantic_actions": {
+    "standalone_creates": 1,
+    "in_place_service_task_definition_updates": 3,
+    "in_place_bounded_iam_policy_updates": 4,
+    "expected_task_definition_replacements": 4,
+    "unexpected_replacements": 0,
+    "standalone_destroys": 0
+  },
+  "standalone_create": {
+    "address": "aws_ssm_parameter.controlled_egress_lease",
+    "value": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "live_authority": false
+  },
+  "service_updates": [
+    {"address": "aws_ecs_service.egress", "desired_count": "0 -> 0"},
+    {"address": "aws_ecs_service.intelligence", "desired_count": "0 -> 0"},
+    {"address": "aws_ecs_service.worker", "desired_count": "0 -> 0"}
+  ],
+  "task_definition_replacements": [
+    "aws_ecs_task_definition.egress",
+    "aws_ecs_task_definition.intelligence",
+    "aws_ecs_task_definition.sampled_slot_activator",
+    "aws_ecs_task_definition.worker"
+  ],
+  "bounded_iam_updates": {
+    "aws_iam_role_policy.egress": "read exact kill-switch, research-release, controlled-egress-lease parameters only",
+    "aws_iam_role_policy.environment_validation": "run exact activator task; update/describe exact controlled-egress service; describe exact cluster tasks; pass exact roles",
+    "aws_iam_role_policy.sampled_slot_executor": "read/write exact controlled-egress lease parameter and preserve existing exact controls",
+    "aws_iam_role_policy.worker": "read exact controlled-egress lease parameter and preserve existing exact controls"
+  },
+  "explicit_zero_changes": {
+    "routes": 0,
+    "security_groups": 0,
+    "vpc_endpoints": 0,
+    "general_internet_egress": 0,
+    "desired_counts": 0,
+    "research_release_value": 0,
+    "sampled_slot_approval_value": 0,
+    "kill_switch_value": 0,
+    "database_or_storage": 0,
+    "unrelated_resources": 0
+  },
+  "lifecycle_invariant": "exact REAL_PUBLIC_RESEARCH authority -> exact lease -> bounded service readiness -> M1 transport -> lease removal and service dormancy; M2-M5 receive no network authority",
+  "network_binding_preserved": {
+    "subnet": "subnet-0ed12f24100baf801",
+    "worker_security_group": "sg-05543bd7e420818bf",
+    "assign_public_ip": "DISABLED"
+  }
+}

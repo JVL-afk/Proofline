@@ -1,0 +1,125 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_AND_M1_M5_EXECUTION_CONFIGURATION",
+  "version": "2026-08-28.1",
+  "state": "READY_FOR_EXACT_OWNER_AUTHORIZATION",
+  "validity": {
+    "starts_at": "2026-08-28T10:00:00Z",
+    "expires_at": "2026-09-04T10:00:00Z",
+    "repair_elapsed_time_ceiling_hours": 24
+  },
+  "identifiers": {
+    "experiment_id": "c14eb906-5711-5444-a12b-217dea75441f",
+    "approval_id": "a0a60384-8aaa-5097-a00e-974d091e304a",
+    "authorized_release_id": "4dcea383-ac32-53ab-acb5-ed468bf6081d",
+    "controlled_egress_lease_id": "5ab6abad-b016-555e-8084-bb5b8390865b",
+    "immutable_work_item_id": "acf3f67b-0c00-587c-b061-571c8de21d30"
+  },
+  "initial_deployment": {
+    "registry_digest": "sha256:fd3446d335f809303a001d059c8d4010e2e10aa2e19c945a6337299e6e507077",
+    "saved_plan_sha256": "55c861e18f8cb125b36846ebb5b89b29becfaa1c2368418752f9928c82ebd72f",
+    "plan_json_sha256": "bf7b392676f7fcda778135a754d5384bc4b0c02ec783c51ff3a6a86a6e940984",
+    "plan_review_sha256": "850c49c13935086ab9dd3675912b4c4b93ad98dde2b9307853a157102d955854",
+    "managed_change_semantic_sha256": "5cbdae7f79610a9a8b71aa57de6b131feb6e4bdbd48d2b33e2f1c5963e41cac8",
+    "apply_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "embedded_backend_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply"
+  },
+  "frozen_slot": {
+    "slot": 1,
+    "business": "903 HVAC",
+    "city": "Tyler",
+    "county": "Smith County",
+    "state": "Texas",
+    "exact_hostname": "903hvac.com",
+    "ordered_package_file_sha256": "0283f0a6956f6bd11e9326419d9671a61cc57dac0b6d376b9e2b7a11f0507a70",
+    "ordered_package_semantic_sha256": "3419a018a0cfb39c7fe6391c19b3acb43378b7b88e92337a2c70af305d345b5b",
+    "slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "slot_registry_semantic_sha256": "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2",
+    "a09_decision_sha256": "1d938be8cf8946bd2b3d0d652500590652e031e056c69ddb0f9449b348261182"
+  },
+  "runtime_components": {
+    "runtime_implementation_commit": "ec4c23a76c4f755115f3964ed6773b77a0852957",
+    "artifact_pipeline_commit": "71c2ecf7e6b6666288f17c434a6be41f045862f1",
+    "bounded_operator_commit": "b6b638f38eeff0d1a38d44a1e1a61ca61a69c211",
+    "bounded_ecs_launcher_sha256": "bb13c794e355253774636d3b940de889f5322ff3c775eeafe87a7f0e7f778357",
+    "gateway_transport_sha256": "700410b2edb0eeeaa977a14b4c786a1150e1473c8ce01e0913c92363dbfa018c",
+    "research_authorization_sha256": "929c045499169d172a5786bf826570311026ab1ee6ddcff69674042f0dce3aac",
+    "controlled_egress_lease_sha256": "5829343312038c7d01f40faea3ff1116e5ae9b36f2ca9eae4d38cfbcb59656fc",
+    "lifecycle_sha256": "cde03724c09c9e801c33568b7183cff9cf87bd8a984d48a620472f0ea613f07b",
+    "execution_sha256": "e0c299e007cc2808dfb25ddc24b57520edc186e665fff12a801d2b8001635a06",
+    "production_entry_point_sha256": "1fa20444480cd12b0049c0df4fac46865be1ffeb2addc8c97123136eb729fe9a",
+    "m1_runtime_sha256": "884b1f271b21f9d0ff4e73557be0ec8c01fda30969fa256f1e555afb4d7f2a99",
+    "m2_m5_runtime_sha256": "40e6511a00738980a7604a7d60c1c3419b396e049748f06ec0dae8116a5ebed3",
+    "coordinator_sha256": "fe0f34c9ef67c1aa5158aad8cf21206a31f167093f1aaa6350e9ba8f1cc54801"
+  },
+  "current_predecessors_before_initial_apply": {
+    "research_release": {
+      "parameter_version": 3,
+      "value_sha256": "2a9466e72af892e93b86d8e3958e3f2adde22bb3c62e95ca0c0604d14e6b2f5b",
+      "canonical_release_id": "02873c16-90de-53cc-ae43-b6e325e268d0",
+      "state": "not_authorized",
+      "suspended_reason": "CONSUMED:M1_RESEARCH_FAILED"
+    },
+    "sampled_slot_approval": {
+      "parameter_version": 7,
+      "exact_value": "{\"state\":\"NOT_AUTHORIZED\"}",
+      "value_sha256": "fdb8e197e9ce7cf749cf4fe063908bc6c4e3066dce0a4adef302423d2381fa67"
+    },
+    "kill_switch": {"parameter_version": 9, "value": "TRIPPED"},
+    "controlled_egress_lease": "ABSENT_BEFORE_INITIAL_DEPLOYMENT"
+  },
+  "authority_envelope": {
+    "permission": "REAL_PUBLIC_RESEARCH",
+    "scope": ["903hvac.com"],
+    "owner_approval_sha256": "SHA256(EXACT_ACCEPTED_OWNER_STATEMENT_UTF8)",
+    "single_use": true,
+    "no_permission_inheritance": true,
+    "terminal_rollback_state": "NOT_AUTHORIZED"
+  },
+  "research_ceilings": {
+    "logical_requests": 8,
+    "authorization_attempts": 8,
+    "transport_attempts": 3,
+    "response_bytes": 250000,
+    "total_bytes": 2000000,
+    "authority_seconds": 600,
+    "operation_seconds": 120,
+    "request_timeout_seconds": 8,
+    "minimum_delay_seconds": 2,
+    "followed_redirects": 0,
+    "research_cost_usd": "0"
+  },
+  "source_policy": {
+    "scheme": "https",
+    "port": 443,
+    "same_host_only": true,
+    "runtime_robots_before_research": true,
+    "certificate_validation": true,
+    "public_ip_ssrf_dns_rebinding_tls_sni_controls": true,
+    "raw_bodies": "EPHEMERAL_ONLY",
+    "durable_evidence": "MINIMIZED_REDACTED_PROVENANCE_SAFE_COMPANY_ONLY"
+  },
+  "repair_policy_sha256": "4e0a946f1e8368d7a17ba4c31597e4f5e0fd6500ff4ff0dba370fb0680b30492",
+  "first_slot01_attempt": {
+    "terminal": "M1_RESEARCH_FAILED",
+    "terminal_evidence_sha256": "41670257a2c01083909f751ee69d4333289bf76d4e856c663d78f872a076ddc2",
+    "target_transport": 0,
+    "authority": "CONSUMED_IMMUTABLE",
+    "interpretation": "INFRASTRUCTURE_AVAILABILITY_DEFECT_NOT_OPPORTUNITY_EVIDENCE"
+  },
+  "workflow": [
+    "apply exact initial controlled-egress successor plan",
+    "synthetic postdeployment validation and Terraform NO_CHANGES",
+    "create exact single-use Slot 01 authority",
+    "derive exact immutable work item",
+    "make controlled egress ready under exact lease",
+    "M1 bounded first-party research",
+    "M2 deterministic offline",
+    "M3 deterministic offline",
+    "M4 deterministic offline",
+    "M5 deterministic non-delivered artifact",
+    "CONTACT_PHASE_NOT_AUTHORIZED",
+    "authority consumed and all controls dormant",
+    "human review"
+  ],
+  "maximum_terminal_state": "CONTACT_PHASE_NOT_AUTHORIZED"
+}

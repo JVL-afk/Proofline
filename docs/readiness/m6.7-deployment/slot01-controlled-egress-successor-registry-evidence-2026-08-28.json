@@ -1,0 +1,65 @@
+{
+  "record_type": "M67_SLOT01_CONTROLLED_EGRESS_SUCCESSOR_REGISTRY_EVIDENCE",
+  "version": "2026-08-28.1",
+  "state": "REPRESENTATION_EQUIVALENT_PROVEN_SCAN_PASS",
+  "observed_at": "2026-08-28T07:19:22.442451+00:00",
+  "publication_authorization_statement_sha256": "0d076f0ae20c5cd186873153071343e520c63013d91389c37eba321f4725d1f0",
+  "publication_attempts_consumed": 1,
+  "source_image": "localhost/m67-phase1-worker:git-71c2ecf-egress-successor",
+  "destination": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker:git-71c2ecf-egress-successor",
+  "registry": {
+    "digest": "sha256:fd3446d335f809303a001d059c8d4010e2e10aa2e19c945a6337299e6e507077",
+    "object_type": "SINGLE_PLATFORM_IMAGE_MANIFEST",
+    "media_type": "application/vnd.oci.image.manifest.v1+json",
+    "platform": "linux/amd64",
+    "config_digest": "sha256:92b18aa2f4310d945a2baec3c1e70d9d7da02e455b22cd1fd6012e61c4d3b13f",
+    "ordered_compressed_layer_digests": [
+      "sha256:41dad0242630a38b7248eae6e9a5c15660ccae64bd1365475addb3833d1b22fc",
+      "sha256:904e98828af6963af07a12868a5e6335ffa83b98007256966a1d64caf2aa81bd",
+      "sha256:f0d2f8eb61740062d5cbef1a7d3923f1b16da095cc1ffbc2b93a2e1840ff6cb5",
+      "sha256:c58c9e5629c87c46982664e95ee5ee9ac897518c4bdb67b67aa4dc14d0db1697",
+      "sha256:05cf827b3988e34b1f5218d804c52dbb776b6c14668e999c848e5837a973b053",
+      "sha256:fc8cb340f5f3a83f43d113f6bb0a1d1521193e65a24caa7c6cab64b910c7f5d5",
+      "sha256:1e89e2810a399fd7cc33ce4961cf8307588f30f13228c07d5ea2957ecd445c14",
+      "sha256:454a2446d831a26bb9ee9f8d7949db5420e6661e6c2e5dc89861465efd2bfeb9",
+      "sha256:926af23570992ee2123d6e53ed779db798a90494e59bf99a13b7428ca72388ce",
+      "sha256:8363fa465092d9c8e6afbc6ee8fab80a15294571d10726e46ccd57165ea25943",
+      "sha256:49c918b7b40dc363b8683764b3df2a052239e71cafefadd7fbd2e6d88236e96b",
+      "sha256:3d0a2ff28ad62d683876eacaa69369e997da23b13b326b489893b053d67e4162",
+      "sha256:44ce038b19d74655a7c6beebe77f76368a31a645cb46cbad4f9c845927ba1689"
+    ]
+  },
+  "local_identity": {
+    "oci_archive_sha256": "e069fa016d729e23887d09a6e4975116d2ef6c5985fd9927a7b509cd2553424e",
+    "docker_archive_sha256": "282a9a0658fcf9f545166b419f07adf6c6be5916217cb2c2c17a530e951793cb",
+    "oci_archive_manifest_digest": "sha256:fd3446d335f809303a001d059c8d4010e2e10aa2e19c945a6337299e6e507077",
+    "buildah_storage_manifest_digest": "sha256:412ea306b962af21f376f7070a08de5097d839cd8294094798d78f7b7a59bcd7",
+    "shared_config_digest": "sha256:92b18aa2f4310d945a2baec3c1e70d9d7da02e455b22cd1fd6012e61c4d3b13f",
+    "new_source_diff_id": "sha256:90b87653b7762286be8686389ef6c4e9806fb568a74b67dd4e7685eef5d11f3f",
+    "accepted_parent_registry_digest": "sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79"
+  },
+  "equivalence": {
+    "classification": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "archive_manifest_byte_equal_to_registry": true,
+    "config_equal": true,
+    "ordered_layers_equal": true,
+    "index_or_manifest_list": false,
+    "attestations": []
+  },
+  "scan": {
+    "target_digest": "sha256:fd3446d335f809303a001d059c8d4010e2e10aa2e19c945a6337299e6e507077",
+    "status": "COMPLETE",
+    "critical": 0,
+    "high": 0,
+    "blocking": 0
+  },
+  "prohibited_actions_observed": {
+    "rebuild": 0,
+    "alternate_publication": 0,
+    "deletion": 0,
+    "terraform_apply": 0,
+    "service_scaling": 0,
+    "slot01_release": 0,
+    "slot01_target_requests": 0
+  }
+}

@@ -1,0 +1,99 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_POLICY",
+  "version": "2026-08-28.1",
+  "state": "PROPOSED_FOR_EXACT_OWNER_AUTHORIZATION",
+  "experiment": {
+    "slot": "01",
+    "business": "903 HVAC",
+    "location": "Tyler / Smith County, Texas",
+    "exact_hostname": "903hvac.com",
+    "terminal_ceiling": "CONTACT_PHASE_NOT_AUTHORIZED",
+    "slot02": "NOT_AUTHORIZED"
+  },
+  "finite_bounds": {
+    "maximum_eligible_repairs": 3,
+    "maximum_elapsed_hours_from_first_authorized_action": 24,
+    "maximum_cumulative_repair_infrastructure_cost_usd": "40.00",
+    "phase1_total_cost_ceiling_usd": "250.00",
+    "maximum_parallel_repairs": 1,
+    "maximum_publication_attempts_per_repair": 1
+  },
+  "eligible_repairs": [
+    "narrow code correction",
+    "container or dependency correction without a security exception",
+    "configuration correction",
+    "orchestration or service-readiness correction",
+    "identity-binding correction",
+    "strict schema-compatibility correction",
+    "bounded infrastructure-plumbing correction"
+  ],
+  "eligibility_rule": "A repair may change only how the exact already-authorized Slot 01 experiment is made operational; it may not change what the owner authorized.",
+  "required_repair_chain": [
+    "diagnose and seal predecessor failure",
+    "implement minimum correction",
+    "run focused, full deterministic, safety, and synthetic M1-M5 tests",
+    "build successor artifact only if required",
+    "prove local representation identity",
+    "publish once through the existing bounded publisher only if required",
+    "obtain actual registry digest and prove representation equivalence",
+    "require provider scan COMPLETE with critical/high/blocking 0/0/0",
+    "generate an ADR-0075-compliant saved Terraform plan only if required",
+    "reject unexpected semantic mutations",
+    "apply only the bounded successor",
+    "perform synthetic postdeployment validation with zero 903hvac.com access",
+    "require Terraform NO_CHANGES",
+    "resume the same immutable Slot 01 experiment"
+  ],
+  "immutable_repair_evidence": [
+    "predecessor attempt and diagnosis",
+    "source/configuration diff",
+    "test evidence",
+    "local artifact identities",
+    "registry identity and scan",
+    "Terraform plan and semantic review",
+    "deployment and convergence result",
+    "retry relationship and cumulative ledgers"
+  ],
+  "mandatory_owner_stop_conditions": [
+    "new business, hostname, or slot",
+    "sample/order change, replacement, or redraw",
+    "broader research or source scope",
+    "material request, time, byte, or cost ceiling increase",
+    "broader Internet or network authority",
+    "person/contact processing or eligibility/readiness",
+    "AI or browser activation",
+    "outreach, delivery, sending, or external communication",
+    "weakened robots, TLS, SSRF, DNS-rebinding, minimization, provenance, or truth control",
+    "security vulnerability exception or nonzero blocking scan finding",
+    "unexplained IAM or network broadening",
+    "truth-taxonomy or opportunity-target change",
+    "any substantive governance change",
+    "any finite repair, elapsed-time, or cost bound exceeded"
+  ],
+  "transport_counter_rule": {
+    "before_first_target_transport": "eligible technical failures may be repaired and the same experiment resumed; every attempt remains immutable",
+    "after_first_target_transport": "all request, attempt, byte, and time counters remain cumulative across repairs and may never reset",
+    "maximum_logical_requests": 8,
+    "maximum_authorization_attempts": 8,
+    "maximum_transport_attempts": 3,
+    "maximum_response_bytes": 250000,
+    "maximum_total_bytes": 2000000,
+    "maximum_operation_seconds": 120,
+    "maximum_authority_seconds": 600,
+    "request_timeout_seconds": 8,
+    "minimum_delay_seconds": 2,
+    "followed_redirects": 0
+  },
+  "always_prohibited": {
+    "real_business_discovery": true,
+    "professional_identity_resolution": true,
+    "person_or_contact_processing": true,
+    "contact_eligibility_or_readiness": true,
+    "ai": true,
+    "browser": true,
+    "outreach_or_delivery": true,
+    "slot02": true,
+    "replacement_or_redraw": true
+  },
+  "terminal_cleanup": "controlled egress dormant; lease, research release, and sampled-slot approval NOT_AUTHORIZED; kill switch TRIPPED; stop for human review"
+}
