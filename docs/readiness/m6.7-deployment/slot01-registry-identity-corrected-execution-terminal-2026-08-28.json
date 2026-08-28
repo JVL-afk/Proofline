@@ -1,0 +1,110 @@
+{
+  "record_type": "M67_SLOT01_REGISTRY_IDENTITY_CORRECTED_EXECUTION_TERMINAL",
+  "version": "2026-08-28.1",
+  "state": "BLOCKED_SLOT01_EXECUTION_APPROVAL_CANONICAL_LEGACY_LOCK_IDENTITY_MISMATCH",
+  "observed_at_utc": "2026-08-28T05:30:08.5760846Z",
+  "authorization": {
+    "name": "AUTHORIZE_SLOT01_REGISTRY_IDENTITY_CORRECTED_M1_M5_EXECUTION",
+    "exact_statement_sha256": "aaf92c35bdc07be8815b8be3fb3aeb349218c7a86e4290004624d519d96e5c79",
+    "accepted_record_commit": "f460f22",
+    "deployment_authority": "CONSUMED_SUCCESSFULLY",
+    "conditional_slot01_execution_authority": "CONSUMED_TERMINAL_BEFORE_RELEASE_CREATION",
+    "reusable": false
+  },
+  "deployment": {
+    "saved_plan_sha256": "80408b91992866b7a68c3096428efde8f5be59eb0f7e61fb767a674937c370ba",
+    "terraform_result": "APPLY_COMPLETE",
+    "terraform_representation": "3 add, 2 change, 3 destroy",
+    "unexpected_actions": 0,
+    "research_task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-research-worker:9",
+    "intelligence_task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-intelligence-worker:6",
+    "sampled_slot_activator_task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-sampled-slot-activator:4",
+    "registry_digest": "sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79",
+    "services_desired_running_pending": "0/0/0"
+  },
+  "postdeploy_validation": {
+    "locked_validation_task_arn": "arn:aws:ecs:us-east-2:785072247535:task/m67-phase1-research/14dfaaa2fb4f4049be9b6c4f4a694a7a",
+    "exact_image_pulled": true,
+    "private_subnet": "subnet-0ed12f24100baf801",
+    "worker_security_group": "sg-05543bd7e420818bf",
+    "public_ip": "DISABLED",
+    "sampled_approval_sentinel_result": "CANONICAL_NOT_AUTHORIZED_FAIL_CLOSED_BEFORE_RELEASE_OR_WORK_ITEM",
+    "registry_identity_focused_suite": "50 passed",
+    "full_suite": "659 passed, 2 expected PostgreSQL environment skips",
+    "repository_check": "PASS",
+    "compileall": "PASS",
+    "terraform_convergence": "NO_CHANGES",
+    "convergence_plan_sha256": "e1d5b9c4ff2ba09d8d91c7de7b48f2748d9157a657aad0192101ca8a08024775",
+    "requests_to_903hvac_com": 0
+  },
+  "registry_identity_validation": {
+    "slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "slot_registry_semantic_sha256": "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2",
+    "correct_file_and_semantic_hashes": "ACCEPTED_BY_DETERMINISTIC_MODEL",
+    "swapped_hashes": "REJECTED_BEFORE_RELEASE_WORK_ITEM_OR_DNS",
+    "missing_hash": "REJECTED_BEFORE_RELEASE_WORK_ITEM_OR_DNS",
+    "altered_hash": "REJECTED_BEFORE_RELEASE_WORK_ITEM_OR_DNS",
+    "resolved_slot01_mapping": "903 HVAC -> 903hvac.com"
+  },
+  "slot01_execution_attempt": {
+    "task_arn": "arn:aws:ecs:us-east-2:785072247535:task/m67-phase1-research/ec0bd4564c1c4573a90b987f19e8b86d",
+    "task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-sampled-slot-activator:4",
+    "image_digest": "sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79",
+    "container_started": true,
+    "container_exit_code": 1,
+    "started_at_utc": "2026-08-28T05:27:58.668Z",
+    "stopped_at_utc": "2026-08-28T05:28:45.557Z",
+    "approval_envelope_file_sha256": "6b4a53549bee896153a8dbacf9189f1bf585ae70f8340ce973380c7c28026c77",
+    "approval_artifact_sha256": "7075bc643fb4daed9e7a060344e3a7ca6c074298d8d978821406ecafe4ed4761",
+    "failure_stage": "OWNER_APPROVAL_PREDECESSOR_LOCK_IDENTITY_VALIDATION_BEFORE_RELEASE_OR_WORK_ITEM",
+    "failure_class": "CANONICAL_LEGACY_LOCK_RELEASE_ID_MISMATCH",
+    "content_minimized_error": "owner approval does not bind the canonical legacy lock identity",
+    "supplied_current_release_id": "9685fef1-ca47-5b4e-b0ae-5411345a210c",
+    "required_canonical_legacy_lock_release_id": "1aff9800-f475-5136-8a7d-f7efa7c0c64f",
+    "legacy_lock_sentinel_sha256": "fdb8e197e9ce7cf749cf4fe063908bc6c4e3066dce0a4adef302423d2381fa67",
+    "release_created": false,
+    "work_item_created": false,
+    "m1_started": false,
+    "m2_m5_started": false,
+    "logical_requests": 0,
+    "transport_attempts": 0,
+    "response_bytes": 0,
+    "requests_to_903hvac_com": 0,
+    "source_or_ai_cost_usd": "0",
+    "exact_aws_metered_cost_usd": "UNKNOWN_NOT_YET_AVAILABLE"
+  },
+  "root_cause": {
+    "classification": "APPROVAL_ENVELOPE_PREDECESSOR_IDENTITY_BINDING_DEFECT",
+    "exact_cause": "The bound execution configuration supplied current_release_id 9685fef1-ca47-5b4e-b0ae-5411345a210c while the exact persisted research-release lock sentinel deterministically maps to canonical legacy lock release ID 1aff9800-f475-5136-8a7d-f7efa7c0c64f.",
+    "application_runtime_changed": false,
+    "sample_or_slot_changed": false,
+    "network_involved": false,
+    "retry_permitted": false
+  },
+  "m1_m5_report": {
+    "m1_evidence": "NOT_CREATED",
+    "provenance": "NO_FIRST_PARTY_SOURCE_ACCESSED",
+    "truth_classifications": [],
+    "unknowns": [
+      "All Slot 01 research questions remain UNKNOWN because M1 did not start."
+    ],
+    "m2_result": "NOT_STARTED",
+    "m2_economics": "NOT_CREATED",
+    "m3_audit": "NOT_CREATED",
+    "m4_demo": "NOT_CREATED",
+    "m5_outreach_artifact": "NOT_CREATED",
+    "predecessor_lineage": "NO_RELEASE_WORK_ITEM_OR_STAGE_ARTIFACT_CREATED",
+    "terminal_state": "BLOCKED_BEFORE_M1"
+  },
+  "terminal_safety_state": {
+    "kill_switch": "TRIPPED",
+    "research_release": "NOT_AUTHORIZED",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED",
+    "running_tasks": 0,
+    "services_desired_running_pending": "0/0/0",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "slot02": "NOT_AUTHORIZED",
+    "replacement_or_redraw": 0,
+    "ai_browser_contact_outreach_delivery": "NOT_AUTHORIZED"
+  }
+}
