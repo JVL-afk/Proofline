@@ -1,0 +1,91 @@
+{
+  "record_type": "M67_SLOT01_REGISTRY_IDENTITY_CORRECTED_IMAGE_PUBLICATION_AUTHORIZATION_READY",
+  "version": "2026-08-28.1",
+  "state": "READY_FOR_SLOT01_REGISTRY_IDENTITY_CORRECTED_IMAGE_PUBLICATION_AUTHORIZATION",
+  "created_at": "2026-08-28T04:28:58Z",
+  "target": {
+    "account_id": "785072247535",
+    "region": "us-east-2",
+    "repository": "m67-phase1-worker",
+    "tag": "git-c60b6638caf6-v5-registry-identity"
+  },
+  "bindings": {
+    "implementation_commit": "b3706bd871f84a70b0f55f380955bac5624021a6",
+    "artifact_pipeline_commit": "c60b6638caf6c01147179bb9ccba1d625de24f54",
+    "evidence_commit": "d2aa60445d2b7ebdf3e4cbc5c9a3bfff9748f287",
+    "local_evidence_sha256": "ce031c2abb3cad79d544b3a8abd9a44532f00c8b6edf877273a3eaf61de7445f",
+    "release_application_sha256": "1082373ada9514cb947b671793a391776a18542165b9deab4668eb4f72b5f08d",
+    "sample_registry_sha256": "36503cf1ea91ceeaa99bc4aa003d6c87adb7a22ab71d8d6a01ea8e59fd5910d3",
+    "focused_tests_sha256": "53433018934e625e9df4e3c0c2088e0ff59195188ddcb74b881fb16ed60ad053",
+    "dockerfile_sha256": "d6fefe23bee1beddc4a17e3f79597746778e7e934000ccdd592e7a7f94d9cdcf",
+    "local_representation_evidence_sha256": "a3a80eaa1a3728765decafe9275913f1697ea408acb1d17f8ff98f3836b45fe3",
+    "consumed_predecessor_terminal_evidence_sha256": "0836faa608710b66ee65f9c2d3062a9b5979bb1dfc4ef3a7a23b1e12c0f12756"
+  },
+  "registry_identity_contract": {
+    "approval_schema": "m67.phase1.sampled-slot-execution-approval@3",
+    "slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+    "slot_registry_semantic_sha256": "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2",
+    "identity_levels_interchangeable": false,
+    "both_required_for_live_authority": true
+  },
+  "local_image_identity": {
+    "source_image": "localhost/m67-phase1-worker:git-c60b6638caf6-v5-registry-identity",
+    "destination": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker:git-c60b6638caf6-v5-registry-identity",
+    "platform": "linux/amd64",
+    "archive_manifest_digest": "sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79",
+    "storage_manifest_digest": "sha256:2269db91173bb15641cc4554c58bb29498c7899db202a48b7181a0cea45c8776",
+    "config_digest": "sha256:ae137c009fc0ad46f8a56b47d329824da75e74325ef4f2e17b94995903f146ec",
+    "new_uncompressed_layer_digest": "sha256:2df0437fe08b20245e866aebd70693ea37c452d766ec7fa6dc774a81fd82e97a",
+    "oci_archive_sha256": "00047db0216104aa6fa6196351074976a9e8f9f60937b20e03d7aa8a2f41b36a",
+    "docker_archive_sha256": "740f9cad74db690287a784400ca26e6649e0ced7118df5ef524345562f57289d",
+    "accepted_parent_registry_digest": "sha256:3579c10d81401476c92ab5d2e0db415c79db7d55fa2c9e7549aae6c102a4f43e",
+    "classification": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN",
+    "security_packages": "libcrypto3/libssl3 3.5.8-r0"
+  },
+  "requested_publication_authority": {
+    "attempts": 1,
+    "terminal": true,
+    "valid_from": "2026-08-28T04:35:00Z",
+    "valid_until": "2026-09-04T04:35:00Z",
+    "publisher_role": "arn:aws:iam::785072247535:role/m67-phase1-worker-image-publisher",
+    "rebuilds": 0,
+    "source_or_dependency_changes": 0,
+    "retags_or_substitutions": 0,
+    "alternate_destinations": 0,
+    "deletions": 0,
+    "terraform_apply": false
+  },
+  "prepublication_requirements": [
+    "restore the owner SSO session and independently revalidate current AWS state",
+    "recompute both local manifest identities, both archive hashes, config digest and ordered layer relationship",
+    "verify implementation, pipeline, evidence, module, test and Dockerfile hashes",
+    "verify services desired/running/pending 0/0/0",
+    "verify kill switch TRIPPED",
+    "verify research release exact NOT_AUTHORIZED",
+    "verify sampled-slot execution approval exact NOT_AUTHORIZED",
+    "verify no Slot 01 release and all seven M6.7 permissions NOT_AUTHORIZED",
+    "verify the exact destination tag is absent"
+  ],
+  "postpublication_requirements": [
+    "obtain exact registry-consumable digest, object/media type, platform, config and ordered compressed layer digests",
+    "cryptographically prove registry equivalence to the accepted local identity graph and parent relationship",
+    "require REPRESENTATION_EQUIVALENT_PROVEN",
+    "require ECR scan COMPLETE with critical/high/blocking 0/0/0",
+    "generate without apply a fresh ADR-0075-compliant saved Terraform application plan using workload-plan provider reads and plan-time embedded state-apply backend",
+    "review every Terraform action and stop on unexpected IAM, network, egress, desired-count, permission-state, release-state, destructive or unrelated change",
+    "prepare one combined deployment and conditional Slot 01 execution authorization at READY_FOR_SLOT01_REGISTRY_IDENTITY_CORRECTED_M1_M5_EXECUTION_AUTHORIZATION"
+  ],
+  "prohibited": [
+    "image rebuild, source/dependency modification, retag, substitution or deletion",
+    "publication outside the exact repository and tag",
+    "Terraform apply or service activation",
+    "Slot 01 release, activation or execution",
+    "903hvac.com DNS or HTTP access",
+    "REAL_PUBLIC_RESEARCH or REAL_BUSINESS_DISCOVERY",
+    "real-company M1-M5",
+    "AI, browser, person/contact processing, outreach, delivery or external communication",
+    "Slot 02, replacement or redraw"
+  ],
+  "exact_owner_approval_statement_sha256": "25491c4bb2ec011de0e3fdfa1ce8e208e87ad646992ed4f0fda9518f24ef909e",
+  "exact_owner_approval_statement": "I approve AUTHORIZE_SLOT01_REGISTRY_IDENTITY_CORRECTED_IMAGE_PUBLICATION for AWS account 785072247535 in us-east-2, binding implementation commit b3706bd871f84a70b0f55f380955bac5624021a6, artifact-pipeline commit c60b6638caf6c01147179bb9ccba1d625de24f54, evidence commit d2aa60445d2b7ebdf3e4cbc5c9a3bfff9748f287, local evidence SHA-256 ce031c2abb3cad79d544b3a8abd9a44532f00c8b6edf877273a3eaf61de7445f, release-application SHA-256 1082373ada9514cb947b671793a391776a18542165b9deab4668eb4f72b5f08d, sample-registry SHA-256 36503cf1ea91ceeaa99bc4aa003d6c87adb7a22ab71d8d6a01ea8e59fd5910d3, focused tests SHA-256 53433018934e625e9df4e3c0c2088e0ff59195188ddcb74b881fb16ed60ad053, Dockerfile SHA-256 d6fefe23bee1beddc4a17e3f79597746778e7e934000ccdd592e7a7f94d9cdcf, local representation evidence SHA-256 a3a80eaa1a3728765decafe9275913f1697ea408acb1d17f8ff98f3836b45fe3, frozen slot-registry file SHA-256 63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2, frozen slot-registry semantic SHA-256 aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2, OCI archive SHA-256 00047db0216104aa6fa6196351074976a9e8f9f60937b20e03d7aa8a2f41b36a, Docker archive SHA-256 740f9cad74db690287a784400ca26e6649e0ced7118df5ef524345562f57289d, OCI archive manifest digest sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79, Buildah storage manifest digest sha256:2269db91173bb15641cc4554c58bb29498c7899db202a48b7181a0cea45c8776, shared config digest sha256:ae137c009fc0ad46f8a56b47d329824da75e74325ef4f2e17b94995903f146ec, new source-layer diff ID sha256:2df0437fe08b20245e866aebd70693ea37c452d766ec7fa6dc774a81fd82e97a, accepted parent registry digest sha256:3579c10d81401476c92ab5d2e0db415c79db7d55fa2c9e7549aae6c102a4f43e, and permanently consumed predecessor terminal evidence SHA-256 0836faa608710b66ee65f9c2d3062a9b5979bb1dfc4ef3a7a23b1e12c0f12756. I accept LOCAL_REPRESENTATION_EQUIVALENT_PROVEN for the exact linux/amd64 local image identity graph and accept that sampled-slot execution approval schema m67.phase1.sampled-slot-execution-approval@3 binds the file and canonical semantic registry identities as distinct, mandatory and non-interchangeable claims. This authorizes exactly one terminal image-publication attempt between 2026-08-28T04:35:00Z and 2026-09-04T04:35:00Z using only the existing bounded m67-phase1-worker-image-publisher path. Publish only local image localhost/m67-phase1-worker:git-c60b6638caf6-v5-registry-identity to 785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker with exact tag git-c60b6638caf6-v5-registry-identity. Before publisher-role assumption, restore authenticated owner control-plane access, reverify every bound local identity, require the destination tag to be absent, and independently prove services desired/running/pending 0/0/0, kill switch TRIPPED, research release NOT_AUTHORIZED, sampled-slot execution approval NOT_AUTHORIZED, no Slot 01 release, and all seven M6.7 permissions NOT_AUTHORIZED. If any precondition differs, stop before publication. This authorizes no rebuild, source or dependency change, alternate image, retagging, alternate repository or tag, deletion, Terraform apply, service activation, Slot 01 release, 903hvac.com access or real-company M1-M5 execution. After publication, obtain the exact registry-consumable digest, object and media type, linux/amd64 platform, config digest and ordered compressed layer digests; cryptographically prove registry equivalence to the accepted local identity graph and parent relationship; require REPRESENTATION_EQUIVALENT_PROVEN; and require ECR provider scan COMPLETE with critical/high/blocking 0/0/0. If any condition fails, stop. If all pass, generate without apply a fresh ADR-0075-compliant Terraform saved application plan using the approved workload-plan identity for provider reads and embedding the protected state-apply backend at plan creation, review every resource action, and stop on any unexpected IAM, network, egress, desired-count, permission-state, release-state, destructive or unrelated change. Then prepare one combined READY_FOR_SLOT01_REGISTRY_IDENTITY_CORRECTED_M1_M5_EXECUTION_AUTHORIZATION binding exact deployment and conditional single-use Slot 01 M1-to-M5 execution after postdeployment validation and Terraform NO_CHANGES. This publication authorization grants zero REAL_PUBLIC_RESEARCH, REAL_BUSINESS_DISCOVERY, AI, browser, person/contact processing, outreach, delivery, external communication, Slot 02, replacement or redraw authority."
+}
