@@ -1,0 +1,17 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_OWNER_AUTHORIZATION",
+  "schema_version": "1.0.0",
+  "state": "ACCEPTED_UNCONSUMED",
+  "event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+  "exact_statement_source": "docs/readiness/m6.7-deployment/slot01-bounded-repair-window-2-and-m1-m5-execution-authorization-ready-2026-08-28.json#exact_owner_approval_statement",
+  "authorization_received_date": "2026-08-28",
+  "saved_plan_sha256": "3090266cdde438abe3fb5dc8b2862b643af5de344445cd328eadf0ac0e78d7f1",
+  "experiment_id": "2efaeb57-0a43-5dd2-b649-3ba320246325",
+  "approval_id": "ab76cb09-b0dc-5842-8d13-57a9b65a39a3",
+  "initial_release_id": "375a88da-da88-5ebf-9daf-cb09934e02b8",
+  "controlled_egress_lease_id": "86bb84aa-f28e-5845-8826-fd81d9090913",
+  "work_item_id": "de86db67-5adc-5bf7-83bc-a43a27bd0e01"
+}

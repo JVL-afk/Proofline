@@ -1,0 +1,145 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_APPLY_AND_EXECUTION_BLOCKER",
+  "schema_version": "1.0.0",
+  "state": "TERRAFORM_APPLIED_M1_M5_BLOCKED_ON_MISSING_OWNER_APPROVAL_ENVELOPE",
+  "observed_at_utc": "2026-08-28T14:13:00Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "operator_identity": "arn:aws:sts::785072247535:assumed-role/AWSReservedSSO_AdministratorAccess_0731fd0cc712296e/andrei",
+  "authorization": {
+    "event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+    "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+    "owner_authorization_record": "docs/readiness/m6.7-deployment/slot01-bounded-repair-window-2-owner-authorization-2026-08-28.json",
+    "state_before": "ACCEPTED_UNCONSUMED",
+    "window_start_utc": "2026-08-28T11:00:00Z",
+    "window_end_utc": "2026-09-04T11:00:00Z",
+    "experiment_id": "2efaeb57-0a43-5dd2-b649-3ba320246325",
+    "approval_id": "ab76cb09-b0dc-5842-8d13-57a9b65a39a3",
+    "initial_release_id": "375a88da-da88-5ebf-9daf-cb09934e02b8",
+    "controlled_egress_lease_id": "86bb84aa-f28e-5845-8826-fd81d9090913",
+    "work_item_id": "de86db67-5adc-5bf7-83bc-a43a27bd0e01"
+  },
+  "environment_preparation": {
+    "aws_sso_login": "PERFORMED_BY_OWNER_ON_REQUEST (profile m67-phase1-owner, AdministratorAccess)",
+    "terraform_binary": "DOWNLOADED terraform 1.15.9 windows_amd64 from releases.hashicorp.com (required_version >= 1.15.9, < 1.16.0); provider hashicorp/aws 6.53.0 already vendored in .terraform and matches .terraform.lock.hcl",
+    "note": "The working environment had neither active AWS credentials nor a Terraform binary at handover; both were provisioned before execution."
+  },
+  "preflight_verification": {
+    "saved_plan_sha256": "3090266cdde438abe3fb5dc8b2862b643af5de344445cd328eadf0ac0e78d7f1",
+    "saved_plan_sha256_match": true,
+    "execution_configuration_sha256": "59fce24bb0278dbee7ff8063d6ef375dc0816f3d48c5291ad0a52fd000dbcd02",
+    "execution_configuration_sha256_match": true,
+    "managed_change_semantic_sha256": "d41ef2dd12e42c09244fb08559121c24922cbbd5cb28404cf4491b4d679b5ca2",
+    "managed_change_semantic_sha256_match": true,
+    "terraform_show_saved_plan": "0 to add, 1 to change, 0 to destroy",
+    "only_planned_change": "aws_iam_role_policy.environment_validation adds statement Sid=ReadExactSampledSlotTaskDefinition Action=ecs:DescribeTaskDefinition Effect=Allow Resource=*",
+    "backend_initialized_with": "s3 profile m67-phase1-state-apply-backend (embedded protected apply backend)",
+    "activator_task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-sampled-slot-activator:7",
+    "activator_status": "ACTIVE",
+    "activator_identity_byte_for_byte": {
+      "arn_match": true,
+      "family": "m67-phase1-sampled-slot-activator",
+      "revision": 7,
+      "image": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:770d4248bbd7b5f915861331663dc68f5107cf87782a86bde5b7105488e16e50",
+      "execution_role": "arn:aws:iam::785072247535:role/m67-phase1-ecs-execution",
+      "task_role": "arn:aws:iam::785072247535:role/m67-phase1-sampled-slot-executor",
+      "fargate_compatible": true,
+      "cpu_architecture": "X86_64",
+      "operating_system_family": "LINUX"
+    },
+    "controlled_egress_service_desired_running_pending": "0/0/0",
+    "running_tasks": 0,
+    "ssm_parameter_versions_before": {
+      "/m67-phase1/kill-switch": 9,
+      "/m67-phase1/research-release": 3,
+      "/m67-phase1/sampled-slot-execution-approval": 7,
+      "/m67-phase1/controlled-egress-lease": 1
+    },
+    "ssm_parameter_versions_match_sealed_preparation_evidence": true,
+    "ssm_parameter_values_readable_by_operator": false,
+    "ssm_parameter_values_note": "ssm:GetParameter on /m67-phase1/{research-release,sampled-slot-execution-approval,controlled-egress-lease} is denied to the SSO Administrator principal by design (only ssm:DescribeParameters succeeds). The kill-switch-operator role can read only the kill-switch parameter. The sampled-slot-executor task role that can read these is not assumable by a user principal.",
+    "operator_policy_had_describe_task_definition_before_apply": false,
+    "requests_to_903hvac_com_before": 0
+  },
+  "terraform_apply": {
+    "performed": true,
+    "provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "backend_identity": "profile m67-phase1-state-apply-backend -> arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "command": "terraform -chdir=infra/terraform/phase1 apply -input=false -lock=true <saved plan>",
+    "result": "Apply complete! Resources: 0 added, 1 changed, 0 destroyed.",
+    "changed_resource": "aws_iam_role_policy.environment_validation (id m67-phase1-operator:m67-phase1-environment-validation)",
+    "post_apply_statement_count": 13,
+    "post_apply_statement_count_before": 12,
+    "post_apply_new_statement": {
+      "Sid": "ReadExactSampledSlotTaskDefinition",
+      "Action": "ecs:DescribeTaskDefinition",
+      "Effect": "Allow",
+      "Resource": "*"
+    },
+    "terraform_convergence_after_apply": "No changes. Your infrastructure matches the configuration.",
+    "preexisting_warning": "aws_service_discovery_service.egress failure_threshold deprecation (unchanged, matches PASS_WITH_PREEXISTING_DEPRECATION_WARNING in preparation evidence)"
+  },
+  "post_apply_dormancy": {
+    "controlled_egress_service_desired_running_pending": "0/0/0",
+    "running_tasks": 0,
+    "ssm_parameter_versions_after": {
+      "/m67-phase1/kill-switch": 9,
+      "/m67-phase1/research-release": 3,
+      "/m67-phase1/sampled-slot-execution-approval": 7,
+      "/m67-phase1/controlled-egress-lease": 1
+    },
+    "kill_switch": "TRIPPED (v9, unchanged)",
+    "research_release": "NOT_AUTHORIZED consumed predecessor (v3, unchanged)",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED sentinel (v7, unchanged)",
+    "controlled_egress_lease": "NOT_AUTHORIZED (v1, unchanged)",
+    "slot01_work_item_created": false,
+    "requests_to_903hvac_com": 0,
+    "terraform_no_changes": true,
+    "all_post_apply_authorization_gates": "PASS"
+  },
+  "blocker": {
+    "classification": "MISSING_WINDOW_2_OWNER_APPROVAL_ENVELOPE_AND_NO_OPERATOR_GENERATOR",
+    "summary": "The bound Terraform plan was applied and every post-apply gate passed, but the M1-M5 continuation cannot start. The bounded launcher scripts/run_m67_bounded_controlled_egress.py only performs ECS gateway scaling + RunTask; the ECS activator container (opintel_intelligence_worker.sampled_slot_execution_main) requires a valid m67.phase1.sampled-slot-execution-approval@3 SampledSlotExecutionApprovalEnvelope to already be written to /m67-phase1/sampled-slot-execution-approval before it can create the Slot 01 release and work item.",
+    "why_operator_cannot_construct_it": [
+      "No window-2 approval envelope exists in the repository. Only superseded schema-@2 envelopes for earlier windows are present under local-data/m6.7/slot01-v5-*.",
+      "No envelope generator or authority-orchestration script exists in tracked scripts/. The only @3 constructions in the codebase are synthetic constants in tests/test_m67_sampled_slot_production_wiring.py.",
+      "The @3 envelope must bind, byte-for-byte, fields of the currently stored research-release object: workspace_id, source_registry_id, source_registry_hash, retention_policy_id, retention_policy_hash, environment_id, environment_hash, cohort_policy_id, kill_switch_id. The operator identity is structurally denied ssm:GetParameter on that parameter, so those values cannot be read.",
+      "Hand-fabricating a production authority artifact that gates live first-party web egress, from a release object that cannot be read and a schema with no reference instance, would violate the system 'never make stuff up' invariant."
+    ],
+    "not_a_repair_trigger": "This is not an eligible operational defect within the Window 2 bounded-repair policy. No repair cycle was consumed. It is a missing input to the already-authorized experiment.",
+    "repair_budget_untouched": {
+      "repairs_used": 0,
+      "repairs_remaining": 5,
+      "elapsed_hours_used": 0,
+      "additional_repair_cost_usd": "0"
+    }
+  },
+  "needs_owner_input_one_of": [
+    "The window-2 m67.phase1.sampled-slot-execution-approval@3 approval envelope JSON (approval + approval_artifact_sha256), to be written to /m67-phase1/sampled-slot-execution-approval.",
+    "The path/name of the envelope-generator or authority-orchestration tool the prior process used (appears not to be committed to this repository).",
+    "An IAM identity or role that can ssm:GetParameter /m67-phase1/research-release and /m67-phase1/sampled-slot-execution-approval, so the operator can read the current release bindings and construct the @3 envelope per docs/contract."
+  ],
+  "safety_state": {
+    "kill_switch": "TRIPPED",
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "research_release": "NOT_AUTHORIZED",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED",
+    "controlled_egress_lease": "NOT_AUTHORIZED",
+    "services_desired_running_pending": "0/0/0",
+    "running_tasks": 0,
+    "slot02": "NOT_STARTED",
+    "replacement_or_redraw": 0,
+    "person_contact_ai_browser_outreach_delivery": "NOT_AUTHORIZED",
+    "target_transport_to_903hvac_com": 0
+  },
+  "authority_consumption": {
+    "window_2_authorization_state": "ACCEPTED_UNCONSUMED (Terraform apply clause satisfied; M1-M5 continuation clause not yet entered)",
+    "note": "The owner authorization treats the apply and the M1-M5 continuation as one event. The apply is done and converged; the single-use research authority has NOT been created or consumed. No Slot 01 release, work item, coordinator, or egress lease exists."
+  },
+  "costs": {
+    "terraform_apply_aws_metered_cost_usd": "~0 (one iam:PutRolePolicy; no metered resources changed)",
+    "ai_cost_usd": "0",
+    "source_cost_usd": "0",
+    "phase1_total_ceiling_usd": "250 (unchanged)"
+  }
+}
