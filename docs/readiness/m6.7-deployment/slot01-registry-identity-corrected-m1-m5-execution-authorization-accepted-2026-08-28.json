@@ -1,0 +1,29 @@
+{
+  "record_type": "AUTHORIZE_SLOT01_REGISTRY_IDENTITY_CORRECTED_M1_M5_EXECUTION",
+  "version": "2026-08-28.1",
+  "state": "OWNER_ACCEPTED_SINGLE_USE_UNCONSUMED",
+  "accepted_at": "2026-08-28T05:01:33.2164559Z",
+  "accepted_statement_sha256": "aaf92c35bdc07be8815b8be3fb3aeb349218c7a86e4290004624d519d96e5c79",
+  "exact_statement_source": "exact_owner_approval_statement in slot01-registry-identity-corrected-m1-m5-execution-authorization-ready-2026-08-28.json",
+  "ready_record_sha256": "3404bbdd21fe72b2094c4b5cefae8a85e91bd089bcd22265b569c5ab7eadc849",
+  "saved_plan_sha256": "80408b91992866b7a68c3096428efde8f5be59eb0f7e61fb767a674937c370ba",
+  "registry_digest": "sha256:855003aec9cbe6d0e38416f8b5ee44baacd2d2a34d752dfefd2e110246561a79",
+  "execution_configuration_sha256": "3139049ecd0ff1de6d2d45cee94338a9ff33ae154387423be8b35b49afd3d538",
+  "slot_registry_file_sha256": "63428deed639059c40dd1e851c658f25ca421892e6155d0b239c4a8020d534d2",
+  "slot_registry_semantic_sha256": "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2",
+  "deployment_authority": "EXACT_SAVED_PLAN_ONLY",
+  "conditional_live_authority": "ONLY_AFTER_COMPLETE_POSTDEPLOY_ACCEPTANCE_AND_TERRAFORM_NO_CHANGES",
+  "validity": {
+    "starts_at": "2026-08-28T04:55:00Z",
+    "expires_at": "2026-09-04T04:55:00Z"
+  },
+  "slot": {
+    "number": 1,
+    "business": "903 HVAC",
+    "hostname": "903hvac.com"
+  },
+  "attempts_authorized": 1,
+  "retries_authorized": 0,
+  "slot02_authorized": false,
+  "maximum_terminal_state": "CONTACT_PHASE_NOT_AUTHORIZED"
+}
