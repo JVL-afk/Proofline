@@ -1,0 +1,124 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_REPAIR_2_STATUS",
+  "schema_version": "1.0.0",
+  "state": "REPAIR_2_IMPLEMENTED_TESTED_IMAGE_BUILT_BLOCKED_ON_ENVIRONMENT_DISK_EXHAUSTION",
+  "observed_at_utc": "2026-08-28T15:50:00Z",
+  "window_2": {
+    "authorization_event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+    "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+    "repairs_used": 2,
+    "repairs_remaining": 3,
+    "elapsed_hours_estimate": 4.7,
+    "additional_repair_infrastructure_cost_usd": "~0 (two short Fargate task runs + one IAM policy)"
+  },
+  "repair_1_recap": {
+    "state": "DEPLOYED_AND_CONVERGED",
+    "commit": "8dfeee6",
+    "artifact": "authority_materialization deterministic @3 envelope builder + aws_iam_role_policy.authority_materialization",
+    "proven": "materializer produced a valid @3 envelope from live state that the exact production applicator accepted (release AUTHORIZED, configuration_hash == approval_artifact_sha256)"
+  },
+  "window_2_first_m1_m5_attempt": {
+    "state": "FAILED_BEFORE_ANY_TARGET_TRANSPORT",
+    "launcher": "scripts/run_m67_bounded_controlled_egress.py + bounded-ecs-execution-config.json",
+    "controlled_egress_gateway": "scaled to 1/1/0 then restored to 0/0/0 by the launcher finally block",
+    "activator_task": "arn:aws:ecs:us-east-2:785072247535:task/m67-phase1-research/bbb1633e9ee4442d9c51013775211c48",
+    "activator_task_definition": "m67-phase1-sampled-slot-activator:7",
+    "activator_exit_code": 1,
+    "activator_runtime_seconds": 45,
+    "failure": "ValueError: existing sampled business differs from frozen identity  (opintel_research_local/persistence.py:357, activate_sampled_run)",
+    "authority_lifecycle_during_failed_run": {
+      "research_release": "v3 -> v4 (authorized by materialized @3 envelope) -> v5 (CONSUMED:BOUNDED_EXECUTION_FAILED, id 375a88da-da88-5ebf-9daf-cb09934e02b9, owner_approval_sha256 3d1326a9...)",
+      "kill_switch": "v9 TRIPPED -> v10 RUN -> v11 TRIPPED",
+      "sampled_slot_execution_approval": "v8 (materialized envelope) -> v9 (NOT_AUTHORIZED sentinel restored by authority_materialization_main restore)",
+      "controlled_egress_lease": "v1 NOT_AUTHORIZED (unchanged; lease never acquired)"
+    },
+    "target_transport": {
+      "dns_lookups_for_903hvac_com": 0,
+      "https_requests_to_903hvac_com": 0,
+      "robots_evaluations": 0,
+      "controlled_egress_log_events_in_window": 0,
+      "hostname_log_events_in_window": 0,
+      "basis": "The activator exited in activate_sampled_run before the controlled-egress lease was acquired and before any research stage ran. CloudWatch filter for '903hvac' over the run window returned zero events."
+    }
+  },
+  "repair_2": {
+    "classification": "ELIGIBLE_DETERMINISTIC_IDENTITY_SCHEMA_COMPATIBILITY_CORRECTION",
+    "commit": "39944e8",
+    "predecessor_relationship": "RETRY_OF_ZERO_TRANSPORT_FAILED_WINDOW_2_M1_M5_ATTEMPT",
+    "diagnosis": "opintel_research builds Business.created_at from release.created_at. The Slot 01 business is content-addressed (uuid5 of source_row_sha256), identical across authorizations, but the consumed canonical-lock predecessor (M1_RESEARCH_FAILED, zero target transport) already persisted its research_businesses row with an earlier created_at. activate_sampled_run compared the full Business dataclass and rejected the freshly authorized re-activation on the created_at field alone.",
+    "minimum_diff": "packages/research-local/src/opintel_research_local/persistence.py activate_sampled_run: when the business row exists, compare the immutable frozen identity only (id, workspace, name, canonical_url, permitted_host, created_by) via dataclasses.replace(stored, created_at=business.created_at); a genuinely different identity still raises. Retains the persisted timestamp.",
+    "approval_binding_impact": "NONE. persistence.py sha256 94a27f48... is not one of the six approval *_sha256 runtime bindings (release_application f7ffdf0c, activation 95a03556, activation_entry_point 12eaf66b, stage_coordinator fe0f34c9, m1_runtime 884b1f27, m2_m5_runtime/production_runtime 40e65110). Only the container image digest moves.",
+    "tests": {
+      "focused_added": [
+        "test_reactivation_with_newer_release_timestamp_reuses_frozen_business",
+        "test_reactivation_still_rejects_a_genuinely_different_business_identity"
+      ],
+      "focused_file": "tests/test_m67_phase1_sampled_slot_authorization.py",
+      "full_deterministic_suite": "695 passed, 2 skipped (PostgreSQL parity)",
+      "ruff": "PASS", "mypy": "PASS", "compileall": "PASS", "repository_check": "PASS"
+    },
+    "image_build": {
+      "dockerfile": "infra/container/phase1-worker/Dockerfile.window2-repair2",
+      "base": "localhost/m67-phase1-worker:git-e0d898c-repair2 (deployed digest sha256:770d4248bbd7b5f915861331663dc68f5107cf87782a86bde5b7105488e16e50)",
+      "layer": "single COPY of packages/research-local/src/opintel_research_local/persistence.py -> /app/research-local/opintel_research_local/persistence.py",
+      "local_tag": "localhost/m67-phase1-worker:git-39944e8-window2-repair2",
+      "local_config_digest": "sha256:e5343f08c97acb6d86a15ee06902ad5acba32bd6668b143409f1e27dd576e59b",
+      "local_storage_manifest_digest": "sha256:101d328fcbbdd9f08447262cfda1e4f53cf3dcb15894d958f2dadbd257992a1f",
+      "platform": "linux/amd64",
+      "layers": 15,
+      "note": "Local buildah manifest digest is evidence about the local image only. The deployable ECR registry digest is not yet obtained (publication blocked)."
+    }
+  },
+  "current_dormant_state": {
+    "kill_switch": "TRIPPED (v11)",
+    "research_release": "v5 CONSUMED:BOUNDED_EXECUTION_FAILED (window 2 zero-transport failure successor)",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED sentinel (v9)",
+    "controlled_egress_lease": "NOT_AUTHORIZED (v1)",
+    "services_desired_running_pending": {"controlled-egress": "0/0/0", "research-worker": "0/0/0", "intelligence-worker": "0/0/0"},
+    "running_tasks": 0,
+    "slot01_work_item_or_task": "NONE ACTIVE",
+    "target_transport_to_903hvac_com": 0
+  },
+  "predecessor_restore_target_verification": {
+    "restore_target": "the pre-Window-2 canonical predecessor at SSM research-release version 3",
+    "research_release_id": "02873c16-90de-53cc-ae43-b6e325e268d1",
+    "matches_sealed_research_release_id": true,
+    "sealed_research_release_value_sha256": "2a9466e72af892e93b86d8e3958e3f2adde22bb3c62e95ca0c0604d14e6b2f5b",
+    "sealed_hash_form_identified": "sha256(LiveResearchPermissionRelease.model_validate_json(v3_bytes).model_dump_json())",
+    "sealed_hash_reproduced_from_ssm_history_v3": true,
+    "owner_approval_sha256": "72401ddabc44b37cc4d98e76c8d66021e3ed7fc0f29a87f41c05080f0694249b",
+    "differs_from_window_2_owner_sha256": true,
+    "suspended_reason": "CONSUMED:M1_RESEARCH_FAILED",
+    "restore_bytes_to_write": "the pydantic-normalized model_dump_json() form whose sha256 == the sealed 2a9466e7... value (raw SSM v3 bytes parse to the identical model but are not byte-identical to the normalized form; the sealed evidence covers the normalized form)",
+    "restore_preconditions_all_verified": {
+      "current_value_is_window_2_consumed_failure": true,
+      "zero_target_transport": true,
+      "services_0_0_0": true,
+      "kill_switch_TRIPPED": true,
+      "approval_and_lease_NOT_AUTHORIZED": true,
+      "no_active_slot01_work_item_or_task": true
+    }
+  },
+  "blockers": [
+    {
+      "id": "ENVIRONMENT_DISK_EXHAUSTION",
+      "severity": "FATAL_FOR_REMAINING_STEPS",
+      "detail": "Windows drive C: is 100% full (was ~947 MB free after this session reclaimed ~1 GB of its own scratch: pytest basetemps, the worktree's copied .terraform provider cache, tool archives). The agent's total footprint is ~1 GB on a 476 GB volume that is otherwise full of unrelated content. Image publication needs to stream ~144 MB, terraform re-init pulls the ~500 MB hashicorp/aws provider, and terraform apply needs working room for state and plan. None can run reliably at <1 GB free.",
+      "owner_action": "Free disk space on C: (target: several GB), then the resume can continue."
+    },
+    {
+      "id": "PREDECESSOR_RESTORE_BYTE_FORM_CONFIRMATION",
+      "severity": "NEEDS_OWNER_CONFIRMATION",
+      "detail": "The sealed research_release_value_sha256 (2a9466e7...) is the hash of the pydantic-normalized model_dump_json() form of the v3 predecessor, not of the raw bytes SSM stored at v3 (which hash to a5292545...). Both parse to the identical LiveResearchPermissionRelease. The plan is to write the normalized form (sha256 == the sealed value). Confirm this is the intended 'exact sealed pre-Window-2 canonical predecessor bytes'."
+    }
+  ],
+  "resume_plan_after_blockers_cleared": [
+    "restore /m67-phase1/research-release to the pydantic-normalized v3 predecessor (sha256 2a9466e7...); record consumed-failed-authority -> exact-predecessor-restoration",
+    "publish git-39944e8-window2-repair2 via m67-phase1-worker-image-publisher; obtain actual ECR registry digest; require linux/amd64, registry==local manifest equivalence, parent of sha256:770d4248, ECR scan COMPLETE, critical/high/blocking 0/0/0",
+    "bump terraform.tfvars worker_image_uri + controlled_egress_image_uri + research_runtime_revision to the PROVEN ECR digest; fresh ADR-0075 saved plan; semantic review (expect only worker/intelligence/controlled-egress/activator task-definition successors); reject any IAM/network/desired-count/authority/standalone-destroy change; apply; require NO_CHANGES + dormant + exact successor identities",
+    "extend authority_materialization to accept the sealed Repair #2 successor image digest (chain: accepted Window 2 -> Repair #2 diagnosis -> sealed Repair #2 implementation -> proven registry successor -> deployed successor revision -> materialized @3); a random/unsealed/unproven digest still fails closed; focused + full tests",
+    "regenerate bounded-ecs-execution-config.json for the successor activator revision",
+    "materialize @3 -> production-validator acceptance -> approval write -> bounded launcher -> successor activator -> release -> immutable work item -> controlled-egress lease/readiness -> M1 -> offline M2..M5 -> CONTACT_PHASE_NOT_AUTHORIZED -> consume -> restore approval/lease/release safe terminal -> services 0/0/0 -> kill switch TRIPPED -> human review",
+    "Repairs #3-#5 remain available for further eligible operational failures"
+  ]
+}
