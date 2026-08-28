@@ -1,0 +1,115 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_AND_EXECUTION_TERMINAL",
+  "version": "2026-08-28.1",
+  "state": "BLOCKED_SLOT01_BOUNDED_REPAIR_EXHAUSTED_ECS_RUNTASK_ACTIVE_REVISION_REPORTED_INACTIVE",
+  "recorded_at": "2026-08-28T10:02:16.7749759Z",
+  "owner_authorization_statement_sha256": "602f09f7f45bbe359fc186be54835af2cd3c15acc2e0e12a8242bdf55985ff36",
+  "experiment_id": "c14eb906-5711-5444-a12b-217dea75441f",
+  "slot": {
+    "number": 1,
+    "business": "903 HVAC",
+    "hostname": "903hvac.com",
+    "replacement_or_redraw": false
+  },
+  "initial_successor_deployment": {
+    "image_digest": "sha256:fd3446d335f809303a001d059c8d4010e2e10aa2e19c945a6337299e6e507077",
+    "terraform_result": "5 add, 7 change, 4 destroy-represented expected replacements",
+    "synthetic_controlled_egress_readiness": "PASS",
+    "terraform_convergence": "NO_CHANGES"
+  },
+  "repair_history": [
+    {
+      "repair_number": 1,
+      "classification": "LOCAL_VALIDATION_HARNESS_ENTRYPOINT_OVERRIDE_DEFECT",
+      "result": "CORRECTED_LOCALLY",
+      "aws_task_stopped": "dd5edbfb00b14f88b88792a3fe865075",
+      "target_transport": 0,
+      "authority_mutation": 0
+    },
+    {
+      "repair_number": 2,
+      "classification": "CONSUMED_NOT_AUTHORIZED_PREDECESSOR_STRICT_IDENTITY_BINDING_DEFECT",
+      "implementation_commit": "e0d898c3afd6694ea2a10f0083fe4e8e7c7ea7d8",
+      "preapply_evidence_commit": "97e08a50ddeeae6f8ccb1fdd37a85602fa0271c3",
+      "preapply_evidence_sha256": "810653aab13d05953e2ea89b6b91a408ba98d7a287236c877637b5d2c7c024fa",
+      "registry_digest": "sha256:770d4248bbd7b5f915861331663dc68f5107cf87782a86bde5b7105488e16e50",
+      "registry_equivalence": "PROVEN",
+      "ecr_scan": "COMPLETE_CRITICAL_HIGH_BLOCKING_0_0_0",
+      "terraform_result": "4 add, 3 change, 4 destroy-represented expected replacements",
+      "deployed_revisions": {
+        "research_worker": 11,
+        "intelligence_worker": 8,
+        "controlled_egress": 7,
+        "sampled_slot_activator": 6
+      },
+      "postdeploy_result": "BLOCKED_BEFORE_TASK_CREATION",
+      "target_transport": 0,
+      "authority_mutation": 0
+    },
+    {
+      "repair_number": 3,
+      "classification": "ECS_TASK_DEFINITION_CONTROL_PLANE_REGISTRATION_DEFECT",
+      "preapply_evidence_commit": "e9c99cb89c91c81ff25240a3bdc243db261a8ba8",
+      "preapply_evidence_sha256": "83e6bb9ebf0f10b381798112728ce96e3271f45f3518ce2170492483adf1aa17",
+      "operation": "TERRAFORM_REREGISTER_BYTE_IDENTICAL_ACTIVATOR_ONLY",
+      "terraform_result": "1 add, 0 change, 1 destroy-represented expected replacement",
+      "replacement_revision": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-sampled-slot-activator:7",
+      "replacement_read_status": "ACTIVE",
+      "replacement_image_digest": "sha256:770d4248bbd7b5f915861331663dc68f5107cf87782a86bde5b7105488e16e50",
+      "bounded_operator_run_task_result": "InvalidParameterException: TaskDefinition is inactive",
+      "postdeploy_result": "BLOCKED_BEFORE_TASK_CREATION",
+      "target_transport": 0,
+      "authority_mutation": 0
+    }
+  ],
+  "terminal_blocker": {
+    "summary": "ECS read APIs report the exact deployed activator revision ACTIVE, while RunTask through the accepted bounded operator identity rejects that same full ARN as inactive before creating a task.",
+    "application_code_executed": false,
+    "task_created": false,
+    "dns_or_http": 0,
+    "slot01_target_requests": 0,
+    "repair_limit": "3_OF_3_EXHAUSTED",
+    "automatic_repair_or_retry_permitted": false
+  },
+  "terraform_terminal_state": {
+    "convergence": "NO_CHANGES",
+    "detailed_exit_code": 0,
+    "convergence_plan_sha256": "5b787b60049249639a3494e36fc4b720a93ac1381927299eaea5979a7d989395"
+  },
+  "authority_terminal_state": {
+    "services": {
+      "research_worker": "0/0/0",
+      "intelligence_worker": "0/0/0",
+      "controlled_egress": "0/0/0"
+    },
+    "active_tasks": 0,
+    "kill_switch": "TRIPPED",
+    "kill_switch_parameter_version": 9,
+    "research_release": "NOT_AUTHORIZED_CONSUMED_PREDECESSOR",
+    "research_release_parameter_version": 3,
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED",
+    "sampled_slot_execution_approval_parameter_version": 7,
+    "controlled_egress_lease": "NOT_AUTHORIZED",
+    "controlled_egress_lease_parameter_version": 1,
+    "new_slot01_release_created": false,
+    "new_slot01_work_item_created": false,
+    "target_hostname_log_events_last_two_hours": 0,
+    "all_seven_m67_permissions": "NOT_AUTHORIZED",
+    "slot02_execution": 0
+  },
+  "research_result": {
+    "current_experiment_m1": "NOT_STARTED",
+    "current_experiment_m2_m5": "NOT_STARTED",
+    "opportunity_evidence": "NONE",
+    "opportunity_interpretation": "PROHIBITED",
+    "truth_state": "UNKNOWN",
+    "prior_slot01_attempt": "IMMUTABLE_M1_RESEARCH_FAILED_ZERO_TARGET_TRANSPORT"
+  },
+  "cost": {
+    "research_cost_usd": "0",
+    "repair_infrastructure_cost_usd": "UNKNOWN_PENDING_AWS_BILLING",
+    "authorized_repair_ceiling_usd": "40",
+    "ceiling_exceedance_observed": false
+  },
+  "next_authority_requirement": "FRESH_OWNER_REVIEW_REQUIRED_BECAUSE_THREE_REPAIR_BOUND_IS_EXHAUSTED"
+}
