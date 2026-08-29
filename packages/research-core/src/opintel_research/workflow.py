@@ -393,7 +393,7 @@ class ResearchWorkflowRunner:
         except Exception:
             raw_hash = hashlib.sha256(snapshot.content).hexdigest()
             event = hashlib.sha256(
-                f"{raw_hash}|MINIMIZATION_FAILED|phase1-minimizer@1".encode()
+                f"{raw_hash}|MINIMIZATION_FAILED|phase1-minimizer@2".encode()
             ).hexdigest()
             return CaptureQuarantine(
                 source_uri=snapshot.final_url,
@@ -401,7 +401,7 @@ class ResearchWorkflowRunner:
                 raw_content_sha256=raw_hash,
                 required_evidence_markers=(),
                 quarantine_reasons=("MINIMIZATION_FAILED",),
-                minimizer_version="phase1-minimizer@1",
+                minimizer_version="phase1-minimizer@2",
                 minimization_event_sha256=event,
             )
 

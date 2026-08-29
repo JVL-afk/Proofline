@@ -28,8 +28,20 @@ from opintel_shadow.domain import stable_hash
 
 _EMAIL = re.compile(r"(?i)\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b")
 _PHONE = re.compile(r"(?<!\w)(?:\+?1[ .()-]*)?(?:\d[ .()-]*){10}(?!\w)")
-_CONTACT_MARKERS = frozenset(
-    {"contact", "staff", "team", "employee", "person", "vcard", "phone", "email", "tel"}
+# Person/contact card markers. Split by how aggressively they may be dropped:
+#  * PERSON markers denote a structured person/staff record - drop the whole
+#    element wherever it appears;
+#  * VALUE markers (contact / phone / email / tel) frequently appear on utility
+#    classes (icon fonts, CTA buttons) and on structural sections that also hold
+#    public business-process evidence (a Request-an-Estimate form, a Contact-Us
+#    section). Only drop them on inline / card-shaped elements, never on a form
+#    or a sectioning container - the value-level email/phone redaction and the
+#    per-fragment business-term filter still remove the actual contact data.
+_PERSON_BLOCK_MARKERS = frozenset({"staff", "team", "employee", "person", "vcard"})
+_CONTACT_VALUE_MARKERS = frozenset({"contact", "phone", "email", "tel"})
+_CONTACT_MARKERS = _PERSON_BLOCK_MARKERS | _CONTACT_VALUE_MARKERS
+_STRUCTURAL_TAGS = frozenset(
+    {"form", "nav", "header", "footer", "main", "section", "article", "body", "html"}
 )
 _ALLOWED_EVIDENCE_TERMS = (
     "texas",
@@ -50,31 +62,73 @@ _ALLOWED_EVIDENCE_TERMS = (
     "form",
 )
 _SKIP_TAGS = frozenset({"script", "style", "noscript", "template", "svg"})
+# HTML void elements emit a start tag and no end tag. Tracking a skip region with a
+# per-start-tag depth counter desynchronises on these and can strand the parser in
+# skip mode for the rest of the document; enumerate them so they are ignored for
+# nesting purposes.
+_VOID_TAGS = frozenset(
+    {
+        "area", "base", "br", "col", "embed", "hr", "img", "input",
+        "link", "meta", "param", "source", "track", "wbr",
+    }
+)
 _ALL_STORES = ("primary", "replicas", "object_versions", "backups", "derived_stores")
 
 
 class _MinimizingParser(HTMLParser):
+    """Deterministic block-level parse: drop <script>/<style>/<noscript>/<template>/
+    <svg> content and any contact/person-classed subtree; keep every other visible
+    text fragment. Skip and contact nesting are tracked over real element boundaries
+    only (void elements ignored, mis-nested end tags tolerated), so a stray unclosed
+    void or block element cannot strand the parser and discard unrelated evidence.
+    """
+
     def __init__(self) -> None:
         super().__init__(convert_charrefs=True)
         self._skip_depth = 0
+        self._open: list[str] = []
+        self._contact_at: list[int] = []
         self.fragments: list[str] = []
         self.removed_blocks = 0
 
+    def _suppressed(self) -> bool:
+        return self._skip_depth > 0 or bool(self._contact_at)
+
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        tag = tag.lower()
+        if tag in _SKIP_TAGS:
+            self._skip_depth += 1
+            return
+        if tag in _VOID_TAGS:
+            return
         values = " ".join(value or "" for key, value in attrs if key in {"id", "class", "itemtype"})
         tokens = {item.lower() for item in re.split(r"[^a-zA-Z]+", values) if item}
-        if self._skip_depth or tag.lower() in _SKIP_TAGS or tokens & _CONTACT_MARKERS:
-            if self._skip_depth == 0 and (tokens & _CONTACT_MARKERS):
+        self._open.append(tag)
+        drop_block = bool(tokens & _PERSON_BLOCK_MARKERS) or (
+            bool(tokens & _CONTACT_VALUE_MARKERS) and tag not in _STRUCTURAL_TAGS
+        )
+        if drop_block and self._skip_depth == 0:
+            if not self._contact_at:
                 self.removed_blocks += 1
-            self._skip_depth += 1
+            self._contact_at.append(len(self._open))
 
     def handle_endtag(self, tag: str) -> None:
-        del tag
-        if self._skip_depth:
-            self._skip_depth -= 1
+        tag = tag.lower()
+        if tag in _SKIP_TAGS:
+            if self._skip_depth > 0:
+                self._skip_depth -= 1
+            return
+        if tag in _VOID_TAGS or tag not in self._open:
+            return
+        while self._open:
+            popped = self._open.pop()
+            while self._contact_at and self._contact_at[-1] > len(self._open):
+                self._contact_at.pop()
+            if popped == tag:
+                break
 
     def handle_data(self, data: str) -> None:
-        if not self._skip_depth and data.strip():
+        if not self._suppressed() and data.strip():
             self.fragments.append(" ".join(data.split()))
 
 
@@ -111,21 +165,47 @@ class PhaseOneMinimizer:
         structured_count = parser.removed_blocks + len(
             re.findall(r'(?i)["\']@type["\']\s*:\s*["\'](?:ContactPoint|Person)["\']', decoded)
         )
-        redacted = _PHONE.sub("[PHONE_REDACTED]", _EMAIL.sub("[EMAIL_REDACTED]", visible))
         permitted_terms = tuple(item.casefold() for item in required_evidence_markers) + (
             _ALLOWED_EVIDENCE_TERMS
         )
-        minimized = "\n".join(
-            line
-            for line in redacted.splitlines()
-            if line.strip() and any(term in line.casefold() for term in permitted_terms)
-        )
+        # Block-level classification, one fragment at a time:
+        #  * redact email/phone values in the fragment;
+        #  * KEEP the fragment only if it still carries independent business evidence
+        #    (a permitted term) - a fragment that is only a contact stub after
+        #    redaction is dropped, not reconstructed;
+        #  * DROP any fragment that still contains a raw contact value.
+        kept_lines: list[str] = []
+        for fragment in visible.splitlines():
+            if not fragment.strip():
+                continue
+            redacted_fragment = _PHONE.sub(
+                "[PHONE_REDACTED]", _EMAIL.sub("[EMAIL_REDACTED]", fragment)
+            )
+            if _EMAIL.search(redacted_fragment) or _PHONE.search(redacted_fragment):
+                continue
+            without_placeholders = redacted_fragment.replace(
+                "[PHONE_REDACTED]", " "
+            ).replace("[EMAIL_REDACTED]", " ")
+            if not any(term in without_placeholders.casefold() for term in permitted_terms):
+                continue
+            kept_lines.append(redacted_fragment)
+        minimized = "\n".join(kept_lines)
         missing = tuple(
             marker
             for marker in required_evidence_markers
             if marker.casefold() not in minimized.casefold()
         )
-        if missing:
+        residual = bool(_EMAIL.search(minimized) or _PHONE.search(minimized))
+        quarantine_reasons: tuple[str, ...] = ()
+        if residual:
+            quarantine_reasons = ("RESIDUAL_CONTACT_VALUE_IN_MINIMIZED_TEXT",)
+        elif missing:
+            quarantine_reasons = tuple(
+                f"REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:{item}" for item in missing
+            )
+        elif not minimized.strip():
+            quarantine_reasons = ("SAFE_EVIDENCE_EMPTY",)
+        if quarantine_reasons:
             return MinimizedCapture(
                 source_uri=source_uri,
                 captured_at=captured_at,
@@ -137,9 +217,7 @@ class PhaseOneMinimizer:
                 removed_phone_count=phone_count,
                 removed_structured_contact_blocks=structured_count,
                 required_evidence_markers=required_evidence_markers,
-                quarantine_reasons=tuple(
-                    f"REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:{item}" for item in missing
-                ),
+                quarantine_reasons=quarantine_reasons,
             )
         return MinimizedCapture(
             source_uri=source_uri,

@@ -71,7 +71,7 @@ class MinimizedCapture(FrozenModel):
     quarantine_reasons: tuple[str, ...]
     raw_body_retained: Literal[False] = False
     person_contact_projection_allowed: Literal[False] = False
-    minimizer_version: Literal["phase1-minimizer@1"] = "phase1-minimizer@1"
+    minimizer_version: Literal["phase1-minimizer@2"] = "phase1-minimizer@2"
 
     @model_validator(mode="after")
     def durable_or_quarantined(self) -> MinimizedCapture:
