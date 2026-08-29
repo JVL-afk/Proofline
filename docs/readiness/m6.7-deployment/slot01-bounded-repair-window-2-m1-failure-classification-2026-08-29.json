@@ -1,0 +1,87 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_M1_FAILURE_CLASSIFICATION",
+  "schema_version": "1.0.0",
+  "state": "CLASSIFIED_ELIGIBLE_INTERNAL_DEFECT",
+  "observed_at_utc": "2026-08-29T07:10:00Z",
+  "subject_run": {
+    "activator_task": "864cfa613b604a7c8cd9a5d7648ee978",
+    "coordinator_run_id": "ad0dd306-8211-5d20-8877-20811574dab3",
+    "research_run_id": "71819ef3-6342-5549-82ab-fad9072afce7",
+    "research_run_created_utc": "2026-08-29T06:13:22.276968Z",
+    "research_run_completed_utc": "2026-08-29T06:13:23.706864Z",
+    "activator_terminal_reason": "M1_RESEARCH_FAILED"
+  },
+  "telemetry_sufficiency": {
+    "durable_surfaces_reviewed": [
+      "CloudWatch /opintel/m67-phase1/worker (activator receipt: one line, terminal_reason only)",
+      "CloudWatch controlled-egress gateway streams (all 8 streams zero events - gateway is a silent proxy)",
+      "CloudWatch ECS/ContainerInsights network metrics (egress service Rx 898 / Tx 623 bytes total during the run; activator task no datapoints)",
+      "RDS opintel_phase1 research_runs / research_fetch_attempts / research_robots_evidence / page_snapshots / research_capture_quarantines (the authoritative provenance-safe classification store)"
+    ],
+    "receipt_alone_insufficient": true,
+    "receipt_gap": "The activator terminal receipt collapses every M1 failure mode to the single token M1_RESEARCH_FAILED. The sub-classification (robots reason_code, HTTP status, fetch error_code) is recorded only as RDS columns with no readable telemetry surface (fixed container ENTRYPOINT, no query path).",
+    "classification_method": "Registered a transient read-only Fargate task definition (m67-phase1-m1-failure-classification-diagnostic:1) reusing the deployed image sha256:9ce26499 and the worker roles, ran ONE SELECT of provenance-safe columns only (statuses, error/reason codes, sha256 hashes, byte/page counters, robots decisions, HTTP status), then deregistered it. No raw response bodies, no minimized page text, no 903hvac.com transport, no authority or infrastructure change."
+  },
+  "database_evidence": {
+    "research_run": {
+      "status": "failed",
+      "last_error_code": "robots_malformed",
+      "last_error_message": "bounded research completed with failures",
+      "pages_attempted": 1,
+      "pages_succeeded": 0,
+      "bytes_stored": 0,
+      "start_url": "https://903hvac.com/",
+      "started_at": "2026-08-29T06:13:22.966685Z"
+    },
+    "robots_evidence": {
+      "host": "903hvac.com",
+      "requested_path": "/",
+      "http_status": 200,
+      "body_sha256": "ef506dc1b57fb487ccdf3c54f676f7cf9fa5a3a356c559e8d7f1ea6402f12607",
+      "body_length": 872,
+      "decision": "DENY",
+      "reason_code": "robots_malformed",
+      "allowed": false,
+      "captured_at": "2026-08-29T06:13:23.674687Z"
+    },
+    "fetch_attempts": [
+      {"attempt_number": 0, "normalized_url": "https://903hvac.com/", "outcome": "robots_blocked", "error_code": "robots_malformed"}
+    ],
+    "page_snapshots": [],
+    "quarantines": []
+  },
+  "root_cause": {
+    "category": "ELIGIBLE_INTERNAL_IMPLEMENTATION_DEFECT",
+    "defect": "RuntimeRobotsPolicy (packages/research-local/src/opintel_research_local/robots.py) does not honor the HTTP Content-Encoding of the robots.txt response. _retrieve() passes transport.request(...).body straight through, and evaluate() calls body.decode('utf-8', errors='strict') on it. When the origin/CDN serves robots.txt gzip-compressed (Cloudflare default), the raw gzip bytes raise UnicodeDecodeError -> caught -> reason_code 'robots_malformed' -> allowed stays False -> decision DENY -> M1 fails closed.",
+    "contrast": "The page-fetch path SafeHttpFetcher.fetch() DOES decode Content-Encoding (calls _decode(raw.body, headers['content-encoding'], ...)). Only the robots path is affected. content-encoding is already in _SAFE_HEADERS, so RawHttpResponse.headers carries it; robots.py simply ignores it.",
+    "reproduction": "GET https://903hvac.com/robots.txt with Accept-Encoding: gzip returns HTTP 200, Content-Encoding: gzip, Transfer-Encoding: chunked, RAW body 872 bytes, RAW sha256 ef506dc1b57fb487ccdf3c54f676f7cf9fa5a3a356c559e8d7f1ea6402f12607 (byte-identical to the run's robots_evidence). gzip.decompress -> 1902 bytes containing 'User-agent: *' / 'Content-Signal: search=yes,ai-train=no,use=reference' / 'Allow: /'. raw.decode('utf-8','strict') raises UnicodeDecodeError: invalid start byte 0x8b at position 1 (gzip magic 1f 8b).",
+    "policy_impact": "903hvac.com's actual robots.txt explicitly Allow: / for User-agent: *. Our RobotFileParser.can_fetch('OpportunityIntelligenceResearch', 'https://903hvac.com/') on the decompressed file returns True. The bounded M1 GET of / SHOULD have been permitted under the existing M1 robots policy; it was blocked solely by the undecoded-gzip defect.",
+    "not_prohibited": "Fixing this does not bypass robots (we still parse and obey Disallow, e.g. Amazonbot Disallow: /), does not bypass Cloudflare/bot-protection (gzip is a standard HTTP content coding, not a challenge), does not spoof a browser, does not broaden redirects, does not weaken TLS/SSRF/DNS-rebinding controls, and does not raise any request ceiling."
+  },
+  "answers": {
+    "exact_m1_failure_category": "robots policy DENY, reason_code=robots_malformed (root cause: undecoded gzip Content-Encoding on the robots.txt response - an internal defect)",
+    "last_successful_m1_substage": "robots.txt retrieval: HTTP GET https://903hvac.com/robots.txt succeeded with HTTP 200 and an 872-byte (gzip) body received through the controlled-egress gateway. Failure is at robots.txt decoding/parsing on our side, before any page fetch.",
+    "dns_occurred": "YES (the gateway resolved 903hvac.com; an HTTP 200 was returned)",
+    "tcp_tls_occurred": "YES (certificate-validated HTTPS to 903hvac.com completed; HTTP 200 received)",
+    "http_request_reached_903hvac_com": "YES (GET /robots.txt reached the edge/origin and returned 200)",
+    "http_status_if_known": "200 (robots.txt). No status for '/' - that page fetch was never attempted.",
+    "robots_outcome_if_known": "decision=DENY, allowed=false, reason_code=robots_malformed on the gzip bytes. The ACTUAL (decompressed) robots.txt is 'User-agent: * / Allow: /' and WOULD ALLOW the bounded fetch of /.",
+    "request_attempt_byte_counters": "robots.txt: 1 request, 1 attempt, HTTP 200, 872 bytes received (compressed), 0 bytes stored. Page '/': 0 requests attempted (blocked by the robots DENY). pages_attempted=1, pages_succeeded=0, bytes_stored=0. fetch_attempts: 1 row (attempt 0, outcome robots_blocked).",
+    "genuine_external_or_internal_defect": "ELIGIBLE INTERNAL DEFECT - the robots evaluation path does not decode HTTP Content-Encoding (gzip/deflate) on the robots.txt response, so a standards-compliant permissive robots.txt served compressed is misclassified as robots_malformed and denied.",
+    "recommendation": "REPAIR_3_ELIGIBLE"
+  },
+  "repair_3_scope_if_authorized": {
+    "minimum_diff": "In packages/research-local/src/opintel_research_local/robots.py, before UTF-8 decoding the robots body, decode it per the response Content-Encoding header using a bounded/safe decompression (mirror SafeHttpFetcher._decode: identity/absent -> unchanged; gzip/deflate -> bounded inflate with a byte cap; anything else -> keep today's robots_malformed). Thread the content-encoding header from RawHttpResponse.headers into _retrieve/evaluate.",
+    "tests": "extend tests/test_m67_runtime_robots.py: gzip-encoded permissive robots.txt -> ALLOW; deflate-encoded -> ALLOW; oversized-after-inflate -> robots_malformed; unknown encoding -> robots_malformed; identity unchanged; Disallow still obeyed.",
+    "then": "build thin successor image -> publish (registry evidence, scan 0/0/0) -> tfvars digest bump + ADR-0075 plan + semantic review + apply -> extend authority_materialization repair_image_successor_chain to link #2 (predecessor sha256:9ce26499 -> Repair #3 successor) -> regenerate launcher config for the new activator revision -> materialize @3 -> re-run M1..M5 -> terminal.",
+    "counters_note": "This run already made first target transport (HTTP 200 on robots.txt). Per the Window 2 statement, request/attempt/byte/time/cost counters are now cumulative and may not be reset by the repair."
+  },
+  "attempt_outcome_preserved": "For THIS Repair #2 attempt the company-level M1 research outcome remains M1_RESEARCH_FAILED. The recommendation is to fix the gzip defect under Repair #3 and re-run, not to retroactively change this attempt's terminal.",
+  "dormant_state_after_classification": {
+    "diagnostic_task_definition": "m67-phase1-m1-failure-classification-diagnostic:1 registered then deregistered (now INACTIVE, inert)",
+    "services": "0/0/0", "running_tasks": 0,
+    "kill_switch": "TRIPPED", "research_release": "v10 CONSUMED:M1_RESEARCH_FAILED",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED", "controlled_egress_lease": "NOT_AUTHORIZED",
+    "target_transport_during_classification": "0 (read-only RDS query only; the separate public robots.txt fetch for defect confirmation was performed from the operator workstation, not the bounded environment)"
+  }
+}
