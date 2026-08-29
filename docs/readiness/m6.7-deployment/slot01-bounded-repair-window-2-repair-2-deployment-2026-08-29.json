@@ -1,0 +1,44 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_REPAIR_2_DEPLOYMENT",
+  "schema_version": "1.0.0",
+  "state": "APPLIED_CONVERGED_DORMANT",
+  "observed_at_utc": "2026-08-29T06:20:00Z",
+  "authorization_event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+  "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+  "terraform_apply": {
+    "provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "backend_identity": "profile m67-phase1-state-apply-backend -> arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "command": "terraform -chdir=infra/terraform/phase1 apply -input=false -lock=true repair2.tfplan",
+    "saved_plan_sha256": "ee123c8a37393a2bf1d56d8b1e13bcd4f8de4a91f60fd98f07ed6f559e44540b",
+    "result": "Apply complete! Resources: 4 added, 3 changed, 4 destroyed.",
+    "post_apply_plan": "No changes. Your infrastructure matches the configuration.",
+    "preexisting_warning": "aws_service_discovery_service.egress failure_threshold deprecation (unchanged)"
+  },
+  "deployed_task_definitions": {
+    "m67-phase1-research-worker": {"revision": 12, "image_digest": "sha256:9ce264999569dc05c80dcdbe7ef3b3579783ed65964e4d28f0f4538f34fcea81", "runtime_revision_env": "sha256:9ce26499..."},
+    "m67-phase1-intelligence-worker": {"revision": 9, "image_digest": "sha256:9ce264999569dc05c80dcdbe7ef3b3579783ed65964e4d28f0f4538f34fcea81"},
+    "m67-phase1-controlled-egress": {"revision": 8, "image_digest": "sha256:9ce264999569dc05c80dcdbe7ef3b3579783ed65964e4d28f0f4538f34fcea81", "runtime_revision_env": "sha256:9ce26499..."},
+    "m67-phase1-sampled-slot-activator": {"revision": 8, "image_digest": "sha256:9ce264999569dc05c80dcdbe7ef3b3579783ed65964e4d28f0f4538f34fcea81", "runtime_revision_env": "sha256:9ce26499..."}
+  },
+  "predecessor_activator_revision": 7,
+  "successor_activator_revision": 8,
+  "activator_revision_change_authority": "The owner statement authorizes eligible repairs to change 'the minimum ECS control-plane/task-definition lifecycle' and 'container/runtime configuration'. Repair #2 deploys the sealed successor image; a new activator revision :8 is the required task-definition lifecycle consequence. Window 1 repair #3 was itself an activator re-registration.",
+  "services": {
+    "m67-phase1-research-worker": {"desired": 0, "running": 0, "pending": 0, "task_definition": "m67-phase1-research-worker:12"},
+    "m67-phase1-intelligence-worker": {"desired": 0, "running": 0, "pending": 0, "task_definition": "m67-phase1-intelligence-worker:9"},
+    "m67-phase1-controlled-egress": {"desired": 0, "running": 0, "pending": 0, "task_definition": "m67-phase1-controlled-egress:8"}
+  },
+  "running_tasks": 0,
+  "post_apply_dormancy": {
+    "kill_switch": "TRIPPED (v11)",
+    "research_release": "v8 sealed pre-Window-2 predecessor (id 02873c16-90de-53cc-ae43-b6e325e268d1, CONSUMED:M1_RESEARCH_FAILED, value sha256 2a9466e72af892e93b86d8e3958e3f2adde22bb3c62e95ca0c0604d14e6b2f5b)",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED (v9)",
+    "controlled_egress_lease": "NOT_AUTHORIZED (v1)",
+    "terraform_no_changes": true,
+    "target_transport_to_903hvac_com": 0,
+    "slot01_work_item_or_release_created": false,
+    "slot02": "NOT_AUTHORIZED"
+  },
+  "adr_0075": "identity separation preserved; semantic review proved no unexplained mutation; only the image digest moved across the four task definitions; no IAM/network/KMS/DB/SSM/desired-count/authority change; no standalone destroy.",
+  "next": "extend authority_materialization to accept the sealed Repair #2 successor image digest sha256:9ce26499... through the evidence chain; focused + full tests; regenerate bounded-ecs-execution-config.json for activator :8; materialize @3; run Slot 01 M1..M5; CONTACT_PHASE_NOT_AUTHORIZED; consume; dormant terminal."
+}

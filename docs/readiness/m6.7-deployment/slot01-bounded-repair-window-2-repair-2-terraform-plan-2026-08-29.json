@@ -1,0 +1,76 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_REPAIR_2_TERRAFORM_PLAN",
+  "schema_version": "1.0.0",
+  "state": "PLAN_SAVED_SEMANTIC_REVIEW_PASS_READY_TO_APPLY",
+  "observed_at_utc": "2026-08-29T06:05:00Z",
+  "authorization": {
+    "event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+    "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+    "clause": "A repair Terraform plan may be applied only when ADR-0075 identity separation is preserved and semantic review proves no unexplained mutation."
+  },
+  "adr_0075_identity_separation": {
+    "plan_provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "plan_backend_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-state-plan (backend.hcl assume_role)",
+    "apply_provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "apply_backend_identity": "profile m67-phase1-state-apply-backend -> arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply (backend.apply.hcl)",
+    "preserved": true
+  },
+  "inputs": {
+    "terraform_version": "1.15.9 windows_amd64",
+    "provider": "hashicorp/aws 6.53.0",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "provider_lock_matches_window2_owner_statement": true,
+    "terraform_tfvars_sha256": "1f4df69faea1e8b566d05bc77d5da3243c556634f18ab0254db9f996476744f5",
+    "tf_config_unchanged_since_repair_1": true,
+    "tf_config_change_note": "No *.tf file changed since Repair #1 commit 8dfeee6 (git diff empty). The only input change is terraform.tfvars (owner out-of-Git package, gitignored): the three image-digest fields.",
+    "tfvars_change": {
+      "worker_image_uri": "@sha256:770d4248... -> @sha256:9ce264999569dc05c80dcdbe7ef3b3579783ed65964e4d28f0f4538f34fcea81",
+      "controlled_egress_image_uri": "@sha256:770d4248... -> @sha256:9ce26499...",
+      "research_runtime_revision": "sha256:770d4248... -> sha256:9ce26499...",
+      "six_approval_binding_sha256_fields": "UNCHANGED (persistence.py is not one of the six hashed runtime files)"
+    },
+    "saved_plan_sha256": "8597a49f9bd42a39b5e20551b504e996184cfa2231e577a9c80c4bebf767d0f7",
+    "plan_json_sha256": "5f10815cc0eb2cf41b6c9055816c9a6562747e9171605972b4574d0a0145b769"
+  },
+  "plan_summary": {
+    "terraform_reported": "4 to add, 3 to change, 4 to destroy",
+    "add_destroy_pairs": "the 4 add + 4 destroy are the four aws_ecs_task_definition replacements (ECS task definitions are immutable; a new revision is register+deregister-tracked)",
+    "changed": "the 3 aws_ecs_service updates (task_definition reference -> new revision, known after apply)"
+  },
+  "resource_changes": [
+    {"address": "aws_ecs_task_definition.worker", "actions": ["delete", "create"], "substantive_change": "image sha256:770d4248 -> sha256:9ce26499 (image field + OPINTEL_RESEARCH_RUNTIME_REVISION env)"},
+    {"address": "aws_ecs_task_definition.intelligence", "actions": ["delete", "create"], "substantive_change": "image digest only"},
+    {"address": "aws_ecs_task_definition.sampled_slot_activator", "actions": ["delete", "create"], "substantive_change": "image digest only (image field + OPINTEL_RESEARCH_RUNTIME_REVISION env)"},
+    {"address": "aws_ecs_task_definition.egress", "actions": ["delete", "create"], "substantive_change": "image digest only (image field + OPINTEL_RESEARCH_RUNTIME_REVISION env)"},
+    {"address": "aws_ecs_service.worker", "actions": ["update"], "substantive_change": "task_definition -> new revision; desired_count stays 0"},
+    {"address": "aws_ecs_service.intelligence", "actions": ["update"], "substantive_change": "task_definition -> new revision; desired_count stays 0"},
+    {"address": "aws_ecs_service.egress", "actions": ["update"], "substantive_change": "task_definition -> new revision; desired_count stays 0"}
+  ],
+  "semantic_review": {
+    "method": "recursive structural diff of every changed resource's before/after with the NEW image digest mapped back to OLD",
+    "task_definitions": "After mapping the digest back, the only residual differences are AWS-populated empty defaults absent from the planned revision (mountPoints:[], portMappings:[], systemControls:[], volumesFrom:[]) and provider representation noise (arn/arn_without_revision/id/revision known-after-apply, enable_fault_injection known-after-apply, ipc_mode/pid_mode ''->null, tags {}->null). No CPU, memory, role, entryPoint, port, log-configuration, or non-digest environment change.",
+    "services": "Only task_definition -> known-after-apply. desired_count=0 unchanged. No launch type, network, load-balancer, or deployment-configuration change.",
+    "no_iam_change": true,
+    "no_network_change": true,
+    "no_kms_change": true,
+    "no_database_change": true,
+    "no_ssm_parameter_change": true,
+    "no_desired_count_change": true,
+    "no_authority_or_permission_state_change": true,
+    "no_standalone_destroy": true,
+    "no_data_source_deferral": true,
+    "unexplained_mutation": "NONE",
+    "note_on_first_plan": "An initial plan additionally showed aws_ssm_parameter.research_release (description clear) cascading to 4 aws_iam_role_policy re-computations. Root cause was a human-readable Description added during the predecessor restore. The description was cleared out-of-band (research-release now v8, value byte-identical to the sealed predecessor sha256 2a9466e7...). The re-plan is clean."
+  },
+  "preflight_state_before_apply": {
+    "research_release_ssm_version": 8,
+    "research_release_value_sha256": "2a9466e72af892e93b86d8e3958e3f2adde22bb3c62e95ca0c0604d14e6b2f5b",
+    "kill_switch": "TRIPPED",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED",
+    "controlled_egress_lease": "NOT_AUTHORIZED",
+    "services_desired_running_pending": "0/0/0",
+    "running_tasks": 0,
+    "target_transport_to_903hvac_com": 0
+  },
+  "next": "terraform init -reconfigure backend.apply.hcl -> terraform apply repair2.tfplan under m67-phase1-terraform-workload-apply -> require Apply complete 4 added / 3 changed / 4 destroyed -> terraform plan again -> require NO_CHANGES -> verify new task-def revisions carry @sha256:9ce26499 -> dormancy gates -> seal deployment evidence."
+}
