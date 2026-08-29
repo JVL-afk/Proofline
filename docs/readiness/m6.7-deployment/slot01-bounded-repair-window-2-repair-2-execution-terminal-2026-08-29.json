@@ -1,0 +1,82 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_REPAIR_2_EXECUTION_TERMINAL",
+  "schema_version": "1.0.0",
+  "state": "BOUNDED_EXECUTION_COMPLETE_M1_RESEARCH_FAILED_VALID_TERMINAL",
+  "observed_at_utc": "2026-08-29T06:20:00Z",
+  "authorization_event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+  "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+  "repairs_used": 2,
+  "repairs_remaining": 3,
+  "elapsed_hours_estimate": 6.3,
+  "additional_repair_infrastructure_cost_usd": "~1 (two short Fargate task runs, one image publication, one IAM policy in Repair #1)",
+  "launcher_configuration": {
+    "path": "local-data/m6.7/bounded-ecs-execution-config.json (gitignored owner-package location)",
+    "sha256": "14f494bf946da4563a7ac5250aff745a39b57510ab8a9a7acbb0792eb96caa02",
+    "schema_version": "m67.phase1.controlled-egress-execution@2",
+    "regenerated_for": "successor activator revision 8 and successor image digest sha256:9ce26499...",
+    "sampled_slot_task_definition": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-sampled-slot-activator:8",
+    "exact_image_digest": "sha256:9ce264999569dc05c80dcdbe7ef3b3579783ed65964e4d28f0f4538f34fcea81",
+    "network": "subnet subnet-0ed12f24100baf801, worker security group sg-05543bd7e420818bf, public IP DISABLED (the already-proven activator binding, unchanged)",
+    "timeouts": {"task_definition_readiness": 120, "startup": 300, "execution": 900, "shutdown": 300}
+  },
+  "materialization": {
+    "identity": "m67-phase1-operator (assumed)",
+    "dry_run": "materialized true; production applicator authorized the envelope; configuration_hash == approval_artifact_sha256 fb4e9d6d828ed25de40df1e17e22c9da08e37a0d53943bf34a442161d4992ed8",
+    "runtime_revision_acceptance": "the deployed activator OPINTEL_RESEARCH_RUNTIME_REVISION sha256:9ce26499... was admitted via the sealed, owner-anchored bounded-repair image successor chain (predecessor sha256:770d4248 inline in the owner statement; representation-equivalent proven; ECR scan 0/0/0; final successor == deployed digest)",
+    "write": "sampled-slot-execution-approval v10 (the @3 envelope)",
+    "authorized_release_id": "375a88da-da88-5ebf-9daf-cb09934e02b8",
+    "predecessor_release_id": "02873c16-90de-53cc-ae43-b6e325e268d1"
+  },
+  "bounded_run": {
+    "launcher": "scripts/run_m67_bounded_controlled_egress.py",
+    "identity": "m67-phase1-operator (assumed)",
+    "controlled_egress_service": "scaled 0 -> 1/1/0 then restored to 0/0/0 by the finally block",
+    "activator_task_arn": "arn:aws:ecs:us-east-2:785072247535:task/m67-phase1-research/864cfa613b604a7c8cd9a5d7648ee978",
+    "activator_task_definition": "m67-phase1-sampled-slot-activator:8",
+    "activator_created_utc": "2026-08-29T06:12:46Z",
+    "activator_started_utc": "2026-08-29T06:13:02Z",
+    "activator_stopped_utc": "2026-08-29T06:13:50Z",
+    "activator_runtime_seconds": 48,
+    "activator_exit_code": 0,
+    "activator_stop_code": "EssentialContainerExited",
+    "activator_summary": {
+      "release_created": true,
+      "release_id": "375a88da-da88-5ebf-9daf-cb09934e02b8",
+      "work_item_created": true,
+      "controlled_egress_lease_created": true,
+      "coordinator_created": true,
+      "coordinator_run_id": "ad0dd306-8211-5d20-8877-20811574dab3",
+      "accepted_stage_count": 1,
+      "controlled_egress_deactivated_after_m1": true,
+      "terminal_reason": "M1_RESEARCH_FAILED",
+      "terminal_state": "NOT_AUTHORIZED"
+    }
+  },
+  "authority_lifecycle": {
+    "kill_switch": "v11 TRIPPED -> v12 RUN (06:13:22Z) -> v13 TRIPPED (06:13:23Z)",
+    "research_release": "v8 predecessor (CONSUMED:M1_RESEARCH_FAILED) -> v9 AUTHORIZED (id 375a88da-...-b8) -> v10 NOT_AUTHORIZED CONSUMED:M1_RESEARCH_FAILED (id 375a88da-...-b9, revoked_at 2026-08-29T06:13:23.880531Z, terminal_rollback_state NOT_AUTHORIZED)",
+    "sampled_slot_execution_approval": "v9 sentinel -> v10 (@3 envelope) -> (activator consumed) -> v11 NOT_AUTHORIZED sentinel restored (authority_materialization_main restore)",
+    "controlled_egress_lease": "v1 NOT_AUTHORIZED -> (acquired) -> v3 NOT_AUTHORIZED"
+  },
+  "m1_outcome": {
+    "classification": "M1_RESEARCH_FAILED",
+    "owner_statement_position": "The accepted Window 2 statement states: 'truthful negative, insufficient-evidence, robots-denial and bounded research failure are valid terminal outcomes and are not repair triggers.' M1_RESEARCH_FAILED is a bounded research failure and is NOT an eligible repair trigger.",
+    "target": "903hvac.com (resolves to Cloudflare 188.114.96.8 / 188.114.97.8)",
+    "transport": "The production M1 runtime (unchanged sampled_slot_m1_runtime_sha256 binding) executed with certificate-validated same-host HTTPS/443, runtime robots evaluation before research pages, zero followed redirects, and the bounded ceilings. The 48-second total runtime and the single accepted stage indicate the bounded failure occurred at or near the robots/preflight boundary. Raw bodies and per-request detail are ephemeral by design (data minimization); no minimized company evidence was persisted.",
+    "no_circumvention": "No attempt was or will be made to bypass robots, bot-protection, TLS, SSRF, DNS-rebinding, or redirect controls. That would exceed the bounded, robots-respecting research authority.",
+    "m2_m5": "Did not run. M2-M5 inherit no Internet authority and depend on a completed M1; a bounded M1 failure terminates the experiment before M2."
+  },
+  "final_dormant_state": {
+    "services_desired_running_pending": {"research-worker": "0/0/0", "intelligence-worker": "0/0/0", "controlled-egress": "0/0/0"},
+    "running_tasks": 0,
+    "kill_switch": "TRIPPED (v13)",
+    "research_release": "v10 NOT_AUTHORIZED consumed terminal (CONSUMED:M1_RESEARCH_FAILED)",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED sentinel (v11)",
+    "controlled_egress_lease": "NOT_AUTHORIZED (v3)",
+    "terraform_plan": "No changes. Your infrastructure matches the configuration.",
+    "deployed_worker_image_digest": "sha256:9ce264999569dc05c80dcdbe7ef3b3579783ed65964e4d28f0f4538f34fcea81",
+    "slot02": "NOT STARTED"
+  },
+  "conclusion": "Window 2 Repair #2 is complete. The frozen Slot 01 experiment was made operational (predecessor restored, successor image published and deployed, materializer extended, launcher regenerated), materialized its exact @3 authority, and executed the exact production M1 path end-to-end. M1 terminated at M1_RESEARCH_FAILED - a valid, owner-pre-accepted bounded research failure, not a repair trigger. Authority was consumed and every control returned to its safe terminal; the environment is dormant with the kill switch TRIPPED. Repairs #3-#5 remain available for future eligible operational defects. Do not start Slot 02.",
+  "human_review": "REQUESTED"
+}
