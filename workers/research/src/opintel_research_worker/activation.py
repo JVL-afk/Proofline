@@ -25,6 +25,11 @@ from opintel_research_worker.sample_registry import FrozenPhaseOneSampleRegistry
 
 A09_MARKER_PREFIX = "A09_SHA256:"
 ACTIVATION_IDEMPOTENCY_REVISION = "m67.phase1.sampled-slot-activation@1"
+REPAIR_ATTEMPT_LINEAGE_REVISION = "m67.phase1.repair-attempt@1"
+# Deterministic execution-attempt identity for the original (non-repaired) run.
+ORIGINAL_ATTEMPT_LINEAGE_SHA256 = hashlib.sha256(
+    f"{REPAIR_ATTEMPT_LINEAGE_REVISION}:original".encode()
+).hexdigest()
 
 
 def _canonical_sha256(value: object) -> str:
@@ -150,9 +155,15 @@ class SampledSlotActivator:
             raise ValueError("requested release is not the current exact release")
         self._validate_release(release, slot_number)
 
-        run_id = uuid5(
-            NAMESPACE_URL, f"{ACTIVATION_IDEMPOTENCY_REVISION}:{release.id}:{slot_number}"
+        # Execution-attempt identity: stable for an identical sealed authority,
+        # distinct for each eligible bounded repair successor within the same
+        # frozen experiment. A prior terminal attempt keeps its own identity and
+        # is never re-driven or overwritten.
+        attempt_lineage = release.repair_attempt_lineage_sha256 or ORIGINAL_ATTEMPT_LINEAGE_SHA256
+        idempotency_key = (
+            f"{ACTIVATION_IDEMPOTENCY_REVISION}:{release.id}:{slot_number}:{attempt_lineage}"
         )
+        run_id = uuid5(NAMESPACE_URL, idempotency_key)
         identity = self._samples.issue(run_id, slot_number)
         decision = self._a09.require_approved(
             slot_number, identity.business_identity, identity.exact_hostname
@@ -174,7 +185,10 @@ class SampledSlotActivator:
         policy = self._policy(release)
         ceilings_sha256 = release_execution_ceilings_sha256(release)
         activation = SampledSlotActivation.create(
-            activation_id=uuid5(NAMESPACE_URL, f"m67.phase1.activation:{release.id}:{slot_number}"),
+            activation_id=uuid5(
+                NAMESPACE_URL,
+                f"m67.phase1.activation:{release.id}:{slot_number}:{attempt_lineage}",
+            ),
             authorization_release_id=release.id,
             authorization_configuration_hash=release.configuration_hash,
             a09_decision_sha256=decision.decision_sha256,
@@ -214,7 +228,7 @@ class SampledSlotActivator:
         result, created = self._repository.activate_sampled_run(
             business,
             run,
-            f"{ACTIVATION_IDEMPOTENCY_REVISION}:{release.id}:{slot_number}",
+            idempotency_key,
         )
         # A revocation after commit cannot make the item executable: every worker revalidates the
         # current release before DNS. Revalidate here so the activation caller also fails closed.

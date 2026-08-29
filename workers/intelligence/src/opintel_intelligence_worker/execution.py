@@ -9,6 +9,7 @@ from typing import Protocol
 from uuid import NAMESPACE_URL, UUID, uuid5
 
 from opintel_research.domain import ResearchRun
+from opintel_research_worker.activation import ORIGINAL_ATTEMPT_LINEAGE_SHA256
 from opintel_research_worker.egress_lease import ControlledEgressLease
 from opintel_research_worker.release_application import (
     BoundedSampledSlotReleaseApplicator,
@@ -93,9 +94,17 @@ class BoundedSampledSlotExecution:
             activation = run.sampled_slot_activation
             if identity is None or activation is None:
                 raise ValueError("sampled activation did not create immutable work-item identity")
+            # Attempt-scoped so a prior terminal coordinator (a superseded
+            # bounded-repair attempt in the same experiment) never short-circuits
+            # a legitimate repaired successor. Stable for an identical sealed
+            # authority; distinct per eligible repair successor.
+            attempt_lineage = (
+                release.repair_attempt_lineage_sha256 or ORIGINAL_ATTEMPT_LINEAGE_SHA256
+            )
             coordinator_run_id = uuid5(
                 NAMESPACE_URL,
-                f"m67.sampled-slot-coordinator:{release.id}:{identity.identity_sha256}",
+                "m67.sampled-slot-coordinator:"
+                f"{release.id}:{identity.identity_sha256}:{attempt_lineage}",
             )
             binding = CoordinatorRunBinding(
                 coordinator_run_id=coordinator_run_id,

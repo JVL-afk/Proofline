@@ -1,13 +1,15 @@
 from __future__ import annotations
 
+import re
 import socket
+from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
 from uuid import UUID, uuid4
 
 import pytest
-from opintel_research.domain import Business, ResearchRun
+from opintel_research.domain import Business, ResearchRun, ResearchRunStatus
 from opintel_research_worker.activation import (
     A09_MARKER_PREFIX,
     FrozenA09DecisionRegistry,
@@ -135,7 +137,10 @@ class _Repository:
     def activate_sampled_run(
         self, business: Business, run: ResearchRun, idempotency_key: str
     ) -> tuple[ResearchRun, bool]:
-        assert idempotency_key.endswith(":1")
+        assert re.fullmatch(
+            r"m67\.phase1\.sampled-slot-activation@1:[0-9a-f-]{36}:1:[0-9a-f]{64}",
+            idempotency_key,
+        )
         self.activation_calls += 1
         existing = self.runs.get(run.id)
         if existing:
@@ -181,6 +186,54 @@ def test_exact_release_derives_only_frozen_slot01_and_is_idempotent() -> None:
     assert first.sampled_slot_identity.exact_hostname == "903hvac.com"
     assert first.sampled_slot_activation is not None
     assert first.sampled_slot_activation.a09_decision_sha256 == A09_SHA256
+
+
+_LINEAGE_A = "a1" * 32
+_LINEAGE_B = "b2" * 32
+
+
+def test_same_experiment_same_attempt_lineage_is_the_same_run() -> None:
+    release = _release(repair_attempt_lineage_sha256=_LINEAGE_A)
+    activator, repository = _activator(release)
+    first, created = activator.activate(1, release.id)
+    second, dup = activator.activate(1, release.id)
+    assert created is True and dup is False
+    assert first.id == second.id
+    assert repository.activation_calls == 1
+    assert len(repository.runs) == 1
+
+
+def test_new_repair_successor_lineage_is_a_deterministic_new_run() -> None:
+    run_a, _ = _activator(_release(repair_attempt_lineage_sha256=_LINEAGE_A))[0].activate(
+        1, _release().id
+    )
+    run_b, _ = _activator(_release(repair_attempt_lineage_sha256=_LINEAGE_B))[0].activate(
+        1, _release().id
+    )
+    run_b2, _ = _activator(_release(repair_attempt_lineage_sha256=_LINEAGE_B))[0].activate(
+        1, _release().id
+    )
+    assert run_a.id != run_b.id
+    assert run_b.id == run_b2.id  # deterministic, no timestamp/random
+    assert (
+        run_a.sampled_slot_activation.activation_id
+        != run_b.sampled_slot_activation.activation_id
+    )
+
+
+def test_prior_terminal_attempt_run_is_untouched_by_a_new_repair_successor() -> None:
+    repo = _Repository()
+    prior, _ = _activator(
+        _release(repair_attempt_lineage_sha256=_LINEAGE_A), repository=repo
+    )[0].activate(1, _release().id)
+    # simulate the prior attempt reaching a terminal state
+    repo.runs[prior.id] = replace(prior, status=ResearchRunStatus.FAILED)
+    successor, created = _activator(
+        _release(repair_attempt_lineage_sha256=_LINEAGE_B), repository=repo
+    )[0].activate(1, _release().id)
+    assert created is True
+    assert successor.id != prior.id
+    assert repo.runs[prior.id].status is ResearchRunStatus.FAILED  # immutable, still terminal
 
 
 @pytest.mark.parametrize(

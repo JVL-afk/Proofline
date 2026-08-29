@@ -14,7 +14,11 @@ from uuid import NAMESPACE_URL, UUID, uuid5
 from opintel_shadow import LiveResearchPermissionRelease, PermissionActivity, PermissionState
 from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
-from opintel_research_worker.activation import A09_MARKER_PREFIX, FrozenA09DecisionRegistry
+from opintel_research_worker.activation import (
+    A09_MARKER_PREFIX,
+    ORIGINAL_ATTEMPT_LINEAGE_SHA256,
+    FrozenA09DecisionRegistry,
+)
 from opintel_research_worker.sample_registry import FrozenPhaseOneSampleRegistry
 
 APPROVAL_SCHEMA = "m67.phase1.sampled-slot-execution-approval@3"
@@ -87,6 +91,7 @@ class SampledSlotExecutionApproval(BaseModel):
     cost_ceiling_usd: Decimal
     allowed_source_scope: tuple[str, ...]
     terminal_rollback_state: Literal["NOT_AUTHORIZED"]
+    repair_attempt_lineage_sha256: str = ORIGINAL_ATTEMPT_LINEAGE_SHA256
 
     @field_validator(
         "owner_statement_sha256",
@@ -105,6 +110,7 @@ class SampledSlotExecutionApproval(BaseModel):
         "stage_coordinator_sha256",
         "m1_runtime_sha256",
         "m2_m5_runtime_sha256",
+        "repair_attempt_lineage_sha256",
     )
     @classmethod
     def lowercase_sha256(cls, value: str) -> str:
@@ -421,6 +427,7 @@ class BoundedSampledSlotReleaseApplicator:
                 allowed_source_scope=approval.allowed_source_scope,
                 terminal_rollback_state=approval.terminal_rollback_state,
                 owner_approval_sha256=approval.owner_statement_sha256,
+                repair_attempt_lineage_sha256=approval.repair_attempt_lineage_sha256,
             )
         value = current.model_copy(
             update={
@@ -450,6 +457,7 @@ class BoundedSampledSlotReleaseApplicator:
                 "allowed_source_scope": approval.allowed_source_scope,
                 "terminal_rollback_state": approval.terminal_rollback_state,
                 "owner_approval_sha256": approval.owner_statement_sha256,
+                "repair_attempt_lineage_sha256": approval.repair_attempt_lineage_sha256,
                 "suspended_reason": None,
                 "revoked_at": None,
             }

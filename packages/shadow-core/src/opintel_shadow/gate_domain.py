@@ -449,6 +449,10 @@ class LiveResearchPermissionRelease(GateRecordBase):
     owner_approval_sha256: str | None = None
     suspended_reason: str | None = None
     revoked_at: datetime | None = None
+    # Deterministic execution-attempt identity within the same frozen experiment.
+    # Stable for an identical sealed authority; distinct for each eligible bounded
+    # repair successor. None / absent means the original (non-repaired) attempt.
+    repair_attempt_lineage_sha256: str | None = None
 
     @field_validator("activity")
     @classmethod

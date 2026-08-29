@@ -355,6 +355,49 @@ def test_no_consumed_budget_keeps_full_statement_ceilings() -> None:
     assert approval.max_duration_seconds == 600
 
 
+def test_repair_attempt_lineage_is_deterministic_and_distinguishes_successors() -> None:
+    from opintel_research_worker.activation import ORIGINAL_ATTEMPT_LINEAGE_SHA256
+    from opintel_research_worker.authority_materialization import _repair_attempt_lineage_sha256
+
+    assert _repair_attempt_lineage_sha256(()) == ORIGINAL_ATTEMPT_LINEAGE_SHA256
+    one = (_repair_link(),)
+    assert _repair_attempt_lineage_sha256(one) == _repair_attempt_lineage_sha256(one)
+    assert _repair_attempt_lineage_sha256(one) != ORIGINAL_ATTEMPT_LINEAGE_SHA256
+    two = (
+        _repair_link(repair_number=1, successor_image_digest="sha256:" + "b2" * 32),
+        _repair_link(
+            repair_number=2,
+            predecessor_image_digest="sha256:" + "b2" * 32,
+            successor_image_digest="sha256:" + "c3" * 32,
+        ),
+    )
+    assert _repair_attempt_lineage_sha256(two) != _repair_attempt_lineage_sha256(one)
+    # a different sealed evidence identity for the same digits changes the lineage
+    altered = (_repair_link(registry_evidence_sha256="9" * 64),)
+    assert _repair_attempt_lineage_sha256(altered) != _repair_attempt_lineage_sha256(one)
+
+
+def test_materialized_envelope_binds_the_repair_attempt_lineage() -> None:
+    from opintel_research_worker.authority_materialization import _repair_attempt_lineage_sha256
+
+    env = dict(RUNTIME_ENV)
+    env["OPINTEL_RESEARCH_RUNTIME_REVISION"] = SUCCESSOR_REVISION
+    chain = (_repair_link(),)
+    result = materialize(
+        _inputs(deployed_activator_environment=env, repair_image_successor_chain=chain)
+    )
+    assert result.envelope.approval.repair_attempt_lineage_sha256 == _repair_attempt_lineage_sha256(
+        chain
+    )
+
+
+def test_original_attempt_envelope_uses_the_original_lineage() -> None:
+    from opintel_research_worker.activation import ORIGINAL_ATTEMPT_LINEAGE_SHA256
+
+    approval = materialize(_inputs()).envelope.approval
+    assert approval.repair_attempt_lineage_sha256 == ORIGINAL_ATTEMPT_LINEAGE_SHA256
+
+
 def test_two_link_sealed_repair_chain_admits_final_deployed_digest() -> None:
     mid = "sha256:" + "b2" * 32
     final = "sha256:" + "c3" * 32

@@ -35,7 +35,10 @@ from uuid import UUID
 
 from opintel_shadow import LiveResearchPermissionRelease, PermissionActivity, PermissionState
 
-from opintel_research_worker.activation import FrozenA09DecisionRegistry
+from opintel_research_worker.activation import (
+    ORIGINAL_ATTEMPT_LINEAGE_SHA256,
+    FrozenA09DecisionRegistry,
+)
 from opintel_research_worker.release_application import (
     APPROVAL_SCHEMA,
     SAMPLED_APPROVAL_LOCK_SENTINEL,
@@ -504,6 +507,33 @@ def _digest_in_statement(digest: str, inputs: MaterializationInputs) -> bool:
     return isinstance(digest, str) and digest in inputs.owner_authorization_statement
 
 
+def _repair_attempt_lineage_sha256(chain: tuple[RepairImageSuccessor, ...]) -> str:
+    """Deterministic execution-attempt identity for the same frozen experiment.
+
+    Empty chain -> the original (non-repaired) attempt identity. Otherwise a hash
+    over the ordered sealed successor links, so an identical sealed chain always
+    yields the same identity and a different legitimate sealed repair successor
+    yields a different one - with no timestamp or random component.
+    """
+
+    if not chain:
+        return ORIGINAL_ATTEMPT_LINEAGE_SHA256
+    parts = ["m67.phase1.repair-attempt@1"]
+    for link in chain:
+        parts.append(
+            "|".join(
+                (
+                    str(link.repair_number),
+                    link.predecessor_image_digest,
+                    link.successor_image_digest,
+                    link.registry_evidence_sha256,
+                    link.deployment_evidence_sha256,
+                )
+            )
+        )
+    return hashlib.sha256("\n".join(parts).encode("utf-8")).hexdigest()
+
+
 def _dry_run_production_validator(
     envelope: SampledSlotExecutionApprovalEnvelope,
     inputs: MaterializationInputs,
@@ -634,6 +664,9 @@ def materialize(inputs: MaterializationInputs) -> MaterializationResult:
         "cost_ceiling_usd": Decimal("0"),
         "allowed_source_scope": (registry["exact_hostname"],),
         "terminal_rollback_state": "NOT_AUTHORIZED",
+        "repair_attempt_lineage_sha256": _repair_attempt_lineage_sha256(
+            inputs.repair_image_successor_chain
+        ),
     }
 
     try:
