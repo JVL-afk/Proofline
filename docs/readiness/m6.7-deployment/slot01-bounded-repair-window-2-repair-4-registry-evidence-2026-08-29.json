@@ -2,67 +2,70 @@
   "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_REPAIR_4_REGISTRY_EVIDENCE",
   "schema_version": "1.0.0",
   "state": "PUBLICATION_SUCCESS_REPRESENTATION_EQUIVALENT_SCAN_PASS",
-  "observed_at_utc": "2026-08-29T10:20:00Z",
+  "observed_at_utc": "2026-08-29T11:10:00Z",
+  "superseded_intermediate": {
+    "digest": "sha256:b8f721bbbc95f884a1c05e85148664eb2ab5e0b5d16bce8a46abcfea5eac9c1b",
+    "commit": "341177c3313f1f7a4f0c1c2b2607d9913ffb123a",
+    "reason": "The first Repair #4 build appended the 64-hex attempt lineage to the research_runs idempotency_key, making it 140 chars and overflowing character varying(128); its resumed activator failed at activate_sampled_run with StringDataRightTruncation and never executed M1. It was published and briefly deployed but never resumed. Corrected in commit 6bb8b346 (idempotency_key now derives from the lineage-scoped run id, 73 chars). Its immutable registry/deployment evidence remains in git history at commits 42afb50 / 7eeb7fe."
+  },
   "authorization": {
     "event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
     "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
     "clause": "identity/schema compatibility correction; image published only through the existing bounded publisher with representation equivalence and ECR scan COMPLETE 0/0/0",
-    "diagnosis_necessity": "Repair #4 changes gate_domain.py, release_application.py, activation.py and execution.py to give a bounded repair-resume a distinct deterministic execution-attempt identity. A container image is the only deployment vehicle; the deployed digest sha256:79697396 still derives run/coordinator identity from release.id alone."
+    "diagnosis_necessity": "Repair #4 gives a bounded repair-resume a distinct deterministic execution-attempt identity (run/activation/coordinator) while the frozen experiment identity stays stable and every prior terminal attempt record remains immutable. A container image is the only deployment vehicle."
   },
   "source_image": {
-    "commit": "341177c3313f1f7a4f0c1c2b2607d9913ffb123a",
-    "commit_short": "341177c",
+    "commit": "6bb8b34619c2e93f104be8e09ded7728c73ed90c",
+    "commit_short": "6bb8b346",
     "dockerfile": "infra/container/phase1-worker/Dockerfile.window2-repair4",
     "base_local_tag": "localhost/m67-phase1-worker:git-d5d5cf8-window2-repair3",
     "base_registry_digest": "sha256:7969739607086e87ee807f6f9836818be38cc00be24b199cb57552a325d72df3",
-    "base_is_current_deployed_digest": true,
-    "local_storage_manifest_digest": "sha256:318e6eff32f902e4958cf4578db27c2797dd92f342c74b0702abcca04287e93d",
-    "config_digest": "sha256:c404f84e3af6476e80dbaec853a407b213b5bf9477d6919be490d912d57672e8",
-    "config_bytes": 32207,
+    "base_is_repair_3_deployed_digest": true,
+    "local_storage_manifest_digest": "sha256:0492e05b7b70a2f39640c5f27a6ec8edff2e74691bc106423fc4f6649b908dda",
+    "config_digest": "sha256:d57bf1bf4cae36bf3cc530f7eb80636378664ae4f7b0619fe46b153136c088dc",
+    "config_bytes": 32208,
     "platform": "linux/amd64",
     "layers": 17,
     "build_timestamp": "SOURCE_DATE_EPOCH=0 (reproducible)",
-    "parent_relationship": "child storage layers[0:16] byte-identical to base (Repair #3); child adds exactly one uncompressed layer sha256:11236ec14292d835ea7cc7de952c8039b7c1cbcb697d561d89a1b570e7dcb7b2 carrying gate_domain.py, release_application.py, activation.py and execution.py",
+    "parent_relationship": "child storage layers[0:16] byte-identical to Repair #3 (sha256:79697396); child adds exactly one uncompressed layer sha256:cf89fe70aa826d56baca110054b5508006567cf4371d1b6bd006af223bc27faa carrying gate_domain.py, release_application.py, activation.py and execution.py",
     "in_image_verification": "LiveResearchPermissionRelease.model_fields contains repair_attempt_lineage_sha256; ORIGINAL_ATTEMPT_LINEAGE_SHA256 == 3d69bf117061e80e8c2660e4fea749215189080b3f3c66f5f7eacd417d161692",
     "changed_approval_bindings": {
       "sampled_slot_release_applicator_sha256": "f7ffdf0cd47abec5e7627ef529d486ed71f09649dc41ffe3a642469ce9fcd420 -> bb931373662a31f81de6f82c201735bc939f250ba42a72a8b29d86824edf1b4e",
-      "sampled_slot_activation_adapter_sha256": "95a0355637800d6e1309755bcb342a990ed8c506d6bbe1de28982c10f0e7cf7c -> 9824426cbf22795be7f7ad3bd2d9f7380b7ccc05d4a128e8d4398eb1d85e0c56",
-      "note": "the other four approval bindings are unchanged; execution.py (4fb9e547...) and gate_domain.py (3aae488a...) are not approval bindings"
+      "sampled_slot_activation_adapter_sha256": "95a0355637800d6e1309755bcb342a990ed8c506d6bbe1de28982c10f0e7cf7c -> 76bdaa38481b363eb7d4155994ca2e00add85d94d070b5d5aa135c67f42fee3b",
+      "note": "the other four approval bindings are unchanged"
     }
   },
   "publication": {
-    "publisher_identity": "arn:aws:sts::785072247535:assumed-role/m67-phase1-worker-image-publisher/m67-window2-repair4-publication",
+    "publisher_identity": "arn:aws:sts::785072247535:assumed-role/m67-phase1-worker-image-publisher/m67-window2-repair4b-publication",
     "repository": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
-    "destination_tag": "git-341177c-window2-repair4",
+    "destination_tag": "git-6bb8b346-window2-repair4",
     "destination_tag_before_attempt": "ABSENT",
-    "attempts": 1, "rebuilds": 0, "retags_or_substitutions": 0, "alternate_destinations": 0, "deletions": 0
+    "attempts": 1, "rebuilds": 1, "rebuild_reason": "supersede the 128-char idempotency_key overflow", "retags_or_substitutions": 0, "deletions": 0
   },
   "registry_identity": {
     "classification": "REPRESENTATION_EQUIVALENT_PROVEN",
     "object_type": "SINGLE_PLATFORM_IMAGE_MANIFEST",
     "media_type": "application/vnd.oci.image.manifest.v1+json",
-    "registry_digest": "sha256:b8f721bbbc95f884a1c05e85148664eb2ab5e0b5d16bce8a46abcfea5eac9c1b",
-    "skopeo_pushed_digest": "sha256:b8f721bbbc95f884a1c05e85148664eb2ab5e0b5d16bce8a46abcfea5eac9c1b",
-    "local_archive_manifest_digest": "sha256:b8f721bbbc95f884a1c05e85148664eb2ab5e0b5d16bce8a46abcfea5eac9c1b",
+    "registry_digest": "sha256:3065292651c460114820d1632257b6abf33d79e0f82a900fc4825b3cfb82b49d",
+    "skopeo_pushed_digest": "sha256:3065292651c460114820d1632257b6abf33d79e0f82a900fc4825b3cfb82b49d",
+    "local_archive_manifest_digest": "sha256:3065292651c460114820d1632257b6abf33d79e0f82a900fc4825b3cfb82b49d",
     "archive_manifest_byte_equal_to_registry": true,
     "index_or_manifest_list": false,
     "platform": "linux/amd64",
-    "config_digest": "sha256:c404f84e3af6476e80dbaec853a407b213b5bf9477d6919be490d912d57672e8",
+    "config_digest": "sha256:d57bf1bf4cae36bf3cc530f7eb80636378664ae4f7b0619fe46b153136c088dc",
     "verifiers": {
       "verify_m67_local_image_identity": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN (17/17 layer mappings, shared config, matching annotations)",
       "verify_m67_registry_image_identity": "REPRESENTATION_EQUIVALENT_PROVEN (registry manifest bytes == local reproduced archive manifest bytes; single-platform; not an index)"
     }
   },
   "ecr_scan": {
-    "target_digest": "sha256:b8f721bbbc95f884a1c05e85148664eb2ab5e0b5d16bce8a46abcfea5eac9c1b",
+    "target_digest": "sha256:3065292651c460114820d1632257b6abf33d79e0f82a900fc4825b3cfb82b49d",
     "status": "COMPLETE", "critical": 0, "high": 0, "blocking": 0, "total_findings": 0, "finding_severity_counts": {}
   },
   "prepublication_state": {
     "services_desired_running_pending": "0/0/0", "live_tasks": 0, "kill_switch": "TRIPPED",
-    "research_release": "v13 CONSUMED:BOUNDED_EXECUTION_FAILED NOT_AUTHORIZED",
-    "sampled_slot_execution_approval": "NOT_AUTHORIZED sentinel", "controlled_egress_lease": "NOT_AUTHORIZED",
     "immutable_prior_attempts": "research run 71819ef3 (FAILED) and coordinator run ad0dd306 (terminal M1_RESEARCH_FAILED) preserved unchanged"
   },
-  "deployment_invariant": "DEPLOYMENT_IMAGE_DIGEST = sha256:b8f721bbbc95f884a1c05e85148664eb2ab5e0b5d16bce8a46abcfea5eac9c1b",
-  "next": "tfvars: 3 image-digest fields -> b8f721bb; 2 approval bindings -> bb931373 / 9824426c. Fresh ADR-0075 plan; semantic review; apply; NO_CHANGES. Materializer chain link #4 (79697396 -> b8f721bb). Materialize a fresh @3 for the new repair-attempt lineage, remaining cumulative budget. Resume M1..M5."
+  "deployment_invariant": "DEPLOYMENT_IMAGE_DIGEST = sha256:3065292651c460114820d1632257b6abf33d79e0f82a900fc4825b3cfb82b49d",
+  "next": "materialize a fresh @3 for the Repair #4 repair-attempt lineage (deterministic new run_id distinct from the immutable 71819ef3), remaining cumulative budget; resume M1..M5."
 }
