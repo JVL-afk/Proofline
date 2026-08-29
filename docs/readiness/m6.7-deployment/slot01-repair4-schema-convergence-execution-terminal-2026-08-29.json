@@ -1,0 +1,95 @@
+{
+  "record_type": "M67_SLOT01_REPAIR4_SCHEMA_CONVERGENCE_EXECUTION_TERMINAL",
+  "schema_version": "1.0.0",
+  "state": "RESUME_EXECUTED_M2_INSUFFICIENT_EVIDENCE_DORMANT",
+  "observed_at_utc": "2026-08-29T14:25:00Z",
+  "authorization_event": "AUTHORIZE_SLOT01_REPAIR4_SCHEMA_CONVERGENCE_COMPLETION_AND_M1_M5_RESUME",
+  "approved_by_reference": true,
+  "readiness_document_sha256": "f585d3d61788128956b00765ad2b4fcdee5030b470344d77853993d118f66c09",
+  "owner_decision_record": "docs/readiness/m6.7-deployment/slot01-repair4-schema-convergence-completion-and-m1-m5-resume-owner-decision-2026-08-29.json",
+
+  "schema_convergence": {
+    "outcome": "COMPLETED_AND_VERIFIED",
+    "migration_fix": "coordinator_persistence._migrate_repair_attempt_lineage() is now state-convergent: it inspects each schema invariant (lineage column, NOT NULL, both uniqueness constraints) and converges only the missing ones; a fully migrated schema is a strict no-op. Deployed in image sha256:47de97dea8e833b2feeacdac1c464d5ac4cef3506d29556c38fa74da280c332f.",
+    "live_catalog_verification": {
+      "converged": true,
+      "uq_m67_coordinator_release": ["authorization_release_id", "repair_attempt_lineage_sha256"],
+      "uq_m67_coordinator_work_item": ["work_item_identity_sha256", "repair_attempt_lineage_sha256"],
+      "lineage_column_not_null": true,
+      "method": "transient Fargate task before the resume; independently re-confirmed by the resume run itself persisting a second coordinator for authorization_release_id 375a88da-...-b8 under a distinct repair-attempt lineage with no UniqueViolation"
+    },
+    "historical_records_preserved": "research runs 318b8b7c, 71819ef3, ac6b9f42, b2633298 and coordinator runs ad0dd306, af1028a3 unchanged; any pre-Repair-4 coordinator row with a NULL lineage received the deterministic legacy backfill only."
+  },
+
+  "resume_run": {
+    "activator_task": "arn:aws:ecs:us-east-2:785072247535:task/m67-phase1-research/c22fc2c3f0ee45f1b6a0e59417bb303d",
+    "activator_exit_code": 0,
+    "activator_runtime_seconds": 57,
+    "repair_attempt_lineage_sha256": "1253aa35446c44a5d70a85907636825aad092a3bfbdbbd360ec059d29d799c16",
+    "repair_attempt_lineage_basis": "deterministic hash of the ordered 5-link sealed repair-image-successor chain (repair-2, repair-3, repair-4, repair-5, schema-convergence); distinct from every prior attempt lineage",
+    "authorized_release_id": "375a88da-da88-5ebf-9daf-cb09934e02b8",
+    "consumed_release_id": "375a88da-da88-5ebf-9daf-cb09934e02b9",
+    "coordinator_run_id": "a548cad5-cc72-5819-979d-06c482a4cbe4",
+    "coordinator_created": true,
+    "work_item_created": true,
+    "release_created": true,
+    "controlled_egress_lease_created": true,
+    "controlled_egress_deactivated_after_m1": true,
+    "accepted_stage_count": 2,
+    "approval_artifact_sha256": "df4af21a3e66acfe53bdd7e9ce3a697c29a146707eb06ae21b2b5c4f12008318"
+  },
+
+  "m1": {
+    "outcome": "SUCCEEDED_DURABLE_MINIMIZED_EVIDENCE",
+    "significance": "The first M1 stage for frozen Slot 01 to persist a durable minimized-evidence artifact. robots was fetched and evaluated at runtime; the 903hvac.com homepage was fetched over the controlled-egress gateway; the Repair #5 block-level minimizer produced a provenance-safe minimized capture that passed validation (no minimization_quarantine).",
+    "stage_artifact": {
+      "stage": "M1_MINIMIZED_EVIDENCE",
+      "artifact_sha256": "456b2b79191957643359112acfc5ad2744eeb2d9ef95bb6b27660e2a12c41195",
+      "output_sha256": "ead09f8d46eddf4e374cfa60cab0215124001bad2660155df26eb83c9a485d82",
+      "revision_id": "2c8d7fcb-764b-59ca-a156-ce8bdeae4a23",
+      "created_at": "2026-08-29T14:16:12.798313Z"
+    }
+  },
+
+  "m2": {
+    "outcome": "M2_INSUFFICIENT_EVIDENCE",
+    "stage_artifact": {
+      "stage": "M2_OPPORTUNITY_ECONOMICS",
+      "artifact_sha256": "264062946c895c200ea920f765e1c56466f33e37b64e29e7ab47f1f01ab30cd7",
+      "output_sha256": "9b49df1750a0c671c3ea97af1a79d6e773f3bc7e1e25ac5ad4262fae0f52b097",
+      "predecessor_artifact_sha256": "456b2b79191957643359112acfc5ad2744eeb2d9ef95bb6b27660e2a12c41195",
+      "created_at": "2026-08-29T14:16:13.104214Z"
+    },
+    "interpretation": "The deterministic offline M2 opportunity-economics stage ran on the M1 minimized evidence and truthfully determined the minimized first-party evidence is insufficient to support an opportunity analysis. The chain terminated at M2; M3, M4 and M5 did not run. Per the accepted owner statement, insufficient-evidence is a valid terminal outcome and is NOT a repair trigger.",
+    "is_this_a_repair_trigger": false
+  },
+
+  "terminal": {
+    "coordinator_state": "TERMINAL",
+    "terminal_reason": "M2_INSUFFICIENT_EVIDENCE",
+    "reached_contact_phase_not_authorized": false,
+    "reason_not_reached": "M2 terminated on insufficient evidence before the chain could progress toward the CONTACT_PHASE_NOT_AUTHORIZED boundary. This is a truthful deterministic terminal, not a defect."
+  },
+
+  "cumulative_consumed_live_budget": {
+    "sealed_before_resume": "docs/readiness/m6.7-deployment/slot01-bounded-repair-window-2-repair-5-consumed-live-budget-2026-08-29.json (sha256 d0fb0deec46ffc1b8ddf9b14fd0732b744063992339397594a1b498992b0a0bb)",
+    "before_resume": {"logical_requests": 4, "authorization_attempts": 2, "transport_attempts_per_url_max": 1, "total_bytes": 251744, "authority_seconds": 3, "cost_usd": "0"},
+    "this_resume_added": "1 robots fetch + 1 page fetch (succeeded) against 903hvac.com; ~1 authorization attempt; the exact wire byte count is in the durable research-run ledger. The additive components are within the remaining ceilings the envelope bound (max_logical_requests 4, max_attempts 6, max_total_bytes 1748256, max_duration_seconds 597).",
+    "no_counter_was_reset": true,
+    "note": "A follow-on materialization, if ever authorized, must seal a new cumulative figure adding this resume's transport to the pre-resume figure."
+  },
+
+  "final_dormant_state": {
+    "kill_switch": "TRIPPED (activator performed its own TRIPPED -> RUN -> TRIPPED; no manual arming)",
+    "sampled_slot_execution_approval": "{\"state\":\"NOT_AUTHORIZED\"} sentinel (restored)",
+    "controlled_egress_lease": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "research_release": "375a88da-da88-5ebf-9daf-cb09934e02b9, state not_authorized, suspended CONSUMED:M2_INSUFFICIENT_EVIDENCE",
+    "services": "controlled-egress 0/0/0, research-worker 0/0/0, intelligence-worker 0/0/0",
+    "running_tasks": 0,
+    "deployed_image": "sha256:47de97dea8e833b2feeacdac1c464d5ac4cef3506d29556c38fa74da280c332f",
+    "terraform": "NO_CHANGES"
+  },
+
+  "conclusion": "The fresh authorization is fully discharged: the latent Repair #4 schema migration is converged and verified in the live catalog; the bounded M1..M5 resume executed under a fresh deterministic repair-attempt identity within the same immutable Slot 01 experiment; M1 succeeded with durable provenance-safe minimized evidence (Repair #5 minimizer proven in production); M2 truthfully terminated on insufficient evidence; authority was consumed and full dormancy restored. No sixth or further general repair allowance exists. Stop for human review.",
+  "human_review": "The frozen Slot 01 bounded first-party research of 903hvac.com now has a truthful terminal: M2_INSUFFICIENT_EVIDENCE. This is a valid bounded-research outcome, not a repair trigger."
+}
