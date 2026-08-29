@@ -1,0 +1,153 @@
+{
+  "record_type": "M67_SLOT01_REPAIR4_SCHEMA_CONVERGENCE_COMPLETION_AND_M1_M5_RESUME_AUTHORIZATION_READY",
+  "schema_version": "1.0.0",
+  "state": "READY_FOR_SLOT01_REPAIR4_SCHEMA_CONVERGENCE_COMPLETION_AND_M1_M5_RESUME_AUTHORIZATION",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "prepared_at_utc": "2026-08-29T14:20:00Z",
+  "prepared_on_commit": "d9cb67b152f879d86cb6f45d153088837a0132a6",
+
+  "relationship_to_prior_authorization": {
+    "prior_event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+    "prior_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+    "prior_repair_budget": "EXHAUSTED 5/5",
+    "explicit_scoping": "This is NOT a sixth repair inside the exhausted Window 2 authorization and must not be relabelled as one. It requests a fresh, separate, narrowly scoped owner authorization for exactly (a) completion of the latent-incomplete Repair #4 database schema migration and (b) one bounded M1..M5 resume of the same frozen Slot 01 experiment. No additional general repair budget is requested."
+  },
+
+  "accepted_diagnosis": {
+    "diagnosis_evidence": "docs/readiness/m6.7-deployment/slot01-repair4-schema-convergence-diagnosis-2026-08-29.json",
+    "diagnosis_evidence_sha256": "e3adec093c7a7327e0743b723efa82dbb6f8a64300585e74490fac00a6356784",
+    "summary": "The current blocker is a latent incomplete Repair #4 database migration. Production already contains the repair_attempt_lineage_sha256 column but retains legacy single-column uniqueness constraints, because _migrate_repair_attempt_lineage() returns early when the column exists. The final Repair #4 implementation (d1b7a04) added composite-constraint rescoping only after a superseded image (3065292651) had already created the column. Schema state is therefore partially migrated: repair_attempt_lineage_sha256 column = present; uq_m67_coordinator_release = legacy single-column UNIQUE(authorization_release_id); uq_m67_coordinator_work_item = presumed legacy single-column (to be independently verified and converged regardless). This causes a legitimate second deterministic repair-attempt coordinator for the same experiment/release lineage (Repair #5 resume, authorized release 375a88da-da88-5ebf-9daf-cb09934e02b8) to fail with UniqueViolation on uq_m67_coordinator_release, pre-M1, with zero target transport.",
+    "repair_5_minimizer_accepted_proven": {
+      "deployed_image_digest": "sha256:edda5c622fd76f1c7b6449f19ed562fd823dabd05882f123df238b695983cc88",
+      "evidence": "synthetic validation MINIMIZATION_PERSISTENCE_V1 succeeded on the deployed image: removed_email_count 2, removed_phone_count 3, removed_structured_contact_blocks 2, minimized_content_sha256 5d832ba343548b967002a907d9dda8e96563bb93cc27e8efb0a82db5abdba0a4",
+      "constraint": "The already-deployed Repair #5 minimizer semantics MUST remain unchanged by the schema-convergence successor."
+    }
+  },
+
+  "required_correction": {
+    "objective": "Make _migrate_repair_attempt_lineage() (opintel_intelligence_worker/coordinator_persistence.py) state-convergent and independently idempotent. Migration completion is determined by the actual required schema invariants, not by the existence of one marker column.",
+    "must_not": [
+      "use column existence as evidence that constraint migration completed",
+      "delete or rewrite historical research runs, coordinator runs, work items, or predecessor records",
+      "make any terminal record non-terminal",
+      "reset any cumulative Window 2 target-transport counter",
+      "change the deployed Repair #5 minimizer semantics",
+      "weaken robots, TLS, SSRF, DNS-rebinding, minimization, provenance or truth controls",
+      "broaden IAM or network scope"
+    ],
+    "convergence_algorithm_conceptual": [
+      "ensure the repair_attempt_lineage_sha256 column exists (ADD COLUMN IF NOT EXISTS)",
+      "ensure historical backfill: rows with NULL lineage get the defined legacy lineage constant; then SET NOT NULL",
+      "inspect uq_m67_coordinator_release: if it is the legacy single-column UNIQUE(authorization_release_id), DROP it and ADD the exact composite UNIQUE(authorization_release_id, repair_attempt_lineage_sha256); if already composite, no-op",
+      "inspect uq_m67_coordinator_work_item: if it is the legacy single-column UNIQUE(work_item_identity_sha256), DROP it and ADD the exact composite UNIQUE(work_item_identity_sha256, repair_attempt_lineage_sha256); if already composite, no-op",
+      "verify final PostgreSQL catalog state: both constraints present with exactly the intended composite column sets",
+      "a database with the column but legacy constraints must converge correctly; a fully migrated database must remain a strict no-op",
+      "non-PostgreSQL dialects (sqlite tests): create_all already produces the current schema; the guard remains a no-op there"
+    ],
+    "expected_diff_scope": "Minimum change to _migrate_repair_attempt_lineage() only. No change to CoordinatorRunRow/CoordinatorRunBinding shape, create_or_get logic, execution.py, activation.py, or any Repair #5 file."
+  },
+
+  "required_tests": {
+    "add_migration_tests_for_at_least": [
+      "no lineage column + legacy constraints -> complete convergence (column added, backfilled, both constraints composite, catalog verified)",
+      "lineage column already present + legacy constraints -> constraints are still migrated to composite",
+      "lineage column present + one composite / one legacy constraint -> only the missing invariant converges; the already-composite one is untouched",
+      "fully migrated schema -> idempotent strict no-op (no ALTER issued)",
+      "historical rows survive unchanged except the already-defined deterministic lineage backfill",
+      "two legitimate repair attempts for the same authorization_release_id but different sealed repair-attempt lineage identities coexist (both coordinator rows persist)",
+      "a duplicate same-lineage attempt for the same release remains rejected / idempotent as designed (create_or_get returns the existing immutable row, or raises 'differs from immutable run' on genuine divergence)"
+    ],
+    "suites": "Run the focused coordinator-persistence / migration test module and the full deterministic suite (pytest with an isolated --basetemp). The Repair #5 minimizer test file (tests/test_m67_legal_privacy_controls.py) and all existing tests must continue to pass."
+  },
+
+  "successor_artifact_pipeline": {
+    "note": "Runtime code (coordinator_persistence.py) must change, so the normal exact successor pipeline applies.",
+    "steps": [
+      "minimum migration-guard correction",
+      "focused + full deterministic tests green",
+      "thin successor image FROM the deployed Repair #5 image (sha256:edda5c6...), COPYing only coordinator_persistence.py; buildah --platform linux/amd64 --format oci --timestamp 0; exactly one added layer over the base",
+      "bounded publication via arn:aws:iam::785072247535:role/m67-phase1-worker-image-publisher to 785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
+      "capture the actual ECR registry digest (pushed == registry; single OCI manifest, not an index)",
+      "representation-equivalence proof: verify_m67_local_image_identity -> LOCAL_REPRESENTATION_EQUIVALENT_PROVEN and verify_m67_registry_image_identity -> REPRESENTATION_EQUIVALENT_PROVEN (registry manifest bytes == local reproduced archive manifest bytes)",
+      "ECR scan COMPLETE with critical/high/blocking 0/0/0",
+      "append the sealed successor lineage link (5th image-successor link: predecessor sha256:edda5c6..., successor = new digest) with its registry-evidence and deployment-evidence JSON",
+      "fresh ADR-0075 Terraform plan using the actual registry digest (workload-plan provider identity, plan-time embedded protected state-apply backend)",
+      "semantic review of the saved plan: only image digest + OPINTEL_RESEARCH_RUNTIME_REVISION change across the four task definitions; services keep desired_count 0; no IAM / network / KMS / SSM parameter / security-group / database / authority / desired-count change; no standalone destroy; no unexplained mutation",
+      "apply the exact saved plan with workload-apply",
+      "PostgreSQL schema convergence verification: confirm uq_m67_coordinator_release and uq_m67_coordinator_work_item are both the intended composite constraints in the live catalog (e.g. one bounded transient diagnostic task or a read-only catalog query)",
+      "Terraform NO_CHANGES post-apply"
+    ]
+  },
+
+  "fresh_authorization_scope": {
+    "permits_exactly": [
+      "Repair #4 schema-convergence completion (the migration-guard correction above) and its successor image build + bounded publication + representation-equivalence proof + clean ECR scan, only if the diagnosis proves an image is necessary",
+      "ADR-0075 Terraform plan + semantic review + apply for exactly the image-digest change, then Terraform NO_CHANGES",
+      "PostgreSQL schema convergence verification of the two composite constraints",
+      "a deterministic FRESH repair-attempt identity (a new sealed image-successor chain link -> a new repair_attempt_lineage_sha256) within the SAME immutable Slot 01 experiment",
+      "exact @3 SampledSlotExecutionApprovalEnvelope materialization for that fresh repair-attempt identity, binding the sealed cumulative consumed live budget",
+      "run the exact bounded launcher while /m67-phase1/kill-switch begins TRIPPED; the activator performs its own enter_run() TRIPPED -> RUN transition; no manual arming of the kill switch to RUN",
+      "single-use REAL_PUBLIC_RESEARCH release creation, one immutable registry-backed Slot 01 work item, and acquisition of only the exact release/work-item/host-bound controlled-egress lease",
+      "controlled egress activation for M1 only",
+      "M1 bounded first-party research of 903hvac.com (runtime robots fetched and evaluated again; no diagnostic/workstation fetch substitutes; certificate-validated same-host HTTPS/443 only; public-IP/SSRF/DNS-rebinding/TLS/SNI controls; zero followed redirects)",
+      "if M1 succeeds: deterministic offline M2 -> M3 -> M4 -> M5 from exact accepted predecessor revisions",
+      "terminate at or before CONTACT_PHASE_NOT_AUTHORIZED",
+      "consume authority; restore the /m67-phase1/sampled-slot-execution-approval NOT_AUTHORIZED sentinel; restore /m67-phase1/controlled-egress-lease to NOT_AUTHORIZED; restore /m67-phase1/kill-switch to TRIPPED; services 0/0/0; zero running tasks; stop for human review"
+    ],
+    "cumulative_counters": {
+      "rule": "Preserve all cumulative Window 2 target-transport counters already consumed. No counter reset is permitted. Before the resume, compute the remaining M1 allowance as original ceilings minus already-consumed live activity; stop rather than execute if the resumed run cannot fit.",
+      "sealed_consumed_budget": "docs/readiness/m6.7-deployment/slot01-bounded-repair-window-2-repair-5-consumed-live-budget-2026-08-29.json",
+      "sealed_consumed_budget_sha256": "d0fb0deec46ffc1b8ddf9b14fd0732b744063992339397594a1b498992b0a0bb",
+      "consumed_live_counters": {
+        "logical_requests": 4,
+        "authorization_attempts": 2,
+        "transport_attempts_per_url_max": 1,
+        "total_bytes": 251744,
+        "authority_seconds": 3,
+        "cost_usd": "0"
+      },
+      "failed_repair_5_resume_added": "ZERO additional target transport (it aborted pre-M1 on the coordinator UniqueViolation)."
+    },
+    "prohibits": [
+      "any sixth or further general repair budget; if another unrelated operational defect appears after this schema-convergence successor, STOP for human review",
+      "Slot 02",
+      "any new business, hostname or slot; sample/order change, replacement or redraw",
+      "broader research, source or network scope; material ceiling increase",
+      "person/contact processing beyond CONTACT_PHASE_NOT_AUTHORIZED; AI or browser activation; outreach, delivery or external communication",
+      "weakened robots, TLS, SSRF, DNS-rebinding, minimization, provenance or truth controls",
+      "manual arming of /m67-phase1/kill-switch to RUN (the activator's enter_run() owns TRIPPED -> RUN -> TRIPPED)",
+      "deletion or rewriting of historical runs, coordinator runs, work items, predecessor records, or terminal history",
+      "any change to the deployed Repair #5 minimizer semantics"
+    ]
+  },
+
+  "current_safe_terminal_state": {
+    "kill_switch": "TRIPPED",
+    "sampled_slot_execution_approval": "{\"state\":\"NOT_AUTHORIZED\"} sentinel (restored)",
+    "research_release": "predecessor 02873c16-90de-53cc-ae43-b6e325e268d1, state not_authorized, suspended CONSUMED:M1_RESEARCH_FAILED, owner_approval_sha256 72401dda... - the safe predecessor/terminal state appropriate to the stopped execution (the failed resume never persisted a new release or consumed authority)",
+    "controlled_egress_lease": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "services": "m67-phase1-controlled-egress 0/0, m67-phase1-research-worker 0/0, m67-phase1-intelligence-worker 0/0",
+    "running_tasks": 0,
+    "deployed_image": "sha256:edda5c622fd76f1c7b6449f19ed562fd823dabd05882f123df238b695983cc88 (Repair #5 minimizer; task defs research-worker :17, intelligence-worker :14, controlled-egress :13, sampled-slot-activator :13); Terraform NO_CHANGES"
+  },
+
+  "immutable_prior_records_preserved": [
+    "research run 318b8b7c-b700-5d04-8f9d-af17b67d1f52 (2026-08-28, robots_transport_failure)",
+    "research run 71819ef3-6342-5549-82ab-fad9072afce7 (Repair #2 resume, robots_malformed)",
+    "research run ac6b9f42-8ae8-531b-bf67-538a7f0bf7d7 (launch that never started)",
+    "research run b2633298-9f68-5521-ad3d-fc749217f8a8 (Repair #4 resume, M1_RESEARCH_FAILED via minimization_quarantine)",
+    "coordinator run ad0dd306-8211-5d20-8877-20811574dab3 (terminal)",
+    "coordinator run af1028a3-3ff7-5328-92cc-60172dd26dd4 (terminal, Repair #4 resume)"
+  ],
+
+  "core_invariant": "Database migration completion is determined by the actual required schema invariants, not by the existence of one marker column.",
+
+  "referenced_committed_evidence": {
+    "repair_5_phase_a_diagnosis": "b4c4aa71d3d163706af72d9a44ec6d420df2fcf718341d75f98d706bc4d476a5",
+    "repair_5_registry_evidence": "8669f261d8ad6d57514bfac19871c62b3fb39e3e7f4367343287742e3bfae48c",
+    "repair_5_deployment_evidence": "b36077a46eee18b360082b459be297b5e8fc5b5bd42a850eaa3807fb8b382548",
+    "repair_5_consumed_live_budget": "d0fb0deec46ffc1b8ddf9b14fd0732b744063992339397594a1b498992b0a0bb",
+    "repair4_schema_convergence_diagnosis": "e3adec093c7a7327e0743b723efa82dbb6f8a64300585e74490fac00a6356784"
+  }
+}

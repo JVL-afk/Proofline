@@ -1,0 +1,44 @@
+{
+  "record_type": "M67_SLOT01_REPAIR4_SCHEMA_CONVERGENCE_DIAGNOSIS",
+  "schema_version": "1.0.0",
+  "state": "DIAGNOSED_LATENT_INCOMPLETE_REPAIR_4_MIGRATION",
+  "observed_at_utc": "2026-08-29T14:10:00Z",
+  "context": {
+    "prior_authorization_event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+    "prior_authorization_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+    "repair_budget_status": "EXHAUSTED 5/5 (Repair #1 config, #2 persistence reactivation, #3 robots content-encoding, #4 execution-attempt identity, #5 block-level minimization). This diagnosis does NOT claim any remaining Window 2 repair budget and is not a sixth repair under the exhausted authorization.",
+    "repair_5_minimizer_status": "ACCEPTED AS TECHNICALLY PROVEN. Deployed image sha256:edda5c622fd76f1c7b6449f19ed562fd823dabd05882f123df238b695983cc88 passed synthetic validation mode MINIMIZATION_PERSISTENCE_V1 (removed_email_count=2, removed_phone_count=3, removed_structured_contact_blocks=2, run_status=succeeded, minimized_content_sha256=5d832ba343548b967002a907d9dda8e96563bb93cc27e8efb0a82db5abdba0a4). The Repair #5 minimizer semantics are correct and must remain unchanged."
+  },
+  "observed_failure": {
+    "when_utc": "2026-08-29T12:56Z",
+    "launcher": "scripts/run_m67_bounded_controlled_egress.py against bounded-ecs-execution-config (activator :13, image sha256:edda5c6...)",
+    "activator_task": "arn:aws:ecs:us-east-2:785072247535:task/m67-phase1-research/0d600d6402244deab225b45712f2b5e3",
+    "activator_exit_code": 1,
+    "exact_error": "psycopg.errors.UniqueViolation: duplicate key value violates unique constraint \"uq_m67_coordinator_release\"",
+    "raising_frame": "opintel_intelligence_worker/execution.py line 121 -> self._repository.create_or_get(binding) -> opintel_intelligence_worker/coordinator_persistence.py create_or_get",
+    "downstream_symptom": "coordinator_persistence.py line 142 ValueError: duplicate coordinator activation differs from immutable run (the IntegrityError fallback lookup keyed on (authorization_release_id, repair_attempt_lineage_sha256) then compared to an immutable prior row)",
+    "stage_reached": "PRE-M1. Failure is at coordinator run creation, before any robots fetch, DNS, TLS or target transport. Zero 903hvac.com access in this attempt.",
+    "kill_switch_note": "A separate 'release application requires the locked pre-execution state' error also appeared because the operator pre-armed /m67-phase1/kill-switch to RUN before the launcher. That was corrected (kill switch restored to TRIPPED); the activator's enter_run() owns the TRIPPED -> RUN -> TRIPPED transition. This is not the root cause of the coordinator failure."
+  },
+  "root_cause": {
+    "classification": "LATENT_INCOMPLETE_REPAIR_4_DATABASE_MIGRATION",
+    "defect": "opintel_intelligence_worker/coordinator_persistence.py _migrate_repair_attempt_lineage() treats the presence of the repair_attempt_lineage_sha256 column as proof that the whole attempt-scoped identity migration completed: `columns = {...}; if \"repair_attempt_lineage_sha256\" in columns: return`. The composite-uniqueness rescoping (DROP legacy single-column uq_m67_coordinator_release / uq_m67_coordinator_work_item, ADD UNIQUE(column, repair_attempt_lineage_sha256)) sits AFTER that early return, inside the same guard.",
+    "how_production_reached_a_partial_state": "The final Repair #4 image d1b7a04 (deployed digest sha256:751e410f...) added the composite-constraint rescoping. But a superseded Repair #4 iteration (image sha256:3065292651..., commit 6bb8b346) had already run an earlier _migrate_ that added the repair_attempt_lineage_sha256 column WITHOUT the rescoping (that iteration then failed at exactly this same UniqueViolation, which is what d1b7a04 was built to fix). When d1b7a04 first ran initialize(), the column already existed, so _migrate_ returned early and the rescoping never executed against production.",
+    "resulting_schema_state": {
+      "repair_attempt_lineage_sha256_column": "PRESENT (and backfilled with the legacy lineage for pre-Repair-4 rows)",
+      "uq_m67_coordinator_release": "LEGACY single-column UNIQUE(authorization_release_id) - NOT the intended composite",
+      "uq_m67_coordinator_work_item": "presumed LEGACY single-column UNIQUE(work_item_identity_sha256) - to be independently verified; the migration must converge it regardless",
+      "catalog_verification": "the observed UniqueViolation on uq_m67_coordinator_release is direct evidence the release constraint is still single-column"
+    },
+    "why_repair_4_own_resume_still_worked": "Research run b2633298 (Repair #4 resume, 2026-08-29T10:32Z) created coordinator run af1028a3-3ff7-5328-92cc-60172dd26dd4 with authorization_release_id 375a88da-da88-5ebf-9daf-cb09934e02b8. Under the legacy UNIQUE(authorization_release_id) that INSERT succeeded because it was the FIRST coordinator row for that release id.",
+    "why_repair_5_resume_fails": "The Repair #5 resume is the SECOND legitimate deterministic repair-attempt coordinator for the same experiment and same authorized release id 375a88da-da88-5ebf-9daf-cb09934e02b8. Its repair-attempt lineage is distinct (a 4-link sealed successor chain vs Repair #4's 3-link chain), so the intended composite constraint (authorization_release_id, repair_attempt_lineage_sha256) would admit it - but the legacy single-column UNIQUE(authorization_release_id) rejects any second row for that release id."
+  },
+  "impact": "A legitimate second deterministic repair-attempt coordinator for the same frozen experiment/release lineage cannot be created. This blocks the Repair #5 M1..M5 resume even though the Repair #5 minimizer fix is proven correct. It is a data-layer schema-convergence gap, not a change in company evidence, opportunity evidence, robots, TLS, SSRF, minimization, provenance or truth controls.",
+  "non_destructive_constraints": "Fixing this must not delete or rewrite historical research runs (71819ef3, b2633298, 318b8b7c, ac6b9f42), coordinator runs (ad0dd306, af1028a3), work items, or predecessor records; must not make any terminal record non-terminal; and must not reset any cumulative Window 2 target-transport counter.",
+  "cumulative_consumed_counters_preserved": {
+    "reference": "docs/readiness/m6.7-deployment/slot01-bounded-repair-window-2-repair-5-consumed-live-budget-2026-08-29.json (sha256 d0fb0deec46ffc1b8ddf9b14fd0732b744063992339397594a1b498992b0a0bb)",
+    "note": "The failed Repair #5 resume attempt consumed ZERO additional target transport (it died pre-M1). The cumulative consumed figure is unchanged: logical_requests 4, authorization_attempts 2, transport_attempts (per-URL max) 1, total_bytes 251744, authority_seconds 3, cost USD 0."
+  },
+  "recommended_correction_summary": "Make _migrate_repair_attempt_lineage() state-convergent and independently idempotent: it must inspect each required schema invariant (lineage column, historical backfill, uq_m67_coordinator_release shape, uq_m67_coordinator_work_item shape) and converge only the missing ones, then verify the final PostgreSQL catalog state. Column existence must never be used as evidence that constraint migration completed. Full correction spec, tests and pipeline are in slot01-repair4-schema-convergence-completion-and-m1-m5-resume-authorization-ready-2026-08-29.json.",
+  "decision": "REQUIRES_FRESH_OWNER_AUTHORIZATION (the Window 2 five-repair envelope is exhausted; a schema-convergence successor deployment and M1..M5 resume need a new, narrowly scoped authorization)."
+}
