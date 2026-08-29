@@ -25,6 +25,7 @@ from pathlib import Path
 from opintel_research_worker.activation import FrozenA09DecisionRegistry
 from opintel_research_worker.authority_materialization import (
     AuthorityMaterializationError,
+    ConsumedLiveBudget,
     MaterializationInputs,
     RepairImageSuccessor,
     materialize,
@@ -118,6 +119,31 @@ def _repair_image_successor_chain() -> tuple[RepairImageSuccessor, ...]:
     return tuple(chain)
 
 
+def _consumed_live_budget() -> ConsumedLiveBudget | None:
+    """Build the already-consumed live M1 budget from a sealed classification file.
+
+    ``OPINTEL_CONSUMED_LIVE_BUDGET_PATH`` points at the sealed M1 failure
+    classification evidence, which records the exact live activity spent by the
+    prior transport-touching run under ``consumed_live_counters``.
+    """
+
+    path = os.environ.get("OPINTEL_CONSUMED_LIVE_BUDGET_PATH", "").strip()
+    if not path:
+        return None
+    record = json.loads(Path(path).read_text(encoding="utf-8"))
+    counters = record.get("consumed_live_counters")
+    if not isinstance(counters, dict):
+        raise SystemExit("sealed classification file has no consumed_live_counters block")
+    return ConsumedLiveBudget(
+        logical_requests=int(counters["logical_requests"]),
+        authorization_attempts=int(counters["authorization_attempts"]),
+        total_bytes=int(counters["total_bytes"]),
+        authority_seconds=int(counters["authority_seconds"]),
+        transport_attempts=int(counters["transport_attempts"]),
+        cost_usd=str(counters.get("cost_usd", "0")),
+    )
+
+
 def _activator_environment(client: object, task_definition: str) -> dict[str, str]:
     response = client.describe_task_definition(taskDefinition=task_definition)  # type: ignore[attr-defined]
     definition = response["taskDefinition"]
@@ -158,6 +184,7 @@ def _materialize(args: argparse.Namespace) -> int:
         deployed_activator_environment=_activator_environment(ecs, activator_task_definition),
         now=datetime.now(UTC),
         repair_image_successor_chain=_repair_image_successor_chain(),
+        consumed_live_budget=_consumed_live_budget(),
     )
 
     try:

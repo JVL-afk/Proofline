@@ -75,6 +75,26 @@ class AuthorityMaterializationError(RuntimeError):
 
 
 @dataclass(frozen=True, slots=True)
+class ConsumedLiveBudget:
+    """Live M1 activity already spent against the frozen experiment's original
+    ceilings once first target transport has occurred.
+
+    The Window 2 statement forbids resetting any request, authorization-attempt,
+    transport-attempt, byte, time or cost counter because of a repair. When this
+    is supplied, the materialized envelope binds the *remaining* allowance
+    (original statement ceiling minus already-consumed live activity), and
+    materialization fails closed if the remainder cannot host a further run.
+    """
+
+    logical_requests: int = 0
+    authorization_attempts: int = 0
+    total_bytes: int = 0
+    authority_seconds: int = 0
+    transport_attempts: int = 0
+    cost_usd: str = "0"
+
+
+@dataclass(frozen=True, slots=True)
 class RepairImageSuccessor:
     """One sealed link in the bounded-repair image successor chain.
 
@@ -146,6 +166,7 @@ class MaterializationInputs:
     deployed_activator_environment: Mapping[str, str]
     now: datetime
     repair_image_successor_chain: tuple[RepairImageSuccessor, ...] = ()
+    consumed_live_budget: ConsumedLiveBudget | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -274,6 +295,39 @@ def _bound_identifiers(inputs: MaterializationInputs) -> dict[str, object]:
         "USD 0 research cost" in statement,
         "accepted owner statement does not fix research cost at USD 0",
     )
+    transport_attempt_ceiling = int(
+        _one(r"(\d+) transport attempts", statement, "transport attempts")
+    )
+    consumed = inputs.consumed_live_budget
+    if consumed is not None:
+        for label, value in (
+            ("logical_requests", consumed.logical_requests),
+            ("authorization_attempts", consumed.authorization_attempts),
+            ("total_bytes", consumed.total_bytes),
+            ("authority_seconds", consumed.authority_seconds),
+            ("transport_attempts", consumed.transport_attempts),
+        ):
+            _require(
+                isinstance(value, int) and value >= 0,
+                f"consumed live budget component {label} is not a non-negative integer",
+            )
+        _require(
+            str(consumed.cost_usd) == "0",
+            "consumed live research cost is non-zero; the frozen experiment fixes cost at USD 0",
+        )
+        ceilings["max_logical_requests"] -= consumed.logical_requests
+        ceilings["max_attempts"] -= consumed.authorization_attempts
+        ceilings["max_total_bytes"] -= consumed.total_bytes
+        ceilings["max_duration_seconds"] -= consumed.authority_seconds
+        _require(
+            ceilings["max_logical_requests"] >= 1
+            and ceilings["max_attempts"] >= 1
+            and ceilings["max_total_bytes"] >= 1
+            and ceilings["max_duration_seconds"] >= 1
+            and consumed.transport_attempts <= transport_attempt_ceiling,
+            "the repair-resumed run cannot fit inside the remaining authorized "
+            "M1 ceilings after already-consumed live activity",
+        )
     return {
         "approval_id": _uuid(approval_id, "approval_id"),
         "authorized_release_id": _uuid(authorized_release_id, "authorized_release_id"),

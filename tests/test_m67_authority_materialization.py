@@ -11,6 +11,7 @@ import pytest
 from opintel_research_worker.activation import FrozenA09DecisionRegistry
 from opintel_research_worker.authority_materialization import (
     AuthorityMaterializationError,
+    ConsumedLiveBudget,
     MaterializationInputs,
     RepairImageSuccessor,
     materialize,
@@ -310,6 +311,48 @@ def test_sealed_repair_successor_chain_admits_deployed_digest() -> None:
         )
     )
     assert result.envelope.approval.research_runtime_revision == SUCCESSOR_REVISION
+
+
+def test_consumed_live_budget_binds_the_remaining_m1_allowance() -> None:
+    result = materialize(
+        _inputs(
+            consumed_live_budget=ConsumedLiveBudget(
+                logical_requests=2,
+                authorization_attempts=1,
+                total_bytes=872,
+                authority_seconds=1,
+                transport_attempts=1,
+            )
+        )
+    )
+    approval = result.envelope.approval
+    assert approval.max_logical_requests == 8 - 2
+    assert approval.max_attempts == 8 - 1
+    assert approval.max_total_bytes == 2_000_000 - 872
+    assert approval.max_duration_seconds == 600 - 1
+    assert approval.max_response_bytes == 250_000  # per-response, not cumulative
+
+
+def test_consumed_budget_exhausting_a_ceiling_fails_closed() -> None:
+    with pytest.raises(AuthorityMaterializationError, match="cannot fit inside the remaining"):
+        materialize(_inputs(consumed_live_budget=ConsumedLiveBudget(total_bytes=2_000_000)))
+
+
+def test_consumed_budget_exceeding_transport_attempt_ceiling_fails_closed() -> None:
+    with pytest.raises(AuthorityMaterializationError, match="cannot fit inside the remaining"):
+        materialize(_inputs(consumed_live_budget=ConsumedLiveBudget(transport_attempts=4)))
+
+
+def test_consumed_budget_with_non_zero_cost_fails_closed() -> None:
+    with pytest.raises(AuthorityMaterializationError, match="research cost is non-zero"):
+        materialize(_inputs(consumed_live_budget=ConsumedLiveBudget(cost_usd="1")))
+
+
+def test_no_consumed_budget_keeps_full_statement_ceilings() -> None:
+    approval = materialize(_inputs()).envelope.approval
+    assert approval.max_logical_requests == 8
+    assert approval.max_total_bytes == 2_000_000
+    assert approval.max_duration_seconds == 600
 
 
 def test_two_link_sealed_repair_chain_admits_final_deployed_digest() -> None:
