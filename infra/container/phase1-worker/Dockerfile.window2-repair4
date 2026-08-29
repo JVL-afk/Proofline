@@ -1,0 +1,19 @@
+# M6.7 Phase 1 Slot 01 Window 2 bounded Repair #4.
+#
+# Thin successor to the deployed Repair #3 image. It replaces only the four
+# modules that carry the deterministic repair-resume execution-attempt identity
+# so a legitimate bounded repair successor gets a distinct deterministic run /
+# activation / coordinator identity while the frozen experiment identity stays
+# stable and every prior terminal attempt record remains immutable. No other
+# file, dependency, entry point, or configuration changes.
+FROM localhost/m67-phase1-worker:git-d5d5cf8-window2-repair3
+
+ARG SOURCE_COMMIT
+LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}" \
+      org.opencontainers.image.title="M6.7 Phase 1 Window 2 repair 4 repair-attempt identity" \
+      org.opencontainers.image.base.digest="sha256:7969739607086e87ee807f6f9836818be38cc00be24b199cb57552a325d72df3"
+
+COPY packages/shadow-core/src/opintel_shadow/gate_domain.py /app/shadow-core/opintel_shadow/gate_domain.py
+COPY workers/research/src/opintel_research_worker/release_application.py /app/research-worker/opintel_research_worker/release_application.py
+COPY workers/research/src/opintel_research_worker/activation.py /app/research-worker/opintel_research_worker/activation.py
+COPY workers/intelligence/src/opintel_intelligence_worker/execution.py /app/intelligence-worker/opintel_intelligence_worker/execution.py
