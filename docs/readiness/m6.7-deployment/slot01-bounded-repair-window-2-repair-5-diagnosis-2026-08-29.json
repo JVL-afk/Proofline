@@ -1,0 +1,63 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_REPAIR_5_DIAGNOSIS",
+  "schema_version": "1.0.0",
+  "state": "DIAGNOSED_REPAIR_5_ELIGIBLE",
+  "observed_at_utc": "2026-08-29T12:40:00Z",
+  "authorization_event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+  "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+  "subject": {
+    "research_run_id": "b2633298-9f68-5521-ad3d-fc749217f8a8",
+    "run_raw_content_sha256": "43c87585726024b3a4016ad2ed3ffb7fc90fd83039fd1a05a1f6e5e04148fbf2",
+    "run_quarantine_reasons": [
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:texas", "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:commercial",
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:business", "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:businesses",
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:company", "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:request",
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:estimate", "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:heating",
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:cooling", "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:air conditioning"
+    ]
+  },
+  "diagnostic_method": {
+    "approach": "In-memory only. Fetched https://903hvac.com/ once for structural analysis; did NOT persist raw HTML or quote any contact/person value. Ran the exact deployed ObservationalHtmlExtractor and opintel_shadow.compliance_application.PhaseOneMinimizer / _MinimizingParser against the fetched body and instrumented the parse.",
+    "page_note": "The current homepage body sha256 (388e66cdf4ed7aea9488b8e0cca80ab804f5971916a569198bf06592404497ab, 138543 bytes) differs from the run's raw sha (page changed since 2026-08-29T10:32Z), but the structural DEFECT and the exact quarantine outcome reproduce identically on the current body.",
+    "no_diagnostic_fetch_substitutes_for_runtime_robots": true
+  },
+  "root_cause": {
+    "classification": "CONCRETE_IMPLEMENTATION_DEFECT_IN_PHASEONEMINIMIZER_MINIMIZINGPARSER",
+    "defect": "_MinimizingParser (opintel_shadow.compliance_application) tracks its skip region with a per-tag depth counter: handle_starttag does `if self._skip_depth or tag in _SKIP_TAGS or <contact-class hit>: self._skip_depth += 1`, and handle_endtag does `if self._skip_depth: self._skip_depth -= 1`. This assumes every start tag has a matching end tag. HTML void elements (<br>, <img>, <input>, <link>, <meta>, ...) emit a start tag and NO end tag. Once the parser enters skip mode (at the first <script>/<style>/<noscript> in <head>, which is early), every subsequent void element ratchets _skip_depth up by 1 with no matching decrement.",
+    "measured_on_this_page": {
+      "skip_depth_final": 52,
+      "skip_depth_should_be": 0,
+      "unbalanced_void_tags_inside_the_stuck_skip_region": {"br": 23, "img": 22, "input": 5, "link": 4},
+      "consequence": "_MinimizingParser keeps 1 fragment / 33 chars (0.0% of the ~66858 text chars); it drops the ENTIRE <body>."
+    },
+    "contrast_with_the_extractor": "ObservationalHtmlExtractor._Parser tracks its ignore region with `self._ignored`, incremented/decremented ONLY on the 5 skip-tags themselves (it `return`s before touching _ignored for any other tag). Void elements are irrelevant to it. On the same page it recovers correctly and extracts 21491 chars (32.1%) of legitimate visible content.",
+    "why_the_quarantine": "ProductionPhaseOneCaptureMinimizer derives required_evidence_markers from the extractor's visible_text (which correctly contains texas/commercial/heating/cooling/air conditioning/estimate/request/company/business/form). PhaseOneMinimizer then builds its minimized text from the STUCK _MinimizingParser (which produced nothing). Every required marker is 'missing' from the empty minimized text -> QUARANTINE_AND_REVIEW with one REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED reason per marker."
+  },
+  "separability_finding": {
+    "safe_business_evidence_present_and_independent": true,
+    "evidence_from_the_deployed_extractor": {
+      "headings": ["HVAC Services in Tyler, TX", "Contact Us for a Free Estimate", "Your Tyler & East Texas Comfort Specialists", "Heating & Cooling Solutions for Tyler, TX", "Air Conditioning", "Installation & Replacement", "Repair & Service", "Maintenance & Tune-Ups", "Furnace Systems"],
+      "link_texts": ["AC Repair & Service", "About 903 HVAC", "Air Conditioning", "All Central AC Services", "Book Your Service", "Commercial Services", "Financing Information", "Get Your Free Estimate"],
+      "buttons": ["Submit Request", "AC Services", "Furnaces", "Heat Pumps"],
+      "forms": [{"action": "https://903hvac.com/contact.php", "method": "post", "id": "small-contact-form"}],
+      "structured_data_types": ["HVACBusiness + PostalAddress", "FAQPage"]
+    },
+    "prohibited_values": {"email_regex_matches": 0, "phone_regex_matches": 24, "structured_contact_or_person_blocks": 0, "contact_classed_dom_blocks": 0, "person_json_ld": 0},
+    "deterministic_block_level_separation_probe": {
+      "method": "keep each text fragment iff it carries an allowed business term AND contains no email/phone regex match",
+      "required_markers_preserved": "ALL (texas, commercial, business, businesses, company, request, estimate, heating, cooling, air conditioning)",
+      "residual_email_or_phone_in_kept_text": false
+    },
+    "conclusion": "The homepage contains independently safe first-party business evidence (HVAC service descriptions, Tyler/East Texas location, commercial services, Free-Estimate / Request CTA, a contact form). The unsafe material is phone numbers, removable at the value level; there are no person/staff cards or ContactPoint/Person records. The current minimizer quarantines the page ONLY because _MinimizingParser drops the whole document; the safe evidence is deterministically separable from the prohibited values."
+  },
+  "decision": "REPAIR_5_ELIGIBLE",
+  "repair_5_scope": {
+    "minimum_correction": "Fix _MinimizingParser's skip-region tracking to match the extractor's proven model - track nesting of the 5 skip tags only, immune to HTML void elements - so the minimizer sees the same visible text the extractor already derives markers from.",
+    "block_segment_level_minimization": "Make the keep/drop decision explicitly per text fragment: DROP any fragment that still contains an email/phone value (do not rely on line-level redaction alone), REDACT where a fragment is safely redaction-compatible, KEEP independently-safe business-evidence fragments; keep the existing contact-classed-block drop and ContactPoint/Person structured-block drop.",
+    "fail_closed": "Quarantine (not raise) when: a required marker cannot be preserved; the validated minimized text still contains a prohibited value; safe evidence is empty; deterministic verification fails. Do not weaken the existing quarantine path.",
+    "not_in_scope": "No new person-name NER or heuristic (the accepted policy handles persons via contact-classed blocks + Person/ContactPoint JSON-LD only; this page has neither). No 903hvac.com-specific wording. No weakening of email/phone/robots/TLS/SSRF/ceiling controls. No change to provenance requirements.",
+    "provenance": "Retained evidence keeps: source URL, snapshot identity, raw-body sha256, minimizer version, drop/redact classification, durable minimized-content sha256, minimization_event_sha256. Deterministic: identical input -> byte-identical minimized output and evidence identity."
+  },
+  "cumulative_budget": "Target transport already occurred. Repair #5 receives only the remaining allowance; the sealed ConsumedLiveBudget lineage is preserved; no counter is reset.",
+  "next": "Implement the minimum minimizer correction + strong deterministic tests; full successor-image pipeline; append chain link 5; ADR-0075 plan/apply; regenerate runtime config; materialize a fresh @3 for a new deterministic repair-attempt identity; resume M1."
+}
