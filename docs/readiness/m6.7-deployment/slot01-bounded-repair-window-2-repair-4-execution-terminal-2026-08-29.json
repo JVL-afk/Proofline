@@ -1,0 +1,81 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_REPAIR_4_EXECUTION_TERMINAL",
+  "schema_version": "1.0.0",
+  "state": "REPAIR_4_COMPLETE_RESUME_EXECUTED_M1_MINIMIZATION_QUARANTINE_VALID_TERMINAL",
+  "observed_at_utc": "2026-08-29T10:35:00Z",
+  "authorization_event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+  "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+  "repairs_used": 4,
+  "repairs_remaining": 1,
+  "repair_4_outcome": "The deterministic repair-resume execution-attempt identity model works. The resumed activator ran end-to-end (exit 0), created a distinct new research run and coordinator run, and did NOT collide with or disturb the immutable prior terminal attempts 71819ef3 / ad0dd306.",
+  "immutable_prior_attempts": {
+    "71819ef3-6342-5549-82ab-fad9072afce7": "research run, status failed, last_error_code robots_malformed - unchanged",
+    "ad0dd306-8211-5d20-8877-20811574dab3": "coordinator run, terminal M1_RESEARCH_FAILED - unchanged",
+    "not_deleted_mutated_or_unterminated": true
+  },
+  "resume_run": {
+    "activator_task": "dae193d3e1394f83a90a08799f5d89a0",
+    "activator_exit_code": 0,
+    "activator_runtime_seconds": 47,
+    "research_run_id": "b2633298-9f68-5521-ad3d-fc749217f8a8",
+    "coordinator_run_id": "af1028a3-3ff7-5328-92cc-60172dd26dd4",
+    "release_id": "375a88da-da88-5ebf-9daf-cb09934e02b8",
+    "repair_attempt_lineage_sha256": "4d87cad522d5612dd199e236aa984dd3f5c3a81b424c547311e42a7b9e3ed072",
+    "accepted_stage_count": 1,
+    "terminal_reason": "M1_RESEARCH_FAILED"
+  },
+  "m1_classification": {
+    "robots": {
+      "http_status": 200,
+      "body_sha256": "31770015297f01ec0494ae490d0ce06dd165a3034860335958e7d2aa7fd84e51",
+      "body_length": 1902,
+      "decision": "ALLOW",
+      "reason_code": "robots_allowed",
+      "allowed": true,
+      "significance": "The Repair #3 Content-Encoding fix WORKED. The gzip robots.txt was decompressed (872 compressed -> 1902 decompressed, matches the earlier reproduction) and parsed: User-agent: * / Allow: /. robots correctly ALLOWED."
+    },
+    "page_fetch": {
+      "url": "https://903hvac.com/",
+      "attempt_1_outcome": "succeeded",
+      "significance": "The 903hvac.com homepage was successfully fetched over the controlled-egress gateway - the first successful M1 page retrieval for frozen Slot 01."
+    },
+    "minimization": {
+      "attempt_0_outcome": "quarantined",
+      "error_code": "minimization_quarantine",
+      "raw_content_sha256": "43c87585726024b3a4016ad2ed3ffb7fc90fd83039fd1a05a1f6e5e04148fbf2",
+      "quarantine_reasons": [
+        "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:texas", "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:commercial",
+        "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:business", "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:businesses",
+        "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:company", "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:request",
+        "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:estimate", "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:heating",
+        "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:cooling", "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:air conditioning"
+      ],
+      "interpretation": "The deterministic production minimizer fetched the page, then could not produce a redacted output that both removed contact/PII data AND safely preserved the required business-evidence markers. It fail-closed to QUARANTINE_AND_REVIEW rather than persist an output it could not guarantee provenance-safe. pages_succeeded=0, bytes_stored=0, no durable evidence persisted."
+    },
+    "counters": {
+      "pages_attempted": 1, "pages_succeeded": 0, "bytes_stored": 0,
+      "robots_request": 1, "page_fetch_attempts": 1, "authority_seconds": "~1",
+      "cumulative_after_this_run": "consult the sealed consumed-budget lineage; the resumed run added 1 robots fetch + 1 page fetch (succeeded) + 1 minimization quarantine, all within the reduced remaining ceilings"
+    }
+  },
+  "is_this_a_repair_trigger": {
+    "answer": "NO",
+    "rationale": "The Window 2 statement lists 'truthful negative, insufficient-evidence, robots-denial and bounded research failure' as valid terminal outcomes that are not repair triggers, and explicitly prohibits any repair that weakens 'minimization, provenance or truth controls'. The page was accessed; the safety-first deterministic minimizer declined to persist evidence it could not guarantee provenance-safe. That is the control operating correctly. M1_RESEARCH_FAILED via minimization_quarantine is the truthful company-level research outcome for frozen Slot 01."
+  },
+  "m2_m5": "Did not run. M2-M5 require a successful M1 with durable evidence; a minimization quarantine leaves pages_succeeded=0.",
+  "final_dormant_state": {
+    "services_desired_running_pending": {"research-worker": "0/0/0", "intelligence-worker": "0/0/0", "controlled-egress": "0/0/0"},
+    "running_tasks": 0,
+    "kill_switch": "TRIPPED (v21)",
+    "research_release": "v22 NOT_AUTHORIZED consumed terminal (CONSUMED:M1_RESEARCH_FAILED, id 375a88da-...-b9)",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED sentinel (v19)",
+    "controlled_egress_lease": "NOT_AUTHORIZED (v5)",
+    "terraform_plan": "No changes",
+    "deployed_image_digest": "sha256:751e410fb034eef198a032c320ec0dd4c052f23535024b5f8a5538fad03a8eec",
+    "diagnostic_task_definitions": "all registered-then-deregistered (INACTIVE, inert)",
+    "leftover_pending_run": "ac6b9f42-8ae8-531b-bf67-538a7f0bf7d7 - a PENDING research run from a superseded Repair #4 iteration that failed at coordinator before M1; no data, left immutable per the no-delete principle",
+    "slot02": "NOT STARTED"
+  },
+  "conclusion": "Repair #4 is complete: a bounded repair-resume is now a deterministic new execution attempt within the same immutable frozen experiment, and the prior terminal attempts are preserved unchanged. The resumed Slot 01 M1 executed the exact production path with the Repair #3 robots fix in effect: robots correctly ALLOWED, the 903hvac.com homepage was fetched, and the deterministic minimizer safely quarantined it (required business evidence could not be preserved provenance-safe alongside contact-data removal). Terminal M1_RESEARCH_FAILED via minimization_quarantine is a valid, owner-pre-accepted bounded research outcome and not a repair trigger. Authority consumed, all controls returned to their safe terminal, kill switch TRIPPED. Repair #5 remains available for future eligible operational defects. Do not start Slot 02.",
+  "human_review": "REQUESTED"
+}
