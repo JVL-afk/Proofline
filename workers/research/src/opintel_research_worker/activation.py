@@ -160,10 +160,13 @@ class SampledSlotActivator:
         # frozen experiment. A prior terminal attempt keeps its own identity and
         # is never re-driven or overwritten.
         attempt_lineage = release.repair_attempt_lineage_sha256 or ORIGINAL_ATTEMPT_LINEAGE_SHA256
-        idempotency_key = (
+        attempt_token = (
             f"{ACTIVATION_IDEMPOTENCY_REVISION}:{release.id}:{slot_number}:{attempt_lineage}"
         )
-        run_id = uuid5(NAMESPACE_URL, idempotency_key)
+        run_id = uuid5(NAMESPACE_URL, attempt_token)
+        # Bounded storage key (<=128) that still uniquely and deterministically
+        # identifies the attempt via the lineage-derived run id.
+        idempotency_key = f"{ACTIVATION_IDEMPOTENCY_REVISION}:{run_id}"
         identity = self._samples.issue(run_id, slot_number)
         decision = self._a09.require_approved(
             slot_number, identity.business_identity, identity.exact_hostname

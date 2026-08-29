@@ -138,9 +138,9 @@ class _Repository:
         self, business: Business, run: ResearchRun, idempotency_key: str
     ) -> tuple[ResearchRun, bool]:
         assert re.fullmatch(
-            r"m67\.phase1\.sampled-slot-activation@1:[0-9a-f-]{36}:1:[0-9a-f]{64}",
-            idempotency_key,
+            r"m67\.phase1\.sampled-slot-activation@1:[0-9a-f-]{36}", idempotency_key
         )
+        assert len(idempotency_key) <= 128
         self.activation_calls += 1
         existing = self.runs.get(run.id)
         if existing:
