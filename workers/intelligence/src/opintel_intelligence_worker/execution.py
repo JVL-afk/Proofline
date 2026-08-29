@@ -117,6 +117,7 @@ class BoundedSampledSlotExecution:
                 activation_sha256=activation.activation_sha256,
                 runtime_revision=activation.research_runtime_revision,
                 created_at=activation.activated_at,
+                repair_attempt_lineage_sha256=attempt_lineage,
             )
             _, coordinator_created = self._repository.create_or_get(binding)
             existing = self._repository.load(coordinator_run_id)

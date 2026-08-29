@@ -466,6 +466,7 @@ def _coordinator_binding() -> CoordinatorRunBinding:
         activation_sha256="5" * 64,
         runtime_revision=RUNTIME,
         created_at=NOW,
+        repair_attempt_lineage_sha256="6" * 64,
     )
 
 
@@ -514,6 +515,36 @@ def test_durable_lineage_survives_restart_and_rejects_substitution(tmp_path: Pat
     with pytest.raises(ValueError, match="predecessor"):
         repository.append(forged, NOW)
     assert repository.append(second, NOW) is True
+
+
+def test_coordinator_identity_is_scoped_to_the_repair_attempt_lineage(tmp_path: Path) -> None:
+    repository = SqlAlchemyCoordinatorRepository(f"sqlite:///{tmp_path / 'coord_attempt.db'}")
+    repository.initialize()
+    first_attempt = _coordinator_binding()
+    assert repository.create_or_get(first_attempt)[1] is True
+    repository.mark_terminal(first_attempt.coordinator_run_id, "M1_RESEARCH_FAILED", NOW)
+
+    # A legitimate bounded repair successor: same experiment / release / work
+    # item, a distinct sealed attempt lineage -> a distinct coordinator run that
+    # does not collide with the prior terminal one.
+    repair_attempt = replace(
+        first_attempt,
+        coordinator_run_id=UUID("30000000-0000-4000-8000-000000000002"),
+        repair_attempt_lineage_sha256="9" * 64,
+    )
+    binding, created = repository.create_or_get(repair_attempt)
+    assert created is True
+    assert binding.coordinator_run_id == repair_attempt.coordinator_run_id
+    assert repository.load(repair_attempt.coordinator_run_id) == ()
+
+    # Re-invoking the same repair attempt is idempotent, not a second run.
+    again, created_again = repository.create_or_get(repair_attempt)
+    assert created_again is False
+    assert again == repair_attempt
+
+    # The prior attempt's coordinator stays terminal and untouched.
+    replayed = repository.create_or_get(first_attempt)
+    assert replayed[1] is False
 
 
 class _Activator:

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import json
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
@@ -16,7 +17,9 @@ from sqlalchemy import (
     UniqueConstraint,
     create_engine,
     event,
+    inspect,
     select,
+    text,
 )
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
@@ -26,6 +29,12 @@ from opintel_intelligence_worker.orchestration import (
     CoordinatorStageState,
     ShadowStage,
 )
+
+# Attempt-lineage value recorded for coordinator runs that were persisted before
+# the repair-attempt identity model existed (they predate Repair #4).
+LEGACY_ATTEMPT_LINEAGE_SHA256 = hashlib.sha256(
+    b"m67.phase1.repair-attempt@1:pre-repair-4-legacy"
+).hexdigest()
 
 
 @dataclass(frozen=True, slots=True)
@@ -40,6 +49,11 @@ class CoordinatorRunBinding:
     activation_sha256: str
     runtime_revision: str
     created_at: datetime
+    # Execution-attempt identity within the same frozen experiment. The
+    # release-id and work-item uniqueness are scoped to this so a prior terminal
+    # coordinator (a superseded bounded-repair attempt) never blocks or
+    # short-circuits a legitimate repaired successor.
+    repair_attempt_lineage_sha256: str
 
 
 class Base(DeclarativeBase):
@@ -49,12 +63,21 @@ class Base(DeclarativeBase):
 class CoordinatorRunRow(Base):
     __tablename__ = "m67_sampled_slot_coordinator_runs"
     __table_args__ = (
-        UniqueConstraint("authorization_release_id", name="uq_m67_coordinator_release"),
-        UniqueConstraint("work_item_identity_sha256", name="uq_m67_coordinator_work_item"),
+        UniqueConstraint(
+            "authorization_release_id",
+            "repair_attempt_lineage_sha256",
+            name="uq_m67_coordinator_release",
+        ),
+        UniqueConstraint(
+            "work_item_identity_sha256",
+            "repair_attempt_lineage_sha256",
+            name="uq_m67_coordinator_work_item",
+        ),
     )
 
     coordinator_run_id: Mapped[str] = mapped_column(String(36), primary_key=True)
     authorization_release_id: Mapped[str] = mapped_column(String(36), nullable=False)
+    repair_attempt_lineage_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
     ordered_package_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
     slot_number: Mapped[int]
     business_identity: Mapped[str] = mapped_column(String(200), nullable=False)
@@ -111,6 +134,59 @@ class SqlAlchemyCoordinatorRepository:
 
     def initialize(self) -> None:
         Base.metadata.create_all(self.engine)
+        self._migrate_repair_attempt_lineage()
+
+    def _migrate_repair_attempt_lineage(self) -> None:
+        """Idempotently bring a pre-Repair-4 coordinator table up to the
+        attempt-scoped identity model: add repair_attempt_lineage_sha256, backfill
+        existing rows with the legacy lineage, and re-scope the release / work-item
+        uniqueness to (column, repair_attempt_lineage_sha256).
+
+        create_all already produces the current schema on a fresh database, so
+        this only does work on an existing PostgreSQL table that predates it.
+        """
+
+        inspector = inspect(self.engine)
+        table = "m67_sampled_slot_coordinator_runs"
+        columns = {column["name"] for column in inspector.get_columns(table)}
+        if "repair_attempt_lineage_sha256" in columns:
+            return
+        if self.engine.dialect.name != "postgresql":
+            return
+        legacy = LEGACY_ATTEMPT_LINEAGE_SHA256
+        with self.engine.begin() as connection:
+            connection.execute(
+                text(
+                    f"ALTER TABLE {table} "
+                    "ADD COLUMN IF NOT EXISTS repair_attempt_lineage_sha256 VARCHAR(64)"
+                )
+            )
+            connection.execute(
+                text(
+                    f"UPDATE {table} SET repair_attempt_lineage_sha256 = :legacy "
+                    "WHERE repair_attempt_lineage_sha256 IS NULL"
+                ),
+                {"legacy": legacy},
+            )
+            connection.execute(
+                text(
+                    f"ALTER TABLE {table} "
+                    "ALTER COLUMN repair_attempt_lineage_sha256 SET NOT NULL"
+                )
+            )
+            for name, column in (
+                ("uq_m67_coordinator_release", "authorization_release_id"),
+                ("uq_m67_coordinator_work_item", "work_item_identity_sha256"),
+            ):
+                connection.execute(
+                    text(f"ALTER TABLE {table} DROP CONSTRAINT IF EXISTS {name}")
+                )
+                connection.execute(
+                    text(
+                        f"ALTER TABLE {table} ADD CONSTRAINT {name} "
+                        f"UNIQUE ({column}, repair_attempt_lineage_sha256)"
+                    )
+                )
 
     def create_or_get(self, binding: CoordinatorRunBinding) -> tuple[CoordinatorRunBinding, bool]:
         row = CoordinatorRunRow(
@@ -132,7 +208,9 @@ class SqlAlchemyCoordinatorRepository:
                 existing = session.scalar(
                     select(CoordinatorRunRow).where(
                         CoordinatorRunRow.authorization_release_id
-                        == str(binding.authorization_release_id)
+                        == str(binding.authorization_release_id),
+                        CoordinatorRunRow.repair_attempt_lineage_sha256
+                        == binding.repair_attempt_lineage_sha256,
                     )
                 )
                 if existing is None:
@@ -246,6 +324,7 @@ class SqlAlchemyCoordinatorRepository:
             row.activation_sha256,
             row.runtime_revision,
             created_at,
+            row.repair_attempt_lineage_sha256,
         )
 
     @staticmethod
