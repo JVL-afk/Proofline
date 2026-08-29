@@ -1,0 +1,69 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_REPAIR_5_CONSUMED_LIVE_BUDGET",
+  "schema_version": "1.0.0",
+  "state": "CUMULATIVE_CONSUMED_BUDGET_SEALED",
+  "observed_at_utc": "2026-08-29T13:45:00Z",
+  "authorization_event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+  "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+  "purpose": "Cumulative live M1 activity permanently spent against the frozen Slot 01 experiment by every Window 2 resume run that reached an HTTP response. Supersedes the single-run figure in slot01-bounded-repair-window-2-m1-failure-classification-2026-08-29.json by adding research run b2633298 (Repair #4 resume: robots ALLOW + first successful page fetch + minimization quarantine). No counter is reset; the earlier sealed figure remains the immutable record of the Repair #3 analysis.",
+  "contributing_runs": [
+    {
+      "id": "71819ef3-6342-5549-82ab-fad9072afce7",
+      "when": "2026-08-29T06:13Z",
+      "outcome": "robots 200 (872 wire bytes) -> robots_malformed DENY (pre-Repair-3 defect)",
+      "logical_requests": 2,
+      "authorization_attempts": 1,
+      "transport_attempts_per_url_max": 1,
+      "wire_bytes": 872,
+      "authority_seconds": 1
+    },
+    {
+      "id": "b2633298-9f68-5521-ad3d-fc749217f8a8",
+      "when": "2026-08-29T10:32Z",
+      "outcome": "robots 200 ALLOW (body 1902) + page fetch https://903hvac.com/ succeeded + minimization_quarantine (pages_succeeded=0, bytes_stored=0)",
+      "logical_requests": 2,
+      "authorization_attempts": 1,
+      "transport_attempts_per_url_max": 1,
+      "wire_bytes": 250872,
+      "wire_bytes_basis": "872 robots wire bytes + page response bounded by the crawl policy max_compressed_bytes=250000; the exact page wire size is not in durable telemetry (page_snapshots_meta empty because the capture was quarantined, not stored), so the per-response ceiling is sealed as a conservative upper bound that cannot understate consumption",
+      "authority_seconds": 2
+    }
+  ],
+  "excluded_runs": [
+    {
+      "id": "318b8b7c-b700-5d04-8f9d-af17b67d1f52",
+      "reason": "2026-08-28 pre-Window-2 original attempt; robots_transport_failure with http_status null (no HTTP response received). Consistent with the Repair #3 sealing, only runs that achieved an HTTP response are counted as consuming a logical request; this run is what made the predecessor CONSUMED and is not re-charged."
+    },
+    {
+      "id": "ac6b9f42-8ae8-531b-bf67-538a7f0bf7d7",
+      "reason": "2026-08-29 10:15 launch that never started (status pending, started_at null, zero fetch attempts, zero transport)."
+    }
+  ],
+  "consumed_live_counters": {
+    "note": "Cumulative across research runs 71819ef3 and b2633298 for the additive components (logical_requests, authorization_attempts, total_bytes, authority_seconds). transport_attempts follows the sealed Repair #3 semantics: it is the maximum per-URL transport attempts consumed by any prior sequence (the 3-attempt clamp is per-URL, not cumulative), which is 1 for both runs. Subtracted from the owner-statement M1 ceilings when materializing the Repair #5 repair-resumed envelope; never reset.",
+    "logical_requests": 4,
+    "authorization_attempts": 2,
+    "transport_attempts": 1,
+    "total_bytes": 251744,
+    "authority_seconds": 3,
+    "cost_usd": "0"
+  },
+  "original_ceilings": {
+    "max_logical_requests": 8,
+    "max_attempts": 8,
+    "max_response_bytes": 250000,
+    "max_total_bytes": 2000000,
+    "max_duration_seconds": 600,
+    "transport_attempts_per_url": 3
+  },
+  "remaining_allowance_for_repair_5_resume": {
+    "max_logical_requests": 4,
+    "max_attempts": 6,
+    "max_response_bytes": 250000,
+    "max_total_bytes": 1748256,
+    "max_duration_seconds": 597,
+    "transport_attempts_per_url": 3
+  },
+  "fits": true,
+  "fits_basis": "A fresh bounded M1 run needs 1 robots + 1 page = 2 logical requests (<= 4), 2 per-URL transport attempts (<= 3), well under 1.7 MB and 597 s. The resumed run fits inside the remaining authorized ceilings."
+}
