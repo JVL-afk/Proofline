@@ -1,0 +1,72 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_REPAIR_5_DEPLOYMENT",
+  "schema_version": "1.0.0",
+  "state": "APPLIED_CONVERGED_DORMANT",
+  "observed_at_utc": "2026-08-29T13:35:00Z",
+  "authorization_event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+  "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+  "adr_0075_identity_separation": {
+    "plan_provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "apply_provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "plan_and_apply_backend_identity": "profile m67-phase1-state-apply-backend -> arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply (saved plan embeds the protected apply backend; AWS provider reads under workload-plan, mutations under workload-apply)",
+    "preserved": true
+  },
+  "inputs": {
+    "terraform_version": "1.15.9 windows_amd64",
+    "provider": "hashicorp/aws 6.53.0",
+    "tf_config_unchanged_since_repair_1": true,
+    "tfvars_change": {
+      "worker_image_uri / controlled_egress_image_uri / research_runtime_revision": "sha256:751e410fb034eef198a032c320ec0dd4c052f23535024b5f8a5538fad03a8eec -> sha256:edda5c622fd76f1c7b6449f19ed562fd823dabd05882f123df238b695983cc88",
+      "note": "the image digest is the sole tfvars change; no approval-binding value changed (see registry evidence changed_approval_bindings note)"
+    }
+  },
+  "semantic_review": {
+    "method": "terraform show -json of the saved plan; recursive structural diff of every non-no-op resource change",
+    "task_definitions": "all four (research-worker, intelligence-worker, controlled-egress, sampled-slot-activator) replaced (delete+create); the only container_definitions difference is `image` and, where present, the `OPINTEL_RESEARCH_RUNTIME_REVISION` env value, both 751e410f -> edda5c6. mountPoints/portMappings/systemControls/volumesFrom key churn is AWS []-vs-absent normalisation present on every prior repair plan.",
+    "services": "research-worker, intelligence, egress services: only task_definition -> new revision; desired_count unchanged (0 -> 0)",
+    "no_iam_change": true,
+    "no_network_change": true,
+    "no_kms_change": true,
+    "no_database_change": true,
+    "no_ssm_parameter_change": true,
+    "no_security_group_change": true,
+    "no_desired_count_change": true,
+    "no_authority_or_permission_state_change": true,
+    "no_standalone_destroy": true,
+    "unexplained_mutation": "NONE"
+  },
+  "terraform_apply": {
+    "plan_summary": "Plan: 4 to add, 3 to change, 4 to destroy",
+    "result": "Apply complete! Resources: 4 added, 3 changed, 4 destroyed.",
+    "post_apply_plan": "No changes. Your infrastructure matches the configuration."
+  },
+  "deployed_task_definitions": {
+    "m67-phase1-research-worker": {
+      "revision": 17,
+      "image_digest": "sha256:edda5c622fd76f1c7b6449f19ed562fd823dabd05882f123df238b695983cc88"
+    },
+    "m67-phase1-intelligence-worker": {
+      "revision": 14,
+      "image_digest": "sha256:edda5c622fd76f1c7b6449f19ed562fd823dabd05882f123df238b695983cc88"
+    },
+    "m67-phase1-controlled-egress": {
+      "revision": 13,
+      "image_digest": "sha256:edda5c622fd76f1c7b6449f19ed562fd823dabd05882f123df238b695983cc88"
+    },
+    "m67-phase1-sampled-slot-activator": {
+      "revision": 13,
+      "image_digest": "sha256:edda5c622fd76f1c7b6449f19ed562fd823dabd05882f123df238b695983cc88",
+      "OPINTEL_RESEARCH_RUNTIME_REVISION": "sha256:edda5c622fd76f1c7b6449f19ed562fd823dabd05882f123df238b695983cc88"
+    }
+  },
+  "post_deploy_state": {
+    "services_desired_running_pending": "0/0/0",
+    "live_tasks": 0,
+    "kill_switch": "TRIPPED",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED",
+    "controlled_egress_lease": "NOT_AUTHORIZED",
+    "research_release": "Repair #4 consumed successor (CONSUMED:M1_RESEARCH_FAILED, NOT_AUTHORIZED) - to be restored to the sealed pre-Window-2 canonical predecessor before materialization"
+  },
+  "deployment_invariant": "DEPLOYMENT_IMAGE_DIGEST = sha256:edda5c622fd76f1c7b6449f19ed562fd823dabd05882f123df238b695983cc88",
+  "next": "materialize a fresh @3 for the Repair #5 repair-attempt lineage; resume M1..M5 -> CONTACT_PHASE_NOT_AUTHORIZED -> dormant."
+}

@@ -1,0 +1,78 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_REPAIR_5_REGISTRY_EVIDENCE",
+  "schema_version": "1.0.0",
+  "state": "PUBLICATION_SUCCESS_REPRESENTATION_EQUIVALENT_SCAN_PASS",
+  "observed_at_utc": "2026-08-29T13:20:00Z",
+  "authorization": {
+    "event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+    "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+    "clause": "final (fifth) eligible bounded repair; deterministic block-level minimization correction; image published only through the existing bounded publisher with representation equivalence and ECR scan COMPLETE 0/0/0",
+    "diagnosis_necessity": "Repair #5 fixes a concrete implementation defect in opintel_shadow.compliance_application._MinimizingParser (skip-region desync on HTML void elements) that quarantined the whole 903hvac.com homepage even though its safe first-party business evidence is deterministically separable from the prohibited phone values. See slot01-bounded-repair-window-2-repair-5-diagnosis-2026-08-29.json (REPAIR_5_ELIGIBLE). A container image is the only deployment vehicle."
+  },
+  "source_image": {
+    "commit": "13a56f0",
+    "code_commit": "cad4714",
+    "dockerfile": "infra/container/phase1-worker/Dockerfile.window2-repair5",
+    "base_local_tag": "localhost/m67-phase1-worker:git-d1b7a04-window2-repair4",
+    "base_registry_digest": "sha256:751e410fb034eef198a032c320ec0dd4c052f23535024b5f8a5538fad03a8eec",
+    "base_is_repair_4_deployed_digest": true,
+    "local_storage_manifest_digest": "sha256:1282ba298e85ce515ec45ac9b54ec422a64e5165f8f52f797f5d176d9ed01e31",
+    "config_digest": "sha256:232f674cb9315e4f5ff0885d93f87297fa4d9dd5f5254044ed1399c0cd1563a2",
+    "config_bytes": 33708,
+    "platform": "linux/amd64",
+    "layers": 18,
+    "build_timestamp": "SOURCE_DATE_EPOCH=0 (buildah --timestamp 0; reproducible)",
+    "parent_relationship": "child storage layers[0:17] byte-identical to Repair #4 (sha256:751e410f) storage layers; child adds exactly one uncompressed layer sha256:80971676f8ed8edb559fb7ca3a9b623ceeba1329996ff93475cfa8e7e9d92336 carrying compliance_application.py, compliance_domain.py and opintel_research/workflow.py",
+    "in_image_verification": "buildah run: `from opintel_shadow.compliance_domain import MinimizedCapture; MinimizedCapture.model_fields['minimizer_version'].default` -> 'phase1-minimizer@2'; `_VOID_TAGS` present in opintel_shadow.compliance_application; `phase1-minimizer@2` referenced in opintel_research/workflow.py",
+    "changed_files_sha256": {
+      "compliance_application.py": "99ef700e93db2fcfd224fdf6b69d908126f36971a05d2ab19714e23c582f367b",
+      "compliance_domain.py": "80998d0740605709ee04782b549889053462318436e33280df228a4b9f6113ab",
+      "workflow.py": "246bb13678f4c32b9cfd6f0c59133027a383caa1f5645aee25693a35408678ff"
+    },
+    "in_image_file_sha256_match_repo": true,
+    "changed_approval_bindings": {
+      "note": "None of the six single-file / bundle approval bindings changed. compliance_application.py, compliance_domain.py and opintel_research/workflow.py are not single-file approval bindings; there is no in-repo generator for the M1 / M2-M5 runtime bundle hashes (the applicator checks only env==envelope self-consistency). Consistent with the Repair #2 and Repair #3 precedent, the container image digest is the authoritative code identity for this change. All six tfvars binding values are unchanged from Repair #4."
+    }
+  },
+  "publication": {
+    "publisher_identity": "arn:aws:sts::785072247535:assumed-role/m67-phase1-worker-image-publisher/m67-window2-repair5-publication",
+    "repository": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
+    "destination_tag": "git-13a56f0-window2-repair5",
+    "destination_tag_before_attempt": "ABSENT",
+    "attempts": 1,
+    "rebuilds": 0
+  },
+  "registry_identity": {
+    "classification": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "object_type": "SINGLE_PLATFORM_IMAGE_MANIFEST",
+    "media_type": "application/vnd.oci.image.manifest.v1+json",
+    "registry_digest": "sha256:edda5c622fd76f1c7b6449f19ed562fd823dabd05882f123df238b695983cc88",
+    "skopeo_pushed_digest": "sha256:edda5c622fd76f1c7b6449f19ed562fd823dabd05882f123df238b695983cc88",
+    "local_archive_manifest_digest": "sha256:edda5c622fd76f1c7b6449f19ed562fd823dabd05882f123df238b695983cc88",
+    "archive_manifest_byte_equal_to_registry": true,
+    "index_or_manifest_list": false,
+    "platform": "linux/amd64",
+    "config_digest": "sha256:232f674cb9315e4f5ff0885d93f87297fa4d9dd5f5254044ed1399c0cd1563a2",
+    "verifiers": {
+      "verify_m67_local_image_identity": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN (18/18 gzip->uncompressed layer mappings, shared config sha256:232f674c, matching annotations)",
+      "verify_m67_registry_image_identity": "REPRESENTATION_EQUIVALENT_PROVEN (registry manifest bytes == local reproduced archive manifest bytes; shared config descriptor; single-platform; not an index)"
+    }
+  },
+  "ecr_scan": {
+    "target_digest": "sha256:edda5c622fd76f1c7b6449f19ed562fd823dabd05882f123df238b695983cc88",
+    "status": "COMPLETE",
+    "critical": 0,
+    "high": 0,
+    "blocking": 0,
+    "total_findings": 0,
+    "finding_severity_counts": {}
+  },
+  "prepublication_state": {
+    "services_desired_running_pending": "0/0/0",
+    "live_tasks": 0,
+    "kill_switch": "TRIPPED",
+    "immutable_prior_attempts": "research run 71819ef3 (FAILED), coordinator run ad0dd306 (terminal M1_RESEARCH_FAILED), and research run b2633298 (terminal M1_RESEARCH_FAILED via minimization_quarantine) preserved unchanged"
+  },
+  "deployment_invariant": "DEPLOYMENT_IMAGE_DIGEST = sha256:edda5c622fd76f1c7b6449f19ed562fd823dabd05882f123df238b695983cc88",
+  "next": "append the fifth sealed repair-successor-chain link; ADR-0075 plan/apply -> NO_CHANGES; restore the sealed pre-Window-2 canonical predecessor; materialize a fresh @3 for the Repair #5 repair-attempt lineage; resume M1..M5."
+}
