@@ -1,0 +1,47 @@
+{
+  "record_type": "M67_SLOT01_PHASE1_M1_V1_HOMEPAGE_FREEZE",
+  "schema_version": "1.0.0",
+  "state": "SLOT01_CLOSED",
+  "recorded_at_utc": "2026-08-29T16:10:00Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "protocol_version_frozen": "PHASE1_M1_V1_HOMEPAGE",
+  "slot": {
+    "slot_number": 1,
+    "business_identity": "903 HVAC",
+    "exact_hostname": "903hvac.com",
+    "experiment": "M6.7 Phase 1 bounded first-party sampled-slot research",
+    "immutable": true
+  },
+  "closed_terminal": {
+    "chain": "M1_SUCCESS -> M2_INSUFFICIENT_EVIDENCE",
+    "coordinator_run_id": "a548cad5-cc72-5819-979d-06c482a4cbe4",
+    "repair_attempt_lineage_sha256": "1253aa35446c44a5d70a85907636825aad092a3bfbdbbd360ec059d29d799c16",
+    "m1_artifact_sha256": "456b2b79191957643359112acfc5ad2744eeb2d9ef95bb6b27660e2a12c41195",
+    "m1_output_sha256": "ead09f8d46eddf4e374cfa60cab0215124001bad2660155df26eb83c9a485d82",
+    "m2_artifact_sha256": "264062946c895c200ea920f765e1c56466f33e37b64e29e7ab47f1f01ab30cd7",
+    "m2_output_sha256": "9b49df1750a0c671c3ea97af1a79d6e773f3bc7e1e25ac5ad4262fae0f52b097",
+    "terminal_reason": "M2_INSUFFICIENT_EVIDENCE",
+    "terminal_evidence_document": "docs/readiness/m6.7-deployment/slot01-repair4-schema-convergence-execution-terminal-2026-08-29.json"
+  },
+  "closure_directive_verbatim": [
+    "Slot 01 is CLOSED with the truthful terminal: M1_SUCCESS -> M2_INSUFFICIENT_EVIDENCE.",
+    "Do not reopen, replace, redraw, or rerun Slot 01.",
+    "Treat Slot 01 as commissioning evidence demonstrating that homepage-only M1 research is insufficiently deep for opportunity evaluation.",
+    "Freeze Slot 01 as: PHASE1_M1_V1_HOMEPAGE and mark it CLOSED.",
+    "Do not silently claim v1 and v2 results are directly protocol-identical."
+  ],
+  "commissioning_interpretation": {
+    "finding": "The PHASE1_M1_V1_HOMEPAGE protocol captured exactly one durable minimized page (the 903hvac.com homepage). The deterministic M2 opportunity-economics detector requires BOTH a commercial-HVAC industry signal AND a public inbound-path signal in the captured evidence corpus to form a hypothesis; a single homepage capture did not carry both, so M2 truthfully returned INSUFFICIENT_DATA.",
+    "not_a_defect": "M2_INSUFFICIENT_EVIDENCE is a valid owner-pre-accepted bounded-research terminal, not a repair trigger. The minimizer, robots, egress, and truth controls all functioned correctly.",
+    "conclusion": "Homepage-only collection is too shallow for opportunity evaluation. A bounded, same-host, relevance-prioritized multi-page corpus is required before Slots 02-24. That successor protocol is PHASE1_M1_V2_BOUNDED_SITE_CRAWL, designed in docs/readiness/m6.7-deployment/phase1-m1-v2-bounded-site-crawl-design-2026-08-29.md."
+  },
+  "preserved": {
+    "slot01_records_immutable": "all Slot 01 research runs, coordinator runs, work items, evidence, robots evidence, and terminal history are retained unchanged and must not be deleted, mutated, reopened, or replaced",
+    "cumulative_window_2_counters": "the sealed cumulative consumed-live-budget (sha256 d0fb0deec46ffc1b8ddf9b14fd0732b744063992339397594a1b498992b0a0bb) plus this resume's transport is the running Window 2 figure; no counter reset is permitted",
+    "deployed_image": "sha256:47de97dea8e833b2feeacdac1c464d5ac4cef3506d29556c38fa74da280c332f",
+    "repair_5_minimizer_semantics": "phase1-minimizer@2 unchanged"
+  },
+  "successor_protocol": "PHASE1_M1_V2_BOUNDED_SITE_CRAWL",
+  "successor_status": "DESIGN_ONLY_PENDING_OWNER_AUTHORIZATION; Slot 02 NOT started"
+}
