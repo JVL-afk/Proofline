@@ -312,6 +312,27 @@ def test_sealed_repair_successor_chain_admits_deployed_digest() -> None:
     assert result.envelope.approval.research_runtime_revision == SUCCESSOR_REVISION
 
 
+def test_two_link_sealed_repair_chain_admits_final_deployed_digest() -> None:
+    mid = "sha256:" + "b2" * 32
+    final = "sha256:" + "c3" * 32
+    env = dict(RUNTIME_ENV)
+    env["OPINTEL_RESEARCH_RUNTIME_REVISION"] = final
+    result = materialize(
+        _inputs(
+            deployed_activator_environment=env,
+            repair_image_successor_chain=(
+                _repair_link(repair_number=1, successor_image_digest=mid),
+                _repair_link(
+                    repair_number=2,
+                    predecessor_image_digest=mid,
+                    successor_image_digest=final,
+                ),
+            ),
+        )
+    )
+    assert result.envelope.approval.research_runtime_revision == final
+
+
 def test_repair_chain_must_start_from_owner_bound_digest() -> None:
     with pytest.raises(AuthorityMaterializationError, match="does not start from the image digest"):
         materialize(

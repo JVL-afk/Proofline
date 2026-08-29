@@ -1,0 +1,78 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_REPAIR_3_DEPLOYMENT",
+  "schema_version": "1.0.0",
+  "state": "APPLIED_CONVERGED_DORMANT",
+  "observed_at_utc": "2026-08-29T09:20:00Z",
+  "authorization_event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+  "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+  "adr_0075_identity_separation": {
+    "plan_provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "apply_provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "apply_backend_identity": "profile m67-phase1-state-apply-backend -> arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "preserved": true
+  },
+  "inputs": {
+    "terraform_version": "1.15.9 windows_amd64",
+    "provider": "hashicorp/aws 6.53.0",
+    "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
+    "tf_config_unchanged_since_repair_1": true,
+    "tf_config_note": "No *.tf file changed since Repair #1 commit 8dfeee6. Only terraform.tfvars (owner out-of-Git package) changed: the three image-digest fields.",
+    "tfvars_change": {
+      "worker_image_uri": "@sha256:9ce26499... -> @sha256:7969739607086e87ee807f6f9836818be38cc00be24b199cb57552a325d72df3",
+      "controlled_egress_image_uri": "@sha256:9ce26499... -> @sha256:79697396...",
+      "research_runtime_revision": "sha256:9ce26499... -> sha256:79697396...",
+      "six_approval_binding_sha256_fields": "UNCHANGED. robots.py and http.py are not among the six hashed runtime files; the applicator only checks env==envelope self-consistency for those tokens, and there is no in-repo bundle-hash generator. The authoritative code identity that moved is the container image digest, sealed in the registry evidence. Repair #2 (persistence.py) set the same precedent."
+    },
+    "saved_plan_sha256": "3e96a447b7cd180a75425853eea4712a874ce90b4ebdf4bba73248acea55d05e"
+  },
+  "plan_summary": {
+    "terraform_reported": "4 to add, 3 to change, 4 to destroy",
+    "add_destroy_pairs": "the four aws_ecs_task_definition replacements (immutable revisions)",
+    "changed": "the three aws_ecs_service task_definition pointer updates"
+  },
+  "semantic_review": {
+    "method": "recursive structural diff of every changed resource with the Repair #3 digest mapped back to the Repair #2 digest",
+    "task_definitions": "After the digest remap the residual diff is NONE for all four - the image digest (image field + OPINTEL_RESEARCH_RUNTIME_REVISION env) is the sole substantive change.",
+    "services": "Only task_definition -> new revision. desired_count unchanged (0).",
+    "no_iam_change": true, "no_network_change": true, "no_kms_change": true,
+    "no_database_change": true, "no_ssm_parameter_change": true, "no_desired_count_change": true,
+    "no_authority_or_permission_state_change": true, "no_standalone_destroy": true,
+    "no_data_source_deferral": true, "unexplained_mutation": "NONE"
+  },
+  "terraform_apply": {
+    "command": "terraform -chdir=infra/terraform/phase1 apply -input=false -lock=true repair3.tfplan",
+    "result": "Apply complete! Resources: 4 added, 3 changed, 4 destroyed.",
+    "post_apply_plan": "No changes. Your infrastructure matches the configuration."
+  },
+  "deployed_task_definitions": {
+    "m67-phase1-research-worker": {"revision": 13, "image_digest": "sha256:7969739607086e87ee807f6f9836818be38cc00be24b199cb57552a325d72df3"},
+    "m67-phase1-intelligence-worker": {"revision": 10, "image_digest": "sha256:7969739607086e87ee807f6f9836818be38cc00be24b199cb57552a325d72df3"},
+    "m67-phase1-controlled-egress": {"revision": 9, "image_digest": "sha256:7969739607086e87ee807f6f9836818be38cc00be24b199cb57552a325d72df3"},
+    "m67-phase1-sampled-slot-activator": {"revision": 9, "image_digest": "sha256:7969739607086e87ee807f6f9836818be38cc00be24b199cb57552a325d72df3"}
+  },
+  "predecessor_activator_revision": 8,
+  "successor_activator_revision": 9,
+  "services": {
+    "m67-phase1-research-worker": {"desired": 0, "running": 0, "pending": 0, "task_definition": "m67-phase1-research-worker:13"},
+    "m67-phase1-intelligence-worker": {"desired": 0, "running": 0, "pending": 0, "task_definition": "m67-phase1-intelligence-worker:10"},
+    "m67-phase1-controlled-egress": {"desired": 0, "running": 0, "pending": 0, "task_definition": "m67-phase1-controlled-egress:9"}
+  },
+  "running_tasks": 0,
+  "post_apply_dormancy": {
+    "kill_switch": "TRIPPED (v13)",
+    "research_release": "v10 NOT_AUTHORIZED consumed terminal (CONSUMED:M1_RESEARCH_FAILED)",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED (v11)",
+    "controlled_egress_lease": "NOT_AUTHORIZED (v3)",
+    "terraform_no_changes": true,
+    "target_transport_to_903hvac_com_during_deploy": 0,
+    "slot02": "NOT STARTED"
+  },
+  "repair_image_successor_chain_link_2": {
+    "predecessor_image_digest": "sha256:9ce264999569dc05c80dcdbe7ef3b3579783ed65964e4d28f0f4538f34fcea81",
+    "successor_image_digest": "sha256:7969739607086e87ee807f6f9836818be38cc00be24b199cb57552a325d72df3",
+    "registry_evidence": "docs/readiness/m6.7-deployment/slot01-bounded-repair-window-2-repair-3-registry-evidence-2026-08-29.json",
+    "deployment_evidence": "this record",
+    "materializer_core_change": "NONE - authority_materialization._accept_runtime_revision already validates contiguous <=5-link chains; a focused two-link happy-path test was added (test_two_link_sealed_repair_chain_admits_final_deployed_digest)."
+  },
+  "next": "compute remaining M1 allowance (original ceilings minus run 71819ef3 live usage); if it fits, regenerate the launcher config for activator :9, materialize @3 with the two-link repair chain, and resume the Slot 01 M1..M5 experiment."
+}
