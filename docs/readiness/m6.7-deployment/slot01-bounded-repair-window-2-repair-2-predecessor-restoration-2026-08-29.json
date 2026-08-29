@@ -1,0 +1,70 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_REPAIR_2_PREDECESSOR_RESTORATION",
+  "schema_version": "1.0.0",
+  "state": "PREDECESSOR_RESTORED",
+  "observed_at_utc": "2026-08-29T00:00:00Z",
+  "transition": "CONSUMED_FAILED_AUTHORITY -> EXACT_PREDECESSOR_RESTORATION",
+  "authorization": {
+    "event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+    "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+    "clause": "predecessor acceptance / eligible technical failure before first target transport may resume this same frozen experiment; no further approval required for predecessor acceptance or terminal cleanup"
+  },
+  "representation_resolution": {
+    "question": "Which serialization of the pre-Window-2 canonical predecessor is the authoritative restore identity?",
+    "resolved_from": "sealed Window 2 preparation evidence, SHA-256 aedd665388761f39eae7a923dd2cc25bb43f89c0ca65505e4a128b399f7226ff, explicitly bound into the owner approval statement",
+    "sealed_field": "current_dormant_state.research_release_value_sha256 = 2a9466e72af892e93b86d8e3958e3f2adde22bb3c62e95ca0c0604d14e6b2f5b (research_release_version 3, research_release_id 02873c16-90de-53cc-ae43-b6e325e268d1)",
+    "finding": "The exact bytes SSM stored at research-release version 3 (1997 bytes) hash to 2a9466e7... AND are byte-identical to LiveResearchPermissionRelease.model_validate_json(v3).model_dump_json(). The raw stored representation, the pydantic canonical representation, and the sealed hash all coincide. There is no representation ambiguity.",
+    "earlier_a5292545_discrepancy": "An earlier status note reported a raw-bytes hash of a52925454eff...; that was a Windows CRLF artifact of hashing `aws ssm ... --output text` piped through Git Bash (a trailing \\r was included). Recomputing from the SSM SDK Value string directly yields 2a9466e7... . No sealed artifact ever referenced a5292545... .",
+    "restored_representation": "the exact stored SSM version-3 value (1997 bytes), which equals both the sealed hash and the pydantic canonical form"
+  },
+  "pre_write_proofs": {
+    "1_normalized_parses_to_historical_v3": true,
+    "2_research_release_id_02873c16_dot_dot_d1": true,
+    "3_owner_approval_sha256_prefix_72401dda": true,
+    "4_terminal_state_CONSUMED_M1_RESEARCH_FAILED": true,
+    "5_all_immutable_binding_fields_equal_historical": true,
+    "6_only_difference_is_serialization_not_semantics": "N/A - stored bytes ARE the canonical form (byte-identical); zero semantic or serialization difference",
+    "7_current_value_is_zero_transport_window2_failed_successor": {
+      "id": "375a88da-da88-5ebf-9daf-cb09934e02b9",
+      "suspended_reason": "CONSUMED:BOUNDED_EXECUTION_FAILED",
+      "owner_approval_sha256_prefix": "3d1326a9",
+      "state": "not_authorized",
+      "terminal_rollback_state": "NOT_AUTHORIZED",
+      "verified": true
+    },
+    "8_services_0_0_0": true,
+    "9_kill_switch_TRIPPED": true,
+    "10_sampled_slot_execution_approval_NOT_AUTHORIZED": true,
+    "11_controlled_egress_lease_NOT_AUTHORIZED": true,
+    "12_no_active_slot01_work_item_or_task": "true - 0 running ECS tasks; Window 2 activator exited in activate_sampled_run before any work-item derivation; prep evidence slot01_release_or_work_item_created_in_exhausted_window=false",
+    "13_target_transport_zero": "true - zero 903hvac.com access in the failed Window 2 attempt (CloudWatch confirmed)"
+  },
+  "write": {
+    "parameter": "/m67-phase1/research-release",
+    "type": "String",
+    "tier": "Standard",
+    "before_version": 5,
+    "before_value_sha256": "e9b7de9f3eeab8a13278d6302b0acb2e3f0ab1a3a7ecf19601167ca39d6816d5",
+    "before_note": "v5 read-back sha differs from the value-only hash 375a88da... because SSM get-parameter Value here was hashed as returned; the id field confirmed 375a88da-da88-5ebf-9daf-cb09934e02b9",
+    "after_version": 6,
+    "after_value_sha256": "2a9466e72af892e93b86d8e3958e3f2adde22bb3c62e95ca0c0604d14e6b2f5b",
+    "after_value_bytes": 1997,
+    "after_equals_sealed": true,
+    "after_id": "02873c16-90de-53cc-ae43-b6e325e268d1",
+    "after_owner_approval_sha256": "72401ddabc44b37cc4d98e76c8d66021e3ed7fc0f29a87f41c05080f0694249b",
+    "after_suspended_reason": "CONSUMED:M1_RESEARCH_FAILED",
+    "after_state": "not_authorized",
+    "method": "boto3 ssm.put_parameter Overwrite=True, byte-exact payload from sealed v3 value; read-back verified byte-identical"
+  },
+  "post_state": {
+    "research_release": "v6 = exact sealed pre-Window-2 canonical predecessor (M1_RESEARCH_FAILED consumed, NOT_AUTHORIZED)",
+    "kill_switch": "TRIPPED",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED",
+    "controlled_egress_lease": "NOT_AUTHORIZED",
+    "services": "0/0/0",
+    "running_tasks": 0,
+    "target_transport_to_903hvac_com": 0
+  },
+  "materializer_readiness": "research-release v6 owner_approval_sha256 (72401dda...) now differs from this window's statement sha (3d1326a9...), satisfying the Repair #1 authority_materialization predecessor precondition that v5 failed ('predecessor already binding this window fails').",
+  "next": "publish git-39944e8-window2-repair2 -> actual ECR digest + representation equivalence + scan COMPLETE 0/0/0 -> terraform digest bump + ADR-0075 plan + semantic review + apply -> materializer extension for sealed Repair #2 successor chain + tests -> launcher regen -> materialize @3 -> Slot 01 M1..M5 -> CONTACT_PHASE_NOT_AUTHORIZED -> consume -> dormant terminal."
+}
