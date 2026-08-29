@@ -1,0 +1,19 @@
+# M6.7 Phase 1 Slot 01 Window 2 bounded Repair #5 (final).
+#
+# Thin successor to the deployed Repair #4 image. It replaces only the three
+# modules that carry the deterministic block-level minimization correction: the
+# _MinimizingParser skip-region tracking is made immune to HTML void elements
+# (the root cause of the Slot 01 minimization_quarantine), minimization becomes a
+# per-fragment keep/redact/drop decision, and the minimizer version is bumped to
+# phase1-minimizer@2. No other file, dependency, entry point, or configuration
+# changes.
+FROM localhost/m67-phase1-worker:git-d1b7a04-window2-repair4
+
+ARG SOURCE_COMMIT
+LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}" \
+      org.opencontainers.image.title="M6.7 Phase 1 Window 2 repair 5 block-level minimization" \
+      org.opencontainers.image.base.digest="sha256:751e410fb034eef198a032c320ec0dd4c052f23535024b5f8a5538fad03a8eec"
+
+COPY packages/shadow-core/src/opintel_shadow/compliance_application.py /app/shadow-core/opintel_shadow/compliance_application.py
+COPY packages/shadow-core/src/opintel_shadow/compliance_domain.py /app/shadow-core/opintel_shadow/compliance_domain.py
+COPY packages/research-core/src/opintel_research/workflow.py /app/research-core/opintel_research/workflow.py
