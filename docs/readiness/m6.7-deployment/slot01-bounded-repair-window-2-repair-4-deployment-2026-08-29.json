@@ -2,15 +2,13 @@
   "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_REPAIR_4_DEPLOYMENT",
   "schema_version": "1.0.0",
   "state": "APPLIED_CONVERGED_DORMANT",
-  "observed_at_utc": "2026-08-29T11:15:00Z",
+  "observed_at_utc": "2026-08-29T12:12:00Z",
   "authorization_event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
   "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
-  "superseded_intermediate_deployment": {
-    "digest": "sha256:b8f721bbbc95f884a1c05e85148664eb2ab5e0b5d16bce8a46abcfea5eac9c1b",
-    "revisions": "research-worker:14, intelligence-worker:11, controlled-egress:10, sampled-slot-activator:10",
-    "reason": "briefly deployed; its resume failed at activate_sampled_run (idempotency_key 128-char overflow) and never executed M1; replaced in place by the corrected image below via a further ADR-0075 apply",
-    "immutable_history_commit": "7eeb7fe"
-  },
+  "superseded_intermediate_deployments": [
+    {"digest": "sha256:b8f721bb...", "revisions": "worker:14/intel:11/egress:10/activator:10", "immutable_history_commit": "7eeb7fe"},
+    {"digest": "sha256:30652926...", "revisions": "worker:15/intel:12/egress:11/activator:11", "immutable_history_commit": "d84b353"}
+  ],
   "adr_0075_identity_separation": {
     "plan_provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
     "apply_provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
@@ -23,17 +21,15 @@
     "provider_lock_sha256": "9e07a6afd9c94413ce74a290c50b8ead88f83d791b3ad19d063dd5beb29fd48f",
     "tf_config_unchanged_since_repair_1": true,
     "tfvars_change": {
-      "worker_image_uri / controlled_egress_image_uri / research_runtime_revision": "-> @sha256:3065292651c460114820d1632257b6abf33d79e0f82a900fc4825b3cfb82b49d",
+      "worker_image_uri / controlled_egress_image_uri / research_runtime_revision": "-> @sha256:751e410fb034eef198a032c320ec0dd4c052f23535024b5f8a5538fad03a8eec",
       "sampled_slot_release_applicator_sha256": "f7ffdf0c... -> bb931373662a31f81de6f82c201735bc939f250ba42a72a8b29d86824edf1b4e",
-      "sampled_slot_activation_adapter_sha256": "95a03556... -> 76bdaa38481b363eb7d4155994ca2e00add85d94d070b5d5aa135c67f42fee3b (via the 9824426c intermediate)",
-      "note": "the two approval-binding changes faithfully reflect the Repair #4 edits to release_application.py and activation.py"
-    },
-    "saved_plan_sha256_intermediate": "5842640b32acff6cd6b646d783dd2be3326253c27e5f30d0a8e7833c965e874d",
-    "saved_plan_sha256_corrected": "(repair4b.tfplan)"
+      "sampled_slot_activation_adapter_sha256": "95a03556... -> 76bdaa38481b363eb7d4155994ca2e00add85d94d070b5d5aa135c67f42fee3b",
+      "note": "the two approval-binding changes were applied across the intermediate iterations; the final iteration (d1b7a04) only moved the image digest"
+    }
   },
   "semantic_review": {
-    "method": "recursive structural diff with the corrected Repair #4 image digest and the activation_adapter binding value mapped back",
-    "task_definitions": "residual diff NONE for all four - image digest (image + OPINTEL_RESEARCH_RUNTIME_REVISION) plus, on the activator only, OPINTEL_ACTIVATION_ADAPTER_SHA256 are the sole substantive changes (OPINTEL_RELEASE_APPLICATOR_SHA256 was already at bb931373 from the b8f721bb apply)",
+    "method": "recursive structural diff with the final Repair #4 image digest mapped back to the prior digest; the two approval-binding env values were already at their final Repair #4 values from the intermediate applies",
+    "task_definitions": "residual diff NONE for all four - the image digest (image + OPINTEL_RESEARCH_RUNTIME_REVISION) is the sole change on the final apply",
     "services": "only task_definition -> new revision; desired_count unchanged (0)",
     "no_iam_change": true, "no_network_change": true, "no_kms_change": true, "no_database_change": true,
     "no_ssm_parameter_change": true, "no_desired_count_change": true,
@@ -44,23 +40,27 @@
     "post_apply_plan": "No changes. Your infrastructure matches the configuration."
   },
   "deployed_task_definitions": {
-    "m67-phase1-research-worker": {"revision": 15, "image_digest": "sha256:3065292651c460114820d1632257b6abf33d79e0f82a900fc4825b3cfb82b49d"},
-    "m67-phase1-intelligence-worker": {"revision": 12, "image_digest": "sha256:30652926..."},
-    "m67-phase1-controlled-egress": {"revision": 11, "image_digest": "sha256:30652926..."},
-    "m67-phase1-sampled-slot-activator": {"revision": 11, "image_digest": "sha256:30652926...", "OPINTEL_RELEASE_APPLICATOR_SHA256": "bb931373662a31f81de6f82c201735bc939f250ba42a72a8b29d86824edf1b4e", "OPINTEL_ACTIVATION_ADAPTER_SHA256": "76bdaa38481b363eb7d4155994ca2e00add85d94d070b5d5aa135c67f42fee3b"}
+    "m67-phase1-research-worker": {"revision": 16, "image_digest": "sha256:751e410fb034eef198a032c320ec0dd4c052f23535024b5f8a5538fad03a8eec"},
+    "m67-phase1-intelligence-worker": {"revision": 13, "image_digest": "sha256:751e410f..."},
+    "m67-phase1-controlled-egress": {"revision": 12, "image_digest": "sha256:751e410f..."},
+    "m67-phase1-sampled-slot-activator": {"revision": 12, "image_digest": "sha256:751e410f...", "OPINTEL_RELEASE_APPLICATOR_SHA256": "bb931373662a31f81de6f82c201735bc939f250ba42a72a8b29d86824edf1b4e", "OPINTEL_ACTIVATION_ADAPTER_SHA256": "76bdaa38481b363eb7d4155994ca2e00add85d94d070b5d5aa135c67f42fee3b"}
   },
   "predecessor_activator_revision": 9,
-  "successor_activator_revision": 11,
+  "successor_activator_revision": 12,
   "services": {
-    "m67-phase1-research-worker": {"desired": 0, "running": 0, "pending": 0, "task_definition": "m67-phase1-research-worker:15"},
-    "m67-phase1-intelligence-worker": {"desired": 0, "running": 0, "pending": 0, "task_definition": "m67-phase1-intelligence-worker:12"},
-    "m67-phase1-controlled-egress": {"desired": 0, "running": 0, "pending": 0, "task_definition": "m67-phase1-controlled-egress:11"}
+    "m67-phase1-research-worker": {"desired": 0, "running": 0, "pending": 0, "task_definition": "m67-phase1-research-worker:16"},
+    "m67-phase1-intelligence-worker": {"desired": 0, "running": 0, "pending": 0, "task_definition": "m67-phase1-intelligence-worker:13"},
+    "m67-phase1-controlled-egress": {"desired": 0, "running": 0, "pending": 0, "task_definition": "m67-phase1-controlled-egress:12"}
   },
   "running_tasks": 0,
+  "coordinator_schema_migration": {
+    "mechanism": "SqlAlchemyCoordinatorRepository.initialize() runs an idempotent guarded migration on every container start; it adds repair_attempt_lineage_sha256, backfills existing rows with LEGACY_ATTEMPT_LINEAGE_SHA256 (2a8667756242c307b97546d3248267e8316347aace184484bb29f401843d57e1), sets NOT NULL, and re-scopes uq_m67_coordinator_release / uq_m67_coordinator_work_item to (column, repair_attempt_lineage_sha256). Applied automatically on the next activator start.",
+    "no_records_deleted_or_untermined": true
+  },
   "post_apply_dormancy": {
-    "kill_switch": "TRIPPED (v15)",
-    "research_release": "v14 NOT_AUTHORIZED sealed predecessor (id 02873c16-..., owner_sha 72401dda..., CONSUMED:M1_RESEARCH_FAILED)",
-    "sampled_slot_execution_approval": "NOT_AUTHORIZED sentinel (v13)",
+    "kill_switch": "TRIPPED (v19)",
+    "research_release": "v20 NOT_AUTHORIZED sealed predecessor (id 02873c16-..., owner_sha 72401dda..., CONSUMED:M1_RESEARCH_FAILED)",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED sentinel (v17)",
     "controlled_egress_lease": "NOT_AUTHORIZED (v3)",
     "terraform_no_changes": true,
     "immutable_prior_attempts_preserved": "research run 71819ef3 (FAILED) and coordinator run ad0dd306 (terminal M1_RESEARCH_FAILED) - NOT deleted, mutated, or made non-terminal",
@@ -68,10 +68,10 @@
   },
   "repair_image_successor_chain_link_4": {
     "predecessor_image_digest": "sha256:7969739607086e87ee807f6f9836818be38cc00be24b199cb57552a325d72df3",
-    "successor_image_digest": "sha256:3065292651c460114820d1632257b6abf33d79e0f82a900fc4825b3cfb82b49d",
+    "successor_image_digest": "sha256:751e410fb034eef198a032c320ec0dd4c052f23535024b5f8a5538fad03a8eec",
     "registry_evidence": "docs/readiness/m6.7-deployment/slot01-bounded-repair-window-2-repair-4-registry-evidence-2026-08-29.json",
     "deployment_evidence": "this record",
     "chain_length_after_link_4": 3
   },
-  "next": "materialize a fresh @3 for the Repair #4 repair-attempt lineage; resume M1..M5."
+  "next": "materialize a fresh @3 for the Repair #4 repair-attempt lineage; resume M1..M5 (M1 robots now decodes gzip -> should ALLOW)."
 }

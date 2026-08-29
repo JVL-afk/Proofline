@@ -2,70 +2,76 @@
   "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_REPAIR_4_REGISTRY_EVIDENCE",
   "schema_version": "1.0.0",
   "state": "PUBLICATION_SUCCESS_REPRESENTATION_EQUIVALENT_SCAN_PASS",
-  "observed_at_utc": "2026-08-29T11:10:00Z",
-  "superseded_intermediate": {
-    "digest": "sha256:b8f721bbbc95f884a1c05e85148664eb2ab5e0b5d16bce8a46abcfea5eac9c1b",
-    "commit": "341177c3313f1f7a4f0c1c2b2607d9913ffb123a",
-    "reason": "The first Repair #4 build appended the 64-hex attempt lineage to the research_runs idempotency_key, making it 140 chars and overflowing character varying(128); its resumed activator failed at activate_sampled_run with StringDataRightTruncation and never executed M1. It was published and briefly deployed but never resumed. Corrected in commit 6bb8b346 (idempotency_key now derives from the lineage-scoped run id, 73 chars). Its immutable registry/deployment evidence remains in git history at commits 42afb50 / 7eeb7fe."
-  },
+  "observed_at_utc": "2026-08-29T12:10:00Z",
+  "superseded_iterations": [
+    {"digest": "sha256:b8f721bbbc95f884a1c05e85148664eb2ab5e0b5d16bce8a46abcfea5eac9c1b", "commit": "341177c", "failure": "idempotency_key 140 chars > character varying(128); resume failed at activate_sampled_run with StringDataRightTruncation"},
+    {"digest": "sha256:3065292651c460114820d1632257b6abf33d79e0f82a900fc4825b3cfb82b49d", "commit": "6bb8b346", "failure": "resume failed at coordinator create_or_get with UniqueViolation on uq_m67_coordinator_release (one coordinator per fixed authorization_release_id)"}
+  ],
   "authorization": {
     "event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
     "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
     "clause": "identity/schema compatibility correction; image published only through the existing bounded publisher with representation equivalence and ECR scan COMPLETE 0/0/0",
-    "diagnosis_necessity": "Repair #4 gives a bounded repair-resume a distinct deterministic execution-attempt identity (run/activation/coordinator) while the frozen experiment identity stays stable and every prior terminal attempt record remains immutable. A container image is the only deployment vehicle."
+    "diagnosis_necessity": "Repair #4 gives a bounded repair-resume a distinct deterministic execution-attempt identity (run/activation/coordinator) so a prior terminal attempt never blocks or short-circuits a legitimate repaired successor. Includes an idempotent PostgreSQL migration for the coordinator table. A container image is the only deployment vehicle."
   },
   "source_image": {
-    "commit": "6bb8b34619c2e93f104be8e09ded7728c73ed90c",
-    "commit_short": "6bb8b346",
+    "commit": "d1b7a04b79a5bd48cb83da787f77128fa7f04349",
+    "commit_short": "d1b7a04",
     "dockerfile": "infra/container/phase1-worker/Dockerfile.window2-repair4",
     "base_local_tag": "localhost/m67-phase1-worker:git-d5d5cf8-window2-repair3",
     "base_registry_digest": "sha256:7969739607086e87ee807f6f9836818be38cc00be24b199cb57552a325d72df3",
     "base_is_repair_3_deployed_digest": true,
-    "local_storage_manifest_digest": "sha256:0492e05b7b70a2f39640c5f27a6ec8edff2e74691bc106423fc4f6649b908dda",
-    "config_digest": "sha256:d57bf1bf4cae36bf3cc530f7eb80636378664ae4f7b0619fe46b153136c088dc",
-    "config_bytes": 32208,
+    "local_storage_manifest_digest": "sha256:6ab7e4d761ea6a06fc3e576cb35cc71c8d27e93e8b4298356b62db90c78ea234",
+    "config_digest": "sha256:beef8cfde0f0f42b43c6142e31be4b5ee2e7ab5d8be7118ab8a9aa73205bcbc8",
+    "config_bytes": 32453,
     "platform": "linux/amd64",
     "layers": 17,
     "build_timestamp": "SOURCE_DATE_EPOCH=0 (reproducible)",
-    "parent_relationship": "child storage layers[0:16] byte-identical to Repair #3 (sha256:79697396); child adds exactly one uncompressed layer sha256:cf89fe70aa826d56baca110054b5508006567cf4371d1b6bd006af223bc27faa carrying gate_domain.py, release_application.py, activation.py and execution.py",
-    "in_image_verification": "LiveResearchPermissionRelease.model_fields contains repair_attempt_lineage_sha256; ORIGINAL_ATTEMPT_LINEAGE_SHA256 == 3d69bf117061e80e8c2660e4fea749215189080b3f3c66f5f7eacd417d161692",
+    "parent_relationship": "child storage layers[0:16] byte-identical to Repair #3 (sha256:79697396); child adds exactly one uncompressed layer sha256:a8478e8bd52949aa6810c35eb7b6deef4e63705fff6929b41aaea97a6eddb893 carrying gate_domain.py, release_application.py, activation.py, execution.py and coordinator_persistence.py",
+    "in_image_verification": "CoordinatorRunBinding.__dataclass_fields__ contains repair_attempt_lineage_sha256; LiveResearchPermissionRelease.model_fields contains repair_attempt_lineage_sha256; LEGACY_ATTEMPT_LINEAGE_SHA256 == 2a8667756242c307b97546d3248267e8316347aace184484bb29f401843d57e1; ORIGINAL_ATTEMPT_LINEAGE_SHA256 == 3d69bf117061e80e8c2660e4fea749215189080b3f3c66f5f7eacd417d161692",
+    "changed_files_sha256": {
+      "release_application.py": "bb931373662a31f81de6f82c201735bc939f250ba42a72a8b29d86824edf1b4e",
+      "activation.py": "76bdaa38481b363eb7d4155994ca2e00add85d94d070b5d5aa135c67f42fee3b",
+      "execution.py": "b603b2291d3a08b2b5dccce42bd3a263aacad09df73d6e46d4a3f39653c10999",
+      "coordinator_persistence.py": "1cca70ec154aa80dcc3d33e23bf325fa2d5c3453aefe72b61c285066514e09e0",
+      "gate_domain.py": "3aae488a8cc7646b8f91d9ef31f0e19809977bf68c6f0b06f2ea9c357942a164"
+    },
     "changed_approval_bindings": {
       "sampled_slot_release_applicator_sha256": "f7ffdf0cd47abec5e7627ef529d486ed71f09649dc41ffe3a642469ce9fcd420 -> bb931373662a31f81de6f82c201735bc939f250ba42a72a8b29d86824edf1b4e",
       "sampled_slot_activation_adapter_sha256": "95a0355637800d6e1309755bcb342a990ed8c506d6bbe1de28982c10f0e7cf7c -> 76bdaa38481b363eb7d4155994ca2e00add85d94d070b5d5aa135c67f42fee3b",
-      "note": "the other four approval bindings are unchanged"
+      "note": "the other four approval bindings are unchanged; execution.py and coordinator_persistence.py are not single-file approval bindings (stage_coordinator_sha256 fe0f34c9 is a bundle whose formula is not in the repo; the container image digest is the authoritative code identity, consistent with the Repair #2 and #3 precedent)"
     }
   },
   "publication": {
-    "publisher_identity": "arn:aws:sts::785072247535:assumed-role/m67-phase1-worker-image-publisher/m67-window2-repair4b-publication",
+    "publisher_identity": "arn:aws:sts::785072247535:assumed-role/m67-phase1-worker-image-publisher/m67-window2-repair4c-publication",
     "repository": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
-    "destination_tag": "git-6bb8b346-window2-repair4",
+    "destination_tag": "git-d1b7a04-window2-repair4",
     "destination_tag_before_attempt": "ABSENT",
-    "attempts": 1, "rebuilds": 1, "rebuild_reason": "supersede the 128-char idempotency_key overflow", "retags_or_substitutions": 0, "deletions": 0
+    "attempts": 1, "rebuilds": 2, "rebuild_reason": "supersede the 128-char idempotency_key overflow, then the coordinator release-uniqueness collision"
   },
   "registry_identity": {
     "classification": "REPRESENTATION_EQUIVALENT_PROVEN",
     "object_type": "SINGLE_PLATFORM_IMAGE_MANIFEST",
     "media_type": "application/vnd.oci.image.manifest.v1+json",
-    "registry_digest": "sha256:3065292651c460114820d1632257b6abf33d79e0f82a900fc4825b3cfb82b49d",
-    "skopeo_pushed_digest": "sha256:3065292651c460114820d1632257b6abf33d79e0f82a900fc4825b3cfb82b49d",
-    "local_archive_manifest_digest": "sha256:3065292651c460114820d1632257b6abf33d79e0f82a900fc4825b3cfb82b49d",
+    "registry_digest": "sha256:751e410fb034eef198a032c320ec0dd4c052f23535024b5f8a5538fad03a8eec",
+    "skopeo_pushed_digest": "sha256:751e410fb034eef198a032c320ec0dd4c052f23535024b5f8a5538fad03a8eec",
+    "local_archive_manifest_digest": "sha256:751e410fb034eef198a032c320ec0dd4c052f23535024b5f8a5538fad03a8eec",
     "archive_manifest_byte_equal_to_registry": true,
     "index_or_manifest_list": false,
     "platform": "linux/amd64",
-    "config_digest": "sha256:d57bf1bf4cae36bf3cc530f7eb80636378664ae4f7b0619fe46b153136c088dc",
+    "config_digest": "sha256:beef8cfde0f0f42b43c6142e31be4b5ee2e7ab5d8be7118ab8a9aa73205bcbc8",
     "verifiers": {
       "verify_m67_local_image_identity": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN (17/17 layer mappings, shared config, matching annotations)",
       "verify_m67_registry_image_identity": "REPRESENTATION_EQUIVALENT_PROVEN (registry manifest bytes == local reproduced archive manifest bytes; single-platform; not an index)"
     }
   },
   "ecr_scan": {
-    "target_digest": "sha256:3065292651c460114820d1632257b6abf33d79e0f82a900fc4825b3cfb82b49d",
+    "target_digest": "sha256:751e410fb034eef198a032c320ec0dd4c052f23535024b5f8a5538fad03a8eec",
     "status": "COMPLETE", "critical": 0, "high": 0, "blocking": 0, "total_findings": 0, "finding_severity_counts": {}
   },
   "prepublication_state": {
     "services_desired_running_pending": "0/0/0", "live_tasks": 0, "kill_switch": "TRIPPED",
     "immutable_prior_attempts": "research run 71819ef3 (FAILED) and coordinator run ad0dd306 (terminal M1_RESEARCH_FAILED) preserved unchanged"
   },
-  "deployment_invariant": "DEPLOYMENT_IMAGE_DIGEST = sha256:3065292651c460114820d1632257b6abf33d79e0f82a900fc4825b3cfb82b49d",
-  "next": "materialize a fresh @3 for the Repair #4 repair-attempt lineage (deterministic new run_id distinct from the immutable 71819ef3), remaining cumulative budget; resume M1..M5."
+  "deployment_invariant": "DEPLOYMENT_IMAGE_DIGEST = sha256:751e410fb034eef198a032c320ec0dd4c052f23535024b5f8a5538fad03a8eec",
+  "next": "materialize a fresh @3 for the Repair #4 repair-attempt lineage; resume M1..M5."
 }
