@@ -1,0 +1,81 @@
+{
+  "record_type": "M67_SLOT01_REPAIR4_SCHEMA_CONVERGENCE_DEPLOYMENT",
+  "schema_version": "1.0.0",
+  "state": "APPLIED_CONVERGED_DORMANT",
+  "observed_at_utc": "2026-08-29T15:15:00Z",
+  "authorization_event": "AUTHORIZE_SLOT01_REPAIR4_SCHEMA_CONVERGENCE_COMPLETION_AND_M1_M5_RESUME",
+  "approved_by_reference": true,
+  "readiness_document_sha256": "f585d3d61788128956b00765ad2b4fcdee5030b470344d77853993d118f66c09",
+  "owner_decision_record": "docs/readiness/m6.7-deployment/slot01-repair4-schema-convergence-completion-and-m1-m5-resume-owner-decision-2026-08-29.json",
+  "adr_0075_identity_separation": {
+    "plan_provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-plan",
+    "apply_provider_identity": "arn:aws:iam::785072247535:role/m67-phase1-terraform-workload-apply",
+    "plan_and_apply_backend_identity": "profile m67-phase1-state-apply-backend -> arn:aws:iam::785072247535:role/m67-phase1-terraform-state-apply",
+    "preserved": true
+  },
+  "inputs": {
+    "terraform_version": "1.15.9 windows_amd64",
+    "provider": "hashicorp/aws 6.53.0",
+    "tf_config_unchanged_since_repair_1": true,
+    "tfvars_change": {
+      "worker_image_uri / controlled_egress_image_uri / research_runtime_revision": "sha256:edda5c622fd76f1c7b6449f19ed562fd823dabd05882f123df238b695983cc88 -> sha256:47de97dea8e833b2feeacdac1c464d5ac4cef3506d29556c38fa74da280c332f",
+      "note": "the image digest is the sole tfvars change; no approval-binding value changed"
+    },
+    "pre_plan_drift_cleared": "aws_ssm_parameter.research_release carried an out-of-band Description (set by the predecessor-restore helper). It was cleared to '' out-of-band with the exact sealed predecessor value (sha256 2a9466e7...) preserved, matching the Repair #2 precedent. The restore helper was updated to stop writing a Description. This removed a cascade of 4 data.aws_iam_policy_document re-reads and 4 aws_iam_role_policy in-place updates that depended on the research_release resource."
+  },
+  "semantic_review": {
+    "method": "terraform show -json of the saved plan; recursive structural diff of every non-no-op resource change, after clearing the description drift",
+    "plan_summary": "Plan: 4 to add, 3 to change, 4 to destroy",
+    "task_definitions": "all four (research-worker, intelligence-worker, controlled-egress, sampled-slot-activator) replaced (delete+create); the only container_definitions difference is `image` and, where present, `OPINTEL_RESEARCH_RUNTIME_REVISION`, both edda5c6 -> 47de97de. mountPoints/portMappings/systemControls/volumesFrom key churn is AWS []-vs-absent normalisation present on every prior repair plan.",
+    "services": "research-worker, intelligence, egress services: only task_definition -> new revision; desired_count unchanged (0 -> 0)",
+    "no_iam_change": true,
+    "no_network_change": true,
+    "no_kms_change": true,
+    "no_database_change": true,
+    "no_ssm_parameter_change": true,
+    "no_security_group_change": true,
+    "no_desired_count_change": true,
+    "no_authority_or_permission_state_change": true,
+    "no_standalone_destroy": true,
+    "unexplained_mutation": "NONE"
+  },
+  "terraform_apply": {
+    "result": "Apply complete! Resources: 4 added, 3 changed, 4 destroyed.",
+    "post_apply_plan": "No changes. Your infrastructure matches the configuration."
+  },
+  "deployed_task_definitions": {
+    "m67-phase1-research-worker": {
+      "revision": 18,
+      "image_digest": "sha256:47de97dea8e833b2feeacdac1c464d5ac4cef3506d29556c38fa74da280c332f"
+    },
+    "m67-phase1-intelligence-worker": {
+      "revision": 15,
+      "image_digest": "sha256:47de97dea8e833b2feeacdac1c464d5ac4cef3506d29556c38fa74da280c332f"
+    },
+    "m67-phase1-controlled-egress": {
+      "revision": 14,
+      "image_digest": "sha256:47de97dea8e833b2feeacdac1c464d5ac4cef3506d29556c38fa74da280c332f"
+    },
+    "m67-phase1-sampled-slot-activator": {
+      "revision": 14,
+      "image_digest": "sha256:47de97dea8e833b2feeacdac1c464d5ac4cef3506d29556c38fa74da280c332f",
+      "OPINTEL_RESEARCH_RUNTIME_REVISION": "sha256:47de97dea8e833b2feeacdac1c464d5ac4cef3506d29556c38fa74da280c332f"
+    }
+  },
+  "postgres_schema_convergence_verified": {
+    "converged": true,
+    "uq_m67_coordinator_release": ["authorization_release_id", "repair_attempt_lineage_sha256"],
+    "uq_m67_coordinator_work_item": ["work_item_identity_sha256", "repair_attempt_lineage_sha256"],
+    "lineage_column_not_null": true
+  },
+  "post_deploy_state": {
+    "services_desired_running_pending": "0/0/0",
+    "live_tasks": 0,
+    "kill_switch": "TRIPPED",
+    "sampled_slot_execution_approval": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "controlled_egress_lease": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "research_release": "predecessor 02873c16-90de-53cc-ae43-b6e325e268d1 (value sha256 2a9466e7..., description cleared), CONSUMED:M1_RESEARCH_FAILED, NOT_AUTHORIZED"
+  },
+  "deployment_invariant": "DEPLOYMENT_IMAGE_DIGEST = sha256:47de97dea8e833b2feeacdac1c464d5ac4cef3506d29556c38fa74da280c332f",
+  "next": "materialize a fresh @3 for the schema-convergence repair-attempt lineage (5-link sealed successor chain); resume M1..M5 -> CONTACT_PHASE_NOT_AUTHORIZED -> dormant."
+}

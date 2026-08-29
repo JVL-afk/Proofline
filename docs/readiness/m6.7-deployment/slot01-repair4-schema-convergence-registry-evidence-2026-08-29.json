@@ -1,0 +1,94 @@
+{
+  "record_type": "M67_SLOT01_REPAIR4_SCHEMA_CONVERGENCE_REGISTRY_EVIDENCE",
+  "schema_version": "1.0.0",
+  "state": "PUBLICATION_SUCCESS_REPRESENTATION_EQUIVALENT_SCAN_PASS",
+  "observed_at_utc": "2026-08-29T15:05:00Z",
+  "authorization": {
+    "event": "AUTHORIZE_SLOT01_REPAIR4_SCHEMA_CONVERGENCE_COMPLETION_AND_M1_M5_RESUME",
+    "approved_by_reference": true,
+    "readiness_document_sha256": "f585d3d61788128956b00765ad2b4fcdee5030b470344d77853993d118f66c09",
+    "diagnosis_sha256": "e3adec093c7a7327e0743b723efa82dbb6f8a64300585e74490fac00a6356784",
+    "owner_decision_record": "docs/readiness/m6.7-deployment/slot01-repair4-schema-convergence-completion-and-m1-m5-resume-owner-decision-2026-08-29.json",
+    "clause": "schema-convergence completion; exact successor artifact/deployment if required; published only through the existing bounded publisher with representation equivalence and ECR scan COMPLETE 0/0/0",
+    "prior_window_2_repair_budget": "EXHAUSTED 5/5 - this successor is under a fresh, separate authorization and is not a sixth Window 2 repair",
+    "diagnosis_necessity": "_migrate_repair_attempt_lineage() judged migration completion by the marker column's existence, leaving production with legacy single-column uq_m67_coordinator_release / uq_m67_coordinator_work_item. The fix is a runtime code change to that method; a container image is the only deployment vehicle. The Repair #5 minimizer semantics are untouched."
+  },
+  "source_image": {
+    "commit": "c9bd6e2",
+    "code_commit": "e1fe340",
+    "dockerfile": "infra/container/phase1-worker/Dockerfile.repair4-schema-convergence",
+    "base_local_tag": "localhost/m67-phase1-worker:git-13a56f0-window2-repair5",
+    "base_registry_digest": "sha256:edda5c622fd76f1c7b6449f19ed562fd823dabd05882f123df238b695983cc88",
+    "base_is_repair_5_deployed_digest": true,
+    "local_storage_manifest_digest": "sha256:5e2127f9a3ae48593368394298072bf5c14ff71e8a5ca06435869dc02a13af09",
+    "config_digest": "sha256:abfeeb6689cdeb6887d45732fdecb6a5896617511641356e1973704b95e01cd6",
+    "config_bytes": 34543,
+    "platform": "linux/amd64",
+    "layers": 19,
+    "build_timestamp": "SOURCE_DATE_EPOCH=0 (buildah --timestamp 0; reproducible)",
+    "parent_relationship": "child storage layers[0:18] byte-identical to Repair #5 (sha256:edda5c6) storage layers; child adds exactly one uncompressed layer sha256:6d25ad1a504a4b6dc13b725dd4732d506b7c9dfec8bfd6b8827e33071cafffbc carrying only coordinator_persistence.py",
+    "in_image_verification": "buildah run: _lineage_convergence_plan for a latent-partial schema (column present, legacy single-column constraints) emits DROP+ADD for both uq_m67_coordinator_release and uq_m67_coordinator_work_item; for a fully-converged schema it returns []. MinimizedCapture.model_fields['minimizer_version'].default is still 'phase1-minimizer@2'; opintel_shadow/compliance_application.py sha256 unchanged at 99ef700e...",
+    "changed_files_sha256": {
+      "coordinator_persistence.py": "b06e8d8d122b0db7e5e0888290fe75bd544b091a6e6ca22f23fd2aff4f38914a"
+    },
+    "in_image_file_sha256_match_repo": true,
+    "changed_approval_bindings": {
+      "note": "None of the six approval bindings changed. coordinator_persistence.py is not a single-file approval binding (stage_coordinator_sha256 fe0f34c9 is a bundle whose formula is not in the repo). All six tfvars binding values are unchanged from Repair #5; the container image digest is the authoritative code identity, consistent with the Repair #2/#3/#5 precedent."
+    }
+  },
+  "publication": {
+    "publisher_identity": "arn:aws:sts::785072247535:assumed-role/m67-phase1-worker-image-publisher/m67-window2-sc-publication",
+    "repository": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
+    "destination_tag": "git-c9bd6e2-repair4-schema-convergence",
+    "destination_tag_before_attempt": "ABSENT",
+    "attempts": 1,
+    "rebuilds": 0
+  },
+  "registry_identity": {
+    "classification": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "object_type": "SINGLE_PLATFORM_IMAGE_MANIFEST",
+    "media_type": "application/vnd.oci.image.manifest.v1+json",
+    "registry_digest": "sha256:47de97dea8e833b2feeacdac1c464d5ac4cef3506d29556c38fa74da280c332f",
+    "skopeo_pushed_digest": "sha256:47de97dea8e833b2feeacdac1c464d5ac4cef3506d29556c38fa74da280c332f",
+    "local_archive_manifest_digest": "sha256:47de97dea8e833b2feeacdac1c464d5ac4cef3506d29556c38fa74da280c332f",
+    "archive_manifest_byte_equal_to_registry": true,
+    "index_or_manifest_list": false,
+    "platform": "linux/amd64",
+    "config_digest": "sha256:abfeeb6689cdeb6887d45732fdecb6a5896617511641356e1973704b95e01cd6",
+    "verifiers": {
+      "verify_m67_local_image_identity": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN (19/19 gzip->uncompressed layer mappings, shared config sha256:abfeeb66, matching annotations)",
+      "verify_m67_registry_image_identity": "REPRESENTATION_EQUIVALENT_PROVEN (registry manifest bytes == local reproduced archive manifest bytes; shared config descriptor; single-platform; not an index)"
+    }
+  },
+  "ecr_scan": {
+    "target_digest": "sha256:47de97dea8e833b2feeacdac1c464d5ac4cef3506d29556c38fa74da280c332f",
+    "status": "COMPLETE",
+    "critical": 0,
+    "high": 0,
+    "blocking": 0,
+    "total_findings": 0,
+    "finding_severity_counts": {}
+  },
+  "postgres_catalog_verification": {
+    "method": "transient Fargate task m67-phase1-sc-catalog-verify (image sha256:47de97de..., activator subnet/SG, deregistered after run), exit 0",
+    "result": {
+      "dialect": "postgresql",
+      "lineage_column_present": true,
+      "lineage_column_not_null": true,
+      "observed_unique_constraints": {
+        "uq_m67_coordinator_release": ["authorization_release_id", "repair_attempt_lineage_sha256"],
+        "uq_m67_coordinator_work_item": ["work_item_identity_sha256", "repair_attempt_lineage_sha256"]
+      },
+      "converged": true
+    },
+    "note": "The live RDS catalog now carries both intended composite uniqueness constraints. The latent partial state that blocked the Repair #5 resume is converged. Historical coordinator rows were preserved; any pre-Repair-4 row with a NULL lineage received the deterministic legacy backfill."
+  },
+  "prepublication_state": {
+    "services_desired_running_pending": "0/0/0",
+    "live_tasks": 0,
+    "kill_switch": "TRIPPED",
+    "immutable_prior_attempts": "research runs 318b8b7c, 71819ef3, ac6b9f42, b2633298 and coordinator runs ad0dd306, af1028a3 preserved unchanged"
+  },
+  "deployment_invariant": "DEPLOYMENT_IMAGE_DIGEST = sha256:47de97dea8e833b2feeacdac1c464d5ac4cef3506d29556c38fa74da280c332f",
+  "next": "append the fifth sealed repair-successor-chain link; materialize a fresh @3 for the schema-convergence repair-attempt lineage; resume M1..M5."
+}
