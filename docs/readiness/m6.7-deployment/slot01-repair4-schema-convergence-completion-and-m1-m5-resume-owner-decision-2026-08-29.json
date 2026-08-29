@@ -1,0 +1,74 @@
+{
+  "record_type": "M67_SLOT01_REPAIR4_SCHEMA_CONVERGENCE_COMPLETION_AND_M1_M5_RESUME_OWNER_DECISION",
+  "schema_version": "1.0.0",
+  "state": "OWNER_APPROVED_BY_REFERENCE",
+  "decision_event": "AUTHORIZE_SLOT01_REPAIR4_SCHEMA_CONVERGENCE_COMPLETION_AND_M1_M5_RESUME",
+  "recorded_at_utc": "2026-08-29T14:45:00Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "approval_method": "BY_REFERENCE_TO_IMMUTABLE_ARTIFACTS. The owner did not author a new synthesized approval-statement string; the approval binds exactly the sealed structured authorization scope in the referenced readiness document and its supporting evidence, at the exact hashes and commit below.",
+  "bound_artifacts": {
+    "readiness_authorization_document": {
+      "path": "docs/readiness/m6.7-deployment/slot01-repair4-schema-convergence-completion-and-m1-m5-resume-authorization-ready-2026-08-29.json",
+      "sha256": "f585d3d61788128956b00765ad2b4fcdee5030b470344d77853993d118f66c09",
+      "record_type": "M67_SLOT01_REPAIR4_SCHEMA_CONVERGENCE_COMPLETION_AND_M1_M5_RESUME_AUTHORIZATION_READY",
+      "state": "READY_FOR_SLOT01_REPAIR4_SCHEMA_CONVERGENCE_COMPLETION_AND_M1_M5_RESUME_AUTHORIZATION"
+    },
+    "schema_convergence_diagnosis": {
+      "path": "docs/readiness/m6.7-deployment/slot01-repair4-schema-convergence-diagnosis-2026-08-29.json",
+      "sha256": "e3adec093c7a7327e0743b723efa82dbb6f8a64300585e74490fac00a6356784"
+    },
+    "sealed_cumulative_consumed_budget": {
+      "path": "docs/readiness/m6.7-deployment/slot01-bounded-repair-window-2-repair-5-consumed-live-budget-2026-08-29.json",
+      "sha256": "d0fb0deec46ffc1b8ddf9b14fd0732b744063992339397594a1b498992b0a0bb"
+    },
+    "commit": "d184412"
+  },
+  "hash_verification": {
+    "readiness_document_sha256_match": true,
+    "diagnosis_sha256_match": true,
+    "consumed_budget_sha256_match": true,
+    "head_commit_at_decision": "d184412",
+    "working_tree_clean_at_decision": true,
+    "verified_by": "sha256sum of each file re-computed against the owner-stated hashes prior to execution"
+  },
+  "dormant_state_preconditions_verified_at_utc": "2026-08-29T14:44:00Z",
+  "dormant_state_preconditions": {
+    "kill_switch": "TRIPPED",
+    "research_release": "predecessor 02873c16-90de-53cc-ae43-b6e325e268d1, state not_authorized, suspended CONSUMED:M1_RESEARCH_FAILED, owner_approval_sha256 72401dda...",
+    "sampled_slot_execution_approval": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "controlled_egress_lease": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "services": "controlled-egress 0/0/0, research-worker 0/0/0, intelligence-worker 0/0/0",
+    "running_tasks": 0,
+    "all_preconditions_met": true
+  },
+  "owner_approved_scope_verbatim": [
+    "schema-convergence completion",
+    "exact successor artifact/deployment if required",
+    "PostgreSQL catalog verification",
+    "fresh deterministic repair-attempt identity within the same immutable Slot 01 experiment",
+    "exact @3 materialization",
+    "launcher with kill switch initially TRIPPED",
+    "activator-owned TRIPPED -> RUN -> TRIPPED",
+    "exact release/work item/coordinator/egress lease",
+    "M1",
+    "if successful, deterministic offline M2 -> M3 -> M4 -> M5",
+    "CONTACT_PHASE_NOT_AUTHORIZED",
+    "consume authority",
+    "restore sentinel/lease safe states",
+    "services 0/0/0",
+    "zero running tasks",
+    "stop for human review"
+  ],
+  "owner_constraints_verbatim": [
+    "Preserve all sealed cumulative Window 2 target-transport counters. No reset is permitted.",
+    "Do not alter Repair #5 minimizer semantics.",
+    "Do not delete or rewrite historical runs, coordinator runs, work items, evidence, or terminal history.",
+    "Do not manually arm the kill switch to RUN.",
+    "No Slot 02.",
+    "No sixth or further general repair allowance is granted.",
+    "If another unrelated operational defect appears after this schema-convergence successor, stop for human review."
+  ],
+  "no_new_synthesized_approval_statement": true,
+  "next": "execute exactly the authorized bounded successor scope"
+}
