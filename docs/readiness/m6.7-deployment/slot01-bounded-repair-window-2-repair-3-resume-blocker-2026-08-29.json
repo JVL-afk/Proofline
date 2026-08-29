@@ -1,0 +1,56 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_REPAIR_3_RESUME_BLOCKER",
+  "schema_version": "1.0.0",
+  "state": "REPAIR_3_DEPLOYED_RESUME_BLOCKED_ON_STALE_TERMINAL_DB_STATE",
+  "observed_at_utc": "2026-08-29T09:40:00Z",
+  "authorization_event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+  "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+  "repair_3_pipeline_completed": {
+    "robots_decode_fix": "commit d5d5cf8 (robots.py + http.py; bounded gzip/deflate decode shared with the page path)",
+    "consumed_live_budget": "commit 7b3b521 (ConsumedLiveBudget reduces the materialized M1 ceilings; sealed in the classification evidence)",
+    "image_published": "sha256:7969739607086e87ee807f6f9836818be38cc00be24b199cb57552a325d72df3 (REPRESENTATION_EQUIVALENT_PROVEN, ECR scan 0/0/0)",
+    "terraform_applied": "task defs research-worker:13, intelligence-worker:10, controlled-egress:9, sampled-slot-activator:9; terraform NO_CHANGES",
+    "materializer_chain": "two-link chain 770d4248 -> 9ce26499 -> 79697396 accepted; dry-run and real materialize both authorized (approval_artifact_sha256 3b829514...)",
+    "launcher_config": "regenerated for activator :9 (sha256 981052fb...)"
+  },
+  "resume_attempt": {
+    "materialize": "wrote sampled-slot-execution-approval v12 (reduced-ceiling @3 envelope)",
+    "launcher": "scaled controlled-egress to 1/1/0, ran activator :9 task 4f145b6faf4c4ba2a702d9256f519095",
+    "activator_exit": "non-zero",
+    "activator_error": "opintel_research.domain.FetchError: ('research_scope_mismatch', 'research run is outside exact authority') at activation.py:211 -> authorization.py:105",
+    "authority_lifecycle": "research-release v11 predecessor -> v12 AUTHORIZED -> v13 CONSUMED:BOUNDED_EXECUTION_FAILED; kill-switch v13 -> v14 RUN -> v15 TRIPPED; approval v12 envelope -> (activation failed) -> v13 NOT_AUTHORIZED sentinel restored; lease v3 unchanged",
+    "target_transport_to_903hvac_com": 0
+  },
+  "root_cause": {
+    "classification": "STALE_TERMINAL_DB_STATE_FROM_PRIOR_ATTEMPT_COLLIDES_WITH_DETERMINISTIC_IDEMPOTENCY",
+    "detail": "activation.py derives run_id = uuid5(NAMESPACE_URL, f'{ACTIVATION_IDEMPOTENCY_REVISION}:{release.id}:{slot_number}'). release.id is the fixed Window 2 authorized release id 375a88da-da88-5ebf-9daf-cb09934e02b8, so run_id is identical for every Window 2 activation. The Repair #2 attempt (2026-08-29 06:13) persisted research run 71819ef3 (status FAILED, terminal) and terminal coordinator run ad0dd306 with that same run_id. On the Repair #3 resume, activation.py line 208 finds the existing run and line 211 calls authority.authorize(existing, existing_business); the existing run's persisted CrawlPolicy was built from the FULL statement ceilings (max_pages 8, max_total_bytes 2000000) while the current release carries the reduced remaining ceilings (max_logical_requests 6, max_total_bytes 1999128), so authorization.py line 105 raises research_scope_mismatch.",
+    "even_without_reduced_ceilings": "If the envelope had used full ceilings, authorize(existing) would pass and return the FAILED terminal run; production_runtime._m1 then re-reads run.status == FAILED (terminal) and immediately re-raises TruthfulTerminal('M1_RESEARCH_FAILED') WITHOUT executing the fixed robots path. Separately, the terminal coordinator run ad0dd306 already holds one accepted M1 artifact, so execution.py would skip M1 and start at M2. Clearing the stale state is required for the repair to take effect under either ceiling choice.",
+    "is_this_an_eligible_defect": "Arguably yes - 'the deterministic idempotency keys of a repair-resumed run collide with a prior failed attempt's persisted terminal state, preventing the repair from taking effect'. But the corrective action is a targeted data cleanup, not a code change; a code change (detect superseded-release terminal state and re-initialize) would be a heavier Repair #4."
+  },
+  "proposed_minimal_action": {
+    "action": "Delete the stale idempotency rows for the FAILED Repair #2 attempt so the Repair #3 resume creates a fresh run that actually executes the fixed robots path.",
+    "rows": [
+      "research_evidence, extracted_material, research_capture_quarantines, research_pages, page_snapshots WHERE research_run_id = 71819ef3 (all expected empty; script aborts if any snapshot/evidence exists)",
+      "research_fetch_attempts, research_robots_evidence WHERE research_run_id = 71819ef3",
+      "m67_sampled_slot_coordinator_artifacts, m67_sampled_slot_coordinator_runs WHERE coordinator_run_id = ad0dd306",
+      "research_runs WHERE id = 71819ef3"
+    ],
+    "kept": "research_businesses row for '903 HVAC' (Repair #2's persistence fix tolerates re-activating it).",
+    "not_a_counter_reset": "The consumed live counters (2 logical requests, 1 authorization attempt, 1 transport attempt, 872 bytes, 1 authority second) remain sealed in slot01-bounded-repair-window-2-m1-failure-classification-2026-08-29.json and bound as reduced ceilings in every subsequent envelope. The FAILED run carries bytes_stored=0 and no company evidence.",
+    "mechanism": "transient task definition (deployed image + worker roles) running one ordered DELETE transaction, then deregistered - the same pattern used for the read-only classification query.",
+    "blocked_by": "Claude Code auto-mode classifier blocked the DELETE-bearing script; needs explicit owner go-ahead or a Bash permission rule."
+  },
+  "current_dormant_state": {
+    "services": "0/0/0", "running_tasks": 0,
+    "kill_switch": "TRIPPED (v15)",
+    "research_release": "v13 CONSUMED:BOUNDED_EXECUTION_FAILED (id 375a88da-...-b9) NOT_AUTHORIZED",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED sentinel (v13)",
+    "controlled_egress_lease": "NOT_AUTHORIZED (v3)",
+    "terraform_plan": "No changes",
+    "deployed_image_digest": "sha256:7969739607086e87ee807f6f9836818be38cc00be24b199cb57552a325d72df3",
+    "target_transport_to_903hvac_com": 0,
+    "slot02": "NOT STARTED",
+    "repairs_used": 3,
+    "repairs_remaining": 2
+  }
+}
