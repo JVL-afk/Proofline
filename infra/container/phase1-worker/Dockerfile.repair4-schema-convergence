@@ -1,0 +1,18 @@
+# M6.7 Phase 1 Slot 01 Repair #4 schema-convergence completion.
+#
+# Thin successor to the deployed Repair #5 image. It replaces only the coordinator
+# persistence module so _migrate_repair_attempt_lineage() converges each required
+# schema invariant independently (the marker column's existence is no longer taken
+# as proof the constraint migration ran). This completes the Repair #4 migration on
+# a database that already has the repair_attempt_lineage_sha256 column but still
+# carries the legacy single-column uniqueness constraints. No other file,
+# dependency, entry point, or configuration changes; the Repair #5 minimizer
+# semantics are untouched.
+FROM localhost/m67-phase1-worker:git-13a56f0-window2-repair5
+
+ARG SOURCE_COMMIT
+LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}" \
+      org.opencontainers.image.title="M6.7 Phase 1 Repair 4 schema-convergence completion" \
+      org.opencontainers.image.base.digest="sha256:edda5c622fd76f1c7b6449f19ed562fd823dabd05882f123df238b695983cc88"
+
+COPY workers/intelligence/src/opintel_intelligence_worker/coordinator_persistence.py /app/intelligence-worker/opintel_intelligence_worker/coordinator_persistence.py
