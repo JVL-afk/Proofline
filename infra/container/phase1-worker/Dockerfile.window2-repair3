@@ -1,0 +1,16 @@
+# M6.7 Phase 1 Slot 01 Window 2 bounded Repair #3.
+#
+# Thin successor to the deployed Repair #2 image. It replaces only the two local
+# research modules that carry the robots.txt Content-Encoding decode fix so a
+# gzip/deflate-encoded robots.txt is decompressed before parsing instead of being
+# misclassified as robots_malformed. No other file, dependency, entry point, or
+# configuration changes.
+FROM localhost/m67-phase1-worker:git-39944e8-window2-repair2
+
+ARG SOURCE_COMMIT
+LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}" \
+      org.opencontainers.image.title="M6.7 Phase 1 Window 2 repair 3 robots content-encoding decode" \
+      org.opencontainers.image.base.digest="sha256:9ce264999569dc05c80dcdbe7ef3b3579783ed65964e4d28f0f4538f34fcea81"
+
+COPY packages/research-local/src/opintel_research_local/http.py /app/research-local/opintel_research_local/http.py
+COPY packages/research-local/src/opintel_research_local/robots.py /app/research-local/opintel_research_local/robots.py
