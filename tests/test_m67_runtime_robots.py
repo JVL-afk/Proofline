@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import gzip
+import zlib
 from datetime import UTC, datetime
 from uuid import uuid4
 
@@ -83,3 +85,75 @@ def test_current_m1_robots_deny_overrides_any_prior_a09_observation() -> None:
     current, _ = decision(RawHttpResponse(200, (), b"User-agent: *\nDisallow: /\n"), "/")
     assert current.reason_code == "robots_denied"
     assert current.allowed is False
+
+
+_ALLOW_ROOT = b"User-agent: *\nAllow: /\n"
+_DENY_ROOT = b"User-agent: *\nDisallow: /\n"
+# The exact shape 903hvac.com serves: a long comment preamble, then the directives.
+_CLOUDFLARE_SHAPE = (
+    b"# " + b"content-signal preamble comment line\n" * 40 + b"\nUser-agent: *\nAllow: /\n"
+)
+
+
+@pytest.mark.parametrize(
+    "encoding,compress",
+    [
+        ("gzip", gzip.compress),
+        ("deflate", zlib.compress),
+        ("GZIP", gzip.compress),
+    ],
+)
+@pytest.mark.parametrize(
+    "raw,allowed,reason",
+    [
+        (_ALLOW_ROOT, True, "robots_allowed"),
+        (_DENY_ROOT, False, "robots_denied"),
+        (_CLOUDFLARE_SHAPE, True, "robots_allowed"),
+    ],
+)
+def test_runtime_robots_decodes_content_encoding_then_obeys_policy(
+    encoding, compress, raw, allowed, reason
+) -> None:
+    response = RawHttpResponse(200, (("Content-Encoding", encoding),), compress(raw))
+    result, transport = decision(response, "/")
+    assert result.allowed is allowed
+    assert result.reason_code == reason
+    assert transport.calls == 1
+    assert not hasattr(result, "body")
+
+
+def test_runtime_robots_gzip_disallow_specific_path_still_denies() -> None:
+    body = gzip.compress(b"User-agent: *\nDisallow: /services\n")
+    result, _ = decision(RawHttpResponse(200, (("content-encoding", "gzip"),), body), "/services")
+    assert result.allowed is False
+    assert result.reason_code == "robots_denied"
+
+
+def test_runtime_robots_unsupported_encoding_fails_closed() -> None:
+    result, _ = decision(RawHttpResponse(200, (("content-encoding", "br"),), b"\x1b\x2e\x00"), "/")
+    assert result.allowed is False
+    assert result.reason_code == "robots_malformed"
+
+
+def test_runtime_robots_malformed_compressed_stream_fails_closed() -> None:
+    result, _ = decision(
+        RawHttpResponse(200, (("content-encoding", "gzip"),), b"not-a-gzip-stream"), "/"
+    )
+    assert result.allowed is False
+    assert result.reason_code == "robots_malformed"
+
+
+def test_runtime_robots_decompression_overflow_fails_closed() -> None:
+    bomb = gzip.compress(b"User-agent: *\nAllow: /\n" + b"# padding\n" * 20_000)
+    assert len(bomb) < 65_536  # compresses small, expands past the robots ceiling
+    result, _ = decision(RawHttpResponse(200, (("content-encoding", "gzip"),), bomb), "/")
+    assert result.allowed is False
+    assert result.reason_code == "robots_oversized"
+
+
+def test_runtime_robots_identity_gzip_magic_bytes_still_fail_closed() -> None:
+    # No Content-Encoding header, body is raw gzip bytes (the original 903hvac.com defect
+    # symptom): strict UTF-8 decode must still fail closed as malformed.
+    result, _ = decision(RawHttpResponse(200, (), gzip.compress(_ALLOW_ROOT)), "/")
+    assert result.allowed is False
+    assert result.reason_code == "robots_malformed"

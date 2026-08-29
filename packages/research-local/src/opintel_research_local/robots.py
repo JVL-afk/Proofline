@@ -8,9 +8,17 @@ from urllib.robotparser import RobotFileParser
 from uuid import UUID
 
 from opintel_m0.ports import Clock, IdentifierFactory
-from opintel_research.domain import CrawlPolicy, RobotsPolicyEvidence
+from opintel_research.domain import (
+    CrawlPolicy,
+    FetchError,
+    OversizedResponseError,
+    RobotsPolicyEvidence,
+    UnsupportedContentError,
+)
 from opintel_research.ports import HttpTransport
 from opintel_research.url_policy import PublicUrlPolicy
+
+from opintel_research_local.http import decode_http_content
 
 _REDIRECTS = {301, 302, 303, 307, 308}
 _MAX_ROBOTS_BYTES = 65_536
@@ -88,6 +96,17 @@ class RuntimeRobotsPolicy:
             return response.status_code, b"", "robots_missing"
         if response.status_code != 200:
             return response.status_code, response.body, "robots_http_failure"
-        if len(response.body) > _MAX_ROBOTS_BYTES:
+        encoding = ""
+        for name, value in response.headers:
+            if name.lower() == "content-encoding":
+                encoding = value
+                break
+        try:
+            decoded = decode_http_content(response.body, encoding, _MAX_ROBOTS_BYTES)
+        except OversizedResponseError:
             return response.status_code, None, "robots_oversized"
-        return response.status_code, response.body, "robots_loaded"
+        except (UnsupportedContentError, FetchError):
+            # A robots.txt we cannot decode per its declared content coding is
+            # treated as malformed and denied - the fail-closed default.
+            return response.status_code, None, "robots_malformed"
+        return response.status_code, decoded, "robots_loaded"

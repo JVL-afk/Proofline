@@ -167,23 +167,35 @@ class SafeHttpFetcher:
 
     @staticmethod
     def _decode(body: bytes, encoding: str, limit: int) -> bytes:
-        normalized = encoding.strip().lower()
-        if not normalized or normalized == "identity":
-            if len(body) > limit:
-                raise OversizedResponseError()
-            return body
-        if normalized == "gzip":
-            decoder = zlib.decompressobj(16 + zlib.MAX_WBITS)
-        elif normalized == "deflate":
-            decoder = zlib.decompressobj()
-        else:
-            raise UnsupportedContentError("unsupported content encoding")
-        try:
-            output = decoder.decompress(body, limit + 1)
-            if len(output) <= limit:
-                output += decoder.flush(limit + 1 - len(output))
-        except zlib.error as error:
-            raise FetchError("malformed compressed response") from error
-        if len(output) > limit or decoder.unconsumed_tail:
+        return decode_http_content(body, encoding, limit)
+
+
+def decode_http_content(body: bytes, encoding: str, limit: int) -> bytes:
+    """Bounded HTTP content-coding decode shared by the page-fetch and robots paths.
+
+    absent / ``identity`` -> unchanged (still bounded by ``limit``);
+    ``gzip`` / ``deflate`` -> bounded decompression;
+    any other coding -> :class:`UnsupportedContentError`;
+    malformed compressed stream -> :class:`FetchError`;
+    output exceeding ``limit`` -> :class:`OversizedResponseError`.
+    """
+    normalized = encoding.strip().lower()
+    if not normalized or normalized == "identity":
+        if len(body) > limit:
             raise OversizedResponseError()
-        return output
+        return body
+    if normalized == "gzip":
+        decoder = zlib.decompressobj(16 + zlib.MAX_WBITS)
+    elif normalized == "deflate":
+        decoder = zlib.decompressobj()
+    else:
+        raise UnsupportedContentError("unsupported content encoding")
+    try:
+        output = decoder.decompress(body, limit + 1)
+        if len(output) <= limit:
+            output += decoder.flush(limit + 1 - len(output))
+    except zlib.error as error:
+        raise FetchError("malformed compressed response") from error
+    if len(output) > limit or decoder.unconsumed_tail:
+        raise OversizedResponseError()
+    return output
