@@ -21,6 +21,7 @@ from sqlalchemy import (
     select,
     text,
 )
+from sqlalchemy.engine import Inspector
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 
@@ -35,6 +36,87 @@ from opintel_intelligence_worker.orchestration import (
 LEGACY_ATTEMPT_LINEAGE_SHA256 = hashlib.sha256(
     b"m67.phase1.repair-attempt@1:pre-repair-4-legacy"
 ).hexdigest()
+
+_COORDINATOR_RUNS_TABLE = "m67_sampled_slot_coordinator_runs"
+_LINEAGE_COLUMN = "repair_attempt_lineage_sha256"
+# The attempt-scoped uniqueness the coordinator-runs table must carry: each
+# release / work-item identity is unique *within one repair-attempt lineage*, so a
+# superseded bounded-repair attempt never blocks a legitimate repaired successor.
+_INTENDED_UNIQUE_CONSTRAINTS: dict[str, tuple[str, ...]] = {
+    "uq_m67_coordinator_release": ("authorization_release_id", _LINEAGE_COLUMN),
+    "uq_m67_coordinator_work_item": ("work_item_identity_sha256", _LINEAGE_COLUMN),
+}
+
+
+def _named_unique_constraints(inspector: Inspector) -> dict[str, tuple[str, ...]]:
+    """Named unique constraints on the coordinator-runs table, column sets in
+    definition order. Unnamed constraints are ignored (the model always names
+    both attempt-scoped constraints explicitly)."""
+
+    result: dict[str, tuple[str, ...]] = {}
+    for constraint in inspector.get_unique_constraints(_COORDINATOR_RUNS_TABLE):
+        name = constraint.get("name")
+        if name:
+            result[name] = tuple(constraint["column_names"])
+    return result
+
+
+def _lineage_convergence_plan(
+    *,
+    has_lineage_column: bool,
+    lineage_column_nullable: bool,
+    unique_constraints: dict[str, tuple[str, ...]],
+    legacy_lineage: str,
+    table: str = _COORDINATOR_RUNS_TABLE,
+) -> list[tuple[str, dict[str, object]]]:
+    """Deterministic ordered (sql, params) statements that converge the coordinator
+    runs table to the attempt-scoped identity model, given its current schema state.
+
+    Completion is judged by the actual schema invariants - lineage column present,
+    column NOT NULL, and both uniqueness constraints being the intended composite -
+    never by the mere existence of the marker column. A schema that already meets
+    every invariant yields an empty plan (strict no-op). A schema that has the
+    column but still carries a legacy single-column constraint converges only the
+    missing invariant(s). The backfill only ever assigns the legacy lineage to rows
+    whose lineage is NULL; existing non-NULL rows are never touched.
+    """
+
+    plan: list[tuple[str, dict[str, object]]] = []
+    needs_backfill_and_not_null = False
+
+    if not has_lineage_column:
+        plan.append(
+            (f"ALTER TABLE {table} ADD COLUMN {_LINEAGE_COLUMN} VARCHAR(64)", {})
+        )
+        needs_backfill_and_not_null = True
+    elif lineage_column_nullable:
+        needs_backfill_and_not_null = True
+
+    if needs_backfill_and_not_null:
+        plan.append(
+            (
+                f"UPDATE {table} SET {_LINEAGE_COLUMN} = :legacy "
+                f"WHERE {_LINEAGE_COLUMN} IS NULL",
+                {"legacy": legacy_lineage},
+            )
+        )
+        plan.append(
+            (f"ALTER TABLE {table} ALTER COLUMN {_LINEAGE_COLUMN} SET NOT NULL", {})
+        )
+
+    for name, intended in _INTENDED_UNIQUE_CONSTRAINTS.items():
+        if unique_constraints.get(name) == intended:
+            continue
+        plan.append((f"ALTER TABLE {table} DROP CONSTRAINT IF EXISTS {name}", {}))
+        plan.append(
+            (
+                f"ALTER TABLE {table} ADD CONSTRAINT {name} "
+                f"UNIQUE ({intended[0]}, {intended[1]})",
+                {},
+            )
+        )
+
+    return plan
 
 
 @dataclass(frozen=True, slots=True)
@@ -137,56 +219,74 @@ class SqlAlchemyCoordinatorRepository:
         self._migrate_repair_attempt_lineage()
 
     def _migrate_repair_attempt_lineage(self) -> None:
-        """Idempotently bring a pre-Repair-4 coordinator table up to the
-        attempt-scoped identity model: add repair_attempt_lineage_sha256, backfill
-        existing rows with the legacy lineage, and re-scope the release / work-item
-        uniqueness to (column, repair_attempt_lineage_sha256).
+        """Converge the coordinator-runs table to the attempt-scoped identity model.
 
-        create_all already produces the current schema on a fresh database, so
-        this only does work on an existing PostgreSQL table that predates it.
+        Every required schema invariant is inspected and converged independently:
+        the presence of the marker column is never taken as proof that the
+        constraint migration ran. A PostgreSQL database that already has
+        ``repair_attempt_lineage_sha256`` but still carries the pre-Repair-4
+        single-column ``uq_m67_coordinator_release`` / ``uq_m67_coordinator_work_item``
+        constraints is brought fully up to date; a schema that already meets every
+        invariant is a strict no-op. ``create_all`` produces the current schema on
+        every other dialect, so this only runs on PostgreSQL.
         """
 
-        inspector = inspect(self.engine)
-        table = "m67_sampled_slot_coordinator_runs"
-        columns = {column["name"] for column in inspector.get_columns(table)}
-        if "repair_attempt_lineage_sha256" in columns:
-            return
         if self.engine.dialect.name != "postgresql":
             return
-        legacy = LEGACY_ATTEMPT_LINEAGE_SHA256
+
         with self.engine.begin() as connection:
-            connection.execute(
-                text(
-                    f"ALTER TABLE {table} "
-                    "ADD COLUMN IF NOT EXISTS repair_attempt_lineage_sha256 VARCHAR(64)"
-                )
-            )
-            connection.execute(
-                text(
-                    f"UPDATE {table} SET repair_attempt_lineage_sha256 = :legacy "
-                    "WHERE repair_attempt_lineage_sha256 IS NULL"
+            inspector = inspect(connection)
+            columns = {
+                column["name"]: column
+                for column in inspector.get_columns(_COORDINATOR_RUNS_TABLE)
+            }
+            lineage_column = columns.get(_LINEAGE_COLUMN)
+            unique_constraints = _named_unique_constraints(inspector)
+            plan = _lineage_convergence_plan(
+                has_lineage_column=lineage_column is not None,
+                lineage_column_nullable=(
+                    lineage_column is None or bool(lineage_column.get("nullable", True))
                 ),
-                {"legacy": legacy},
+                unique_constraints=unique_constraints,
+                legacy_lineage=LEGACY_ATTEMPT_LINEAGE_SHA256,
             )
-            connection.execute(
-                text(
-                    f"ALTER TABLE {table} "
-                    "ALTER COLUMN repair_attempt_lineage_sha256 SET NOT NULL"
-                )
+            for statement, params in plan:
+                connection.execute(text(statement), params)
+
+    def verify_repair_attempt_lineage_schema(self) -> dict[str, object]:
+        """Read-only PostgreSQL catalog check that the attempt-scoped schema
+        invariants actually hold. Returns the observed constraint column sets and a
+        ``converged`` verdict; a no-op ``{"dialect": ...}`` result off PostgreSQL."""
+
+        if self.engine.dialect.name != "postgresql":
+            return {"dialect": self.engine.dialect.name, "converged": True}
+        with self.engine.connect() as connection:
+            inspector = inspect(connection)
+            columns = {
+                column["name"]: column
+                for column in inspector.get_columns(_COORDINATOR_RUNS_TABLE)
+            }
+            observed = _named_unique_constraints(inspector)
+        lineage_column = columns.get(_LINEAGE_COLUMN)
+        converged = (
+            lineage_column is not None
+            and not bool(lineage_column.get("nullable", True))
+            and all(
+                observed.get(name) == intended
+                for name, intended in _INTENDED_UNIQUE_CONSTRAINTS.items()
             )
-            for name, column in (
-                ("uq_m67_coordinator_release", "authorization_release_id"),
-                ("uq_m67_coordinator_work_item", "work_item_identity_sha256"),
-            ):
-                connection.execute(
-                    text(f"ALTER TABLE {table} DROP CONSTRAINT IF EXISTS {name}")
-                )
-                connection.execute(
-                    text(
-                        f"ALTER TABLE {table} ADD CONSTRAINT {name} "
-                        f"UNIQUE ({column}, repair_attempt_lineage_sha256)"
-                    )
-                )
+        )
+        return {
+            "dialect": "postgresql",
+            "lineage_column_present": lineage_column is not None,
+            "lineage_column_not_null": lineage_column is not None
+            and not bool(lineage_column.get("nullable", True)),
+            "observed_unique_constraints": {k: list(v) for k, v in observed.items()},
+            "intended_unique_constraints": {
+                k: list(v) for k, v in _INTENDED_UNIQUE_CONSTRAINTS.items()
+            },
+            "converged": converged,
+        }
 
     def create_or_get(self, binding: CoordinatorRunBinding) -> tuple[CoordinatorRunBinding, bool]:
         row = CoordinatorRunRow(
