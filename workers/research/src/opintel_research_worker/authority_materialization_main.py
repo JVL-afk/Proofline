@@ -16,6 +16,7 @@ authorized-envelope -> restored-sentinel lifecycle.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 from datetime import UTC, datetime
@@ -25,6 +26,7 @@ from opintel_research_worker.activation import FrozenA09DecisionRegistry
 from opintel_research_worker.authority_materialization import (
     AuthorityMaterializationError,
     MaterializationInputs,
+    RepairImageSuccessor,
     materialize,
 )
 from opintel_research_worker.release_application import SAMPLED_APPROVAL_LOCK_SENTINEL
@@ -51,6 +53,69 @@ def _client(service: str, region: str) -> object:
 def _read_parameter(client: object, name: str) -> str:
     response = client.get_parameter(Name=name, WithDecryption=False)  # type: ignore[attr-defined]
     return str(response["Parameter"]["Value"])
+
+
+def _sha256_file(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _repair_image_successor_chain() -> tuple[RepairImageSuccessor, ...]:
+    """Build the sealed bounded-repair image successor chain from committed evidence.
+
+    ``OPINTEL_REPAIR_SUCCESSOR_REGISTRY_EVIDENCE_PATHS`` and
+    ``OPINTEL_REPAIR_SUCCESSOR_DEPLOYMENT_EVIDENCE_PATHS`` are parallel,
+    comma-separated, repair-ordered lists of the sealed registry-evidence and
+    deployment-evidence JSON files. Every field of every link is read out of
+    those immutable records - nothing is passed in directly.
+    """
+
+    registry_env = "OPINTEL_REPAIR_SUCCESSOR_REGISTRY_EVIDENCE_PATHS"
+    deployment_env = "OPINTEL_REPAIR_SUCCESSOR_DEPLOYMENT_EVIDENCE_PATHS"
+    registry_raw = os.environ.get(registry_env, "").strip()
+    deployment_raw = os.environ.get(deployment_env, "").strip()
+    if not registry_raw and not deployment_raw:
+        return ()
+    registry_paths = [Path(p.strip()) for p in registry_raw.split(",") if p.strip()]
+    deployment_paths = [Path(p.strip()) for p in deployment_raw.split(",") if p.strip()]
+    if len(registry_paths) != len(deployment_paths) or not registry_paths:
+        raise SystemExit(
+            "repair successor registry/deployment evidence path lists "
+            "must be equal-length and non-empty"
+        )
+
+    chain: list[RepairImageSuccessor] = []
+    for index, (registry_path, deployment_path) in enumerate(
+        zip(registry_paths, deployment_paths, strict=True), start=1
+    ):
+        registry = json.loads(registry_path.read_text(encoding="utf-8"))
+        deployment_text = deployment_path.read_text(encoding="utf-8")
+        json.loads(deployment_text)  # must be well-formed sealed JSON
+        identity = registry.get("registry_identity", {})
+        scan = registry.get("ecr_scan", {})
+        source = registry.get("source_image", {})
+        successor_digest = str(identity.get("registry_digest", ""))
+        if successor_digest and successor_digest not in deployment_text:
+            raise SystemExit(
+                f"repair {index} deployment evidence does not reference its sealed "
+                f"registry successor digest"
+            )
+        chain.append(
+            RepairImageSuccessor(
+                repair_number=index,
+                predecessor_image_digest=str(source.get("base_registry_digest", "")),
+                successor_image_digest=successor_digest,
+                registry_evidence_sha256=_sha256_file(registry_path),
+                deployment_evidence_sha256=_sha256_file(deployment_path),
+                representation_equivalent_proven=(
+                    identity.get("classification") == "REPRESENTATION_EQUIVALENT_PROVEN"
+                    and identity.get("archive_manifest_byte_equal_to_registry") is True
+                ),
+                ecr_scan_critical=int(scan.get("critical", 1)),
+                ecr_scan_high=int(scan.get("high", 1)),
+                ecr_scan_blocking=int(scan.get("blocking", 1)),
+            )
+        )
+    return tuple(chain)
 
 
 def _activator_environment(client: object, task_definition: str) -> dict[str, str]:
@@ -92,6 +157,7 @@ def _materialize(args: argparse.Namespace) -> int:
         stored_sampled_slot_approval_raw=_read_parameter(ssm, APPROVAL_PARAMETER),
         deployed_activator_environment=_activator_environment(ecs, activator_task_definition),
         now=datetime.now(UTC),
+        repair_image_successor_chain=_repair_image_successor_chain(),
     )
 
     try:

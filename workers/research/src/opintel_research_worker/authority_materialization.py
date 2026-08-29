@@ -65,8 +65,39 @@ _ACTIVATOR_ENVIRONMENT_KEYS = {
 }
 
 
+_SHA256_HEX = re.compile(r"[0-9a-f]{64}")
+_IMAGE_DIGEST = re.compile(r"sha256:[0-9a-f]{64}")
+_MAX_BOUNDED_REPAIRS = 5
+
+
 class AuthorityMaterializationError(RuntimeError):
     """Raised when the exact single-use approval cannot be materialized safely."""
+
+
+@dataclass(frozen=True, slots=True)
+class RepairImageSuccessor:
+    """One sealed link in the bounded-repair image successor chain.
+
+    The accepted Window 2 statement authorizes at most five sequential eligible
+    repairs and requires every repair to immutably seal its registry identity,
+    representation equivalence, clean provider scan and deployment. When an
+    eligible repair republishes the worker image, the deployed activator runtime
+    revision is the repair successor digest rather than the digest inline in the
+    owner statement. Each link is derived by
+    :mod:`authority_materialization_main` from the committed sealed evidence
+    files; the core only checks the chain is contiguous, owner-anchored, within
+    the five-repair bound, representation-equivalent and scan-clean.
+    """
+
+    repair_number: int
+    predecessor_image_digest: str
+    successor_image_digest: str
+    registry_evidence_sha256: str
+    deployment_evidence_sha256: str
+    representation_equivalent_proven: bool
+    ecr_scan_critical: int
+    ecr_scan_high: int
+    ecr_scan_blocking: int
 
 
 def _require(condition: object, message: str) -> None:
@@ -114,6 +145,7 @@ class MaterializationInputs:
     stored_sampled_slot_approval_raw: str
     deployed_activator_environment: Mapping[str, str]
     now: datetime
+    repair_image_successor_chain: tuple[RepairImageSuccessor, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -340,14 +372,82 @@ def _runtime_bindings(inputs: MaterializationInputs) -> dict[str, object]:
         values[field] = raw
     revision = str(values["research_runtime_revision"])
     _require(
-        revision.startswith("sha256:") and re.fullmatch(r"sha256:[0-9a-f]{64}", revision),
+        revision.startswith("sha256:") and _IMAGE_DIGEST.fullmatch(revision),
         "deployed activator runtime revision is not a sha256 digest",
     )
-    _require(
-        revision in inputs.owner_authorization_statement,
-        "deployed activator runtime revision is not the image digest bound by the owner statement",
-    )
+    _accept_runtime_revision(revision, inputs)
     return values
+
+
+def _accept_runtime_revision(revision: str, inputs: MaterializationInputs) -> None:
+    """Accept the deployed activator digest only if the owner bound it directly
+    or a sealed, owner-anchored bounded-repair chain proves it is the successor."""
+
+    if revision in inputs.owner_authorization_statement:
+        return
+
+    chain = inputs.repair_image_successor_chain
+    _require(
+        bool(chain),
+        "deployed activator runtime revision is neither bound by the owner statement "
+        "nor backed by a sealed bounded-repair image successor chain",
+    )
+    _require(
+        len(chain) <= _MAX_BOUNDED_REPAIRS,
+        "bounded-repair image successor chain exceeds the five-repair authorization",
+    )
+    _require(
+        _digest_in_statement(chain[0].predecessor_image_digest, inputs),
+        "the bounded-repair image successor chain does not start from the "
+        "image digest bound by the accepted owner statement",
+    )
+    for index, link in enumerate(chain):
+        where = f"bounded-repair image successor {index + 1}"
+        _require(link.repair_number == index + 1, f"{where} is not sequentially numbered from one")
+        for label, digest in (
+            ("predecessor", link.predecessor_image_digest),
+            ("successor", link.successor_image_digest),
+        ):
+            _require(
+                isinstance(digest, str) and bool(_IMAGE_DIGEST.fullmatch(digest)),
+                f"{where} {label} image digest is not a sha256 digest",
+            )
+        for label, value in (
+            ("registry", link.registry_evidence_sha256),
+            ("deployment", link.deployment_evidence_sha256),
+        ):
+            _require(
+                isinstance(value, str) and bool(_SHA256_HEX.fullmatch(value)),
+                f"{where} sealed {label} evidence sha256 is missing or malformed",
+            )
+        _require(
+            link.predecessor_image_digest != link.successor_image_digest,
+            f"{where} predecessor and successor image digests are identical",
+        )
+        _require(
+            link.representation_equivalent_proven is True,
+            f"{where} image is not representation-equivalent proven against its local build",
+        )
+        _require(
+            link.ecr_scan_critical == 0
+            and link.ecr_scan_high == 0
+            and link.ecr_scan_blocking == 0,
+            f"{where} image ECR scan is not COMPLETE with critical/high/blocking 0/0/0",
+        )
+        if index > 0:
+            _require(
+                chain[index - 1].successor_image_digest == link.predecessor_image_digest,
+                "bounded-repair image successor chain is not contiguous",
+            )
+    _require(
+        chain[-1].successor_image_digest == revision,
+        "the deployed activator runtime revision is not the final sealed "
+        "bounded-repair image successor",
+    )
+
+
+def _digest_in_statement(digest: str, inputs: MaterializationInputs) -> bool:
+    return isinstance(digest, str) and digest in inputs.owner_authorization_statement
 
 
 def _dry_run_production_validator(

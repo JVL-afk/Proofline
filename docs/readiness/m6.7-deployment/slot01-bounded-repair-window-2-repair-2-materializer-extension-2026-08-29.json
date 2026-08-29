@@ -1,0 +1,53 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_REPAIR_2_MATERIALIZER_EXTENSION",
+  "schema_version": "1.0.0",
+  "state": "IMPLEMENTED_TESTED",
+  "observed_at_utc": "2026-08-29T06:45:00Z",
+  "authorization_event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+  "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+  "problem": "authority_materialization._runtime_bindings required the deployed activator OPINTEL_RESEARCH_RUNTIME_REVISION to be a literal substring of the owner authorization statement. Repair #2 deploys a republished worker image (sha256:9ce26499...) that the Window 2 statement (which inlines the base sha256:770d4248...) does not name, so materialization would fail closed after a legitimate, owner-authorized bounded repair.",
+  "minimum_diff": {
+    "authority_materialization.py": "Added frozen RepairImageSuccessor and MaterializationInputs.repair_image_successor_chain (default empty). _runtime_bindings now calls _accept_runtime_revision: the digest is accepted if it is inline in the owner statement (unchanged path) OR a non-empty, <=5-link, contiguous chain whose first link's predecessor digest is inline in the owner statement, whose every link is representation-equivalent proven with ECR scan critical/high/blocking 0/0/0 and well-formed sealed registry+deployment evidence sha256s, and whose final link's successor digest equals the deployed digest. Any gap, reordering, unproven link, dirty scan, wrong anchor, or chain>5 fails closed.",
+    "authority_materialization_main.py": "_repair_image_successor_chain builds the chain from OPINTEL_REPAIR_SUCCESSOR_REGISTRY_EVIDENCE_PATHS / OPINTEL_REPAIR_SUCCESSOR_DEPLOYMENT_EVIDENCE_PATHS (parallel, repair-ordered, comma-separated committed sealed evidence files). Every field is read out of the immutable records; each file is sha256-hashed; the deployment evidence must textually reference its sealed registry successor digest. Absent env vars -> empty chain -> unchanged owner-statement-only behavior."
+  },
+  "evidence_chain_for_repair_2": {
+    "accepted_window_2_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+    "repair_2_diagnosis_and_status": "docs/readiness/m6.7-deployment/slot01-bounded-repair-window-2-repair-2-status-2026-08-28.json",
+    "sealed_repair_2_implementation_commit": "39944e842a7f34e6b41b8098eae6b9ccb6ec9497",
+    "proven_registry_successor": {
+      "evidence": "docs/readiness/m6.7-deployment/slot01-bounded-repair-window-2-repair-2-registry-evidence-2026-08-29.json",
+      "file_sha256": "611f9da44f34341c3c4b96b3af0afcef84f8a0ee5e5cad4817740690bc5b021f",
+      "predecessor_image_digest": "sha256:770d4248bbd7b5f915861331663dc68f5107cf87782a86bde5b7105488e16e50",
+      "successor_image_digest": "sha256:9ce264999569dc05c80dcdbe7ef3b3579783ed65964e4d28f0f4538f34fcea81",
+      "representation_equivalent_proven": true,
+      "ecr_scan": "COMPLETE critical/high/blocking 0/0/0"
+    },
+    "deployed_successor": {
+      "evidence": "docs/readiness/m6.7-deployment/slot01-bounded-repair-window-2-repair-2-deployment-2026-08-29.json",
+      "file_sha256": "2fb48258122d9d885b5c0ac24ac7b0d766d6706b263597d5433d5ddefc46141d",
+      "activator_revision": 8,
+      "activator_runtime_revision_env": "sha256:9ce264999569dc05c80dcdbe7ef3b3579783ed65964e4d28f0f4538f34fcea81"
+    },
+    "chain_first_link_anchor_in_owner_statement": true,
+    "chain_final_link_equals_deployed_digest": true,
+    "chain_length": 1,
+    "within_five_repair_bound": true
+  },
+  "fail_closed_coverage": [
+    "empty chain + non-statement digest -> rejected",
+    "chain not anchored to the owner-statement image digest -> rejected",
+    "final successor != deployed digest -> rejected",
+    "representation_equivalent_proven false -> rejected",
+    "ECR scan not 0/0/0 -> rejected",
+    "non-contiguous chain -> rejected",
+    "chain longer than five links -> rejected"
+  ],
+  "approval_binding_impact": "NONE. The six approval *_sha256 runtime bindings are unchanged. The @3 SampledSlotExecutionApprovalEnvelope schema and the activator-side BoundedSampledSlotReleaseApplicator are unchanged. The dry-run production validator still gates every materialized envelope.",
+  "tests": {
+    "focused": "tests/test_m67_authority_materialization.py 25 passed (7 new bounded-repair chain tests: admits sealed successor; must anchor to owner digest; final must equal deployed; rejects unproven representation; rejects dirty scan; must be contiguous; cannot exceed five links)",
+    "full_deterministic_suite": "702 passed, 2 skipped (PostgreSQL parity) with a clean --basetemp",
+    "ruff": "PASS", "mypy": "PASS (2 files)", "repository_check": "PASS",
+    "note_on_unrelated_errors": "A shared C:\\Users\\eugen\\AppData\\Local\\Temp\\pytest-of-eugen directory is currently access-denied (locked by a concurrent process), which errors every tmp_path-fixture test. Running pytest with a fresh --basetemp is clean: 702 passed / 2 skipped. Not a Repair #2 regression."
+  },
+  "next": "regenerate bounded-ecs-execution-config.json for activator :8; materialize @3 with the chain env vars; run Slot 01 M1..M5; CONTACT_PHASE_NOT_AUTHORIZED; consume; dormant terminal."
+}

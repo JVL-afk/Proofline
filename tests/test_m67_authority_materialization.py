@@ -12,6 +12,7 @@ from opintel_research_worker.activation import FrozenA09DecisionRegistry
 from opintel_research_worker.authority_materialization import (
     AuthorityMaterializationError,
     MaterializationInputs,
+    RepairImageSuccessor,
     materialize,
 )
 from opintel_research_worker.release_application import (
@@ -266,11 +267,133 @@ def test_missing_activator_runtime_binding_fails() -> None:
         materialize(_inputs(deployed_activator_environment=env))
 
 
-def test_activator_revision_not_bound_by_statement_fails() -> None:
+def test_activator_revision_not_bound_by_statement_or_repair_chain_fails() -> None:
     env = dict(RUNTIME_ENV)
     env["OPINTEL_RESEARCH_RUNTIME_REVISION"] = "sha256:" + "9" * 64
-    with pytest.raises(AuthorityMaterializationError, match="not the image digest bound"):
+    with pytest.raises(
+        AuthorityMaterializationError,
+        match="neither bound by the owner statement nor backed by a sealed",
+    ):
         materialize(_inputs(deployed_activator_environment=env))
+
+
+SUCCESSOR_REVISION = "sha256:" + "a1" * 32
+
+
+def _repair_link(**changes: object) -> RepairImageSuccessor:
+    base: dict[str, object] = {
+        "repair_number": 1,
+        "predecessor_image_digest": RUNTIME_REVISION,
+        "successor_image_digest": SUCCESSOR_REVISION,
+        "registry_evidence_sha256": "1" * 64,
+        "deployment_evidence_sha256": "2" * 64,
+        "representation_equivalent_proven": True,
+        "ecr_scan_critical": 0,
+        "ecr_scan_high": 0,
+        "ecr_scan_blocking": 0,
+    }
+    base.update(changes)
+    return RepairImageSuccessor(**base)  # type: ignore[arg-type]
+
+
+def _repair_env() -> dict[str, str]:
+    env = dict(RUNTIME_ENV)
+    env["OPINTEL_RESEARCH_RUNTIME_REVISION"] = SUCCESSOR_REVISION
+    return env
+
+
+def test_sealed_repair_successor_chain_admits_deployed_digest() -> None:
+    result = materialize(
+        _inputs(
+            deployed_activator_environment=_repair_env(),
+            repair_image_successor_chain=(_repair_link(),),
+        )
+    )
+    assert result.envelope.approval.research_runtime_revision == SUCCESSOR_REVISION
+
+
+def test_repair_chain_must_start_from_owner_bound_digest() -> None:
+    with pytest.raises(AuthorityMaterializationError, match="does not start from the image digest"):
+        materialize(
+            _inputs(
+                deployed_activator_environment=_repair_env(),
+                repair_image_successor_chain=(
+                    _repair_link(predecessor_image_digest="sha256:" + "b" * 64),
+                ),
+            )
+        )
+
+
+def test_repair_chain_final_successor_must_equal_deployed_digest() -> None:
+    with pytest.raises(AuthorityMaterializationError, match="not the final sealed"):
+        materialize(
+            _inputs(
+                deployed_activator_environment=_repair_env(),
+                repair_image_successor_chain=(
+                    _repair_link(successor_image_digest="sha256:" + "c" * 64),
+                ),
+            )
+        )
+
+
+def test_repair_chain_rejects_unproven_representation() -> None:
+    with pytest.raises(AuthorityMaterializationError, match="not representation-equivalent proven"):
+        materialize(
+            _inputs(
+                deployed_activator_environment=_repair_env(),
+                repair_image_successor_chain=(
+                    _repair_link(representation_equivalent_proven=False),
+                ),
+            )
+        )
+
+
+def test_repair_chain_rejects_dirty_scan() -> None:
+    with pytest.raises(AuthorityMaterializationError, match="ECR scan is not COMPLETE"):
+        materialize(
+            _inputs(
+                deployed_activator_environment=_repair_env(),
+                repair_image_successor_chain=(_repair_link(ecr_scan_high=2),),
+            )
+        )
+
+
+def test_repair_chain_must_be_contiguous() -> None:
+    mid = "sha256:" + "d" * 64
+    with pytest.raises(AuthorityMaterializationError, match="not contiguous"):
+        materialize(
+            _inputs(
+                deployed_activator_environment=_repair_env(),
+                repair_image_successor_chain=(
+                    _repair_link(repair_number=1, successor_image_digest=mid),
+                    _repair_link(
+                        repair_number=2,
+                        predecessor_image_digest="sha256:" + "e" * 64,
+                        successor_image_digest=SUCCESSOR_REVISION,
+                    ),
+                ),
+            )
+        )
+
+
+def test_repair_chain_cannot_exceed_five_links() -> None:
+    links = tuple(
+        _repair_link(
+            repair_number=i + 1,
+            predecessor_image_digest=RUNTIME_REVISION if i == 0 else f"sha256:{i:064d}",
+            successor_image_digest=(
+                SUCCESSOR_REVISION if i == 5 else f"sha256:{i + 1:064d}"
+            ),
+        )
+        for i in range(6)
+    )
+    with pytest.raises(AuthorityMaterializationError, match="exceeds the five-repair"):
+        materialize(
+            _inputs(
+                deployed_activator_environment=_repair_env(),
+                repair_image_successor_chain=links,
+            )
+        )
 
 
 def test_synthetic_registry_not_bound_by_statement_fails() -> None:
