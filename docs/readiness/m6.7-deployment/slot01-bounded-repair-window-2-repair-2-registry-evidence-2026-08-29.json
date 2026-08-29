@@ -1,0 +1,105 @@
+{
+  "record_type": "M67_SLOT01_BOUNDED_REPAIR_WINDOW_2_REPAIR_2_REGISTRY_EVIDENCE",
+  "schema_version": "1.0.0",
+  "state": "PUBLICATION_SUCCESS_REPRESENTATION_EQUIVALENT_SCAN_PASS",
+  "observed_at_utc": "2026-08-29T05:40:10Z",
+  "authorization": {
+    "event": "AUTHORIZE_SLOT01_BOUNDED_REPAIR_WINDOW_2_AND_M1_M5_EXECUTION",
+    "exact_statement_sha256": "3d1326a95546b710713f603d4f0132de98bc3f55c127c6cb5c5a3e24ab194233",
+    "clause": "An image may be built and published only when the diagnosis proves it necessary, only through the existing bounded publisher to the existing repository, and only with representation equivalence and ECR scan COMPLETE with critical/high/blocking 0/0/0.",
+    "diagnosis_necessity": "Repair #2 modifies packages/research-local/src/opintel_research_local/persistence.py (activate_sampled_run identity check). A container image is the only deployment vehicle for a Python source change; the deployed digest sha256:770d4248 does not contain the fix."
+  },
+  "source_image": {
+    "commit": "39944e842a7f34e6b41b8098eae6b9ccb6ec9497",
+    "commit_short": "39944e8",
+    "dockerfile": "infra/container/phase1-worker/Dockerfile.window2-repair2",
+    "base_local_tag": "localhost/m67-phase1-worker:git-e0d898c-repair2",
+    "base_registry_digest": "sha256:770d4248bbd7b5f915861331663dc68f5107cf87782a86bde5b7105488e16e50",
+    "base_is_current_deployed_digest": true,
+    "local_storage_manifest_digest": "sha256:101d328fcbbdd9f08447262cfda1e4f53cf3dcb15894d958f2dadbd257992a1f",
+    "config_digest": "sha256:e5343f08c97acb6d86a15ee06902ad5acba32bd6668b143409f1e27dd576e59b",
+    "config_bytes": 29671,
+    "platform": "linux/amd64",
+    "layers": 15,
+    "parent_relationship": "child storage layers[0:14] byte-identical to base storage layers; child adds exactly one uncompressed layer sha256:a0693f12796d076e2b36a448f2da06432500bf496236cb74f71c536d1f6be1d3 (the persistence.py COPY)",
+    "config_labels": {
+      "org.opencontainers.image.base.digest": "sha256:770d4248bbd7b5f915861331663dc68f5107cf87782a86bde5b7105488e16e50",
+      "org.opencontainers.image.revision": "39944e8",
+      "org.opencontainers.image.title": "M6.7 Phase 1 Window 2 repair 2 reactivation fix",
+      "io.buildah.version": "1.33.7"
+    }
+  },
+  "publication": {
+    "publisher_identity": "arn:aws:sts::785072247535:assumed-role/m67-phase1-worker-image-publisher/m67-window2-repair2-publication",
+    "repository": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
+    "destination_tag": "git-39944e8-window2-repair2",
+    "destination_tag_before_attempt": "ABSENT",
+    "tool": "skopeo 1.13.3 copy oci-archive -> docker://ECR",
+    "attempts": 1,
+    "rebuilds": 0,
+    "retags_or_substitutions": 0,
+    "alternate_destinations": 0,
+    "deletions": 0
+  },
+  "registry_identity": {
+    "classification": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "object_type": "SINGLE_PLATFORM_IMAGE_MANIFEST",
+    "media_type": "application/vnd.oci.image.manifest.v1+json",
+    "registry_digest": "sha256:9ce264999569dc05c80dcdbe7ef3b3579783ed65964e4d28f0f4538f34fcea81",
+    "skopeo_pushed_digest": "sha256:9ce264999569dc05c80dcdbe7ef3b3579783ed65964e4d28f0f4538f34fcea81",
+    "local_archive_manifest_digest": "sha256:9ce264999569dc05c80dcdbe7ef3b3579783ed65964e4d28f0f4538f34fcea81",
+    "archive_manifest_byte_equal_to_registry": true,
+    "index_or_manifest_list": false,
+    "platform": "linux/amd64",
+    "config_digest": "sha256:e5343f08c97acb6d86a15ee06902ad5acba32bd6668b143409f1e27dd576e59b",
+    "ordered_compressed_layer_digests": [
+      "sha256:41dad0242630a38b7248eae6e9a5c15660ccae64bd1365475addb3833d1b22fc",
+      "sha256:904e98828af6963af07a12868a5e6335ffa83b98007256966a1d64caf2aa81bd",
+      "sha256:f0d2f8eb61740062d5cbef1a7d3923f1b16da095cc1ffbc2b93a2e1840ff6cb5",
+      "sha256:c58c9e5629c87c46982664e95ee5ee9ac897518c4bdb67b67aa4dc14d0db1697",
+      "sha256:05cf827b3988e34b1f5218d804c52dbb776b6c14668e999c848e5837a973b053",
+      "sha256:fc8cb340f5f3a83f43d113f6bb0a1d1521193e65a24caa7c6cab64b910c7f5d5",
+      "sha256:1e89e2810a399fd7cc33ce4961cf8307588f30f13228c07d5ea2957ecd445c14",
+      "sha256:454a2446d831a26bb9ee9f8d7949db5420e6661e6c2e5dc89861465efd2bfeb9",
+      "sha256:926af23570992ee2123d6e53ed779db798a90494e59bf99a13b7428ca72388ce",
+      "sha256:8363fa465092d9c8e6afbc6ee8fab80a15294571d10726e46ccd57165ea25943",
+      "sha256:49c918b7b40dc363b8683764b3df2a052239e71cafefadd7fbd2e6d88236e96b",
+      "sha256:3d0a2ff28ad62d683876eacaa69369e997da23b13b326b489893b053d67e4162",
+      "sha256:44ce038b19d74655a7c6beebe77f76368a31a645cb46cbad4f9c845927ba1689",
+      "sha256:6c4b3407e7e19fdc89cde82ce2cf707ab880d1d7af920dbc25d669e1df50e531",
+      "sha256:cb71de61c573f334ff0a858bb507cd68632938e3aeb4b4f52ec3412d70aeabf8"
+    ],
+    "verifiers": {
+      "verify_m67_local_image_identity": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN (15/15 gzip->uncompressed layer mappings, shared config, matching annotations)",
+      "verify_m67_registry_image_identity": "REPRESENTATION_EQUIVALENT_PROVEN (registry manifest bytes == local reproduced archive manifest bytes; shared config descriptor; matching annotations; single-platform; not an index)"
+    }
+  },
+  "ecr_scan": {
+    "target_digest": "sha256:9ce264999569dc05c80dcdbe7ef3b3579783ed65964e4d28f0f4538f34fcea81",
+    "status": "COMPLETE",
+    "critical": 0,
+    "high": 0,
+    "blocking": 0,
+    "total_findings": 0,
+    "finding_severity_counts": {}
+  },
+  "prepublication_state": {
+    "services_desired_running_pending": "0/0/0",
+    "live_tasks": 0,
+    "kill_switch": "TRIPPED",
+    "research_release": "v6 exact sealed predecessor (NOT_AUTHORIZED, CONSUMED:M1_RESEARCH_FAILED)",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED",
+    "controlled_egress_lease": "NOT_AUTHORIZED",
+    "slot01_work_item_or_task": "NONE",
+    "target_transport_to_903hvac_com": 0
+  },
+  "authority_preserved": {
+    "terraform_apply": false,
+    "slot01_release_created": false,
+    "requests_to_903hvac_com": 0,
+    "real_company_m1_m5_runs": 0,
+    "slot02": "NOT_AUTHORIZED"
+  },
+  "deployment_invariant": "DEPLOYMENT_IMAGE_DIGEST = sha256:9ce264999569dc05c80dcdbe7ef3b3579783ed65964e4d28f0f4538f34fcea81 (proven registry manifest digest)",
+  "next": "terraform.tfvars worker_image_uri + controlled_egress_image_uri + research_runtime_revision -> @sha256:9ce26499... ; fresh ADR-0075 saved plan; semantic review (expect only worker/intelligence/controlled-egress/activator task-definition successors); apply; require NO_CHANGES + dormant + exact successor identities."
+}
