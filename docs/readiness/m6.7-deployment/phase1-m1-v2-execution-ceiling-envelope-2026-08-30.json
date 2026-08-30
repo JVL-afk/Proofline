@@ -1,0 +1,70 @@
+{
+  "record_type": "M67_PHASE1_M1_V2_EXECUTION_CEILING_ENVELOPE",
+  "schema_version": "1.0.0",
+  "state": "SEALED_PENDING_LIVE_MATERIALIZER_WIRING",
+  "recorded_at_utc": "2026-08-30T00:00:00Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "crawl_protocol_version": "phase1-m1@2-bounded-site-crawl",
+  "supersedes": "the v1 (phase1-m1@1-homepage) execution ceilings for Slots 02-24 only; Slot 01 is frozen",
+  "bound_design": {
+    "path": "docs/readiness/m6.7-deployment/phase1-m1-v2-bounded-site-crawl-design-2026-08-29.md",
+    "sha256": "49ae0a63082b329ace62b9fd860f873983bc81d5befe1d6df67c16487d0d6a8a",
+    "section": "§7 Proposed new ceilings"
+  },
+  "bound_owner_decision": {
+    "path": "docs/readiness/m6.7-deployment/phase1-m1-v2-bounded-site-crawl-implementation-and-activation-owner-decision-2026-08-30.json",
+    "sha256": "467b740ea786aa8a0dfc7b456144553b6865d4b8c14188df31557d035e8a3432"
+  },
+  "ceilings": {
+    "crawl_protocol_version": "phase1-m1@2-bounded-site-crawl",
+    "cost_ceiling_usd": "0",
+    "max_attempts": 2,
+    "max_useful_page_fetches": 25,
+    "max_total_http_requests": 48,
+    "max_discovery_fetches": 6,
+    "max_depth": 3,
+    "max_response_bytes": 1000000,
+    "max_compressed_bytes": 1000000,
+    "max_total_bytes": 18000000,
+    "max_sitemap_entries_parsed": 2000,
+    "max_duration_seconds": 300,
+    "per_domain_delay_seconds": "2.0",
+    "request_timeout_seconds": "8.0",
+    "max_redirects": 0,
+    "max_query_variants_per_path": 3,
+    "max_path_segments": 6,
+    "max_pages_per_category": 4,
+    "no_progress_window": 3,
+    "low_relevance_floor": 20
+  },
+  "new_bindings_over_v1": [
+    "max_useful_page_fetches = 25  (hard cap, not a target)",
+    "crawl_protocol_version = phase1-m1@2-bounded-site-crawl  (folded into the M1 output digest)"
+  ],
+  "execution_ceilings_sha256": "083b70520f161d4c21aa72cc221cb063dc2b99cf19ab15caa9c0cd7011b0506b",
+  "execution_ceilings_sha256_method": "sha256 of json.dumps(ceilings, sort_keys=True, separators=(',',':'), ensure_ascii=False) over the exact object under .ceilings above",
+  "worst_case_per_slot": {
+    "https_get_requests": 48,
+    "transfer_bytes": 18000000,
+    "wall_clock_seconds": 300,
+    "cost_usd": "0"
+  },
+  "worst_case_slots_02_24_cumulative": {
+    "slots": 23,
+    "https_get_requests": 1104,
+    "transfer_bytes": 414000000,
+    "all_first_party_same_host_robots_respecting": true
+  },
+  "consumed_live_budget_carry_forward": "unchanged - ConsumedLiveBudget (Repair #3) still subtracts already-consumed live activity per slot",
+  "cumulative_window_2_counters": "not reset; Slot 01's sealed cumulative figure (sha256 d0fb0deec46ffc1b8ddf9b14fd0732b744063992339397594a1b498992b0a0bb) plus the Slot 01 resume transport remains the running figure",
+  "live_materializer_wiring_still_required": {
+    "note": "This envelope is a sealed artifact. Making a live sampled-slot release CARRY these bounds requires code wiring that only affects real Slot 02-24 execution (which the current authorization does NOT permit). That wiring is enumerated in phase1-m1-v2-slots02-06-readiness-2026-08-30.md §3 and must be green-lit by the READY_FOR_SLOTS02_06 batch authorization before any Slot runs.",
+    "files": [
+      "packages/shadow-core/.../gate_domain.py::LiveResearchPermissionRelease (+crawl_protocol_version, +max_useful_page_fetches optional)",
+      "workers/research/.../activation.py::release_execution_ceilings_sha256 (include the two new fields when present) + _policy (v2 branch)",
+      "workers/research/.../authorization.py::authorize (v2 policy-vs-release equality when protocol is v2)",
+      "workers/research/.../authority_materialization.py (emit the two fields + the raised numeric ceilings from a sealed owner statement carrying the v2 numbers, or from this envelope by hash)"
+    ]
+  }
+}
