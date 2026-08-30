@@ -229,6 +229,8 @@ class PageRow(Base):
     )
     fetched_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     error_code: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    # PHASE1_M1_V2_BOUNDED_SITE_CRAWL: deterministic page-purpose classification.
+    page_purpose: Mapped[str] = mapped_column(String(40), default="unclassified")
 
 
 class EvidenceRow(Base):
@@ -255,6 +257,16 @@ class EvidenceRow(Base):
     extractor_name: Mapped[str] = mapped_column(String(80))
     extractor_version: Mapped[str] = mapped_column(String(20))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    # PHASE1_M1_V2_BOUNDED_SITE_CRAWL: deterministic public FACT class of the fragment.
+    fact_class: Mapped[str] = mapped_column(String(40), default="public_other")
+
+
+# PHASE1_M1_V2_BOUNDED_SITE_CRAWL additive columns applied by a state-convergent
+# migration (see initialize()): (table, column, DDL type, backfill literal).
+_V2_ADDITIVE_COLUMNS: tuple[tuple[str, str, str, str], ...] = (
+    ("research_pages", "page_purpose", "VARCHAR(40)", "'unclassified'"),
+    ("research_evidence", "fact_class", "VARCHAR(40)", "'public_other'"),
+)
 
 
 class SqlAlchemyResearchRepository:
@@ -299,6 +311,30 @@ class SqlAlchemyResearchRepository:
                         revision="research-schema@2-minimized", applied_at=datetime.now(UTC)
                     )
                 )
+            self._converge_v2_bounded_site_crawl_schema(connection, inspect(connection))
+
+    @staticmethod
+    def _converge_v2_bounded_site_crawl_schema(connection: object, inspector: object) -> None:
+        """State-convergent, independently idempotent PHASE1_M1_V2 column migration.
+
+        Inspects each intended column and adds only the missing ones. A
+        fully-migrated schema is a strict no-op. No marker-column shortcut; the
+        live column set is the authority. Backfill only touches NULL rows.
+        ``Base.metadata.create_all`` already creates these columns on a fresh
+        database, so this converges pre-existing databases only.
+        """
+        for table, column, ddl_type, backfill in _V2_ADDITIVE_COLUMNS:
+            if table not in inspector.get_table_names():  # type: ignore[attr-defined]
+                continue
+            present = {item["name"] for item in inspector.get_columns(table)}  # type: ignore[attr-defined]
+            if column in present:
+                continue
+            connection.execute(  # type: ignore[attr-defined]
+                text(f"ALTER TABLE {table} ADD COLUMN {column} {ddl_type}")
+            )
+            connection.execute(  # type: ignore[attr-defined]
+                text(f"UPDATE {table} SET {column} = {backfill} WHERE {column} IS NULL")
+            )
 
     def create_business(self, business: Business) -> Business:
         data = asdict(business)
@@ -741,6 +777,8 @@ class SqlAlchemyResearchRepository:
         policy_payload: dict[str, object] = {
             "schema_version": "research-run-policy@3-authorized-sampled-slot",
             "crawl_policy": asdict(value.policy),
+            "crawl_protocol_version": value.crawl_protocol_version,
+            "coverage_record_sha256": value.coverage_record_sha256,
             "sampled_slot_identity": (
                 {
                     **asdict(value.sampled_slot_identity),
@@ -865,6 +903,10 @@ class SqlAlchemyResearchRepository:
             last_error_message=row.last_error_message,
             sampled_slot_identity=identity,
             sampled_slot_activation=activation,
+            crawl_protocol_version=policy_payload.get(
+                "crawl_protocol_version", "phase1-m1@1-homepage"
+            ),
+            coverage_record_sha256=policy_payload.get("coverage_record_sha256"),
         )
 
     @staticmethod
@@ -997,6 +1039,7 @@ class SqlAlchemyResearchRepository:
             material_id=_id(value.material_id) if value.material_id else None,
             fetched_at=value.fetched_at,
             error_code=value.error_code,
+            page_purpose=value.page_purpose,
         )
 
     @staticmethod
@@ -1014,6 +1057,7 @@ class SqlAlchemyResearchRepository:
             material_id=UUID(row.material_id) if row.material_id else None,
             fetched_at=_aware(row.fetched_at),
             error_code=row.error_code,
+            page_purpose=getattr(row, "page_purpose", None) or "unclassified",
         )
 
     @staticmethod
@@ -1052,4 +1096,5 @@ class SqlAlchemyResearchRepository:
             extractor_name=row.extractor_name,
             extractor_version=row.extractor_version,
             created_at=_aware(row.created_at),
+            fact_class=getattr(row, "fact_class", None) or "public_other",
         )

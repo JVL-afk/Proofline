@@ -48,6 +48,340 @@ class CrawlPolicy:
     per_domain_delay_seconds: float = 0.25
     cache_ttl_seconds: int = 300
     browser_fallback_enabled: bool = False
+    # --- PHASE1_M1_V2_BOUNDED_SITE_CRAWL additive ceilings (v1-safe defaults) ---
+    # `max_pages` remains the successful-capture ceiling ("useful page fetches").
+    max_total_http_requests: int = 15
+    max_discovery_fetches: int = 1
+    max_sitemap_entries_parsed: int = 2_000
+    max_query_variants_per_path: int = 3
+    max_path_segments: int = 6
+    max_pages_per_category: int = 4
+    no_progress_window: int = 3
+    low_relevance_floor: int = 20
+    crawl_protocol_version: str = "phase1-m1@1-homepage"
+
+
+class SemanticCategory(StrEnum):
+    """Deterministic business page-purpose taxonomy for M1 v2 relevance scoring.
+
+    Matched semantically on tokens (path segments, query keys, anchor text, title,
+    h1) -- never by exact URL name.
+    """
+
+    HOMEPAGE = "homepage"
+    SERVICES = "services"
+    COMMERCIAL_HVAC = "commercial_hvac"
+    RESIDENTIAL_HVAC = "residential_hvac"
+    HEATING = "heating"
+    COOLING_AC = "cooling_ac"
+    REPAIR = "repair"
+    INSTALLATION = "installation"
+    MAINTENANCE = "maintenance"
+    EMERGENCY_SERVICE = "emergency_service"
+    REQUEST_SERVICE_SCHEDULING = "request_service_scheduling"
+    ESTIMATE_QUOTE = "estimate_quote"
+    CONTACT_MECHANISM = "contact_mechanism"
+    ABOUT = "about"
+    SERVICE_AREA_LOCATION = "service_area_location"
+    FINANCING = "financing"
+    FAQ = "faq"
+    UNCLASSIFIED = "unclassified"
+
+
+# `PagePurpose` is the same closed taxonomy applied to a fetched page.
+PagePurpose = SemanticCategory
+
+# Frozen keyword table. Order within each tuple is irrelevant; the dict key order
+# defines the deterministic tie-break priority when a URL matches several
+# categories (earlier key wins as the primary category).
+SEMANTIC_CATEGORIES: dict[SemanticCategory, tuple[str, ...]] = {
+    SemanticCategory.COMMERCIAL_HVAC: (
+        "commercial hvac",
+        "commercial heating",
+        "commercial cooling",
+        "commercial air",
+        "commercial",
+        "industrial",
+        "business",
+    ),
+    SemanticCategory.RESIDENTIAL_HVAC: (
+        "residential hvac",
+        "residential heating",
+        "residential cooling",
+        "residential",
+        "home comfort",
+        "homeowner",
+    ),
+    SemanticCategory.EMERGENCY_SERVICE: (
+        "emergency",
+        "24/7",
+        "24-7",
+        "24 hour",
+        "same day",
+        "urgent",
+        "after hours",
+    ),
+    SemanticCategory.REQUEST_SERVICE_SCHEDULING: (
+        "request service",
+        "service request",
+        "schedule service",
+        "schedule",
+        "scheduling",
+        "book online",
+        "book now",
+        "appointment",
+        "request an appointment",
+    ),
+    SemanticCategory.ESTIMATE_QUOTE: (
+        "estimate",
+        "free estimate",
+        "quote",
+        "get a quote",
+        "request a quote",
+        "request an estimate",
+        "pricing",
+    ),
+    SemanticCategory.CONTACT_MECHANISM: (
+        "contact us",
+        "contact",
+        "get in touch",
+        "reach us",
+        "reach out",
+    ),
+    SemanticCategory.SERVICE_AREA_LOCATION: (
+        "service area",
+        "service areas",
+        "areas we serve",
+        "areas served",
+        "locations",
+        "service map",
+        "cities we serve",
+        "coverage area",
+    ),
+    SemanticCategory.FINANCING: (
+        "financing",
+        "finance",
+        "payment options",
+        "payment plans",
+        "credit",
+        "loan",
+    ),
+    SemanticCategory.FAQ: (
+        "faq",
+        "faqs",
+        "frequently asked",
+        "questions",
+    ),
+    SemanticCategory.HEATING: (
+        "heating",
+        "furnace",
+        "heat pump",
+        "boiler",
+        "heater",
+    ),
+    SemanticCategory.COOLING_AC: (
+        "cooling",
+        "air conditioning",
+        "air conditioner",
+        " ac ",
+        "ac repair",
+        "ac installation",
+        "hvac cooling",
+        "mini split",
+    ),
+    SemanticCategory.REPAIR: (
+        "repair",
+        "repairs",
+        "fix",
+        "troubleshoot",
+        "not working",
+    ),
+    SemanticCategory.INSTALLATION: (
+        "installation",
+        "install",
+        "replacement",
+        "new system",
+        "system replacement",
+    ),
+    SemanticCategory.MAINTENANCE: (
+        "maintenance",
+        "tune up",
+        "tune-up",
+        "tuneup",
+        "service plan",
+        "maintenance plan",
+        "preventative",
+        "preventive",
+    ),
+    SemanticCategory.SERVICES: (
+        "services",
+        "our services",
+        "what we do",
+        "hvac services",
+        "service",
+    ),
+    SemanticCategory.ABOUT: (
+        "about us",
+        "about",
+        "our story",
+        "our company",
+        "who we are",
+        "our team",
+        "meet the team",
+    ),
+    SemanticCategory.HOMEPAGE: (
+        "home",
+    ),
+}
+
+# Every category that counts toward M1-v2 coverage and M2 relevance (all but the
+# catch-all). Homepage is included; it is always captured first as the seed.
+HIGH_VALUE_CATEGORIES: frozenset[SemanticCategory] = frozenset(
+    category for category in SemanticCategory if category is not SemanticCategory.UNCLASSIFIED
+)
+
+
+class DiscoverySource(StrEnum):
+    SEED = "seed"
+    ROBOTS_SITEMAP = "robots_sitemap"
+    DECLARED_SITEMAP = "declared_sitemap"
+    CONVENTIONAL_SITEMAP = "conventional_sitemap"
+    SITEMAP_INDEX_CHILD = "sitemap_index_child"
+    ON_PAGE_LINK = "on_page_link"
+
+
+_SITEMAP_DISCOVERY_SOURCES: frozenset[DiscoverySource] = frozenset(
+    {
+        DiscoverySource.ROBOTS_SITEMAP,
+        DiscoverySource.DECLARED_SITEMAP,
+        DiscoverySource.CONVENTIONAL_SITEMAP,
+        DiscoverySource.SITEMAP_INDEX_CHILD,
+    }
+)
+
+
+class CandidateDisposition(StrEnum):
+    CAPTURED = "captured"
+    QUEUED = "queued"
+    EXCLUDED = "excluded"
+    ROBOTS_DENIED = "robots_denied"
+    TRANSPORT_FAILED = "transport_failed"
+    QUARANTINED = "quarantined"
+    BUDGET_SKIPPED = "budget_skipped"
+
+
+class CrawlStopReason(StrEnum):
+    USEFUL_PAGE_BUDGET_EXCEEDED = "useful_page_budget_exceeded"
+    TOTAL_REQUEST_BUDGET_EXCEEDED = "total_request_budget_exceeded"
+    DISCOVERY_BUDGET_EXCEEDED = "discovery_budget_exceeded"
+    BYTE_BUDGET_EXCEEDED = "byte_budget_exceeded"
+    CRAWL_DURATION_EXCEEDED = "crawl_duration_exceeded"
+    KILL_SWITCH_ACTIVE = "kill_switch_active"
+    MAX_DEPTH_BACKSTOP = "max_depth_backstop"
+    HIGH_VALUE_CATEGORIES_SATISFIED = "high_value_categories_satisfied"
+    NO_NEW_EVIDENCE = "no_new_evidence"
+    FRONTIER_EXHAUSTED = "frontier_exhausted"
+
+
+@dataclass(frozen=True, slots=True)
+class UrlCandidate:
+    canonical_url: str
+    requested_url: str
+    depth: int
+    discovery_source: DiscoverySource
+    anchor_text: str
+    from_page_id: UUID | None
+    category: SemanticCategory | None
+    matched_categories: tuple[SemanticCategory, ...]
+    score: int
+    tie_break_key: str
+
+
+@dataclass(frozen=True, slots=True)
+class DiscoveryEdge:
+    id: UUID
+    research_run_id: UUID
+    from_page_id: UUID | None
+    discovered_url_canonical: str
+    discovery_source: DiscoverySource
+    category: SemanticCategory | None
+    score: int
+    disposition: str
+    recorded_at: datetime
+
+
+@dataclass(frozen=True, slots=True)
+class M1CoverageRecord:
+    """Deterministic, immutable record of what the bounded crawl looked at.
+
+    Absence of a category is *public absence only* -- it must never become an
+    internal fact. Enforced by M2 truth rules (unchanged) plus coverage tests.
+    """
+
+    research_run_id: UUID
+    crawl_protocol_version: str
+    candidate_urls_discovered: int
+    candidate_source_breakdown: tuple[tuple[str, int], ...]
+    eligible_urls: int
+    duplicate_or_excluded_urls: tuple[tuple[str, str], ...]
+    pages_attempted: int
+    pages_successfully_captured: int
+    captured_pages: tuple[tuple[str, str], ...]
+    pages_quarantined: int
+    quarantined_pages: tuple[tuple[str, str], ...]
+    pages_denied_by_robots: int
+    robots_denied_pages: tuple[tuple[str, str], ...]
+    transport_failures: int
+    transport_failed_pages: tuple[tuple[str, str], ...]
+    semantic_categories_searched: tuple[str, ...]
+    semantic_categories_found: tuple[str, ...]
+    semantic_categories_captured: tuple[str, ...]
+    sitemap_documents_fetched: int
+    robots_sitemap_directives_seen: int
+    stop_reasons: tuple[str, ...]
+    byte_budget_used: int
+    time_budget_used_seconds: int
+    attempts_used: int
+    total_http_requests_used: int
+    coverage_record_sha256: str = "0" * 64
+
+    def canonical_payload(self) -> dict[str, object]:
+        return {
+            "attempts_used": self.attempts_used,
+            "byte_budget_used": self.byte_budget_used,
+            "candidate_source_breakdown": [list(item) for item in self.candidate_source_breakdown],
+            "candidate_urls_discovered": self.candidate_urls_discovered,
+            "captured_pages": [list(item) for item in self.captured_pages],
+            "crawl_protocol_version": self.crawl_protocol_version,
+            "duplicate_or_excluded_urls": [list(item) for item in self.duplicate_or_excluded_urls],
+            "eligible_urls": self.eligible_urls,
+            "pages_attempted": self.pages_attempted,
+            "pages_denied_by_robots": self.pages_denied_by_robots,
+            "pages_quarantined": self.pages_quarantined,
+            "pages_successfully_captured": self.pages_successfully_captured,
+            "quarantined_pages": [list(item) for item in self.quarantined_pages],
+            "research_run_id": str(self.research_run_id),
+            "robots_denied_pages": [list(item) for item in self.robots_denied_pages],
+            "robots_sitemap_directives_seen": self.robots_sitemap_directives_seen,
+            "semantic_categories_captured": list(self.semantic_categories_captured),
+            "semantic_categories_found": list(self.semantic_categories_found),
+            "semantic_categories_searched": list(self.semantic_categories_searched),
+            "sitemap_documents_fetched": self.sitemap_documents_fetched,
+            "stop_reasons": list(self.stop_reasons),
+            "time_budget_used_seconds": self.time_budget_used_seconds,
+            "total_http_requests_used": self.total_http_requests_used,
+            "transport_failed_pages": [list(item) for item in self.transport_failed_pages],
+            "transport_failures": self.transport_failures,
+        }
+
+    def computed_sha256(self) -> str:
+        encoded = json.dumps(
+            self.canonical_payload(), sort_keys=True, separators=(",", ":"), ensure_ascii=False
+        ).encode("utf-8")
+        return hashlib.sha256(encoded).hexdigest()
+
+    def sealed(self) -> M1CoverageRecord:
+        return replace(self, coverage_record_sha256=self.computed_sha256())
 
 
 @dataclass(frozen=True, slots=True)
@@ -268,6 +602,8 @@ class ResearchRun:
     last_error_message: str | None = None
     sampled_slot_identity: SampledSlotIdentity | None = None
     sampled_slot_activation: SampledSlotActivation | None = None
+    crawl_protocol_version: str = "phase1-m1@1-homepage"
+    coverage_record_sha256: str | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -487,6 +823,7 @@ class ResearchPage:
     material_id: UUID | None
     fetched_at: datetime | None
     error_code: str | None = None
+    page_purpose: str = "unclassified"
 
 
 @dataclass(frozen=True, slots=True)
@@ -508,6 +845,7 @@ class ResearchEvidence:
     extractor_name: str
     extractor_version: str
     created_at: datetime
+    fact_class: str = "public_other"
 
 
 @dataclass(frozen=True, slots=True)

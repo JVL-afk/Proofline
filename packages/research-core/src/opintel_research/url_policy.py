@@ -5,7 +5,7 @@ from __future__ import annotations
 import ipaddress
 import socket
 import unicodedata
-from urllib.parse import quote, urlsplit, urlunsplit
+from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 
 from opintel_research.domain import (
     UrlPolicyError,
@@ -16,6 +16,60 @@ from opintel_research.ports import Resolver
 
 _ALLOWED_PORTS = {"http": 80, "https": 443}
 _BLOCKED_HOSTS = {"localhost", "localhost.localdomain", "metadata.google.internal"}
+
+# Frozen crawl-dedup tracking-parameter set for PHASE1_M1_V2_BOUNDED_SITE_CRAWL.
+# These are stripped ONLY for crawl canonicalisation / dedup -- never from the
+# URL that safety validation or provenance sees.
+TRACKING_PARAMS: frozenset[str] = frozenset(
+    {
+        "utm_source",
+        "utm_medium",
+        "utm_campaign",
+        "utm_term",
+        "utm_content",
+        "utm_id",
+        "gclid",
+        "fbclid",
+        "mc_cid",
+        "mc_eid",
+        "ref",
+        "source",
+        "_ga",
+        "_gl",
+        "msclkid",
+        "igshid",
+        "si",
+        "yclid",
+        "dclid",
+    }
+)
+
+
+def canonical_crawl_url(normalized_url: str) -> str:
+    """Additive crawl-dedup canonicalisation on top of ``normalize_public_url``.
+
+    Pure and deterministic. Does NOT replace ``normalize_public_url`` or any
+    safety check; the input MUST already be a normalised public URL.
+    - strip a trailing slash except on the site root
+    - drop ``TRACKING_PARAMS`` and any ``utm_*`` key
+    - sort remaining query keys; collapse a repeated key to its first value
+    """
+    parsed = urlsplit(normalized_url)
+    path = parsed.path or "/"
+    if len(path) > 1 and path.endswith("/"):
+        path = path.rstrip("/") or "/"
+    kept: dict[str, str] = {}
+    for key, value in parse_qsl(parsed.query, keep_blank_values=True):
+        lowered = key.lower()
+        if lowered in TRACKING_PARAMS or lowered.startswith("utm_"):
+            continue
+        if key not in kept:
+            kept[key] = value
+    query = urlencode(sorted(kept.items()), doseq=False)
+    canonical = urlunsplit((parsed.scheme, parsed.netloc, path, query, ""))
+    if contains_prohibited_contact_value(canonical):
+        raise UrlPolicyError("URL contains prohibited contact data")
+    return canonical
 
 
 def normalize_public_url(value: str) -> str:
