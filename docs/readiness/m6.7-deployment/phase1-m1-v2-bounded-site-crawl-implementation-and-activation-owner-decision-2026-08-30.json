@@ -1,0 +1,90 @@
+{
+  "record_type": "M67_PHASE1_M1_V2_BOUNDED_SITE_CRAWL_IMPLEMENTATION_AND_ACTIVATION_OWNER_DECISION",
+  "schema_version": "1.0.0",
+  "state": "OWNER_APPROVED_BY_REFERENCE",
+  "decision_event": "AUTHORIZE_PHASE1_M1_V2_BOUNDED_SITE_CRAWL_IMPLEMENTATION_AND_ACTIVATION",
+  "recorded_at_utc": "2026-08-30T00:00:00Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "approval_method": "BY_REFERENCE_TO_IMMUTABLE_ARTIFACTS. The owner approved proceeding from the accepted design into implementation. The owner did not author a new synthesized approval-statement string; this record binds exactly the accepted design document at its SHA-256 plus the refinements the owner stated verbatim below.",
+  "bound_artifacts": {
+    "accepted_design_document": {
+      "path": "docs/readiness/m6.7-deployment/phase1-m1-v2-bounded-site-crawl-design-2026-08-29.md",
+      "sha256": "49ae0a63082b329ace62b9fd860f873983bc81d5befe1d6df67c16487d0d6a8a",
+      "record_type": "M67_PHASE1_M1_V2_BOUNDED_SITE_CRAWL_DESIGN",
+      "accepted_at_commit": "63dcfdb"
+    },
+    "slot01_freeze_record": {
+      "path": "docs/readiness/m6.7-deployment/slot01-phase1-m1-v1-homepage-freeze-2026-08-29.json",
+      "sha256": "a95c73e75476dcf40636d27e37c22a4f98d0f3f26c521ea754f4a61261b2877b"
+    },
+    "head_commit_at_decision": "63dcfdbe728a4bc6827cc8ed330b3d7d9eb9e342"
+  },
+  "hash_verification": {
+    "design_document_sha256_match": true,
+    "freeze_record_sha256_match": true,
+    "verified_by": "sha256sum recomputed against owner-stated hashes prior to implementation"
+  },
+  "slot01_status_reaffirmed": {
+    "protocol": "PHASE1_M1_V1_HOMEPAGE",
+    "terminal_chain": "M1_SUCCESS -> M2_INSUFFICIENT_EVIDENCE",
+    "directive": "Do not reopen, rerun, replace, redraw, or mutate Slot 01.",
+    "immutable": true
+  },
+  "owner_accepted_scope_verbatim": [
+    "Upgrade M1 from homepage-only collection into a deterministic bounded same-host website evidence crawl so M2 receives a materially richer first-party evidence corpus without changing M2 truth thresholds.",
+    "The design at commit 63dcfdb is accepted subject to the refinements below.",
+    "Implement deterministic candidate discovery from: runtime robots.txt; robots-declared sitemap URLs; bounded conventional sitemap endpoints when permitted; gzip sitemap support where already within accepted HTTP-content decoding semantics; one-level sitemap indexes; same-host links discovered on successfully accepted pages.",
+    "Maintain all existing hostname, TLS, SNI, SSRF, public-IP, DNS-rebinding, redirect and robots controls. Never crawl an unapproved host.",
+    "Implement the frozen semantic relevance frontier proposed in the design. Preserve deterministic total ordering. Canonicalize and deduplicate URLs. Strip only the frozen tracking parameters defined by policy. Reject query loops, excessive path depth, duplicate pagination and other deterministic low-value URL patterns.",
+    "Implement the proposed Phase 1 v2 ceilings: maximum useful page fetches 25; maximum total HTTP requests 48; discovery fetches 6; maximum crawl depth 3; maximum attempts per URL 2; cumulative response bytes 18 MB; maximum operation duration 300 s; minimum politeness delay 2 s; followed redirects 0; research/source cost USD 0. Treat 25 as a hard maximum, not a target.",
+    "Bind all new ceilings and crawl_protocol_version = phase1-m1@2-bounded-site-crawl into the authorization/execution digest as proposed.",
+    "Preserve one-page-to-one-provenance relationships. Do not merge text across pages into unverifiable synthetic source text. Raw bodies remain ephemeral. Existing block-level minimization and privacy controls remain unchanged.",
+    "Implement deterministic M1 coverage reporting. Coverage may inform M2 about research completeness, but must never convert public absence into internal absence.",
+    "Do not lower or modify M2 opportunity thresholds merely because more M1 evidence is available. Preserve FACT / INFERENCE / ESTIMATE / RECOMMENDATION / UNKNOWN semantics exactly. M2 and all downstream stages remain deterministic/offline as currently designed.",
+    "Freeze Slot 01 -> phase1-m1@1-homepage. Subsequent approved Phase 1 runs use phase1-m1@2-bounded-site-crawl. Fold the crawl protocol version into M1 output identity/digest. Never claim v1 and v2 are protocol-identical.",
+    "Implement the accepted design with the minimum architectural change: new deterministic frontier.py; new deterministic sitemap.py; additive domain/evidence/coverage types; state-convergent database migration; workflow conversion from homepage-only to bounded frontier traversal; authorization/envelope wiring for new crawl ceilings/protocol version; M2/downstream semantics unchanged. Preserve existing safety branches rather than rewriting them.",
+    "Implement the full proposed synthetic-site matrix. Run the full existing regression suite as well. Existing compliance/safety application hashes asserted unchanged must remain unchanged unless the accepted implementation intrinsically requires otherwise; any such change requires explicit explanation and review.",
+    "This authorization permits only: implementation -> tests -> one exact successor image -> bounded publication -> actual registry digest -> representation-equivalence proof -> ECR scan COMPLETE, critical/high/blocking 0/0/0 -> fresh ADR-0075 Terraform plan -> semantic review -> exact additive/state-convergent DB migration -> apply -> PostgreSQL schema verification -> Terraform NO_CHANGES -> synthetic in-cluster BOUNDED_SITE_CRAWL_V1 validation.",
+    "Synthetic validation must prove the full multi-page workflow without accessing a real Phase 1 company.",
+    "Once implementation, deployment, migration, convergence and synthetic validation all pass, stop and prepare: READY_FOR_SLOTS02_06_PHASE1_M1_V2_EXECUTION_AUTHORIZATION. Do not prepare one authorization per Slot. The next human gate should authorize the planned Slots 02-06 batch under the frozen M1 v2 protocol."
+  ],
+  "owner_refinements_over_design_verbatim": [
+    "Important early-stopping refinement: NO_NEW_EVIDENCE must not terminate the crawl while discovered HIGH-priority categories remain unattempted and can still fit within the remaining hard execution budget. High-priority category coverage takes precedence over saturation stopping.",
+    "Early stopping is permitted only when one of these is deterministically true: all discovered high-value categories are attempted/exhausted; the relevance frontier is exhausted; remaining high-value candidates cannot fit within remaining hard ceilings; or the accepted evidence-saturation rule is met after required high-value coverage.",
+    "Coverage may inform M2 that (e.g.) a commercial page was searched/found/not-found, but M2 may not infer that a company does or doesn't have an internal commercial process without supporting evidence."
+  ],
+  "hard_stop_not_authorized_verbatim": [
+    "Slot 02 execution;",
+    "any real Phase 1 company crawl;",
+    "reopening Slot 01;",
+    "M2 threshold changes;",
+    "AI/browser activation;",
+    "person/contact phase;",
+    "outreach/delivery;",
+    "new host scope;",
+    "weakened minimization, robots, TLS, SSRF, DNS-rebinding, provenance or truth controls."
+  ],
+  "constraints_carried_forward": [
+    "Preserve all cumulative Window 2 target-transport counters. No reset.",
+    "Do not alter phase1-minimizer@2 semantics.",
+    "Do not delete, mutate, reopen, or replace any historical run, coordinator run, work item, evidence, coverage record, or terminal history.",
+    "Do not manually arm the kill switch to RUN - the activator's enter_run() owns TRIPPED -> RUN -> TRIPPED.",
+    "No Slot 02 until separately authorized.",
+    "If an unrelated operational defect appears during implementation, stop for owner review."
+  ],
+  "no_new_synthesized_approval_statement": true,
+  "return_package_required_by_owner": [
+    "final implementation commit",
+    "exact protocol definition",
+    "final ceilings",
+    "tests",
+    "image/scan evidence",
+    "Terraform semantic result",
+    "DB migration/catalog evidence",
+    "synthetic crawl result",
+    "proof existing truth/minimization/network controls remain enforced",
+    "readiness package for Slots 02-06"
+  ],
+  "next": "execute exactly the authorized implementation-and-activation scope, then STOP and prepare READY_FOR_SLOTS02_06_PHASE1_M1_V2_EXECUTION_AUTHORIZATION"
+}
