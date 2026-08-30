@@ -1,0 +1,130 @@
+{
+  "record_type": "M67_SLOTS02_06_SUCCESSOR_IMAGE_LINK7_DEPLOYMENT",
+  "schema_version": "1.0.0",
+  "state": "DEPLOYED_IN_CLUSTER_VALIDATED_DORMANT",
+  "recorded_at_utc": "2026-08-30T12:30:00Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "authority": {
+    "decision_event": "AUTHORIZE_SLOTS02_06_PHASE1_M1_V2_EXECUTION",
+    "authorization_package_sha256": "d28e42594c943debf0144b3f5ecce57589760881e579ebbf52f6984d8150677a",
+    "owner_decision_record": "docs/readiness/m6.7-deployment/authorize-slots02-06-phase1-m1-v2-execution-owner-decision-2026-08-30.json",
+    "execution_instruction": "successor artifact/deployment if required -> synthetic validation -> Slot 02..06",
+    "repair_budget": "none; this is a protocol-scope successor for the additive live-materialiser v2 runtime wiring, not a repair"
+  },
+  "image": {
+    "chain_link": 7,
+    "predecessor_registry_digest": "sha256:62ba45aa295b912a578676dd440c75525206757878242e679923764b61c009e4",
+    "successor_registry_digest": "sha256:34e5974f068c6d9633e87aa6d212e687814878a903bcdb7a53adbc7cec241291",
+    "destination_tag": "git-ff42632-m1v2-slots02-06",
+    "source_commit": "ff42632",
+    "dockerfile": "infra/container/phase1-worker/Dockerfile.window2-m1v2-slots02-06",
+    "manifest_media_type": "application/vnd.oci.image.manifest.v1+json",
+    "storage_config_digest": "sha256:d556ee94d2e80e0f8221a272add348e5169e59956e2313dffde38158656205f3",
+    "layers": 21,
+    "layers_added_over_predecessor": 1,
+    "publisher_identity": "arn:aws:sts::785072247535:assumed-role/m67-phase1-worker-image-publisher/m67-window2-l7-publication",
+    "pushed_digest_equals_registry_digest": true,
+    "contents": {
+      "runtime_wiring_copied": [
+        "packages/shadow-core/src/opintel_shadow/gate_domain.py",
+        "workers/research/src/opintel_research_worker/activation.py",
+        "workers/research/src/opintel_research_worker/authorization.py",
+        "workers/research/src/opintel_research_worker/release_application.py"
+      ],
+      "config_copied": ["infra/container/phase1-worker/phase1-a09-decision-registry.json (Slots 02-05 APPROVED; Slot 06 absent)"],
+      "materialiser_not_baked_in": ["authority_materialization_v2.py", "authority_materialization_v2_main.py"],
+      "no_dependency_entrypoint_or_config_change": true,
+      "in_image_file_sha256": {
+        "release_application.py": "45b35f32bf60a87b75443db868a43d2a71a676cc2aba2a53b30a72eea29772db",
+        "activation.py": "42d206de3620fd32f2569f32fb45f97cc7939c89567cbe25b8236e8bd58cbae2",
+        "authorization.py": "421b1daa609adea92d711e8c0412ade5d1d2e9cc99297bdd938d76ec4381a3f9",
+        "gate_domain.py": "7ba5fa4e55fefa78591f0c72e89a2c7f3159dc4e23f89bce7e272aac53116060"
+      },
+      "unchanged_truth_and_minimization_controls": {
+        "opportunity_core_rules_py_sha256": "5575c3a40d30b7d472f3ef68f841c03c9a9be4a9a9baac91b572594b401efd8f",
+        "research_core_site_crawl_py_sha256": "22712ecd47eb5114ffc820cfdc27bca24d5acd1c6d5f942f7d81b3aa27cc086f",
+        "synthetic_validation_py_sha256": "f6c1900ed94ed92fa38a89bd3652327e9bb765188aaec5a8f2bcbef0edcd83d0",
+        "minimizer_version": "phase1-minimizer@2"
+      }
+    }
+  },
+  "representation_equivalence": {
+    "local_verifier": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN",
+    "registry_verifier": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "archive_manifest_bytes_equal_registry_manifest_bytes": true,
+    "reproduced_registry_manifest_byte_equal_to_registry": true
+  },
+  "ecr_scan": {"status": "COMPLETE", "finding_severity_counts": {}, "critical": 0, "high": 0, "blocking": 0},
+  "terraform_adr_0075": {
+    "plan_role": "m67-phase1-terraform-workload-plan",
+    "apply_role": "m67-phase1-terraform-workload-apply",
+    "plan_backend": "backend.hcl",
+    "apply_backend": "backend.apply.hcl",
+    "tfvars_changes": {
+      "worker_image_uri / controlled_egress_image_uri / research_runtime_revision": "sha256:62ba45aa... -> sha256:34e5974f...",
+      "sampled_slot_release_applicator_sha256": "bb931373... -> 45b35f32bf60a87b75443db868a43d2a71a676cc2aba2a53b30a72eea29772db",
+      "sampled_slot_activation_adapter_sha256": "76bdaa38... -> 42d206de3620fd32f2569f32fb45f97cc7939c89567cbe25b8236e8bd58cbae2",
+      "other four approval bindings": "unchanged (entry_point / stage_coordinator / m1_runtime / m2_m5_runtime bundles; image digest is authoritative)"
+    },
+    "plan_summary": "4 to add, 3 to change, 4 to destroy",
+    "semantic_review": "image digest 62ba45aa -> 34e5974f is the meaningful change on all four task definitions plus, on the sampled-slot-activator only, the two single-file approval-binding env values updated to the link-7 in-image hashes; the 4/3/4 is ECS immutable-task-definition recreation plus provider empty-collection normalisation (mountPoints/portMappings/systemControls/volumesFrom []->null); no non-taskdef/non-service resource changes; all service desired_count 0 -> 0",
+    "apply_result": "Apply complete! Resources: 4 added, 3 changed, 4 destroyed.",
+    "post_apply_plan": "No changes. Your infrastructure matches the configuration. (terraform plan -detailed-exitcode = 0)",
+    "task_definitions_after": {
+      "m67-phase1-research-worker": 22,
+      "m67-phase1-intelligence-worker": 19,
+      "m67-phase1-controlled-egress": 18,
+      "m67-phase1-sampled-slot-activator": 18
+    },
+    "all_task_definitions_reference_digest": "sha256:34e5974f068c6d9633e87aa6d212e687814878a903bcdb7a53adbc7cec241291"
+  },
+  "in_cluster_synthetic_validation": {
+    "runner": "transient Fargate m67-phase1-research-worker:22 task, OPINTEL_SYNTHETIC_VALIDATION_MODE override",
+    "KILL_SWITCH_BLOCK_V1": {
+      "validation_id": "m67-m1v2-kill-switch-block-v1l7",
+      "task": "d50d2f2cdef648f4ab77ae3c5c85b896",
+      "exit_code": 0,
+      "run_status": "failed",
+      "fetch_called": false,
+      "evidence_count": 0,
+      "page_count": 0,
+      "validation_ref_sha256": "97300ea72436581f8345a02ad83967bb5702ba9bcf8236919646ba0474d66244"
+    },
+    "BOUNDED_SITE_CRAWL_V1": {
+      "validation_id": "m67-m1v2-bounded-site-crawl-v1l7",
+      "task": "d130c1fc1b6a44c1af4e534b1e33e70b",
+      "exit_code": 0,
+      "run_status": "succeeded",
+      "crawl_protocol_version": "phase1-m1@2-bounded-site-crawl",
+      "fetch_called": true,
+      "page_count": 4,
+      "evidence_count": 12,
+      "snapshot_count": 4,
+      "discovery_edges_persisted": 9,
+      "captured_categories": ["commercial_hvac", "homepage", "request_service_scheduling", "services"],
+      "stop_reasons": ["frontier_exhausted"],
+      "kill_switch_active_observed": true,
+      "catalog_converged": true,
+      "catalog_second_pass_noop": true,
+      "historical_rows_preserved": true,
+      "coverage_record_sha256": "c939f7f5c73c685a529b0c749429d312847a08ce53f923249d88d5d977bc1f2e",
+      "removed_email_count": 0,
+      "removed_phone_count": 0,
+      "removed_structured_contact_blocks": 0,
+      "validation_ref_sha256": "e7930100323294853329e72da87cc9d40ffa0b551d485624109d711dec182ce0"
+    }
+  },
+  "dormant_state_after": {
+    "ssm_kill_switch": "TRIPPED",
+    "ssm_research_release": "not_authorized",
+    "ssm_sampled_slot_execution_approval": "NOT_AUTHORIZED",
+    "ssm_controlled_egress_lease": "NOT_AUTHORIZED",
+    "ecs_services": {
+      "m67-phase1-research-worker": "desired 0 / running 0 / m67-phase1-research-worker:22",
+      "m67-phase1-intelligence-worker": "desired 0 / running 0 / m67-phase1-intelligence-worker:19",
+      "m67-phase1-controlled-egress": "desired 0 / running 0 / m67-phase1-controlled-egress:18"
+    }
+  },
+  "next": "Slot 02..05 execution via operator-local authority_materialization_v2_main + activator; Slot 06 already terminated at truthful A-09 outcome"
+}
