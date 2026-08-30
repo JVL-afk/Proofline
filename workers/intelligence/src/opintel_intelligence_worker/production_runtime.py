@@ -18,7 +18,7 @@ from opintel_outreach import (
     OutreachWorkflowRunner,
 )
 from opintel_research import ResearchWorkflowRunner
-from opintel_research.domain import ResearchRunStatus
+from opintel_research.domain import PageStatus, ResearchRunStatus
 from opintel_research_local import SqlAlchemyResearchRepository
 
 from opintel_intelligence_worker.orchestration import CoordinatedStageArtifact, ShadowStage
@@ -117,13 +117,27 @@ class CanonicalSampledSlotStageRuntime:
         if run is None or not run.status.terminal:
             raise ValueError("exact sampled M1 did not reach a terminal state")
         evidence = self._research_repository.list_evidence(self._workspace, self._work_item)
+        pages = self._research_repository.list_pages(self._workspace, self._work_item)
         output = _sha(
             {
                 "bytes_stored": run.bytes_stored,
+                "coverage_record_sha256": run.coverage_record_sha256,
+                "crawl_protocol_version": run.crawl_protocol_version,
                 "evidence": [
-                    (str(item.id), item.content_sha256, item.locator, item.snapshot_version)
+                    (
+                        str(item.id),
+                        item.content_sha256,
+                        item.locator,
+                        item.snapshot_version,
+                        item.fact_class,
+                    )
                     for item in evidence
                 ],
+                "page_purposes": sorted(
+                    (page.normalized_url, page.page_purpose)
+                    for page in pages
+                    if page.status is not PageStatus.FAILED
+                ),
                 "pages_attempted": run.pages_attempted,
                 "pages_succeeded": run.pages_succeeded,
                 "research_run_id": str(run.id),
