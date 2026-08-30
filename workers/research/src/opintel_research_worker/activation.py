@@ -39,21 +39,46 @@ def _canonical_sha256(value: object) -> str:
     return hashlib.sha256(encoded).hexdigest()
 
 
+V2_CRAWL_PROTOCOL = "phase1-m1@2-bounded-site-crawl"
+
+# PHASE1_M1_V2_BOUNDED_SITE_CRAWL fixed crawl knobs from the sealed execution-
+# ceiling envelope (execution_ceilings_sha256
+# 083b70520f161d4c21aa72cc221cb063dc2b99cf19ab15caa9c0cd7011b0506b). Only the
+# batch-relevant ceilings (useful fetches, total HTTP requests, total bytes,
+# duration) are carried per-release and clamped by the materialiser; these knobs
+# never vary.
+_V2_MAX_DEPTH = 3
+_V2_MAX_RESPONSE_BYTES = 1_000_000
+_V2_MAX_ATTEMPTS = 2
+_V2_MAX_DISCOVERY_FETCHES = 6
+_V2_MAX_SITEMAP_ENTRIES = 2_000
+_V2_MAX_QUERY_VARIANTS = 3
+_V2_MAX_PATH_SEGMENTS = 6
+_V2_MAX_PAGES_PER_CATEGORY = 4
+_V2_NO_PROGRESS_WINDOW = 3
+_V2_LOW_RELEVANCE_FLOOR = 20
+_V2_PER_DOMAIN_DELAY_SECONDS = 2.0
+_V2_REQUEST_TIMEOUT_SECONDS = 8.0
+_V2_MAX_REDIRECTS = 0
+
+
 def release_execution_ceilings_sha256(release: LiveResearchPermissionRelease) -> str:
-    return _canonical_sha256(
-        {
-            "allowed_source_scope": list(release.allowed_source_scope),
-            "cost_ceiling_usd": str(release.cost_ceiling_usd),
-            "expires_at": release.expires_at.isoformat(),
-            "max_attempts": release.max_attempts,
-            "max_logical_requests": release.max_logical_requests,
-            "max_response_bytes": release.max_response_bytes,
-            "max_total_bytes": release.max_total_bytes,
-            "max_duration_seconds": release.max_duration_seconds,
-            "starts_at": release.starts_at.isoformat(),
-            "terminal_rollback_state": release.terminal_rollback_state,
-        }
-    )
+    payload: dict[str, object] = {
+        "allowed_source_scope": list(release.allowed_source_scope),
+        "cost_ceiling_usd": str(release.cost_ceiling_usd),
+        "expires_at": release.expires_at.isoformat(),
+        "max_attempts": release.max_attempts,
+        "max_logical_requests": release.max_logical_requests,
+        "max_response_bytes": release.max_response_bytes,
+        "max_total_bytes": release.max_total_bytes,
+        "max_duration_seconds": release.max_duration_seconds,
+        "starts_at": release.starts_at.isoformat(),
+        "terminal_rollback_state": release.terminal_rollback_state,
+    }
+    if release.crawl_protocol_version is not None:
+        payload["crawl_protocol_version"] = release.crawl_protocol_version
+        payload["max_useful_page_fetches"] = release.max_useful_page_fetches
+    return _canonical_sha256(payload)
 
 
 @dataclass(frozen=True, slots=True)
@@ -215,6 +240,7 @@ class SampledSlotActivator:
             updated_at=now,
             sampled_slot_identity=identity,
             sampled_slot_activation=activation,
+            crawl_protocol_version=release.crawl_protocol_version or "phase1-m1@1-homepage",
         )
         self._authority.authorize(run, business)
         if self._stop.is_active():
@@ -258,6 +284,12 @@ class SampledSlotActivator:
             or release.cost_ceiling_usd != Decimal("0")
         ):
             raise ValueError("release is not an exact bounded sampled-slot authority")
+        if release.crawl_protocol_version is not None and (
+            release.crawl_protocol_version != V2_CRAWL_PROTOCOL
+            or release.max_useful_page_fetches is None
+            or release.max_useful_page_fetches < 1
+        ):
+            raise ValueError("release carries an unrecognised bounded-crawl protocol")
         self._samples.verify_release(release)
 
     @staticmethod
@@ -267,6 +299,8 @@ class SampledSlotActivator:
         assert release.max_response_bytes is not None
         assert release.max_total_bytes is not None
         assert release.max_duration_seconds is not None
+        if release.crawl_protocol_version == V2_CRAWL_PROTOCOL:
+            return SampledSlotActivator._policy_v2(release)
         duration = max(
             1,
             min(
@@ -288,4 +322,43 @@ class SampledSlotActivator:
             per_domain_delay_seconds=2.0,
             cache_ttl_seconds=0,
             browser_fallback_enabled=False,
+        )
+
+    @staticmethod
+    def _policy_v2(release: LiveResearchPermissionRelease) -> CrawlPolicy:
+        """Bounded-site-crawl policy. The materialiser has already clamped the
+        batch-relevant ceilings on the release (useful fetches, total HTTP
+        requests via max_logical_requests, total bytes, duration); every other
+        knob is fixed by the sealed envelope. No v1 min() re-clamping: the
+        release ceilings ARE the authority."""
+        useful = release.max_useful_page_fetches
+        total_http = release.max_logical_requests
+        total_bytes = release.max_total_bytes
+        duration = release.max_duration_seconds
+        attempts = release.max_attempts
+        response_bytes = release.max_response_bytes
+        assert useful is not None and total_http is not None and total_bytes is not None
+        assert duration is not None and attempts is not None and response_bytes is not None
+        return CrawlPolicy(
+            max_pages=useful,
+            max_depth=_V2_MAX_DEPTH,
+            max_total_bytes=total_bytes,
+            max_response_bytes=min(_V2_MAX_RESPONSE_BYTES, response_bytes),
+            max_compressed_bytes=min(_V2_MAX_RESPONSE_BYTES, response_bytes),
+            max_duration_seconds=duration,
+            request_timeout_seconds=_V2_REQUEST_TIMEOUT_SECONDS,
+            max_redirects=_V2_MAX_REDIRECTS,
+            max_attempts=min(_V2_MAX_ATTEMPTS, attempts),
+            per_domain_delay_seconds=_V2_PER_DOMAIN_DELAY_SECONDS,
+            cache_ttl_seconds=0,
+            browser_fallback_enabled=False,
+            max_total_http_requests=total_http,
+            max_discovery_fetches=_V2_MAX_DISCOVERY_FETCHES,
+            max_sitemap_entries_parsed=_V2_MAX_SITEMAP_ENTRIES,
+            max_query_variants_per_path=_V2_MAX_QUERY_VARIANTS,
+            max_path_segments=_V2_MAX_PATH_SEGMENTS,
+            max_pages_per_category=_V2_MAX_PAGES_PER_CATEGORY,
+            no_progress_window=_V2_NO_PROGRESS_WINDOW,
+            low_relevance_floor=_V2_LOW_RELEVANCE_FLOOR,
+            crawl_protocol_version=V2_CRAWL_PROTOCOL,
         )

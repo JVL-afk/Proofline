@@ -22,7 +22,25 @@ from opintel_research_worker.activation import (
 from opintel_research_worker.sample_registry import FrozenPhaseOneSampleRegistry
 
 APPROVAL_SCHEMA = "m67.phase1.sampled-slot-execution-approval@3"
+APPROVAL_SCHEMA_V4 = "m67.phase1.sampled-slot-execution-approval@4"
 APPROVAL_STATE = "OWNER_APPROVED"
+
+# The exact frozen Phase 1 slot rows for which a sampled-slot execution approval
+# may be materialised. Slot 01 is preserved verbatim; Slots 02-06 are the
+# owner-named batch (AUTHORIZE_SLOTS02_06_PHASE1_M1_V2_EXECUTION, package sha256
+# d28e42594c943debf0144b3f5ecce57589760881e579ebbf52f6984d8150677a). Any slot
+# outside this set fails closed. Values are byte-identical to
+# infra/container/phase1-worker/phase1-frozen-slot-registry.json
+# (registry_sha256 aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2).
+_FROZEN_SLOT_SCOPE: dict[int, tuple[str, str]] = {
+    1: ("903 HVAC", "903hvac.com"),
+    2: ("Webb Air", "webbair.com"),
+    3: ("BNCAIR", "www.bncair.net"),
+    4: ("All Elements Heating & Air", "allelementshvac.com"),
+    5: ("Fintastic Cooling & Heating", "www.callfintastic.com"),
+    6: ("Calvin's Climate", "www.calvinsclimate.com"),
+}
+V2_CRAWL_PROTOCOL = "phase1-m1@2-bounded-site-crawl"
 RELEASE_APPLICATOR_REVISION = "m67.phase1.release-applicator@1"
 LEGACY_LOCK_SENTINEL = '{"state":"NOT_AUTHORIZED"}'
 LEGACY_LOCK_SENTINEL_SHA256 = hashlib.sha256(LEGACY_LOCK_SENTINEL.encode("utf-8")).hexdigest()
@@ -48,7 +66,10 @@ class SampledSlotExecutionApproval(BaseModel):
 
     model_config = ConfigDict(frozen=True, extra="forbid")
 
-    schema_version: Literal["m67.phase1.sampled-slot-execution-approval@3"]
+    schema_version: Literal[
+        "m67.phase1.sampled-slot-execution-approval@3",
+        "m67.phase1.sampled-slot-execution-approval@4",
+    ]
     state: Literal["OWNER_APPROVED"]
     approval_id: UUID
     owner_statement_sha256: str
@@ -92,6 +113,9 @@ class SampledSlotExecutionApproval(BaseModel):
     allowed_source_scope: tuple[str, ...]
     terminal_rollback_state: Literal["NOT_AUTHORIZED"]
     repair_attempt_lineage_sha256: str = ORIGINAL_ATTEMPT_LINEAGE_SHA256
+    # PHASE1_M1_V2_BOUNDED_SITE_CRAWL: present only on an @4 v2 approval.
+    crawl_protocol_version: str | None = None
+    max_useful_page_fetches: int | None = None
 
     @field_validator(
         "owner_statement_sha256",
@@ -120,10 +144,16 @@ class SampledSlotExecutionApproval(BaseModel):
 
     @model_validator(mode="after")
     def exact_scope(self) -> SampledSlotExecutionApproval:
-        if self.slot_number != 1 or self.business_identity != "903 HVAC":
-            raise ValueError("this successor accepts only frozen Phase 1 Slot 01")
-        if self.exact_hostname != "903hvac.com":
-            raise ValueError("this successor accepts only the approved Slot 01 hostname")
+        frozen = _FROZEN_SLOT_SCOPE.get(self.slot_number)
+        if frozen is None:
+            raise ValueError("slot number is outside the frozen Phase 1 batch scope (1..6)")
+        if (self.business_identity, self.exact_hostname) != frozen:
+            raise ValueError("approval business identity / hostname is not the frozen slot row")
+        is_v2 = self.schema_version == "m67.phase1.sampled-slot-execution-approval@4"
+        if is_v2 and self.slot_number == 1:
+            raise ValueError("Slot 01 is frozen PHASE1_M1_V1_HOMEPAGE; no v2 approval")
+        if not is_v2 and self.slot_number != 1:
+            raise ValueError("Slots 02-06 require the @4 v2 approval schema")
         if self.allowed_source_scope != (self.exact_hostname,):
             raise ValueError("approval source scope must contain only the exact hostname")
         if self.expires_at <= self.starts_at:
@@ -137,9 +167,23 @@ class SampledSlotExecutionApproval(BaseModel):
         ) < 1:
             raise ValueError("approval ceilings must be explicitly positive")
         if self.cost_ceiling_usd != Decimal("0"):
-            raise ValueError("Phase 1 Slot 01 AI/source cost must remain USD 0")
+            raise ValueError("Phase 1 AI/source cost must remain USD 0")
         if self.legacy_lock_sentinel_sha256 != LEGACY_LOCK_SENTINEL_SHA256:
             raise ValueError("approval does not bind the exact historical lock sentinel")
+        if is_v2 and (
+            self.crawl_protocol_version != V2_CRAWL_PROTOCOL
+            or self.max_useful_page_fetches is None
+            or self.max_useful_page_fetches < 1
+        ):
+            raise ValueError(
+                "a v2 (@4) approval requires crawl_protocol_version="
+                f"{V2_CRAWL_PROTOCOL!r} and a positive max_useful_page_fetches"
+            )
+        if not is_v2 and (
+            self.crawl_protocol_version is not None
+            or self.max_useful_page_fetches is not None
+        ):
+            raise ValueError("a v1 (@3) approval must not carry v2 crawl fields")
         return self
 
 
@@ -389,11 +433,13 @@ class BoundedSampledSlotReleaseApplicator:
         approval: SampledSlotExecutionApproval,
     ) -> LiveResearchPermissionRelease:
         payload = approval.model_dump(mode="json")
+        slot_tag = f"slot{approval.slot_number:02d}"
+        run_restriction = f"PHASE1_SLOT_{approval.slot_number:02d}"
         if isinstance(current, CanonicalNotAuthorizedResearchRelease):
             return LiveResearchPermissionRelease(
                 id=approval.authorized_release_id,
                 workspace_id=approval.workspace_id,
-                version=f"{RELEASE_APPLICATOR_REVISION}.slot01-owner-authorized",
+                version=f"{RELEASE_APPLICATOR_REVISION}.{slot_tag}-owner-authorized",
                 configuration_hash=canonical_sha256(payload),
                 created_at=self._now(),
                 activity=PermissionActivity.REAL_PUBLIC_RESEARCH,
@@ -405,7 +451,7 @@ class BoundedSampledSlotReleaseApplicator:
                 environment_id=approval.environment_id,
                 environment_hash=approval.environment_hash,
                 cohort_policy_id=approval.cohort_policy_id,
-                cohort_or_run_restriction="PHASE1_SLOT_01",
+                cohort_or_run_restriction=run_restriction,
                 starts_at=approval.starts_at,
                 expires_at=approval.expires_at,
                 approval_ids=(
@@ -428,15 +474,17 @@ class BoundedSampledSlotReleaseApplicator:
                 terminal_rollback_state=approval.terminal_rollback_state,
                 owner_approval_sha256=approval.owner_statement_sha256,
                 repair_attempt_lineage_sha256=approval.repair_attempt_lineage_sha256,
+                crawl_protocol_version=approval.crawl_protocol_version,
+                max_useful_page_fetches=approval.max_useful_page_fetches,
             )
         value = current.model_copy(
             update={
                 "id": approval.authorized_release_id,
-                "version": f"{current.version}.slot01-owner-authorized",
+                "version": f"{current.version}.{slot_tag}-owner-authorized",
                 "configuration_hash": canonical_sha256(payload),
                 "created_at": self._now(),
                 "state": PermissionState.AUTHORIZED,
-                "cohort_or_run_restriction": "PHASE1_SLOT_01",
+                "cohort_or_run_restriction": run_restriction,
                 "starts_at": approval.starts_at,
                 "expires_at": approval.expires_at,
                 "approval_ids": (
@@ -458,6 +506,8 @@ class BoundedSampledSlotReleaseApplicator:
                 "terminal_rollback_state": approval.terminal_rollback_state,
                 "owner_approval_sha256": approval.owner_statement_sha256,
                 "repair_attempt_lineage_sha256": approval.repair_attempt_lineage_sha256,
+                "crawl_protocol_version": approval.crawl_protocol_version,
+                "max_useful_page_fetches": approval.max_useful_page_fetches,
                 "suspended_reason": None,
                 "revoked_at": None,
             }

@@ -11,6 +11,8 @@ from opintel_shadow import LiveResearchPermissionRelease, PermissionActivity, Pe
 
 from opintel_research_worker.activation import (
     A09_MARKER_PREFIX,
+    V2_CRAWL_PROTOCOL,
+    SampledSlotActivator,
     release_execution_ceilings_sha256,
 )
 from opintel_research_worker.egress_lease import (
@@ -20,6 +22,10 @@ from opintel_research_worker.egress_lease import (
     parse_stored_egress_lease,
 )
 from opintel_research_worker.sample_registry import FrozenPhaseOneSampleRegistry
+
+
+def _run_is_v2(run: ResearchRun) -> bool:
+    return getattr(run, "crawl_protocol_version", None) == V2_CRAWL_PROTOCOL
 
 
 class AwsSsmResearchAuthorization:
@@ -97,10 +103,8 @@ class AwsSsmResearchAuthorization:
             or release.allowed_source_scope != (run.permitted_host,)
             or run.business_id != business.id
             or run.permitted_host != identity.exact_hostname
-            or run.policy.max_pages != min(10, release.max_logical_requests or 0)
-            or run.policy.max_attempts != min(3, release.max_attempts or 0)
-            or run.policy.max_response_bytes != min(1_000_000, release.max_response_bytes or 0)
-            or run.policy.max_total_bytes != min(5_000_000, release.max_total_bytes or 0)
+            or run.policy != SampledSlotActivator._policy(release)
+            or _run_is_v2(run) != (release.crawl_protocol_version == V2_CRAWL_PROTOCOL)
         ):
             raise FetchError("research_scope_mismatch", "research run is outside exact authority")
         if self._require_egress_lease:

@@ -453,6 +453,11 @@ class LiveResearchPermissionRelease(GateRecordBase):
     # Stable for an identical sealed authority; distinct for each eligible bounded
     # repair successor. None / absent means the original (non-repaired) attempt.
     repair_attempt_lineage_sha256: str | None = None
+    # PHASE1_M1_V2_BOUNDED_SITE_CRAWL: present only on a v2 release. When set, the
+    # sampled-slot activator builds the bounded-site-crawl CrawlPolicy from the
+    # sealed execution-ceiling envelope instead of the homepage-only v1 policy.
+    crawl_protocol_version: str | None = None
+    max_useful_page_fetches: int | None = None
 
     @field_validator("activity")
     @classmethod
@@ -499,6 +504,16 @@ class LiveResearchPermissionRelease(GateRecordBase):
                 raise ValueError("authorized research release requires positive exact ceilings")
             if self.cost_ceiling_usd is None or self.cost_ceiling_usd < 0:
                 raise ValueError("authorized research release requires an exact cost ceiling")
+            if self.crawl_protocol_version is not None and (
+                self.crawl_protocol_version != "phase1-m1@2-bounded-site-crawl"
+                or self.max_useful_page_fetches is None
+                or self.max_useful_page_fetches < 1
+            ):
+                raise ValueError(
+                    "a v2 authorized research release requires "
+                    "crawl_protocol_version='phase1-m1@2-bounded-site-crawl' and a positive "
+                    "max_useful_page_fetches"
+                )
         return self
 
 
