@@ -1,0 +1,236 @@
+{
+ "results": [
+  {
+   "a09_outcome": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+   "acceptance_criteria": {
+    "business_identity_corroborated_on_root": true,
+    "exact_host_serves_first_party_root_http_200": true,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": true
+   },
+   "business_identity": "Webb Air",
+   "decision_sha256": "011fef37f2ac2985203e129c237b120dda11f2f5aef1ad306601693aa0ac8a30",
+   "evidence_state": "BOUNDED_A09_EVIDENCE_COMPLETE_FOR_SLOT",
+   "exact_hostname": "webbair.com",
+   "legal": {
+    "body_bytes": 106719,
+    "body_sha256": "66dde1f5274efd22a43a47742ef67446a6dad9b91a808c49a54a66a58869060b",
+    "content_type": "text/html; charset=UTF-8",
+    "outcome": "HTTP_RESPONSE",
+    "oversized": false,
+    "redirect_location": null,
+    "status": 200
+   },
+   "observed_at": "2026-08-30T11:33:48.214166+00:00",
+   "robots": {
+    "body_bytes": 29,
+    "body_sha256": "69f6030ac73d906097765eab34b725d8b6820c637c31523b25032c475d027b4a",
+    "content_type": "text/plain; charset=UTF-8",
+    "outcome": "HTTP_RESPONSE",
+    "oversized": false,
+    "redirect_location": null,
+    "root_allowed_for_review_agent": true,
+    "status": 200
+   },
+   "root": {
+    "body_bytes": 109002,
+    "body_sha256": "25060bb12a1c331e882049206f45ac337d68334a0e54eb28f6b59dd0e195fc9b",
+    "content_type": "text/html; charset=UTF-8",
+    "hard_restriction_markers": [],
+    "identity_signal": "BUSINESS_NAME_TOKENS_PRESENT",
+    "legal_path_source": "homepage_link",
+    "outcome": "HTTP_RESPONSE",
+    "oversized": false,
+    "redirect_location": null,
+    "same_host_legal_path": "/privacy-policy/",
+    "status": 200
+   },
+   "slot": 2,
+   "supporting_evidence": {
+    "legal_page_http_200": true,
+    "legal_path_source": "homepage_link",
+    "same_host_legal_path": "/privacy-policy/"
+   }
+  },
+  {
+   "a09_outcome": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+   "acceptance_criteria": {
+    "business_identity_corroborated_on_root": true,
+    "exact_host_serves_first_party_root_http_200": true,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": true
+   },
+   "business_identity": "BNCAIR",
+   "decision_sha256": "1295ff06ec1581af8d276b3ee4cda586fd5440588bf625e28ef24402f130cdcc",
+   "evidence_state": "BOUNDED_A09_EVIDENCE_COMPLETE_FOR_SLOT",
+   "exact_hostname": "www.bncair.net",
+   "legal": null,
+   "observed_at": "2026-08-30T11:33:50.951758+00:00",
+   "robots": {
+    "body_bytes": 112,
+    "body_sha256": "fc3da90d91283fece0fc645bfac4cb2be598c6d6f83f2614fcccbbc62e28cdc9",
+    "content_type": "text/plain; charset=utf-8",
+    "outcome": "HTTP_RESPONSE",
+    "oversized": false,
+    "redirect_location": null,
+    "root_allowed_for_review_agent": true,
+    "status": 200
+   },
+   "root": {
+    "body_bytes": 103174,
+    "body_sha256": "d6f575f51dedbe256f8fd770dd432d50b43c63e39e90e98ff39d34c1b7befe9b",
+    "content_type": "text/html; charset=UTF-8",
+    "hard_restriction_markers": [],
+    "identity_signal": "BUSINESS_NAME_TOKENS_PRESENT",
+    "legal_path_source": null,
+    "outcome": "HTTP_RESPONSE",
+    "oversized": false,
+    "redirect_location": null,
+    "same_host_legal_path": null,
+    "status": 200
+   },
+   "slot": 3,
+   "supporting_evidence": {
+    "legal_page_http_200": false,
+    "legal_path_source": null,
+    "same_host_legal_path": null
+   }
+  },
+  {
+   "a09_outcome": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+   "acceptance_criteria": {
+    "business_identity_corroborated_on_root": true,
+    "exact_host_serves_first_party_root_http_200": true,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": true
+   },
+   "business_identity": "All Elements Heating & Air",
+   "decision_sha256": "a3121ae0c986aed19cd6f63047d2c95f41008238e0fe7f53ac3a3a0852d6c0f0",
+   "evidence_state": "BOUNDED_A09_EVIDENCE_COMPLETE_FOR_SLOT",
+   "exact_hostname": "allelementshvac.com",
+   "legal": null,
+   "observed_at": "2026-08-30T11:34:08.187670+00:00",
+   "robots": {
+    "body_bytes": 132,
+    "body_sha256": "b09752de8d4d8806a1f78f5cd9781c59093fd81f3f3d9778b4144799b3f6dae0",
+    "content_type": "text/plain; charset=utf-8",
+    "outcome": "HTTP_RESPONSE",
+    "oversized": false,
+    "redirect_location": null,
+    "root_allowed_for_review_agent": true,
+    "status": 200
+   },
+   "root": {
+    "body_bytes": 579288,
+    "body_sha256": "e151ae6cd67c4b3fcb66a19146d3f90be05dc6993fcce124fcf4ce8f01b46a78",
+    "content_type": "text/html; charset=UTF-8",
+    "hard_restriction_markers": [],
+    "identity_signal": "BUSINESS_NAME_TOKENS_PRESENT",
+    "legal_path_source": null,
+    "outcome": "HTTP_RESPONSE",
+    "oversized": false,
+    "redirect_location": null,
+    "same_host_legal_path": null,
+    "status": 200
+   },
+   "slot": 4,
+   "supporting_evidence": {
+    "legal_page_http_200": false,
+    "legal_path_source": null,
+    "same_host_legal_path": null
+   }
+  },
+  {
+   "a09_outcome": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+   "acceptance_criteria": {
+    "business_identity_corroborated_on_root": true,
+    "exact_host_serves_first_party_root_http_200": true,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": true
+   },
+   "business_identity": "Fintastic Cooling & Heating",
+   "decision_sha256": "256b719a0870dc148a1707aa9eb13cb6f8ecd38ea5d3c5951b5cf594c17ad157",
+   "evidence_state": "BOUNDED_A09_EVIDENCE_COMPLETE_FOR_SLOT",
+   "exact_hostname": "www.callfintastic.com",
+   "legal": null,
+   "observed_at": "2026-08-30T11:34:12.500841+00:00",
+   "robots": {
+    "body_bytes": 165,
+    "body_sha256": "9cc78578f0cdf4ee93e715329c82f1a6b59fac9265fc746ba0a1d1c619d80257",
+    "content_type": "text/plain",
+    "outcome": "HTTP_RESPONSE",
+    "oversized": false,
+    "redirect_location": null,
+    "root_allowed_for_review_agent": true,
+    "status": 200
+   },
+   "root": {
+    "body_bytes": 313960,
+    "body_sha256": "96f76a219be17a4572e19e25880b10e0f74f362d111e4faceefc0680c7b372f6",
+    "content_type": "text/html;charset=utf-8",
+    "hard_restriction_markers": [],
+    "identity_signal": "BUSINESS_NAME_TOKENS_PRESENT",
+    "legal_path_source": null,
+    "outcome": "HTTP_RESPONSE",
+    "oversized": false,
+    "redirect_location": null,
+    "same_host_legal_path": null,
+    "status": 200
+   },
+   "slot": 5,
+   "supporting_evidence": {
+    "legal_page_http_200": false,
+    "legal_path_source": null,
+    "same_host_legal_path": null
+   }
+  },
+  {
+   "a09_outcome": "NOT_APPROVED_A09_CRITERIA_NOT_SATISFIED",
+   "acceptance_criteria": {
+    "business_identity_corroborated_on_root": false,
+    "exact_host_serves_first_party_root_http_200": false,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": false,
+    "root_not_redirected_off_the_exact_host": false
+   },
+   "business_identity": "Calvin's Climate",
+   "evidence_state": "BOUNDED_A09_EVIDENCE_COMPLETE_FOR_SLOT",
+   "exact_hostname": "www.calvinsclimate.com",
+   "legal": null,
+   "observed_at": "2026-08-30T11:34:22.319271+00:00",
+   "robots": {
+    "body_bytes": 0,
+    "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "content_type": "text/html; charset=UTF-8",
+    "outcome": "HTTP_RESPONSE",
+    "oversized": false,
+    "redirect_location": "https://calvinsclimate.com/robots.txt",
+    "root_allowed_for_review_agent": false,
+    "status": 301
+   },
+   "root": {
+    "body_bytes": 0,
+    "body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "content_type": "text/html; charset=UTF-8",
+    "hard_restriction_markers": [],
+    "identity_signal": "NO_ROOT",
+    "legal_path_source": null,
+    "outcome": "HTTP_RESPONSE",
+    "oversized": false,
+    "redirect_location": "https://calvinsclimate.com/",
+    "same_host_legal_path": null,
+    "status": 301
+   },
+   "slot": 6,
+   "supporting_evidence": {
+    "legal_page_http_200": false,
+    "legal_path_source": null,
+    "same_host_legal_path": null
+   }
+  }
+ ]
+}

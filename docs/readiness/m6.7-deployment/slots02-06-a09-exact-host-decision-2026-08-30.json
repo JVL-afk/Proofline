@@ -1,0 +1,71 @@
+{
+  "record_type": "M67_SLOTS02_06_A09_EXACT_HOST_DECISION",
+  "schema_version": "1.0.0",
+  "state": "A09_DECISIONS_MATERIALISED",
+  "recorded_at_utc": "2026-08-30T11:00:00Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "authority": {
+    "decision_event": "AUTHORIZE_SLOTS02_06_PHASE1_M1_V2_EXECUTION",
+    "authorization_package_sha256": "d28e42594c943debf0144b3f5ecce57589760881e579ebbf52f6984d8150677a",
+    "owner_directive_2": "conditional owner acceptance under the existing unchanged A-09 policy for the five named frozen mappings only; if the existing A-09 acceptance criteria are satisfied, materialise the exact image-bound APPROVED decision; if not, fail that slot closed with the truthful A-09 terminal outcome and proceed. Do not substitute another hostname. Do not redraw or replace the company. No further owner signature required to accept an A-09 result that satisfies these exact conditions for these five already-named hosts."
+  },
+  "process": {
+    "runner": "docs/readiness/m6.7-deployment/slots02-06-a09-exact-host-review-runner-2026-08-30.py (sha256 e4ef8e510d3b369ca19a7b447459ddb60d68f915ea7c2160947f8932a96e5db8)",
+    "evidence": "docs/readiness/m6.7-deployment/slots02-06-a09-exact-host-review-evidence-2026-08-30.json (sha256 ac3a2634dcc1e22ce6500d34795b3c20e59b6996399a3935187c9383d2ebcbcf)",
+    "method": "bounded read-only exact-host access review: GET https://{host}/robots.txt and https://{host}/ with the OpportunityIntelligenceResearch identity, no followed redirects, <=900 KB per response, content-minimised signal extraction; a same-host legal page is collected as supporting evidence when discoverable but its absence is not disqualifying (the existing process recommended APPROVE for Slots 01, 02, 03 with no same-host legal path). Runs 2026-08-30, stable across three passes.",
+    "acceptance_criteria_exact_existing_process": [
+      "the exact frozen candidate hostname serves a first-party root page with HTTP 200",
+      "the root response is not redirected off the exact host",
+      "robots.txt (HTTP 200 or 404) allows the review agent at the site root",
+      "the frozen business identity is corroborated by distinctive name tokens in the root's visible text (exclusion list identical to scripts/run_m67_manual_exact_host_a09_access_review.py)",
+      "no hard automated-access prohibition (no scraping / no crawling / no automated use) in the root's visible text"
+    ]
+  },
+  "decisions": [
+    {
+      "slot_number": 2, "business_identity": "Webb Air", "exact_hostname": "webbair.com",
+      "outcome": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+      "decision_sha256": "be9389ee08bcf2587accd890e0b4827c2c6a3d75f21c0dc76f4ccc465940fa19",
+      "supporting": "root 200, robots 200 allows agent, identity BUSINESS_NAME_TOKENS_PRESENT, same-host legal /privacy-policy/ 200",
+      "materialised_into_image_bound_registry": true
+    },
+    {
+      "slot_number": 3, "business_identity": "BNCAIR", "exact_hostname": "www.bncair.net",
+      "outcome": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+      "decision_sha256": "04b016b2e206063a50ea73e03daa8956c81cfbd4a83e56bcce3a6c26aae5e5fb",
+      "supporting": "root 200, robots 200 allows agent, identity BUSINESS_NAME_TOKENS_PRESENT; no same-host legal page discoverable (not disqualifying; matches the prior 2026-08-25 APPROVE recommendation for this host)",
+      "materialised_into_image_bound_registry": true
+    },
+    {
+      "slot_number": 4, "business_identity": "All Elements Heating & Air", "exact_hostname": "allelementshvac.com",
+      "outcome": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+      "decision_sha256": "05d455a9ee894817828131e3f37d1bcb9bf5b29e660aa2d322fb101e8de0801a",
+      "supporting": "root 200, robots 200 allows agent, identity BUSINESS_NAME_TOKENS_PRESENT; no same-host legal page discoverable",
+      "materialised_into_image_bound_registry": true
+    },
+    {
+      "slot_number": 5, "business_identity": "Fintastic Cooling & Heating", "exact_hostname": "www.callfintastic.com",
+      "outcome": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+      "decision_sha256": "54e7edfd5c45cd3b57a7298eda7db9847ab17a48c9e8d571bfdf79938c5d9fb0",
+      "supporting": "root 200, robots 200 allows agent, identity BUSINESS_NAME_TOKENS_PRESENT; no same-host legal page discoverable",
+      "materialised_into_image_bound_registry": true
+    },
+    {
+      "slot_number": 6, "business_identity": "Calvin's Climate", "exact_hostname": "www.calvinsclimate.com",
+      "outcome": "NOT_APPROVED_A09_CRITERIA_NOT_SATISFIED",
+      "decision_sha256": null,
+      "truthful_terminal": "the exact frozen candidate hostname www.calvinsclimate.com returns HTTP 301 redirecting off the exact host to https://calvinsclimate.com/; the exact host does not serve a first-party first-party root page. Per the frozen mapping, the bare hostname is NOT substituted and the company is NOT redrawn. This is a valid truthful A-09 terminal for Slot 06.",
+      "materialised_into_image_bound_registry": false,
+      "activator_behaviour": "FrozenA09DecisionRegistry.require_approved(6, ...) fails closed; Slot 06 cannot be executed under this batch."
+    }
+  ],
+  "image_bound_registry_after": {
+    "path": "infra/container/phase1-worker/phase1-a09-decision-registry.json",
+    "slots_present": [1, 2, 3, 4, 5],
+    "slot_06": "absent (truthful A-09 terminal)"
+  },
+  "no_hostname_substitution": true,
+  "no_company_redraw_or_replacement": true,
+  "next": "Slots 02-05 proceed to M1 v2 execution; Slot 06 terminates at its truthful A-09 outcome and the batch proceeds to human review after Slot 06"
+}
