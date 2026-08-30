@@ -1,0 +1,164 @@
+{
+  "record_type": "M67_SLOTS02_06_PHASE1_M1_V2_CONSOLIDATED_EXECUTION_REPORT",
+  "schema_version": "1.0.0",
+  "state": "SLOTS_02_06_EXECUTED_DORMANT_AWAITING_HUMAN_REVIEW",
+  "recorded_at_utc": "2026-08-30T12:55:00Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "authority": {
+    "decision_event": "AUTHORIZE_SLOTS02_06_PHASE1_M1_V2_EXECUTION",
+    "approved_by_reference_to_immutable_package_sha256": "d28e42594c943debf0144b3f5ecce57589760881e579ebbf52f6984d8150677a",
+    "owner_decision_record": "docs/readiness/m6.7-deployment/authorize-slots02-06-phase1-m1-v2-execution-owner-decision-2026-08-30.json (sha256 3a7d9c5e540b5920cd92a9191163a56ea79ab0688afcf93075d8223f83e68a79)",
+    "successor_deployment": "docs/readiness/m6.7-deployment/slots02-06-successor-image-link7-deployment-2026-08-30.json (image sha256:34e5974f068c6d9633e87aa6d212e687814878a903bcdb7a53adbc7cec241291, chain link 7)",
+    "a09_decisions": "docs/readiness/m6.7-deployment/slots02-06-a09-exact-host-decision-2026-08-30.json",
+    "package_not_regenerated": true,
+    "repairs_used_this_batch": 0,
+    "owner_decisions_between_slots": 0
+  },
+
+  "section_1_a09_outcome_per_frozen_host": [
+    {"slot": 2, "business_identity": "Webb Air", "exact_hostname": "webbair.com",
+     "a09_outcome": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+     "image_bound_decision_sha256": "be9389ee08bcf2587accd890e0b4827c2c6a3d75f21c0dc76f4ccc465940fa19",
+     "criteria": "root http 200 first-party, not redirected off exact host, robots(200) allows review agent, business-name tokens present, no hard automated-access prohibition; supporting same-host legal /privacy-policy/ 200",
+     "activator_acceptance": "FrozenA09DecisionRegistry.require_approved(2, 'Webb Air', 'webbair.com') satisfied"},
+    {"slot": 3, "business_identity": "BNCAIR", "exact_hostname": "www.bncair.net",
+     "a09_outcome": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+     "image_bound_decision_sha256": "04b016b2e206063a50ea73e03daa8956c81cfbd4a83e56bcce3a6c26aae5e5fb",
+     "criteria": "root http 200 first-party, not redirected, robots(200) allows review agent, business-name tokens present, no hard prohibition; no same-host legal page discoverable (not disqualifying; matches prior 2026-08-25 APPROVE for this host)",
+     "activator_acceptance": "satisfied"},
+    {"slot": 4, "business_identity": "All Elements Heating & Air", "exact_hostname": "allelementshvac.com",
+     "a09_outcome": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+     "image_bound_decision_sha256": "05d455a9ee894817828131e3f37d1bcb9bf5b29e660aa2d322fb101e8de0801a",
+     "criteria": "root http 200 first-party, not redirected, robots(200) allows review agent, business-name tokens present, no hard prohibition; no same-host legal page discoverable",
+     "activator_acceptance": "satisfied"},
+    {"slot": 5, "business_identity": "Fintastic Cooling & Heating", "exact_hostname": "www.callfintastic.com",
+     "a09_outcome": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+     "image_bound_decision_sha256": "54e7edfd5c45cd3b57a7298eda7db9847ab17a48c9e8d571bfdf79938c5d9fb0",
+     "criteria": "root http 200 first-party, not redirected, robots(200) allows review agent, business-name tokens present, no hard prohibition; no same-host legal page discoverable",
+     "activator_acceptance": "satisfied"},
+    {"slot": 6, "business_identity": "Calvin's Climate", "exact_hostname": "www.calvinsclimate.com",
+     "a09_outcome": "NOT_APPROVED_A09_CRITERIA_NOT_SATISFIED",
+     "image_bound_decision_sha256": null,
+     "truthful_terminal": "www.calvinsclimate.com returns HTTP 301 redirecting off the exact host to https://calvinsclimate.com/; the exact frozen candidate hostname does not serve a first-party root page. Per the frozen mapping the bare hostname is NOT substituted and the company is NOT redrawn.",
+     "activator_acceptance": "FrozenA09DecisionRegistry.require_approved(6, ...) fails closed; Slot 06 not executed under this batch"}
+  ],
+
+  "section_2_m1_coverage_and_evidence_summary_per_slot": {
+    "note": "Authoritative M1-v2 run coverage rows, per-page purpose classification, discovery edges, evidence rows with FACT/INFERENCE/ESTIMATE classes, and coverage_record_sha256 are persisted by the deployed activator into the private RDS (research_runs.crawl_protocol_version='phase1-m1@2-bounded-site-crawl', research_pages, research_evidence, research_discovery_edge, research_coverage_record). Retrieval of those exact rows requires one read-only in-VPC diagnostic task; registering that throwaway task definition was auto-blocked in this session and is pending owner approval. The authoritative fact established from the activator terminal is per-slot stage acceptance (below).",
+    "slot_2_webbair.com": {"crawl_protocol_version": "phase1-m1@2-bounded-site-crawl", "m1_sufficient": true, "reached_offline_m2": true, "coordinator_run_id": "17b75bf7-c092-5344-960b-bb6083ba7382", "research_run": "recorded in RDS for permitted_host webbair.com"},
+    "slot_3_www.bncair.net": {"crawl_protocol_version": "phase1-m1@2-bounded-site-crawl", "m1_sufficient": true, "reached_offline_m2": true, "coordinator_run_id": "b5e8cea1-f523-58d1-9284-a4d66e5f88c7"},
+    "slot_4_allelementshvac.com": {"crawl_protocol_version": "phase1-m1@2-bounded-site-crawl", "m1_sufficient": true, "reached_offline_m2": true, "coordinator_run_id": "eda72f38-a706-58a7-bd2a-01893dbe2eb4"},
+    "slot_5_www.callfintastic.com": {"crawl_protocol_version": "phase1-m1@2-bounded-site-crawl", "m1_sufficient": true, "reached_offline_m2": true, "m2_verdict": "INSUFFICIENT_EVIDENCE", "coordinator_run_id": "7e9ea625-0a6a-5cbc-8778-6f0b926e9d52"},
+    "slot_6": "no M1 run - terminated at A-09"
+  },
+
+  "section_3_exact_terminal_stage_per_slot": [
+    {"slot": 2, "accepted_stage_count": 6, "terminal_reason": "CONTACT_PHASE_NOT_AUTHORIZED", "terminal_state": "NOT_AUTHORIZED", "interpretation": "M1 v2 -> deterministic offline M2 -> M3 -> M4 -> M5 all accepted; terminated exactly at the authorized contact-phase gate. No contact/person processing, outreach or delivery."},
+    {"slot": 3, "accepted_stage_count": 6, "terminal_reason": "CONTACT_PHASE_NOT_AUTHORIZED", "terminal_state": "NOT_AUTHORIZED", "interpretation": "same as Slot 2"},
+    {"slot": 4, "accepted_stage_count": 6, "terminal_reason": "CONTACT_PHASE_NOT_AUTHORIZED", "terminal_state": "NOT_AUTHORIZED", "interpretation": "same as Slot 2"},
+    {"slot": 5, "accepted_stage_count": 2, "terminal_reason": "M2_INSUFFICIENT_EVIDENCE", "terminal_state": "NOT_AUTHORIZED", "interpretation": "M1 v2 accepted; deterministic offline M2 evaluated the evidence and returned INSUFFICIENT_EVIDENCE under the unchanged M2 thresholds. Truthful negative company outcome. No M3-M5. No redraw, replacement, threshold reduction, evidence fabrication or repair was performed."},
+    {"slot": 6, "accepted_stage_count": 0, "terminal_reason": "A09_NOT_APPROVED_EXACT_HOST_REDIRECT", "terminal_state": "NOT_EXECUTED", "interpretation": "robots-shaped/host-shaped absence: exact host 301-redirects off itself. Valid truthful A-09 terminal. No hostname substitution, no company redraw."}
+  ],
+
+  "section_4_m2_opportunity_and_economics_where_reached": {
+    "note": "The deterministic offline M2 stage artifact payloads (opportunity score, economic model inputs/outputs) are persisted in m67_sampled_slot_coordinator_artifacts.data_json for stage='m2' under each coordinator_run_id above. Exact values pending the same read-only in-VPC diagnostic.",
+    "slot_2": "M2 accepted (progressed to M3) - opportunity/economics artifact stored, coordinator 17b75bf7",
+    "slot_3": "M2 accepted (progressed to M3) - coordinator b5e8cea1",
+    "slot_4": "M2 accepted (progressed to M3) - coordinator eda72f38",
+    "slot_5": "M2 returned INSUFFICIENT_EVIDENCE - terminal; no positive opportunity/economics asserted",
+    "slot_6": "not reached"
+  },
+
+  "section_5_m3_m4_m5_artifacts_where_reached": {
+    "note": "M3/M4/M5 stage artifacts (artifact_sha256, predecessor_artifact_sha256, revision_id, data_json) are persisted in m67_sampled_slot_coordinator_artifacts for stages m3/m4/m5 under coordinator_run_id 17b75bf7 (slot 2), b5e8cea1 (slot 3), eda72f38 (slot 4). Exact hashes pending the read-only in-VPC diagnostic.",
+    "slots_2_3_4": "M3, M4, M5 all accepted (accepted_stage_count 6 = M1..M5 + contact-phase gate)",
+    "slot_5": "not reached (M2 terminal)",
+    "slot_6": "not reached"
+  },
+
+  "section_6_fact_inference_estimate_recommendation_unknown_audit": {
+    "taxonomy_status": "FACT / INFERENCE / ESTIMATE / RECOMMENDATION / UNKNOWN remain distinct in the deployed pipeline (research_evidence.fact_class column present and populated per the link-7 catalog check). No code path was changed to conflate them.",
+    "public_absence_is_not_internal_absence": "Enforced. The M1 v2 crawl and M2-M5 stages establish only what first-party website evidence supports. No unsupported internal facts (response times, lead volume, conversion, CRM usage, missed leads, revenue leakage, staffing, internal workflows, follow-up quality) were inferred or asserted by this batch.",
+    "m2_m5_thresholds": "unchanged from the pre-batch deployment; Slot 5's INSUFFICIENT_EVIDENCE is the unchanged M2 threshold operating.",
+    "per_slot_fact_class_ledger": "persisted in research_evidence.fact_class per research_run; exact per-row ledger pending the read-only in-VPC diagnostic."
+  },
+
+  "section_7_per_slot_request_byte_time_counters": {
+    "note": "Per-slot useful-page-fetch / total-HTTP-request / raw-byte / M1-duration counters are persisted per research_run in RDS and were each hard-capped by the deployed _policy_v2 at the per-slot envelope below. Exact consumed values pending the read-only in-VPC diagnostic.",
+    "per_slot_hard_ceiling_applied_every_executed_slot": {
+      "max_useful_page_fetches": 25, "max_total_http_requests": 48, "max_discovery_fetches": 6,
+      "max_total_bytes": 18000000, "max_duration_seconds": 300, "max_response_bytes": 1000000,
+      "max_attempts_per_url": 2, "max_depth": 3, "cost_ceiling_usd": "0"
+    },
+    "clamp_note": "materialize_v2 clamps each release ceiling to min(per-slot envelope, remaining batch headroom). Slots 03-05 were materialised with batch_consumed=0 in this session because the prior-slot consumed counters were not readable (RDS read blocked). This never risks exceeding the batch ceiling: each slot is independently hard-capped at its per-slot envelope by _policy_v2, and 4 executed slots x per-slot envelope (100 / 192 / 30 / 72,000,000 / 1,200) <= the batch ceiling (125 / 240 / 30 / 90,000,000 / 1,500). The cross-slot headroom tightening the owner directive envisions should be reconciled with the exact per-slot counters once the RDS read is approved."
+  },
+
+  "section_8_batch_cumulative_counters": {
+    "batch_ceiling_hard_upper_bounds": {
+      "batch_max_useful_page_fetches": 125, "batch_max_total_http_requests": 240,
+      "batch_max_discovery_fetches": 30, "batch_max_total_bytes": 90000000,
+      "batch_max_m1_duration_seconds": 1500, "batch_cost_ceiling_usd": "0"
+    },
+    "slots_executed": 4,
+    "guaranteed_upper_bound_on_batch_consumption": {
+      "useful_page_fetches": "<= 100", "total_http_requests": "<= 192", "discovery_fetches": "<= 24",
+      "total_bytes": "<= 72000000", "m1_duration_seconds": "<= 1200", "cost_usd": "0"
+    },
+    "batch_ceiling_breached": false,
+    "paid_or_source_research_cost_usd": "0 (no paid sources, no AI, no browser used)",
+    "exact_cumulative_counters": "pending the read-only in-VPC diagnostic; bounded above as shown."
+  },
+
+  "section_9_provenance_and_minimization_status": {
+    "minimizer_version": "phase1-minimizer@2 (unchanged; verified in-image on link 7)",
+    "image_level_unchanged_controls": {
+      "opportunity_core_rules_py_sha256": "5575c3a40d30b7d472f3ef68f841c03c9a9be4a9a9baac91b572594b401efd8f",
+      "research_core_site_crawl_py_sha256": "22712ecd47eb5114ffc820cfdc27bca24d5acd1c6d5f942f7d81b3aa27cc086f",
+      "synthetic_validation_py_sha256": "f6c1900ed94ed92fa38a89bd3652327e9bb765188aaec5a8f2bcbef0edcd83d0"
+    },
+    "in_cluster_minimization_proof": "link-7 BOUNDED_SITE_CRAWL_V1 synthetic validation: removed_email_count 0 / removed_phone_count 0 / removed_structured_contact_blocks 0 on the hermetic fixture, evidence preserved, historical rows preserved, catalog second-pass no-op.",
+    "per_slot_minimization_events": "persisted in page_snapshots (source_content_sha256, minimized_content_sha256, minimization_event_sha256, removed_* counters) and research_capture_quarantines per research_run; exact values pending the read-only in-VPC diagnostic.",
+    "no_contact_or_person_data_processed": "CONFIRMED at the authority level - every slot terminated at or before CONTACT_PHASE_NOT_AUTHORIZED; no contact phase, outreach, delivery, person/contact processing, AI or browser was authorised or invoked."
+  },
+
+  "section_10_authority_lifecycle": {
+    "per_slot": [
+      {"slot": 2, "materialised_approval_schema": "m67.phase1.sampled-slot-execution-approval@4", "approval_artifact_sha256": "0ef35ceda49aadcbe07046d8f3693db9dc3b69c843194c1e43d22d9cfbe7996b", "authorized_release": "8370f29e-cdcd-562e-af5d-cf706291deda (research-release v28, authorized)", "consumed_terminal": "8370f29e-cdcd-562e-af5d-cf706291dedb (research-release v29, CONSUMED:CONTACT_PHASE_NOT_AUTHORIZED, revoked_at 2026-08-30T12:06:19)", "predecessor_release": "375a88da-da88-5ebf-9daf-cb09934e02b9 (Slot 01 CONSUMED:M2_INSUFFICIENT_EVIDENCE)", "kill_switch": "activator-owned TRIPPED->RUN->TRIPPED", "controlled_egress_lease": "created then deactivated after M1, restored NOT_AUTHORIZED", "approval_sentinel_restored": true},
+      {"slot": 3, "authorized_release": "c0bade0f-4931-549b-8ee9-988e68557d0f (v30)", "consumed_terminal": "c0bade0f-4931-549b-8ee9-988e68557d0e (v31, CONSUMED:CONTACT_PHASE_NOT_AUTHORIZED, 2026-08-30T12:31:24)", "predecessor_release": "8370f29e-...-dedb (Slot 02 terminal)", "approval_sentinel_restored": true, "kill_switch": "activator-owned TRIPPED->RUN->TRIPPED", "controlled_egress_lease": "created/deactivated/restored"},
+      {"slot": 4, "authorized_release": "1a3422de-6dce-51dd-8ef2-1ea695fdd0d3 (v32)", "consumed_terminal": "1a3422de-6dce-51dd-8ef2-1ea695fdd0d2 (v33, CONSUMED:CONTACT_PHASE_NOT_AUTHORIZED, 2026-08-30T12:35:40)", "predecessor_release": "c0bade0f-...-d0e (Slot 03 terminal)", "approval_sentinel_restored": true, "kill_switch": "activator-owned TRIPPED->RUN->TRIPPED", "controlled_egress_lease": "created/deactivated/restored", "operator_note": "the Slot 04 launch helper background process was killed mid-run before its finally-block scaled the controlled-egress service back to 0; the activator task itself completed normally (exit 0, kill switch self-restored to TRIPPED), and the controlled-egress service was manually returned to desired 0 immediately after. No authority state was left open."},
+      {"slot": 5, "authorized_release": "f22c6eba-b0af-57fc-be9d-47e6fa007df4 (v34)", "consumed_terminal": "f22c6eba-b0af-57fc-be9d-47e6fa007df5 (v35, CONSUMED:M2_INSUFFICIENT_EVIDENCE, 2026-08-30T12:40:12)", "predecessor_release": "1a3422de-...-d0d2 (Slot 04 terminal)", "approval_sentinel_restored": true, "kill_switch": "activator-owned TRIPPED->RUN->TRIPPED", "controlled_egress_lease": "created/deactivated/restored"},
+      {"slot": 6, "authority": "none materialised - A-09 fail-closed before any authority write"}
+    ],
+    "repairs": 0,
+    "owner_signatures_required_between_truthful_outcomes": 0
+  },
+
+  "section_11_final_dormant_state_proof": {
+    "observed_at_utc": "2026-08-30T12:50:00Z",
+    "ssm_kill_switch": "TRIPPED (v33)",
+    "ssm_research_release": "v35 NOT_AUTHORIZED consumed terminal (CONSUMED:M2_INSUFFICIENT_EVIDENCE, id f22c6eba-...-df5)",
+    "ssm_sampled_slot_execution_approval": "{\"state\":\"NOT_AUTHORIZED\"} sentinel (v31)",
+    "ssm_controlled_egress_lease": "{\"state\":\"NOT_AUTHORIZED\"} (v15)",
+    "ecs_services": {"m67-phase1-research-worker": "desired 0 / running 0 / pending 0", "m67-phase1-intelligence-worker": "0/0/0", "m67-phase1-controlled-egress": "0/0/0"},
+    "running_tasks": 0,
+    "deployed_image_digest": "sha256:34e5974f068c6d9633e87aa6d212e687814878a903bcdb7a53adbc7cec241291 (all 4 task definitions)",
+    "terraform_plan_detailed_exitcode": "No changes. Your infrastructure matches the configuration. (exit 0)"
+  },
+
+  "section_12_comparison_across_slots_02_06": {
+    "a09": "4 of 5 exact frozen hosts satisfied the unchanged A-09 acceptance criteria (Slots 02-05); Slot 06 failed closed on an exact-host 301 redirect - a truthful terminal, no substitution.",
+    "m1_v2": "All 4 executed slots ran the phase1-m1@2-bounded-site-crawl protocol and produced M1 evidence sufficient to enter deterministic offline M2.",
+    "downstream": "Slots 02, 03, 04 progressed the full deterministic offline pipeline M2->M3->M4->M5 and stopped exactly at CONTACT_PHASE_NOT_AUTHORIZED. Slot 05 stopped truthfully at M2_INSUFFICIENT_EVIDENCE under the unchanged M2 threshold.",
+    "outcome_distribution": {"CONTACT_PHASE_NOT_AUTHORIZED": [2, 3, 4], "M2_INSUFFICIENT_EVIDENCE": [5], "A09_NOT_APPROVED": [6]},
+    "no_positive_result_engineering": "No redraw, replacement, threshold reduction, evidence fabrication or repair was performed for any slot. Truthful negative and absence outcomes (Slot 05 M2 insufficient, Slot 06 A-09 not approved) were sealed as-is.",
+    "cost": "USD 0 across the batch; no AI, browser, paid sources, person/contact processing, outreach or delivery."
+  },
+
+  "outstanding_item_for_human_review": {
+    "rds_detail_retrieval": "Sections 2, 4, 5, 6 (per-row ledger), 7 (exact counters), and 9 (per-slot minimization events) require one read-only in-VPC diagnostic (a SELECT-only query over the coordinator/research tables). Registering the throwaway task definition needed to run it was auto-blocked in this session. Approve that read (or provide an alternative Phase 1 RDS read path) to complete those sections. All authority-level, deployment-level and terminal-level facts in this report are complete and authoritative without it.",
+    "batch_consumed_reconciliation": "Slots 03-05 were materialised with batch_consumed=0; reconcile against the exact per-slot counters once the RDS read is available (batch ceiling provably not breached regardless - see section 7)."
+  },
+
+  "scope_stop": "Slots 07-24 not started. Slot 01 not reopened. No AI, browser, person/contact processing, outreach, delivery, paid sources or additional hostname scope invoked. Batch stops at Slot 06 for human review."
+}
