@@ -1,0 +1,31 @@
+# M6.7 Phase 1 PHASE1_M1_V2_BOUNDED_SITE_CRAWL successor.
+#
+# This is a PROTOCOL UPGRADE successor (chain link 6), NOT a repair. Thin
+# successor to the deployed Repair #4 schema-convergence image
+# (registry digest sha256:47de97dea8e833b2feeacdac1c464d5ac4cef3506d29556c38fa74da280c332f).
+#
+# It replaces exactly the modules that implement the bounded same-host
+# relevance-prioritised multi-page M1 crawl. No dependency, entry point, or
+# configuration change: frontier.py / sitemap.py / site_crawl.py are pure stdlib.
+# The homepage-only protocol path (workflow._execute_homepage) is byte-for-byte
+# unchanged and still runs for every run whose crawl_protocol_version is not
+# "phase1-m1@2-bounded-site-crawl". phase1-minimizer@2 and the M2..M5 rules are
+# untouched.
+FROM localhost/m67-phase1-worker:git-c9bd6e2-repair4-schema-convergence
+
+ARG SOURCE_COMMIT
+LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}" \
+      org.opencontainers.image.title="M6.7 Phase 1 M1 v2 bounded site crawl" \
+      org.opencontainers.image.base.digest="sha256:47de97dea8e833b2feeacdac1c464d5ac4cef3506d29556c38fa74da280c332f"
+
+COPY packages/research-core/src/opintel_research/domain.py       /app/research-core/opintel_research/domain.py
+COPY packages/research-core/src/opintel_research/frontier.py     /app/research-core/opintel_research/frontier.py
+COPY packages/research-core/src/opintel_research/sitemap.py      /app/research-core/opintel_research/sitemap.py
+COPY packages/research-core/src/opintel_research/site_crawl.py   /app/research-core/opintel_research/site_crawl.py
+COPY packages/research-core/src/opintel_research/url_policy.py   /app/research-core/opintel_research/url_policy.py
+COPY packages/research-core/src/opintel_research/workflow.py     /app/research-core/opintel_research/workflow.py
+COPY packages/research-core/src/opintel_research/ports.py        /app/research-core/opintel_research/ports.py
+COPY packages/research-local/src/opintel_research_local/persistence.py /app/research-local/opintel_research_local/persistence.py
+COPY packages/research-local/src/opintel_research_local/robots.py     /app/research-local/opintel_research_local/robots.py
+COPY workers/intelligence/src/opintel_intelligence_worker/production_runtime.py /app/intelligence-worker/opintel_intelligence_worker/production_runtime.py
+COPY workers/research/src/opintel_research_worker/synthetic_validation.py       /app/research-worker/opintel_research_worker/synthetic_validation.py
