@@ -1,0 +1,31 @@
+# M6.7 Phase 1 PHASE1_M1_V2 -> Slots 02-06 execution successor (chain link 7).
+#
+# Thin successor to the deployed PHASE1_M1_V2 bounded-site-crawl image
+# (registry digest sha256:62ba45aa295b912a578676dd440c75525206757878242e679923764b61c009e4).
+#
+# Carries exactly the RUNTIME half of the additive live-materialiser v2 wiring
+# authorised by AUTHORIZE_SLOTS02_06_PHASE1_M1_V2_EXECUTION (package sha256
+# d28e42594c943debf0144b3f5ecce57589760881e579ebbf52f6984d8150677a):
+#   * gate_domain.py     - LiveResearchPermissionRelease optional v2 fields;
+#   * activation.py       - _policy_v2 + ceilings sha256 folds the v2 bindings;
+#   * authorization.py    - strict run.policy == _policy(release) equality;
+#   * release_application.py - @4 approval schema, frozen 6-slot scope;
+#   * the image-bound A-09 decision registry updated with Slots 02-05 APPROVED
+#     (Slot 06 remains absent -> the activator fails closed for it).
+# authority_materialization_v2[_main].py are NOT baked in: the materialiser is an
+# operator-local tool run the same way the v1 materialiser is, never in-cluster.
+#
+# No dependency, entry point or other configuration change. The bounded-site-crawl
+# workflow, phase1-minimizer@2, and the M2..M5 truth rules are untouched.
+FROM localhost/m67-phase1-worker:git-01388b3-m1v2-bounded-site-crawl
+
+ARG SOURCE_COMMIT
+LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}" \
+      org.opencontainers.image.title="M6.7 Phase 1 M1 v2 Slots 02-06 execution" \
+      org.opencontainers.image.base.digest="sha256:62ba45aa295b912a578676dd440c75525206757878242e679923764b61c009e4"
+
+COPY packages/shadow-core/src/opintel_shadow/gate_domain.py /app/shadow-core/opintel_shadow/gate_domain.py
+COPY workers/research/src/opintel_research_worker/activation.py         /app/research-worker/opintel_research_worker/activation.py
+COPY workers/research/src/opintel_research_worker/authorization.py      /app/research-worker/opintel_research_worker/authorization.py
+COPY workers/research/src/opintel_research_worker/release_application.py /app/research-worker/opintel_research_worker/release_application.py
+COPY infra/container/phase1-worker/phase1-a09-decision-registry.json /app/config/phase1-a09-decision-registry.json
