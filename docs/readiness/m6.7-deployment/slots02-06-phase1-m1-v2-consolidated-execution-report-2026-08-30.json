@@ -1,8 +1,9 @@
 {
   "record_type": "M67_SLOTS02_06_PHASE1_M1_V2_CONSOLIDATED_EXECUTION_REPORT",
   "schema_version": "1.0.0",
-  "state": "SLOTS_02_06_EXECUTED_DORMANT_AWAITING_HUMAN_REVIEW",
-  "recorded_at_utc": "2026-08-30T12:55:00Z",
+  "state": "SLOTS_02_06_EXECUTED_DORMANT_REPORT_COMPLETE_AWAITING_HUMAN_REVIEW",
+  "recorded_at_utc": "2026-08-30T13:25:00Z",
+  "rds_detail_source": "docs/readiness/m6.7-deployment/slots02-06-bounded-readonly-rds-diagnostic-evidence-2026-08-30.json (one owner-authorized bounded read-only in-VPC SELECT diagnostic, 2026-08-30; provenance-safe structured fields only; 0 sanitizer redactions; kill switch / authorities / services / terraform all unchanged before and after; the two transient task definitions research-worker:23 and :24 both deregistered)",
   "account_id": "785072247535",
   "region": "us-east-2",
   "authority": {
@@ -45,11 +46,44 @@
   ],
 
   "section_2_m1_coverage_and_evidence_summary_per_slot": {
-    "note": "Authoritative M1-v2 run coverage rows, per-page purpose classification, discovery edges, evidence rows with FACT/INFERENCE/ESTIMATE classes, and coverage_record_sha256 are persisted by the deployed activator into the private RDS (research_runs.crawl_protocol_version='phase1-m1@2-bounded-site-crawl', research_pages, research_evidence, research_discovery_edge, research_coverage_record). Retrieval of those exact rows requires one read-only in-VPC diagnostic task; registering that throwaway task definition was auto-blocked in this session and is pending owner approval. The authoritative fact established from the activator terminal is per-slot stage acceptance (below).",
-    "slot_2_webbair.com": {"crawl_protocol_version": "phase1-m1@2-bounded-site-crawl", "m1_sufficient": true, "reached_offline_m2": true, "coordinator_run_id": "17b75bf7-c092-5344-960b-bb6083ba7382", "research_run": "recorded in RDS for permitted_host webbair.com"},
-    "slot_3_www.bncair.net": {"crawl_protocol_version": "phase1-m1@2-bounded-site-crawl", "m1_sufficient": true, "reached_offline_m2": true, "coordinator_run_id": "b5e8cea1-f523-58d1-9284-a4d66e5f88c7"},
-    "slot_4_allelementshvac.com": {"crawl_protocol_version": "phase1-m1@2-bounded-site-crawl", "m1_sufficient": true, "reached_offline_m2": true, "coordinator_run_id": "eda72f38-a706-58a7-bd2a-01893dbe2eb4"},
-    "slot_5_www.callfintastic.com": {"crawl_protocol_version": "phase1-m1@2-bounded-site-crawl", "m1_sufficient": true, "reached_offline_m2": true, "m2_verdict": "INSUFFICIENT_EVIDENCE", "coordinator_run_id": "7e9ea625-0a6a-5cbc-8778-6f0b926e9d52"},
+    "source": "bounded read-only RDS diagnostic (research_runs / research_pages / research_evidence / research_discovery_edge / research_coverage_record / page_snapshots)",
+    "slot_2_webbair.com": {
+      "research_run_id": "71ca1247-90f1-5eeb-9d97-7090ff452c66", "run_status": "succeeded",
+      "useful_page_fetches": 24, "pages_attempted": 24, "page_failures": 0, "bytes_stored": 2450146,
+      "coverage_record_sha256": "c8d62785c660b36ab6450adecac5aa4dfe147aefce14a795490c98e7a6678ace",
+      "distinct_page_purposes": ["about","commercial_hvac","contact_mechanism","cooling_ac","estimate_quote","faq","financing","heating","repair","residential_hvac","service_area_location"],
+      "evidence_rows": 161, "discovery_edges": 157, "durable_minimized_snapshots": 24, "quarantines": 0,
+      "fact_class_pct": {"public_service_description": 55, "public_other": 25, "public_inbound_path": 18, "public_service_area": 1}
+    },
+    "slot_3_www.bncair.net": {
+      "research_run_id": "3f3e316d-965a-5967-a014-ba9c3d038e01", "run_status": "succeeded",
+      "useful_page_fetches": 3, "pages_attempted": 3, "page_failures": 0, "bytes_stored": 323545,
+      "coverage_record_sha256": "98ce1dabd404f96616d05976b60fb23a65074b8fcfde2b58782c9511fc654dee",
+      "distinct_page_purposes": ["contact_mechanism","services","unclassified"],
+      "evidence_rows": 20, "discovery_edges": 8, "durable_minimized_snapshots": 3, "quarantines": 0,
+      "fact_class_pct": {"public_service_description": 60, "public_inbound_path": 25, "public_other": 15},
+      "note": "small first-party site - only 3 same-host pages available; crawl exhausted the frontier and still cleared M1"
+    },
+    "slot_4_allelementshvac.com": {
+      "research_run_id": "3db4c058-e16d-5778-a184-014a7eccefd8", "run_status": "partial",
+      "useful_page_fetches": 13, "pages_attempted": 20, "page_failures": 7,
+      "fetch_outcomes": {"succeeded": 13, "permanent_failure": 7, "page_failed": 7},
+      "bytes_stored": 7121025,
+      "coverage_record_sha256": "79ff1bbf6240796e17bf46ae701136b90adb23658a9ddf3b2e1b3c71ce4a0a2d",
+      "distinct_page_purposes": ["about","commercial_hvac","contact_mechanism","cooling_ac","heating","installation","maintenance","repair","services","unclassified"],
+      "evidence_rows": 115, "discovery_edges": 49, "durable_minimized_snapshots": 13, "quarantines": 0,
+      "fact_class_pct": {"public_service_description": 73, "public_other": 21, "public_inbound_path": 3, "public_about": 3},
+      "note": "7 of 20 candidate pages returned transport/HTTP failures; the 13 successful captures met the M1 sufficiency floor so M1 was ACCEPTED on a partial crawl"
+    },
+    "slot_5_www.callfintastic.com": {
+      "research_run_id": "19082ea7-49d1-5bd5-a8ae-b473e1447d34", "run_status": "succeeded",
+      "useful_page_fetches": 17, "pages_attempted": 17, "page_failures": 0, "bytes_stored": 5803281,
+      "coverage_record_sha256": "af28ab437404a052f98864e79fb58c8bb329d27dd75ce3f272666b9d2eced1b8",
+      "distinct_page_purposes": ["about","contact_mechanism","cooling_ac","faq","heating","installation","maintenance","repair","services"],
+      "evidence_rows": 179, "discovery_edges": 44, "durable_minimized_snapshots": 17, "quarantines": 0,
+      "fact_class_pct": {"public_other": 47, "public_service_description": 44, "public_inbound_path": 5, "public_faq": 2, "public_about": 1},
+      "note": "largest evidence set of the batch but the least structured - see section 13"
+    },
     "slot_6": "no M1 run - terminated at A-09"
   },
 
@@ -62,36 +96,66 @@
   ],
 
   "section_4_m2_opportunity_and_economics_where_reached": {
-    "note": "The deterministic offline M2 stage artifact payloads (opportunity score, economic model inputs/outputs) are persisted in m67_sampled_slot_coordinator_artifacts.data_json for stage='m2' under each coordinator_run_id above. Exact values pending the same read-only in-VPC diagnostic.",
-    "slot_2": "M2 accepted (progressed to M3) - opportunity/economics artifact stored, coordinator 17b75bf7",
-    "slot_3": "M2 accepted (progressed to M3) - coordinator b5e8cea1",
-    "slot_4": "M2 accepted (progressed to M3) - coordinator eda72f38",
-    "slot_5": "M2 returned INSUFFICIENT_EVIDENCE - terminal; no positive opportunity/economics asserted",
+    "source": "m67_sampled_slot_coordinator_artifacts (stage M2_OPPORTUNITY_ECONOMICS). Structured artifact identities/hashes/verdicts retrieved; the M2 economic model output itself is content-addressed by output_sha256 and is a deterministic offline function of the M1 minimized evidence.",
+    "slot_2": {"stage_state": "ACCEPTED", "verdict": "opportunity sufficient - progressed to M3", "artifact_sha256": "4706ae19c32d135d90cbdabca0c1de9fdf535fff2e47d588aee8386cb1421fe4", "output_sha256": "0ef6a21db4ce5d9a899c1c01c8a417fd7343761a8c708a8d5d74592bd777c0cc"},
+    "slot_3": {"stage_state": "ACCEPTED", "verdict": "opportunity sufficient - progressed to M3", "artifact_sha256": "6be193fbd67acca41f17019181dff31bec62c769f12dadcd0a88de1175d769f0", "output_sha256": "bd0dda51eee6802d9268fe1513fc7cf9408dbc57205bffb1235a736766e46bdf"},
+    "slot_4": {"stage_state": "ACCEPTED", "verdict": "opportunity sufficient - progressed to M3", "artifact_sha256": "e0d7c41655f457d75e523df43a576b030967dbbc74121222774bcb9ca6a296a4", "output_sha256": "717cd1b3c12170469ade9165bba74d30dffa94a6e91d08cd19260f81add4138b"},
+    "slot_5": {"stage_state": "ACCEPTED", "verdict": "INSUFFICIENT_EVIDENCE - deterministic offline M2 could not clear the unchanged sufficiency threshold; coordinator terminal M2_INSUFFICIENT_EVIDENCE; no positive opportunity or economics asserted", "artifact_sha256": "68c34e92a4e9277fd5e227843f8dc96dbd91ead939f126742d3ac590d5b099a9", "output_sha256": "822f361ac7a88bade310d8cc76d426d07676609d43ca9571e778e0e7d9c7418b"},
     "slot_6": "not reached"
   },
 
   "section_5_m3_m4_m5_artifacts_where_reached": {
-    "note": "M3/M4/M5 stage artifacts (artifact_sha256, predecessor_artifact_sha256, revision_id, data_json) are persisted in m67_sampled_slot_coordinator_artifacts for stages m3/m4/m5 under coordinator_run_id 17b75bf7 (slot 2), b5e8cea1 (slot 3), eda72f38 (slot 4). Exact hashes pending the read-only in-VPC diagnostic.",
-    "slots_2_3_4": "M3, M4, M5 all accepted (accepted_stage_count 6 = M1..M5 + contact-phase gate)",
-    "slot_5": "not reached (M2 terminal)",
+    "source": "m67_sampled_slot_coordinator_artifacts; each artifact chains by predecessor_artifact_sha256 to the prior stage.",
+    "slot_2": {
+      "M3_EVIDENCE_LINKED_AUDIT": {"state": "ACCEPTED", "artifact_sha256": "c63b137860c6218f773ad02a3d93017210af97bbead813f2c6cf3d370bea97ab", "output_sha256": "331333e00939e7532315733f2051f191a460f695e9a3ba1517d8eb3c17067a56"},
+      "M4_DETERMINISTIC_DEMO": {"state": "ACCEPTED", "artifact_sha256": "e82a3d6112703dad87de3eb29450173815a446e7e81d5581035a561819314413", "output_sha256": "1569672e69ec60a16ebba716e8c063d8555f9191af71a1e919122c325dfbfa52"},
+      "M5_SHADOW_OUTREACH_PACKAGE": {"state": "ACCEPTED", "artifact_sha256": "379e1f7d0d7a5797bacbbe0423d40db4ccbd833006f1930fddc732cbd7c4f9e1", "output_sha256": "92249cd899a7aca485ecc3683d8bad11634bc785b34f1b057e7e1f33dde95b83"},
+      "CONTACT_PHASE_NOT_AUTHORIZED": {"state": "ACCEPTED", "artifact_sha256": "ded243b7b6eeb70428b3bc114a50f9c9eee7693aaeb315ce0ab23e3585367004"}
+    },
+    "slot_3": {
+      "M3_EVIDENCE_LINKED_AUDIT": {"state": "ACCEPTED", "artifact_sha256": "767839acd9b3035e332afeb80de46599b3f8d90e31de6b58a69b1dc841c1f014", "output_sha256": "a3d7beceedb7fa1886c571bdf7d7eb621a8d64ded0be343809dd93445a406ffb"},
+      "M4_DETERMINISTIC_DEMO": {"state": "ACCEPTED", "artifact_sha256": "b9b7499e761120e54b3059d83c70e22ca08492856d574b0bbaeb7f8f2895af2b", "output_sha256": "5ce95f8da4019f4145a3ff415fb610a36812b8ce6a16f6caa5fb84211211c9c9"},
+      "M5_SHADOW_OUTREACH_PACKAGE": {"state": "ACCEPTED", "artifact_sha256": "6c26e4c63002a84b3556224cab64bda3651a14b62d085d1451ea22a4454fce2b", "output_sha256": "cf5c205e1dbd81c121afea64109e74f516c0963f21b24bf02c1c6510d161457f"},
+      "CONTACT_PHASE_NOT_AUTHORIZED": {"state": "ACCEPTED", "artifact_sha256": "b3062b86ef255c92db3db65e0fbb1b37c1bae23eb9967a003c330eb8c2cf94fc"}
+    },
+    "slot_4": {
+      "M3_EVIDENCE_LINKED_AUDIT": {"state": "ACCEPTED", "artifact_sha256": "a9347c38da8c9095667f9e12730b0a9fc5d1670cd49f9e58e6caa486e3054814", "output_sha256": "c7ba2f93d5535990cc3023624c5ec11021a2ab855e07cae096bd61318b61fbff"},
+      "M4_DETERMINISTIC_DEMO": {"state": "ACCEPTED", "artifact_sha256": "442e8bd32a05954b0030a3685ec348964805f15cfaa92c3819d96f723026e8e5", "output_sha256": "7da6729f5d2f90e1b6dd6eae293d6486d76878fa884b278dd5cdc6a3b660e0f9"},
+      "M5_SHADOW_OUTREACH_PACKAGE": {"state": "ACCEPTED", "artifact_sha256": "122e25457070e6428a354e010eaef2130b1014a82b6dcdad38ba9faaf95712a5", "output_sha256": "92e61818253cbfbeb4f0bc7881997f7a4995ee82a90c90fdd13f914d040acfec"},
+      "CONTACT_PHASE_NOT_AUTHORIZED": {"state": "ACCEPTED", "artifact_sha256": "e8201bb5c5b0f71898b12f2ab14f183ed5f7cb252e55fb7215c0847287e487cf"}
+    },
+    "note_shared_contact_gate_output": "the CONTACT_PHASE_NOT_AUTHORIZED artifact output_sha256 is identical across slots 2/3/4 (9ba2d0a42c9942b8833e7867a0f45f9c8853aa0a5f1d4b5c08bda1a08273679f) - it is the fixed 'contact phase not authorized' terminal marker, carrying no company data",
+    "slot_5": "M3/M4/M5 not reached (M2 terminal)",
     "slot_6": "not reached"
   },
 
   "section_6_fact_inference_estimate_recommendation_unknown_audit": {
-    "taxonomy_status": "FACT / INFERENCE / ESTIMATE / RECOMMENDATION / UNKNOWN remain distinct in the deployed pipeline (research_evidence.fact_class column present and populated per the link-7 catalog check). No code path was changed to conflate them.",
-    "public_absence_is_not_internal_absence": "Enforced. The M1 v2 crawl and M2-M5 stages establish only what first-party website evidence supports. No unsupported internal facts (response times, lead volume, conversion, CRM usage, missed leads, revenue leakage, staffing, internal workflows, follow-up quality) were inferred or asserted by this batch.",
-    "m2_m5_thresholds": "unchanged from the pre-batch deployment; Slot 5's INSUFFICIENT_EVIDENCE is the unchanged M2 threshold operating.",
-    "per_slot_fact_class_ledger": "persisted in research_evidence.fact_class per research_run; exact per-row ledger pending the read-only in-VPC diagnostic."
+    "taxonomy_status": "FACT / INFERENCE / ESTIMATE / RECOMMENDATION / UNKNOWN remain distinct in the deployed pipeline; research_evidence.fact_class is present and populated on every batch evidence row.",
+    "per_slot_fact_class_ledger": {
+      "slot_2": {"public_service_description": 89, "public_other": 41, "public_inbound_path": 29, "public_service_area": 2, "total": 161},
+      "slot_3": {"public_service_description": 12, "public_inbound_path": 5, "public_other": 3, "total": 20},
+      "slot_4": {"public_service_description": 84, "public_other": 24, "public_inbound_path": 4, "public_about": 3, "total": 115},
+      "slot_5": {"public_other": 85, "public_service_description": 79, "public_inbound_path": 9, "public_faq": 4, "public_about": 2, "total": 179}
+    },
+    "all_evidence_classes_are_public": "every fact_class observed is a public_* class (public_service_description, public_inbound_path, public_service_area, public_about, public_faq, public_other) - i.e. FACTs about publicly published first-party website content only",
+    "public_absence_is_not_internal_absence": "Enforced. No unsupported internal facts (response times, lead volume, conversion, CRM usage, missed leads, revenue leakage, staffing, internal workflows, follow-up quality) were inferred or asserted by this batch. The M2 economic model is a deterministic function of these public FACTs only.",
+    "m2_m5_thresholds": "unchanged; Slot 5's INSUFFICIENT_EVIDENCE is the unchanged M2 sufficiency threshold operating on a public-evidence set that did not support a scored opportunity."
   },
 
   "section_7_per_slot_request_byte_time_counters": {
-    "note": "Per-slot useful-page-fetch / total-HTTP-request / raw-byte / M1-duration counters are persisted per research_run in RDS and were each hard-capped by the deployed _policy_v2 at the per-slot envelope below. Exact consumed values pending the read-only in-VPC diagnostic.",
     "per_slot_hard_ceiling_applied_every_executed_slot": {
       "max_useful_page_fetches": 25, "max_total_http_requests": 48, "max_discovery_fetches": 6,
       "max_total_bytes": 18000000, "max_duration_seconds": 300, "max_response_bytes": 1000000,
       "max_attempts_per_url": 2, "max_depth": 3, "cost_ceiling_usd": "0"
     },
-    "clamp_note": "materialize_v2 clamps each release ceiling to min(per-slot envelope, remaining batch headroom). Slots 03-05 were materialised with batch_consumed=0 in this session because the prior-slot consumed counters were not readable (RDS read blocked). This never risks exceeding the batch ceiling: each slot is independently hard-capped at its per-slot envelope by _policy_v2, and 4 executed slots x per-slot envelope (100 / 192 / 30 / 72,000,000 / 1,200) <= the batch ceiling (125 / 240 / 30 / 90,000,000 / 1,500). The cross-slot headroom tightening the owner directive envisions should be reconciled with the exact per-slot counters once the RDS read is approved."
+    "actuals_from_diagnostic": {
+      "slot_2": {"useful_page_fetches": 24, "page_fetch_attempts": 24, "page_failures": 0, "robots_sitemap_probe_rows": 29, "bytes_stored": 2450146, "approx_wall_clock_seconds": 69, "within_all_dimensions": true},
+      "slot_3": {"useful_page_fetches": 3, "page_fetch_attempts": 3, "page_failures": 0, "robots_sitemap_probe_rows": 4, "bytes_stored": 323545, "approx_wall_clock_seconds": 8, "within_all_dimensions": true},
+      "slot_4": {"useful_page_fetches": 13, "page_fetch_attempts": 20, "page_failures": 7, "robots_sitemap_probe_rows": 21, "bytes_stored": 7121025, "approx_wall_clock_seconds": 73, "within_all_dimensions": true},
+      "slot_5": {"useful_page_fetches": 17, "page_fetch_attempts": 17, "page_failures": 0, "robots_sitemap_probe_rows": 18, "bytes_stored": 5803281, "approx_wall_clock_seconds": 46, "within_all_dimensions": true}
+    },
+    "note_on_probe_rows": "research_robots_evidence rows count every robots/sitemap check including cache-served re-checks, so they over-count actual HTTP requests; page_fetch_attempts + a small number of live sitemap-variant probes are the real HTTP load, and every slot stayed inside the 48-request per-slot ceiling (crawls ended on frontier exhaustion or the 25-useful-page cap, never on the HTTP-request ceiling).",
+    "clamp_note": "Slots 03-05 were materialised with batch_consumed=0 (prior-slot counters were not yet readable). Retro-assessment with the exact actuals: cumulative 57 useful fetches / 64 page attempts / 15,697,997 bytes / ~196 s - each dimension far below the batch ceiling, so the batch bound was never at risk. Every slot was independently hard-capped at its per-slot envelope by _policy_v2."
   },
 
   "section_8_batch_cumulative_counters": {
@@ -101,13 +165,15 @@
       "batch_max_m1_duration_seconds": 1500, "batch_cost_ceiling_usd": "0"
     },
     "slots_executed": 4,
-    "guaranteed_upper_bound_on_batch_consumption": {
-      "useful_page_fetches": "<= 100", "total_http_requests": "<= 192", "discovery_fetches": "<= 24",
-      "total_bytes": "<= 72000000", "m1_duration_seconds": "<= 1200", "cost_usd": "0"
+    "exact_cumulative_actuals": {
+      "useful_page_fetches": 57, "page_fetch_attempts": 64, "page_failures": 7,
+      "raw_bytes_stored": 15697997, "approx_m1_wall_clock_seconds": 196, "cost_usd": "0"
+    },
+    "headroom_remaining_against_batch_ceiling": {
+      "useful_page_fetches": 68, "bytes": 74302003, "m1_duration_seconds": 1304
     },
     "batch_ceiling_breached": false,
-    "paid_or_source_research_cost_usd": "0 (no paid sources, no AI, no browser used)",
-    "exact_cumulative_counters": "pending the read-only in-VPC diagnostic; bounded above as shown."
+    "paid_or_source_research_cost_usd": "0 (no paid sources, no AI, no browser)"
   },
 
   "section_9_provenance_and_minimization_status": {
@@ -118,7 +184,14 @@
       "synthetic_validation_py_sha256": "f6c1900ed94ed92fa38a89bd3652327e9bb765188aaec5a8f2bcbef0edcd83d0"
     },
     "in_cluster_minimization_proof": "link-7 BOUNDED_SITE_CRAWL_V1 synthetic validation: removed_email_count 0 / removed_phone_count 0 / removed_structured_contact_blocks 0 on the hermetic fixture, evidence preserved, historical rows preserved, catalog second-pass no-op.",
-    "per_slot_minimization_events": "persisted in page_snapshots (source_content_sha256, minimized_content_sha256, minimization_event_sha256, removed_* counters) and research_capture_quarantines per research_run; exact values pending the read-only in-VPC diagnostic.",
+    "per_slot_minimization_events": {
+      "slot_2": {"durable_minimized_snapshots": 24, "disposition": "DURABLE_MINIMIZED_CAPTURE (all)", "removed_email": 4, "removed_phone": 210, "removed_structured_contact_blocks": 98, "quarantines": 0},
+      "slot_3": {"durable_minimized_snapshots": 3, "disposition": "DURABLE_MINIMIZED_CAPTURE (all)", "removed_email": 8, "removed_phone": 16, "removed_structured_contact_blocks": 6, "quarantines": 0},
+      "slot_4": {"durable_minimized_snapshots": 13, "disposition": "DURABLE_MINIMIZED_CAPTURE (all)", "removed_email": 26, "removed_phone": 290, "removed_structured_contact_blocks": 1, "quarantines": 0},
+      "slot_5": {"durable_minimized_snapshots": 17, "disposition": "DURABLE_MINIMIZED_CAPTURE (all)", "removed_email": 0, "removed_phone": 11948, "removed_structured_contact_blocks": 1, "quarantines": 0}
+    },
+    "quarantines_across_batch": 0,
+    "note": "every captured page produced a DURABLE_MINIMIZED_CAPTURE - no page was quarantined for un-preservable evidence (contrast the pre-batch Slot 01 v1 homepage runs, which hit minimization_quarantine). Slot 5's website was extremely phone-CTA-dense (11,948 phone occurrences stripped) yet still minimized cleanly with evidence preserved.",
     "no_contact_or_person_data_processed": "CONFIRMED at the authority level - every slot terminated at or before CONTACT_PHASE_NOT_AUTHORIZED; no contact phase, outreach, delivery, person/contact processing, AI or browser was authorised or invoked."
   },
 
@@ -135,15 +208,17 @@
   },
 
   "section_11_final_dormant_state_proof": {
-    "observed_at_utc": "2026-08-30T12:50:00Z",
-    "ssm_kill_switch": "TRIPPED (v33)",
+    "observed_at_utc": "2026-08-30T13:15:00Z (after the bounded read-only RDS diagnostic)",
+    "ssm_kill_switch": "TRIPPED (v33 - unchanged since the last slot execution and unchanged by the diagnostic)",
     "ssm_research_release": "v35 NOT_AUTHORIZED consumed terminal (CONSUMED:M2_INSUFFICIENT_EVIDENCE, id f22c6eba-...-df5)",
     "ssm_sampled_slot_execution_approval": "{\"state\":\"NOT_AUTHORIZED\"} sentinel (v31)",
     "ssm_controlled_egress_lease": "{\"state\":\"NOT_AUTHORIZED\"} (v15)",
-    "ecs_services": {"m67-phase1-research-worker": "desired 0 / running 0 / pending 0", "m67-phase1-intelligence-worker": "0/0/0", "m67-phase1-controlled-egress": "0/0/0"},
+    "ecs_services": {"m67-phase1-research-worker": "desired 0 / running 0 / pending 0 (rev 22)", "m67-phase1-intelligence-worker": "0/0/0 (rev 19)", "m67-phase1-controlled-egress": "0/0/0 (rev 18)"},
     "running_tasks": 0,
+    "transient_diagnostic_task_definitions": "m67-phase1-research-worker:23 and :24 both INACTIVE (deregistered); services never referenced them",
     "deployed_image_digest": "sha256:34e5974f068c6d9633e87aa6d212e687814878a903bcdb7a53adbc7cec241291 (all 4 task definitions)",
-    "terraform_plan_detailed_exitcode": "No changes. Your infrastructure matches the configuration. (exit 0)"
+    "terraform_plan_detailed_exitcode": "No changes. Your infrastructure matches the configuration. (exit 0)",
+    "diagnostic_mutation_summary": "the only AWS state change from the diagnostic was register+deregister of two transient research-worker revisions plus two ephemeral read-only Fargate task runs; no SSM parameter, ECS service, kill switch, research-release, approval, or database row was created, modified or deleted"
   },
 
   "section_12_comparison_across_slots_02_06": {
@@ -155,10 +230,29 @@
     "cost": "USD 0 across the batch; no AI, browser, paid sources, person/contact processing, outreach or delivery."
   },
 
-  "outstanding_item_for_human_review": {
-    "rds_detail_retrieval": "Sections 2, 4, 5, 6 (per-row ledger), 7 (exact counters), and 9 (per-slot minimization events) require one read-only in-VPC diagnostic (a SELECT-only query over the coordinator/research tables). Registering the throwaway task definition needed to run it was auto-blocked in this session. Approve that read (or provide an alternative Phase 1 RDS read path) to complete those sections. All authority-level, deployment-level and terminal-level facts in this report are complete and authoritative without it.",
-    "batch_consumed_reconciliation": "Slots 03-05 were materialised with batch_consumed=0; reconcile against the exact per-slot counters once the RDS read is available (batch ceiling provably not breached regardless - see section 7)."
+  "section_13_comparative_analysis_why_02_04_reached_m5_but_05_stopped_at_m2": {
+    "question": "Slots 02, 03 and 04 progressed the full deterministic offline pipeline to M5; Slot 05 terminated at M2_INSUFFICIENT_EVIDENCE. Why?",
+    "same_pipeline_same_thresholds": "All four ran the identical deployed image (sha256:34e5974f...), the identical phase1-m1@2 crawl policy (25 pages / 48 HTTP / 18 MB / 300 s / depth 3), the identical unchanged deterministic offline M2 economic model, and the identical M2 sufficiency threshold. Nothing in code or configuration differed between slots. The divergence is entirely in the first-party public evidence each site yielded.",
+    "the_determinant_is_evidence_composition_not_volume": {
+      "observation": "Slot 05 returned the LARGEST evidence set of the batch (179 rows, vs 161 / 20 / 115) and tied for the most pages (17), yet it is the one that failed M2. Raw volume is not what M2 scores.",
+      "fact_class_mix": {
+        "slot_2_webbair": {"service_description": "55%", "inbound_path": "18%", "service_area": "1%", "other": "25%", "reading": "balanced - deep service catalogue PLUS strong conversion-pathway evidence PLUS geographic/service-area specificity"},
+        "slot_3_bncair": {"service_description": "60%", "inbound_path": "25%", "other": "15%", "reading": "tiny site (3 pages) but the HIGHEST inbound-path density of the batch - a clear, concentrated conversion-pathway signal was enough for M2"},
+        "slot_4_allelements": {"service_description": "73%", "inbound_path": "3%", "about": "3%", "other": "21%", "reading": "service-depth dominant plus company/about evidence; partial crawl (13/20 pages) but the service-description mass carried M2"},
+        "slot_5_fintastic": {"other": "47%", "service_description": "44%", "inbound_path": "5%", "faq": "2%", "about": "1%", "reading": "nearly half the evidence is low-value public_other; service-description is a minority; inbound-path evidence is proportionally the WEAKEST of all four (5% vs 18-25%); almost no company or geographic specificity"}
+      },
+      "conversion_pathway_evidence_absolute_counts": {"slot_2": 29, "slot_3": 5, "slot_4": 4, "slot_5": 9, "note": "Slot 5's 9 inbound-path rows are spread across 17 pages (0.5/page) vs Slot 3's 5 across 3 pages (1.7/page) and Slot 2's 29 across 24 pages (1.2/page)"}
+    },
+    "corroborating_signal": "Slot 05's site was extraordinarily phone-CTA-dense - the minimizer stripped 11,948 phone occurrences (vs 16-290 for the others). That is consistent with a site built around a repeated call-now CTA across templated pages rather than substantive, differentiated service and company description. After minimization removed the contact CTAs, what remained for M2 was proportionally thin on the structured signal (service depth + conversion pathway + specificity) that the economic model needs.",
+    "mechanism": "M2 (deterministic, offline) attempts to assemble a SCORED addressable opportunity from the M1 public FACTs. It requires a coherent minimum of (a) substantive service-offering description, (b) inbound / conversion-pathway evidence, and ideally (c) company or service-area specificity. Slots 02-04 each cleared that bar by a different strength - 02 by balance + geography, 03 by concentrated inbound-path density, 04 by service-description mass + company evidence. Slot 05's evidence was high-volume but low-structure: dominated by unclassified public_other, minority service-description, and the weakest proportional conversion-pathway evidence, with negligible company/geographic specificity. The model could not build a scored opportunity above threshold and returned INSUFFICIENT_EVIDENCE.",
+    "truth_taxonomy_note": "The fact_class distributions, page counts, evidence counts and removed-contact counts above are FACTs (stored diagnostic rows). The causal explanation linking Slot 05's evidence composition to the M2 verdict is INFERENCE from those FACTs plus the known M2 model design; it asserts nothing about Slot 05's actual internal business (lead volume, response time, revenue, staffing) - public thinness is not internal thinness.",
+    "this_is_the_control_working": "M2_INSUFFICIENT_EVIDENCE is a truthful, owner-pre-accepted negative company outcome. It was sealed as-is: no redraw, no replacement, no threshold reduction, no evidence fabrication, no repair."
   },
 
-  "scope_stop": "Slots 07-24 not started. Slot 01 not reopened. No AI, browser, person/contact processing, outreach, delivery, paid sources or additional hostname scope invoked. Batch stops at Slot 06 for human review."
+  "outstanding_item_for_human_review": {
+    "rds_detail_retrieval": "COMPLETE. One owner-authorized bounded read-only in-VPC SELECT diagnostic was executed 2026-08-30; sections 2, 4, 5, 6, 7, 8 and 9 are now filled from provenance-safe structured fields. Evidence: docs/readiness/m6.7-deployment/slots02-06-bounded-readonly-rds-diagnostic-evidence-2026-08-30.json. Disclosure: two ephemeral read-only task executions occurred (the first aborted on a client-side output-guard bug before emitting any row; the second, identical SELECT-only workload, succeeded). Neither performed any INSERT/UPDATE/DELETE/DDL, SSM write, service scaling, kill-switch change, or external network access; both transient task definitions (research-worker:23, :24) were deregistered.",
+    "batch_consumed_reconciliation": "COMPLETE. Exact cumulative actuals: 57 useful page fetches / 64 page attempts / 15,697,997 bytes / ~196 s M1 wall-clock - each far below the batch ceiling (125 / 240 / 90,000,000 / 1,500). The batch_consumed=0 materialization of Slots 03-05 caused no risk; every slot was independently hard-capped at its per-slot envelope by _policy_v2."
+  },
+
+  "scope_stop": "Slots 07-24 not started. Slot 01 not reopened. No AI, browser, person/contact processing, outreach, delivery, paid sources or additional hostname scope invoked. No terminal outcome was changed by the diagnostic. Batch stops at Slot 06 for human review."
 }

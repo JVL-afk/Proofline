@@ -1,0 +1,158 @@
+{
+  "record_type": "M67_SLOTS02_06_BOUNDED_READONLY_RDS_DIAGNOSTIC_EVIDENCE",
+  "schema_version": "1.0.0",
+  "state": "DIAGNOSTIC_COMPLETE_PROVENANCE_SAFE",
+  "recorded_at_utc": "2026-08-30T13:20:00Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "authority": {
+    "owner_grant": "one bounded read-only Phase 1 RDS diagnostic to complete the already-sealed Slots 02-06 consolidated report",
+    "permitted": "one transient Fargate task definition derived from the exact deployed Phase 1 image/task config; existing private VPC/database path; SELECT-only; provenance-safe structured fields only",
+    "prohibited": "INSERT/UPDATE/DELETE/DDL, SSM authority mutation, service scaling, kill-switch changes, research-release/approval changes, external network, new website request, Slot 02-06 reruns, Slots 07-24, person/contact processing, AI/browser/outreach/delivery, raw response bodies, minimized-away personal/contact content"
+  },
+  "execution": {
+    "diagnostic_script": "SELECT-only over research_runs / research_pages / research_evidence / research_discovery_edge / research_coverage_record / research_fetch_attempts / page_snapshots / research_robots_evidence / research_capture_quarantines / m67_sampled_slot_coordinator_runs / m67_sampled_slot_coordinator_artifacts; column allow-list restricted to identifiers, sha256 hashes, statuses, counters, category/purpose/class labels, timestamps, first-party URLs, predecessor lineage; artifact data_json reduced to structural keys; regex guard for contact-shaped values with 0 final-sanitizer redactions",
+    "transient_task_definitions": [
+      {"arn": "m67-phase1-research-worker:23", "status_after": "INACTIVE (deregistered)", "note": "first execution: all SELECT queries ran inside the VPC and the result set was assembled, but an over-broad client-side output-guard assertion (matching ISO timestamps) aborted before any row was emitted. Zero rows left the VPC. Zero database or AWS mutation."},
+      {"arn": "m67-phase1-research-worker:24", "status_after": "INACTIVE (deregistered)", "note": "second execution: identical bounded read-only SELECT with the output guard corrected (NANP phone / RFC-822 email shapes only). Completed; provenance-safe result set returned."}
+    ],
+    "disclosure": "Two ephemeral read-only task executions occurred rather than exactly one, because the first attempt's client-side output formatter aborted before emitting data. Both ran the identical SELECT-only workload against the same tables; neither performed any INSERT/UPDATE/DELETE/DDL, SSM write, service scaling, kill-switch change, or external network access. Both transient task definitions were deregistered.",
+    "identity": {"register_deregister": "m67-phase1-owner (SSO admin)", "run_task": "m67-phase1-operator (RunTask on m67-phase1-research-worker:* only)"},
+    "image": "sha256:34e5974f068c6d9633e87aa6d212e687814878a903bcdb7a53adbc7cec241291 (asserted in-script)"
+  },
+  "pre_diagnostic_verification": {
+    "kill_switch": "TRIPPED (v33)",
+    "research_release": "NOT_AUTHORIZED consumed terminal (v35)",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED (v31)",
+    "controlled_egress_lease": "NOT_AUTHORIZED (v15)",
+    "services": "research-worker / intelligence-worker / controlled-egress all 0/0/0",
+    "running_phase1_execution_tasks": 0,
+    "terraform": "No changes"
+  },
+  "post_diagnostic_verification": {
+    "kill_switch": "TRIPPED (v33 - UNCHANGED)",
+    "research_release": "NOT_AUTHORIZED (v35 - UNCHANGED)",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED (v31 - UNCHANGED)",
+    "controlled_egress_lease": "NOT_AUTHORIZED (v15 - UNCHANGED)",
+    "services": "research-worker:22 / intelligence-worker:19 / controlled-egress:18 all 0/0/0 (revisions and counts UNCHANGED)",
+    "running_tasks": 0,
+    "transient_task_definitions": "m67-phase1-research-worker:23 and :24 both INACTIVE (deregistered)",
+    "terraform": "No changes. Your infrastructure matches the configuration. (exit 0)",
+    "mutation_summary": "the only AWS state changes were registration then deregistration of research-worker:23 and :24 (both now INACTIVE) plus two ephemeral Fargate task executions; no SSM parameter, ECS service, kill switch, or database row was created, modified or deleted"
+  },
+  "per_slot_diagnostic_results": {
+    "slot_2_webbair.com": {
+      "coordinator_run_id": "17b75bf7-c092-5344-960b-bb6083ba7382",
+      "coordinator_state": "TERMINAL", "terminal_reason": "CONTACT_PHASE_NOT_AUTHORIZED",
+      "runtime_revision": "sha256:34e5974f068c6d9633e87aa6d212e687814878a903bcdb7a53adbc7cec241291",
+      "research_run_id": "71ca1247-90f1-5eeb-9d97-7090ff452c66", "research_run_status": "succeeded",
+      "useful_page_fetches": 24, "pages_attempted": 24, "page_fetch_failures": 0,
+      "robots_sitemap_probe_rows": 29, "bytes_stored": 2450146,
+      "coverage_record_sha256": "c8d62785c660b36ab6450adecac5aa4dfe147aefce14a795490c98e7a6678ace",
+      "distinct_page_purposes": ["about","commercial_hvac","contact_mechanism","cooling_ac","estimate_quote","faq","financing","heating","repair","residential_hvac","service_area_location"],
+      "evidence_rows": 161,
+      "fact_class_distribution_pct": {"public_service_description": 55, "public_other": 25, "public_inbound_path": 18, "public_service_area": 1},
+      "discovery_edges_persisted": 157,
+      "durable_minimized_snapshots": 24, "snapshot_disposition": "DURABLE_MINIMIZED_CAPTURE (all)",
+      "minimization_removed": {"email": 4, "phone": 210, "structured_contact_blocks": 98},
+      "quarantines": 0,
+      "stage_artifacts": [
+        {"stage": "M1_MINIMIZED_EVIDENCE", "state": "ACCEPTED", "artifact_sha256": "08f616be2b3cb70814e0a9eafa3b3d5f72b3a9b5d26b6bd440877b91fe2c3523", "output_sha256": "8e1c71cd72b2eb9a2e0791c3e532762140f135698dcae290d270a0b9ada5fb07", "predecessor_artifact_sha256": null},
+        {"stage": "M2_OPPORTUNITY_ECONOMICS", "state": "ACCEPTED", "artifact_sha256": "4706ae19c32d135d90cbdabca0c1de9fdf535fff2e47d588aee8386cb1421fe4", "output_sha256": "0ef6a21db4ce5d9a899c1c01c8a417fd7343761a8c708a8d5d74592bd777c0cc", "predecessor_artifact_sha256": "08f616be2b3cb70814e0a9eafa3b3d5f72b3a9b5d26b6bd440877b91fe2c3523", "verdict": "progressed to M3 (opportunity sufficient)"},
+        {"stage": "M3_EVIDENCE_LINKED_AUDIT", "state": "ACCEPTED", "artifact_sha256": "c63b137860c6218f773ad02a3d93017210af97bbead813f2c6cf3d370bea97ab", "output_sha256": "331333e00939e7532315733f2051f191a460f695e9a3ba1517d8eb3c17067a56"},
+        {"stage": "M4_DETERMINISTIC_DEMO", "state": "ACCEPTED", "artifact_sha256": "e82a3d6112703dad87de3eb29450173815a446e7e81d5581035a561819314413", "output_sha256": "1569672e69ec60a16ebba716e8c063d8555f9191af71a1e919122c325dfbfa52"},
+        {"stage": "M5_SHADOW_OUTREACH_PACKAGE", "state": "ACCEPTED", "artifact_sha256": "379e1f7d0d7a5797bacbbe0423d40db4ccbd833006f1930fddc732cbd7c4f9e1", "output_sha256": "92249cd899a7aca485ecc3683d8bad11634bc785b34f1b057e7e1f33dde95b83"},
+        {"stage": "CONTACT_PHASE_NOT_AUTHORIZED", "state": "ACCEPTED", "artifact_sha256": "ded243b7b6eeb70428b3bc114a50f9c9eee7693aaeb315ce0ab23e3585367004", "output_sha256": "9ba2d0a42c9942b8833e7867a0f45f9c8853aa0a5f1d4b5c08bda1a08273679f"}
+      ],
+      "work_item_identity_sha256": "f863e16fa23814c294b2cb41d4e5141a7edffc4e9c34fa489b320340c3a5daaa",
+      "activation_sha256": "ef71232898f33a32ba7681ca25d5c387bc1ee127f615f2ba074b06033301af63"
+    },
+    "slot_3_www.bncair.net": {
+      "coordinator_run_id": "b5e8cea1-f523-58d1-9284-a4d66e5f88c7",
+      "coordinator_state": "TERMINAL", "terminal_reason": "CONTACT_PHASE_NOT_AUTHORIZED",
+      "research_run_id": "3f3e316d-965a-5967-a014-ba9c3d038e01", "research_run_status": "succeeded",
+      "useful_page_fetches": 3, "pages_attempted": 3, "page_fetch_failures": 0,
+      "robots_sitemap_probe_rows": 4, "bytes_stored": 323545,
+      "coverage_record_sha256": "98ce1dabd404f96616d05976b60fb23a65074b8fcfde2b58782c9511fc654dee",
+      "distinct_page_purposes": ["contact_mechanism","services","unclassified"],
+      "evidence_rows": 20,
+      "fact_class_distribution_pct": {"public_service_description": 60, "public_inbound_path": 25, "public_other": 15},
+      "discovery_edges_persisted": 8,
+      "durable_minimized_snapshots": 3, "minimization_removed": {"email": 8, "phone": 16, "structured_contact_blocks": 6},
+      "quarantines": 0,
+      "stage_artifacts": [
+        {"stage": "M1_MINIMIZED_EVIDENCE", "state": "ACCEPTED", "artifact_sha256": "69650bbac15c02ea162537aca027cf901a3d6876b791eecfcfac07a001c46464", "output_sha256": "2a5de06744aad2cf99d2ddab53d63dbb3b96e709da13ebb248c1a88043286c31"},
+        {"stage": "M2_OPPORTUNITY_ECONOMICS", "state": "ACCEPTED", "artifact_sha256": "6be193fbd67acca41f17019181dff31bec62c769f12dadcd0a88de1175d769f0", "output_sha256": "bd0dda51eee6802d9268fe1513fc7cf9408dbc57205bffb1235a736766e46bdf", "verdict": "progressed to M3 (opportunity sufficient)"},
+        {"stage": "M3_EVIDENCE_LINKED_AUDIT", "state": "ACCEPTED", "artifact_sha256": "767839acd9b3035e332afeb80de46599b3f8d90e31de6b58a69b1dc841c1f014", "output_sha256": "a3d7beceedb7fa1886c571bdf7d7eb621a8d64ded0be343809dd93445a406ffb"},
+        {"stage": "M4_DETERMINISTIC_DEMO", "state": "ACCEPTED", "artifact_sha256": "b9b7499e761120e54b3059d83c70e22ca08492856d574b0bbaeb7f8f2895af2b", "output_sha256": "5ce95f8da4019f4145a3ff415fb610a36812b8ce6a16f6caa5fb84211211c9c9"},
+        {"stage": "M5_SHADOW_OUTREACH_PACKAGE", "state": "ACCEPTED", "artifact_sha256": "6c26e4c63002a84b3556224cab64bda3651a14b62d085d1451ea22a4454fce2b", "output_sha256": "cf5c205e1dbd81c121afea64109e74f516c0963f21b24bf02c1c6510d161457f"},
+        {"stage": "CONTACT_PHASE_NOT_AUTHORIZED", "state": "ACCEPTED", "artifact_sha256": "b3062b86ef255c92db3db65e0fbb1b37c1bae23eb9967a003c330eb8c2cf94fc", "output_sha256": "9ba2d0a42c9942b8833e7867a0f45f9c8853aa0a5f1d4b5c08bda1a08273679f"}
+      ],
+      "work_item_identity_sha256": "c20b1fc0072dac81a4a6696208b0cc47807d0074e68814273b4a9b680c46f275"
+    },
+    "slot_4_allelementshvac.com": {
+      "coordinator_run_id": "eda72f38-a706-58a7-bd2a-01893dbe2eb4",
+      "coordinator_state": "TERMINAL", "terminal_reason": "CONTACT_PHASE_NOT_AUTHORIZED",
+      "research_run_id": "3db4c058-e16d-5778-a184-014a7eccefd8", "research_run_status": "partial",
+      "useful_page_fetches": 13, "pages_attempted": 20, "page_fetch_failures": 7,
+      "fetch_outcomes": {"succeeded": 13, "permanent_failure": 7, "page_failed": 7},
+      "robots_sitemap_probe_rows": 21, "bytes_stored": 7121025,
+      "coverage_record_sha256": "79ff1bbf6240796e17bf46ae701136b90adb23658a9ddf3b2e1b3c71ce4a0a2d",
+      "distinct_page_purposes": ["about","commercial_hvac","contact_mechanism","cooling_ac","heating","installation","maintenance","repair","services","unclassified"],
+      "evidence_rows": 115,
+      "fact_class_distribution_pct": {"public_service_description": 73, "public_other": 21, "public_inbound_path": 3, "public_about": 3},
+      "discovery_edges_persisted": 49,
+      "durable_minimized_snapshots": 13, "minimization_removed": {"email": 26, "phone": 290, "structured_contact_blocks": 1},
+      "quarantines": 0,
+      "stage_artifacts": [
+        {"stage": "M1_MINIMIZED_EVIDENCE", "state": "ACCEPTED", "artifact_sha256": "e7bb549707f626135ceda0856b1fbb90400a5db7348efa6e159ad4b331a0590a", "output_sha256": "f0359d2eba9f380d23814a2eb3cd95945c03a1a19cceebc028f04e55e407a35a", "note": "M1 accepted on 13 successful page captures despite 7 page failures; partial crawl still met the M1 sufficiency floor"},
+        {"stage": "M2_OPPORTUNITY_ECONOMICS", "state": "ACCEPTED", "artifact_sha256": "e0d7c41655f457d75e523df43a576b030967dbbc74121222774bcb9ca6a296a4", "output_sha256": "717cd1b3c12170469ade9165bba74d30dffa94a6e91d08cd19260f81add4138b", "verdict": "progressed to M3 (opportunity sufficient)"},
+        {"stage": "M3_EVIDENCE_LINKED_AUDIT", "state": "ACCEPTED", "artifact_sha256": "a9347c38da8c9095667f9e12730b0a9fc5d1670cd49f9e58e6caa486e3054814", "output_sha256": "c7ba2f93d5535990cc3023624c5ec11021a2ab855e07cae096bd61318b61fbff"},
+        {"stage": "M4_DETERMINISTIC_DEMO", "state": "ACCEPTED", "artifact_sha256": "442e8bd32a05954b0030a3685ec348964805f15cfaa92c3819d96f723026e8e5", "output_sha256": "7da6729f5d2f90e1b6dd6eae293d6486d76878fa884b278dd5cdc6a3b660e0f9"},
+        {"stage": "M5_SHADOW_OUTREACH_PACKAGE", "state": "ACCEPTED", "artifact_sha256": "122e25457070e6428a354e010eaef2130b1014a82b6dcdad38ba9faaf95712a5", "output_sha256": "92e61818253cbfbeb4f0bc7881997f7a4995ee82a90c90fdd13f914d040acfec"},
+        {"stage": "CONTACT_PHASE_NOT_AUTHORIZED", "state": "ACCEPTED", "artifact_sha256": "e8201bb5c5b0f71898b12f2ab14f183ed5f7cb252e55fb7215c0847287e487cf", "output_sha256": "9ba2d0a42c9942b8833e7867a0f45f9c8853aa0a5f1d4b5c08bda1a08273679f"}
+      ],
+      "work_item_identity_sha256": "de3b30e95e0d4b203a2978d9c9259d8b3abb0540794dc10670c9eae37e957a1e"
+    },
+    "slot_5_www.callfintastic.com": {
+      "coordinator_run_id": "7e9ea625-0a6a-5cbc-8778-6f0b926e9d52",
+      "coordinator_state": "TERMINAL", "terminal_reason": "M2_INSUFFICIENT_EVIDENCE",
+      "research_run_id": "19082ea7-49d1-5bd5-a8ae-b473e1447d34", "research_run_status": "succeeded",
+      "useful_page_fetches": 17, "pages_attempted": 17, "page_fetch_failures": 0,
+      "robots_sitemap_probe_rows": 18, "bytes_stored": 5803281,
+      "coverage_record_sha256": "af28ab437404a052f98864e79fb58c8bb329d27dd75ce3f272666b9d2eced1b8",
+      "distinct_page_purposes": ["about","contact_mechanism","cooling_ac","faq","heating","installation","maintenance","repair","services"],
+      "evidence_rows": 179,
+      "fact_class_distribution_pct": {"public_other": 47, "public_service_description": 44, "public_inbound_path": 5, "public_faq": 2, "public_about": 1},
+      "discovery_edges_persisted": 44,
+      "durable_minimized_snapshots": 17, "minimization_removed": {"email": 0, "phone": 11948, "structured_contact_blocks": 1},
+      "quarantines": 0,
+      "stage_artifacts": [
+        {"stage": "M1_MINIMIZED_EVIDENCE", "state": "ACCEPTED", "artifact_sha256": "60bfbad3dea14954b71b73d6727888e796910f87a78521bc9354b9104cd1d74b", "output_sha256": "19c25a810288096c1205313d52b610a57a262e3af726eb1af1955ec87b531aa4"},
+        {"stage": "M2_OPPORTUNITY_ECONOMICS", "state": "ACCEPTED", "artifact_sha256": "68c34e92a4e9277fd5e227843f8dc96dbd91ead939f126742d3ac590d5b099a9", "output_sha256": "822f361ac7a88bade310d8cc76d426d07676609d43ca9571e778e0e7d9c7418b", "verdict": "INSUFFICIENT_EVIDENCE - terminal; did not progress to M3"}
+      ],
+      "m3_m4_m5": "not reached",
+      "work_item_identity_sha256": "f093047753bb104ac9fbe458694e7ba02855411fc104cbbb9a49a261a221fab2"
+    }
+  },
+  "batch_cumulative_actuals": {
+    "useful_page_fetches": 57, "batch_ceiling": 125, "within": true,
+    "page_fetch_attempts": 64, "page_fetch_failures": 7,
+    "raw_bytes_stored": 15697997, "batch_ceiling_bytes": 90000000, "within": true,
+    "approx_m1_wall_clock_seconds_total": 196, "batch_ceiling_seconds": 1500, "within": true,
+    "per_slot_useful_fetches": {"2": 24, "3": 3, "4": 13, "5": 17},
+    "per_slot_bytes": {"2": 2450146, "3": 323545, "4": 7121025, "5": 5803281},
+    "per_slot_all_within_envelope": "25 pages / 48 HTTP / 18MB / 300s per slot - every slot inside all four dimensions",
+    "batch_consumed_zero_materialization_retro_assessment": "confirmed harmless - even the exact cumulative (57/64/15.7MB/~196s) is far below every batch ceiling; the batch bound was never at risk"
+  },
+  "provenance_and_minimization": {
+    "all_snapshots_disposition": "DURABLE_MINIMIZED_CAPTURE",
+    "quarantines_across_batch": 0,
+    "minimizer_version": "phase1-minimizer@2",
+    "no_contact_or_person_values_selected": true,
+    "final_sanitizer_redactions": 0,
+    "fact_class_column_populated": true,
+    "page_purpose_column_populated": true
+  },
+  "diagnostic_result_artifact_sha256": "recorded alongside this record; source dump slot_ev2.json (operator-local, provenance-safe fields only)"
+}
