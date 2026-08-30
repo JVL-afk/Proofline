@@ -1,0 +1,58 @@
+{
+  "record_type": "M67_READY_FOR_SLOTS02_06_PHASE1_M1_V2_EXECUTION_AUTHORIZATION",
+  "schema_version": "1.0.0",
+  "state": "READY_FOR_ONE_BATCH_OWNER_AUTHORIZATION",
+  "proposed_decision_event": "AUTHORIZE_SLOTS02_06_PHASE1_M1_V2_EXECUTION",
+  "recorded_at_utc": "2026-08-30T09:40:00Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "one_batch_gate": "This is a SINGLE authorization for the planned Slots 02-06 batch under the frozen phase1-m1@2-bounded-site-crawl protocol. It is NOT one authorization per slot and NOT another chain of mechanical implementation approvals.",
+  "preconditions_all_met": {
+    "implementation": "AUTHORIZE_PHASE1_M1_V2_BOUNDED_SITE_CRAWL_IMPLEMENTATION_AND_ACTIVATION discharged",
+    "full_test_suite": "786 pass / 3 skip (Postgres-only); mypy + ruff clean",
+    "deployed_digest": "sha256:62ba45aa295b912a578676dd440c75525206757878242e679923764b61c009e4",
+    "representation_equivalence": "both verifiers PROVEN",
+    "ecr_scan": "COMPLETE critical/high/blocking 0/0/0",
+    "terraform": "applied under ADR-0075 identity separation; post-apply NO_CHANGES",
+    "live_rds_migration": "state-convergent; converged:true; idempotent; historical rows preserved",
+    "in_cluster_kill_switch_block": "KILL_SWITCH_BLOCK_V1 FAILED + no fetch (enforcement proven)",
+    "in_cluster_multi_page_proof": "BOUNDED_SITE_CRAWL_V1 succeeded end-to-end with no real Phase 1 company",
+    "slot01": "frozen PHASE1_M1_V1_HOMEPAGE, terminal M1_SUCCESS -> M2_INSUFFICIENT_EVIDENCE, not reopened",
+    "slot02": "NOT started"
+  },
+  "bound_artifacts": {
+    "design": {"path": "docs/readiness/m6.7-deployment/phase1-m1-v2-bounded-site-crawl-design-2026-08-29.md", "sha256": "49ae0a63082b329ace62b9fd860f873983bc81d5befe1d6df67c16487d0d6a8a"},
+    "implementation_owner_decision": {"path": "docs/readiness/m6.7-deployment/phase1-m1-v2-bounded-site-crawl-implementation-and-activation-owner-decision-2026-08-30.json", "sha256": "467b740ea786aa8a0dfc7b456144553b6865d4b8c14188df31557d035e8a3432"},
+    "execution_ceiling_envelope": {"path": "docs/readiness/m6.7-deployment/phase1-m1-v2-execution-ceiling-envelope-2026-08-30.json", "sha256": "dee5075aabbe6b49df6049053d4c20c1c014071a202a1ba86c479059aba7c6f5", "execution_ceilings_sha256": "083b70520f161d4c21aa72cc221cb063dc2b99cf19ab15caa9c0cd7011b0506b"},
+    "deployment_evidence": {"path": "docs/readiness/m6.7-deployment/phase1-m1-v2-deployment-2026-08-30.json", "sha256": "410aa5be5c0e7b9580a7c9561434c4846d9f921acf4a169afd8657261722defd"},
+    "slots02_06_readiness": {"path": "docs/readiness/m6.7-deployment/phase1-m1-v2-slots02-06-readiness-2026-08-30.md", "sha256": "45e4fdc12a3daecd73893af55e53c7a14327c57467112d51e92b1f1213aec3e4"},
+    "implementation_head_commit": "5be5f1f"
+  },
+  "batch_authorization_would_permit_exactly": [
+    "1. The additive live-materializer wiring (readiness section 3): LiveResearchPermissionRelease gains optional crawl_protocol_version + max_useful_page_fetches; activation._policy builds the v2 CrawlPolicy from the sealed envelope when the release carries the v2 protocol; authorization.py verifies the v2 policy-vs-release equality; authority_materialization emits the two new bindings + the raised numeric ceilings sourced from the sealed envelope by its execution_ceilings_sha256. v1 releases and their hashes are unaffected. Tests: v2 round-trip green, v1 unchanged.",
+    "2. ONE more successor image ONLY IF the section-3 wiring changes worker code (it does): built the same bounded way, both verifiers PROVEN, ECR scan 0/0/0, ADR-0075 plan/review/apply/NO_CHANGES.",
+    "3. Per-slot A-09 exact-host acceptance for Slots 02-06 where not already recorded (owner review of each exact hostname).",
+    "4. FIVE bounded real first-party crawls (Slots 02, 03, 04, 05, 06) under the sealed v2 execution-ceiling envelope: 25 useful page fetches / 48 total HTTP / 6 discovery / depth 3 / 2 attempts / 18 MB / 300 s / 2 s delay / 0 followed redirects / 2000 sitemap entries / USD 0 per slot. Same-host only, robots-respecting, ConsumedLiveBudget carry-forward per slot.",
+    "5. Deterministic OFFLINE M2 -> M3 -> M4 -> M5 per slot, terminating at CONTACT_PHASE_NOT_AUTHORIZED (or an earlier truthful terminal). M2/M3/M4/M5 truth rules, thresholds and INSUFFICIENT_EVIDENCE semantics UNCHANGED.",
+    "6. Seal per-slot execution evidence; restore dormancy (kill switch TRIPPED, sentinel/lease NOT_AUTHORIZED, services 0/0/0) after each slot."
+  ],
+  "batch_authorization_would_NOT_permit": [
+    "Slots 07-24 (a later gate)",
+    "reopening / rerunning / relabelling Slot 01",
+    "any change to M2/M3/M4/M5 truth rules, evidence thresholds, or INSUFFICIENT_EVIDENCE semantics",
+    "raising the v2 ceilings beyond the sealed envelope, or waiving the per-slot ConsumedLiveBudget carry-forward",
+    "AI / browser activation",
+    "the person / contact phase, outreach, or delivery",
+    "any new hostname beyond each slot's exact A-09-accepted host",
+    "any paid API or non-first-party data source"
+  ],
+  "constraints_carried_forward": [
+    "phase1-minimizer@2 semantics unchanged",
+    "no historical run / coordinator run / work item / evidence / coverage record / terminal history deleted, mutated, reopened or replaced",
+    "the activator's enter_run() owns TRIPPED -> RUN -> TRIPPED; do not pre-arm the kill switch",
+    "cumulative Window 2 target-transport counters not reset",
+    "if an unrelated operational defect appears, stop for owner review"
+  ],
+  "approval_method": "BY_REFERENCE_TO_IMMUTABLE_ARTIFACTS at the sha256 values above; the owner does not author a new synthesized approval-statement string.",
+  "next_after_this_gate": "AUTHORIZE_SLOTS07_24_* (out of scope here)"
+}
