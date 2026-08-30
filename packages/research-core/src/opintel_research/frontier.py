@@ -12,6 +12,7 @@ import re
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from urllib.parse import urlsplit
+from uuid import UUID
 
 from opintel_research.domain import (
     _SITEMAP_DISCOVERY_SOURCES,
@@ -21,6 +22,38 @@ from opintel_research.domain import (
     DiscoverySource,
     SemanticCategory,
 )
+
+# Mirrors the keyword sets in
+# packages/opportunity-core/src/opintel_opportunity/rules.py::detect (industry +
+# inbound + strong + contradiction). Kept local so research-core does not depend
+# on opportunity-core. Used ONLY to decide whether a fresh capture added new
+# M2-relevant signal for the deterministic no-progress early-stop -- it never
+# changes what M2 does with the evidence.
+M2_RELEVANCE_TOKENS: frozenset[str] = frozenset(
+    {
+        "commercial hvac",
+        "commercial heating",
+        "commercial cooling",
+        "request service",
+        "request a quote",
+        "service request",
+        "contact our service",
+        "company name",
+        "service need",
+        "urgency",
+        "service area",
+        "24/7 staffed dispatch",
+        "instant scheduling",
+        "live qualification",
+        "immediate routing",
+    }
+)
+
+
+def m2_relevance_hits(text: str) -> frozenset[str]:
+    lowered = text.lower()
+    return frozenset(token for token in M2_RELEVANCE_TOKENS if token in lowered)
+
 
 _UNCLASSIFIED_BASE = 20
 _HIGH_VALUE_BASE = 100
@@ -272,13 +305,13 @@ def should_stop(state: FrontierStopState) -> tuple[CrawlStopReason, ...]:
 
 
 @dataclass(slots=True)
-class _Queued:
+class QueuedCandidate:
     canonical_url: str
     requested_url: str
     depth: int
     discovery_source: DiscoverySource
     anchor_text: str
-    from_page_id: object
+    from_page_id: UUID | None
     score: CandidateScore
 
 
@@ -286,7 +319,7 @@ class _Queued:
 class PriorityFrontier:
     """Deterministic priority queue keyed by (-score, category_name, canonical_url)."""
 
-    _queued: dict[str, _Queued] = field(default_factory=dict)
+    _queued: dict[str, QueuedCandidate] = field(default_factory=dict)
     _known: set[str] = field(default_factory=set)
 
     def has_seen(self, canonical_url: str) -> bool:
@@ -294,6 +327,9 @@ class PriorityFrontier:
 
     def mark_seen(self, canonical_url: str) -> None:
         self._known.add(canonical_url)
+
+    def known_urls(self) -> frozenset[str]:
+        return frozenset(self._known)
 
     def push(
         self,
@@ -303,13 +339,13 @@ class PriorityFrontier:
         depth: int,
         discovery_source: DiscoverySource,
         anchor_text: str,
-        from_page_id: object,
+        from_page_id: UUID | None,
         score: CandidateScore,
     ) -> bool:
         if canonical_url in self._known:
             return False
         self._known.add(canonical_url)
-        self._queued[canonical_url] = _Queued(
+        self._queued[canonical_url] = QueuedCandidate(
             canonical_url, requested_url, depth, discovery_source, anchor_text,
             from_page_id, score,
         )
@@ -319,7 +355,7 @@ class PriorityFrontier:
         return len(self._queued)
 
     @staticmethod
-    def _order_key(item: _Queued) -> tuple[int, int, str]:
+    def _order_key(item: QueuedCandidate) -> tuple[int, int, str]:
         rank = (
             _CATEGORY_PRIORITY[item.score.category]
             if item.score.category is not None
@@ -332,14 +368,14 @@ class PriorityFrontier:
             return -(10**9)
         return max(item.score.score for item in self._queued.values())
 
-    def pop_best(self) -> _Queued | None:
+    def pop_best(self) -> QueuedCandidate | None:
         if not self._queued:
             return None
         best = min(self._queued.values(), key=self._order_key)
         del self._queued[best.canonical_url]
         return best
 
-    def remaining_high_value_fits(self, fits: Callable[[_Queued], bool]) -> bool:
+    def remaining_high_value_fits(self, fits: Callable[[QueuedCandidate], bool]) -> bool:
         for item in self._queued.values():
             category = item.score.category
             if category not in HIGH_VALUE_CATEGORIES or category is SemanticCategory.HOMEPAGE:

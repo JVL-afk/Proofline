@@ -240,6 +240,40 @@ HIGH_VALUE_CATEGORIES: frozenset[SemanticCategory] = frozenset(
     category for category in SemanticCategory if category is not SemanticCategory.UNCLASSIFIED
 )
 
+_FACT_CLASS_KEYWORDS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    (
+        "public_inbound_path",
+        (
+            "request service", "request a quote", "service request", "schedule",
+            "book online", "appointment", "contact us", "get a quote", "free estimate",
+        ),
+    ),
+    (
+        "public_service_area",
+        ("service area", "areas we serve", "cities we serve", "locations"),
+    ),
+    ("public_faq", ("faq", "frequently asked", "questions")),
+    ("public_about", ("about us", "our story", "our team", "who we are")),
+    (
+        "public_service_description",
+        (
+            "commercial", "residential", "heating", "cooling", "air conditioning",
+            "repair", "installation", "maintenance", "hvac",
+        ),
+    ),
+)
+
+
+def classify_public_fact(fragment: str) -> str:
+    """Deterministic public FACT class of an evidence fragment. No inference: a
+    pure keyword class of text that is a verified substring of a minimised page.
+    """
+    lowered = fragment.lower()
+    for fact_class, keywords in _FACT_CLASS_KEYWORDS:
+        if any(keyword in lowered for keyword in keywords):
+            return fact_class
+    return "public_other"
+
 
 class DiscoverySource(StrEnum):
     SEED = "seed"
@@ -300,6 +334,7 @@ class UrlCandidate:
 @dataclass(frozen=True, slots=True)
 class DiscoveryEdge:
     id: UUID
+    workspace_id: UUID
     research_run_id: UUID
     from_page_id: UUID | None
     discovered_url_canonical: str
@@ -319,6 +354,7 @@ class M1CoverageRecord:
     """
 
     research_run_id: UUID
+    workspace_id: UUID
     crawl_protocol_version: str
     candidate_urls_discovered: int
     candidate_source_breakdown: tuple[tuple[str, int], ...]
@@ -361,6 +397,7 @@ class M1CoverageRecord:
             "pages_successfully_captured": self.pages_successfully_captured,
             "quarantined_pages": [list(item) for item in self.quarantined_pages],
             "research_run_id": str(self.research_run_id),
+            "workspace_id": str(self.workspace_id),
             "robots_denied_pages": [list(item) for item in self.robots_denied_pages],
             "robots_sitemap_directives_seen": self.robots_sitemap_directives_seen,
             "semantic_categories_captured": list(self.semantic_categories_captured),

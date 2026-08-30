@@ -6,7 +6,7 @@ import json
 from dataclasses import asdict, replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from typing import overload
+from typing import Any, overload
 from uuid import UUID
 
 from opintel_research.domain import (
@@ -14,9 +14,12 @@ from opintel_research.domain import (
     CaptureDisposition,
     CaptureQuarantine,
     CrawlPolicy,
+    DiscoveryEdge,
+    DiscoverySource,
     DurablePageBundle,
     ExtractedMaterial,
     FetchAttempt,
+    M1CoverageRecord,
     MinimizedPageSnapshot,
     PageStatus,
     ResearchEvidence,
@@ -26,6 +29,7 @@ from opintel_research.domain import (
     RobotsPolicyEvidence,
     SampledSlotActivation,
     SampledSlotIdentity,
+    SemanticCategory,
 )
 from sqlalchemy import (
     Boolean,
@@ -67,6 +71,58 @@ def _aware(value: datetime | None) -> datetime | None:
 
 def _json(value: object) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+
+
+def _pairs(value: Any) -> tuple[tuple[str, str], ...]:
+    return tuple((str(item[0]), str(item[1])) for item in value or ())
+
+
+def _pair_ints(value: Any) -> tuple[tuple[str, int], ...]:
+    return tuple((str(item[0]), int(item[1])) for item in value or ())
+
+
+def _strs(value: Any) -> tuple[str, ...]:
+    return tuple(str(item) for item in value or ())
+
+
+def _coverage_from_payload(raw: dict[str, object]) -> M1CoverageRecord:
+    payload: dict[str, object] = raw
+
+    def s(key: str) -> str:
+        return str(payload[key])
+
+    def i(key: str) -> int:
+        return int(str(payload[key]))
+
+    record = M1CoverageRecord(
+        research_run_id=UUID(s("research_run_id")),
+        workspace_id=UUID(s("workspace_id")),
+        crawl_protocol_version=s("crawl_protocol_version"),
+        candidate_urls_discovered=i("candidate_urls_discovered"),
+        candidate_source_breakdown=_pair_ints(payload.get("candidate_source_breakdown")),
+        eligible_urls=i("eligible_urls"),
+        duplicate_or_excluded_urls=_pairs(payload.get("duplicate_or_excluded_urls")),
+        pages_attempted=i("pages_attempted"),
+        pages_successfully_captured=i("pages_successfully_captured"),
+        captured_pages=_pairs(payload.get("captured_pages")),
+        pages_quarantined=i("pages_quarantined"),
+        quarantined_pages=_pairs(payload.get("quarantined_pages")),
+        pages_denied_by_robots=i("pages_denied_by_robots"),
+        robots_denied_pages=_pairs(payload.get("robots_denied_pages")),
+        transport_failures=i("transport_failures"),
+        transport_failed_pages=_pairs(payload.get("transport_failed_pages")),
+        semantic_categories_searched=_strs(payload.get("semantic_categories_searched")),
+        semantic_categories_found=_strs(payload.get("semantic_categories_found")),
+        semantic_categories_captured=_strs(payload.get("semantic_categories_captured")),
+        sitemap_documents_fetched=i("sitemap_documents_fetched"),
+        robots_sitemap_directives_seen=i("robots_sitemap_directives_seen"),
+        stop_reasons=_strs(payload.get("stop_reasons")),
+        byte_budget_used=i("byte_budget_used"),
+        time_budget_used_seconds=i("time_budget_used_seconds"),
+        attempts_used=i("attempts_used"),
+        total_http_requests_used=i("total_http_requests_used"),
+    )
+    return replace(record, coverage_record_sha256=record.computed_sha256())
 
 
 class Base(DeclarativeBase):
@@ -121,6 +177,8 @@ class RunRow(Base):
     bytes_stored: Mapped[int] = mapped_column(Integer, default=0)
     last_error_code: Mapped[str | None] = mapped_column(String(80), nullable=True)
     last_error_message: Mapped[str | None] = mapped_column(String(240), nullable=True)
+    # PHASE1_M1_V2_BOUNDED_SITE_CRAWL: sha256 of the sealed M1 coverage record.
+    coverage_record_sha256: Mapped[str | None] = mapped_column(String(64), nullable=True)
 
 
 class FetchAttemptRow(Base):
@@ -266,7 +324,33 @@ class EvidenceRow(Base):
 _V2_ADDITIVE_COLUMNS: tuple[tuple[str, str, str, str], ...] = (
     ("research_pages", "page_purpose", "VARCHAR(40)", "'unclassified'"),
     ("research_evidence", "fact_class", "VARCHAR(40)", "'public_other'"),
+    ("research_runs", "coverage_record_sha256", "VARCHAR(64)", "NULL"),
 )
+
+
+class DiscoveryEdgeRow(Base):
+    __tablename__ = "research_discovery_edge"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    workspace_id: Mapped[str] = mapped_column(String(36), index=True)
+    research_run_id: Mapped[str] = mapped_column(ForeignKey("research_runs.id"), index=True)
+    from_page_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
+    discovered_url_canonical: Mapped[str] = mapped_column(String(2048))
+    discovery_source: Mapped[str] = mapped_column(String(32))
+    category: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    score: Mapped[int] = mapped_column(Integer)
+    disposition: Mapped[str] = mapped_column(String(48))
+    recorded_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+
+
+class CoverageRecordRow(Base):
+    __tablename__ = "research_coverage_record"
+    research_run_id: Mapped[str] = mapped_column(
+        ForeignKey("research_runs.id"), primary_key=True
+    )
+    workspace_id: Mapped[str] = mapped_column(String(36), index=True)
+    coverage_record_sha256: Mapped[str] = mapped_column(String(64))
+    payload_json: Mapped[str] = mapped_column(Text)
+    recorded_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 
 
 class SqlAlchemyResearchRepository:
@@ -664,23 +748,91 @@ class SqlAlchemyResearchRepository:
         now: datetime,
         error_code: str | None = None,
         safe_message: str | None = None,
+        coverage_record_sha256: str | None = None,
     ) -> None:
+        values: dict[str, object] = {
+            "status": status,
+            "pages_attempted": pages_attempted,
+            "pages_succeeded": pages_succeeded,
+            "bytes_stored": bytes_stored,
+            "updated_at": now,
+            "completed_at": now,
+            "lease_expires_at": None,
+            "last_error_code": error_code,
+            "last_error_message": safe_message,
+        }
+        if coverage_record_sha256 is not None:
+            values["coverage_record_sha256"] = coverage_record_sha256
         with self._sessions.begin() as session:
-            session.execute(
-                update(RunRow)
-                .where(RunRow.id == _id(run_id))
-                .values(
-                    status=status,
-                    pages_attempted=pages_attempted,
-                    pages_succeeded=pages_succeeded,
-                    bytes_stored=bytes_stored,
-                    updated_at=now,
-                    completed_at=now,
-                    lease_expires_at=None,
-                    last_error_code=error_code,
-                    last_error_message=safe_message,
+            session.execute(update(RunRow).where(RunRow.id == _id(run_id)).values(**values))
+
+    def save_coverage_record(self, record: M1CoverageRecord) -> None:
+        sealed = record if record.coverage_record_sha256 != "0" * 64 else record.sealed()
+        with self._sessions.begin() as session:
+            session.merge(
+                CoverageRecordRow(
+                    research_run_id=_id(sealed.research_run_id),
+                    workspace_id=_id(sealed.workspace_id),
+                    coverage_record_sha256=sealed.coverage_record_sha256,
+                    payload_json=_json(sealed.canonical_payload()),
+                    recorded_at=datetime.now(UTC),
                 )
             )
+
+    def get_coverage_record(
+        self, workspace_id: UUID, run_id: UUID
+    ) -> M1CoverageRecord | None:
+        with self._sessions() as session:
+            row = session.get(CoverageRecordRow, _id(run_id))
+            if row is None or row.workspace_id != _id(workspace_id):
+                return None
+            return _coverage_from_payload(json.loads(row.payload_json))
+
+    def save_discovery_edges(self, edges: tuple[DiscoveryEdge, ...]) -> None:
+        if not edges:
+            return
+        with self._sessions.begin() as session:
+            for edge in edges:
+                session.merge(
+                    DiscoveryEdgeRow(
+                        id=_id(edge.id),
+                        workspace_id=_id(edge.workspace_id),
+                        research_run_id=_id(edge.research_run_id),
+                        from_page_id=_id(edge.from_page_id) if edge.from_page_id else None,
+                        discovered_url_canonical=edge.discovered_url_canonical,
+                        discovery_source=edge.discovery_source.value,
+                        category=edge.category.value if edge.category else None,
+                        score=edge.score,
+                        disposition=edge.disposition,
+                        recorded_at=edge.recorded_at,
+                    )
+                )
+
+    def list_discovery_edges(self, workspace_id: UUID, run_id: UUID) -> list[DiscoveryEdge]:
+        with self._sessions() as session:
+            rows = session.scalars(
+                select(DiscoveryEdgeRow)
+                .where(
+                    DiscoveryEdgeRow.workspace_id == _id(workspace_id),
+                    DiscoveryEdgeRow.research_run_id == _id(run_id),
+                )
+                .order_by(DiscoveryEdgeRow.recorded_at, DiscoveryEdgeRow.discovered_url_canonical)
+            ).all()
+        return [
+            DiscoveryEdge(
+                id=UUID(row.id),
+                workspace_id=UUID(row.workspace_id),
+                research_run_id=UUID(row.research_run_id),
+                from_page_id=UUID(row.from_page_id) if row.from_page_id else None,
+                discovered_url_canonical=row.discovered_url_canonical,
+                discovery_source=DiscoverySource(row.discovery_source),
+                category=SemanticCategory(row.category) if row.category else None,
+                score=row.score,
+                disposition=row.disposition,
+                recorded_at=_aware(row.recorded_at),
+            )
+            for row in rows
+        ]
 
     def list_pages(self, workspace_id: UUID, run_id: UUID) -> list[ResearchPage]:
         with self._sessions() as session:
@@ -778,7 +930,6 @@ class SqlAlchemyResearchRepository:
             "schema_version": "research-run-policy@3-authorized-sampled-slot",
             "crawl_policy": asdict(value.policy),
             "crawl_protocol_version": value.crawl_protocol_version,
-            "coverage_record_sha256": value.coverage_record_sha256,
             "sampled_slot_identity": (
                 {
                     **asdict(value.sampled_slot_identity),
@@ -906,7 +1057,7 @@ class SqlAlchemyResearchRepository:
             crawl_protocol_version=policy_payload.get(
                 "crawl_protocol_version", "phase1-m1@1-homepage"
             ),
-            coverage_record_sha256=policy_payload.get("coverage_record_sha256"),
+            coverage_record_sha256=getattr(row, "coverage_record_sha256", None),
         )
 
     @staticmethod

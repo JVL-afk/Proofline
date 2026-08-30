@@ -10,11 +10,13 @@ from opintel_research.domain import (
     Business,
     CaptureQuarantine,
     CrawlPolicy,
+    DiscoveryEdge,
     DurableMinimizedCapture,
     DurablePageBundle,
     ExtractedMaterial,
     FetchAttempt,
     FetchedDocument,
+    M1CoverageRecord,
     MinimizedPageSnapshot,
     PageSnapshot,
     RawHttpResponse,
@@ -117,7 +119,14 @@ class ResearchRepository(Protocol):
         now: datetime,
         error_code: str | None = None,
         safe_message: str | None = None,
+        coverage_record_sha256: str | None = None,
     ) -> None: ...
+    def save_coverage_record(self, record: M1CoverageRecord) -> None: ...
+    def get_coverage_record(
+        self, workspace_id: UUID, run_id: UUID
+    ) -> M1CoverageRecord | None: ...
+    def save_discovery_edges(self, edges: tuple[DiscoveryEdge, ...]) -> None: ...
+    def list_discovery_edges(self, workspace_id: UUID, run_id: UUID) -> list[DiscoveryEdge]: ...
     def list_pages(self, workspace_id: UUID, run_id: UUID) -> list[ResearchPage]: ...
     def get_page(self, workspace_id: UUID, page_id: UUID) -> ResearchPage | None: ...
     def get_snapshot(

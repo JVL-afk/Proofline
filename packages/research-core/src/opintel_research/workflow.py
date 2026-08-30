@@ -12,6 +12,7 @@ from opintel_m0.ports import Clock, IdentifierFactory
 
 from opintel_research.domain import (
     BrowserFallbackUnavailable,
+    Business,
     CaptureQuarantine,
     DurableMinimizedCapture,
     DurablePageBundle,
@@ -26,6 +27,7 @@ from opintel_research.domain import (
     ResearchRun,
     ResearchRunStatus,
     UrlPolicyError,
+    classify_public_fact,
     contains_prohibited_contact_value,
 )
 from opintel_research.ports import (
@@ -95,6 +97,14 @@ class ResearchWorkflowRunner:
         if business is None:
             raise RuntimeError("research business is missing")
         self._research_authorization.authorize(run, business)
+        if run.crawl_protocol_version == "phase1-m1@2-bounded-site-crawl":
+            from opintel_research.site_crawl import BoundedSiteCrawlRunner
+
+            BoundedSiteCrawlRunner(self).execute(run, business)
+            return
+        self._execute_homepage(run, business)
+
+    def _execute_homepage(self, run: ResearchRun, business: Business) -> None:
         queue: deque[tuple[str, int]] = deque([(run.start_url, 0)])
         visited: set[str] = set()
         pages_attempted = 0
@@ -505,6 +515,7 @@ class ResearchWorkflowRunner:
                 extractor_name=material.extractor_name,
                 extractor_version=material.extractor_version,
                 created_at=self._clock.now(),
+                fact_class=classify_public_fact(fragment),
             )
             for locator, fragment in fragments
         ]
