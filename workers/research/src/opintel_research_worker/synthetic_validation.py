@@ -35,8 +35,58 @@ from opintel_research_worker.minimization import ProductionPhaseOneCaptureMinimi
 
 _NAMESPACE: Final = UUID("4c0ab969-cc2b-4a7e-9edf-4efb5567a4d7")
 _MODES: Final = frozenset(
-    {"KILL_SWITCH_BLOCK_V1", "MINIMIZATION_PERSISTENCE_V1", "RESTORE_INSPECTION_V1"}
+    {
+        "KILL_SWITCH_BLOCK_V1",
+        "MINIMIZATION_PERSISTENCE_V1",
+        "RESTORE_INSPECTION_V1",
+        "BOUNDED_SITE_CRAWL_V1",
+    }
 )
+_V2_PROTOCOL: Final = "phase1-m1@2-bounded-site-crawl"
+
+_V2_FILLER: Final = (
+    " Our licensed technicians provide heating, cooling, air conditioning, furnace repair, "
+    "system installation and seasonal maintenance across the local service area. Office "
+    "hours are Monday through Friday. Ask about maintenance plans and financing options."
+)
+
+
+def _v2_page(title: str, h1: str, body: str) -> bytes:
+    return (
+        f"<html><head><title>{title}</title></head><body><h1>{h1}</h1>"
+        f"<p>{body}{_V2_FILLER}</p></body></html>"
+    ).encode()
+
+
+_V2_SITE: Final[dict[str, bytes]] = {
+    "https://synthetic.invalid/sitemap.xml": (
+        b'<?xml version="1.0"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
+        b"<url><loc>https://synthetic.invalid/</loc></url>"
+        b"<url><loc>https://synthetic.invalid/commercial-hvac</loc></url>"
+        b"<url><loc>https://synthetic.invalid/request-service</loc></url>"
+        b"<url><loc>https://synthetic.invalid/services</loc></url>"
+        b"<url><loc>https://synthetic.invalid/privacy</loc></url>"
+        b"</urlset>"
+    ),
+    "https://synthetic.invalid/": _v2_page(
+        "Synthetic HVAC", "Texas HVAC service for homes and businesses",
+        "We keep your property comfortable year round.",
+    ),
+    "https://synthetic.invalid/commercial-hvac": _v2_page(
+        "Commercial HVAC", "Commercial HVAC",
+        "We serve commercial HVAC and commercial heating clients across Texas.",
+    ),
+    "https://synthetic.invalid/request-service": _v2_page(
+        "Request Service", "Request Service",
+        "Businesses may request service and schedule an appointment online.",
+    ),
+    "https://synthetic.invalid/services": _v2_page(
+        "Services", "Our HVAC Services", "We provide repair, installation and maintenance.",
+    ),
+    "https://synthetic.invalid/privacy": _v2_page(
+        "Privacy", "Privacy Policy", "This cookie and privacy notice is legal boilerplate.",
+    ),
+}
 _FIXTURE: Final = b"""<html><head><title>Synthetic Commercial HVAC</title></head><body>
 <h1>Texas commercial HVAC service for business facilities</h1>
 <p>Businesses may request a service estimate online.</p>
@@ -71,12 +121,14 @@ class _SyntheticRobotsPolicy:
         permitted_host: str,
         policy: CrawlPolicy,
     ) -> RobotsPolicyEvidence:
-        del url, policy
+        del policy
+        from urllib.parse import urlsplit
+
         return RobotsPolicyEvidence(
             id=self._identifiers.new(),
             research_run_id=research_run_id,
             host=permitted_host,
-            requested_path="/",
+            requested_path=urlsplit(url).path or "/",
             captured_at=SystemClock().now(),
             http_status=200,
             body_sha256="0" * 64,
@@ -85,6 +137,12 @@ class _SyntheticRobotsPolicy:
             reason_code="synthetic_robots_allowed",
             allowed=True,
         )
+
+    def sitemap_directives(
+        self, research_run_id: UUID, permitted_host: str, policy: CrawlPolicy
+    ) -> tuple[str, ...]:
+        del research_run_id, permitted_host, policy
+        return ()
 
 
 class _DeterministicIdentifiers:
@@ -123,6 +181,31 @@ class _SyntheticFetcher:
         )
 
 
+class _SyntheticSiteFetcher:
+    """Serves the image-contained multi-page fixture; no network I/O possible."""
+
+    def __init__(self) -> None:
+        self.calls: list[str] = []
+
+    def fetch(
+        self, url: str, permitted_host: str, policy: CrawlPolicy, attempt_number: int
+    ) -> FetchedDocument:
+        del policy, attempt_number
+        if permitted_host != "synthetic.invalid" or not url.startswith("https://synthetic.invalid/"):
+            raise RuntimeError("synthetic validation attempted an unauthorized source")
+        self.calls.append(url)
+        body = _V2_SITE.get(url)
+        if body is None:
+            from opintel_research.domain import FetchError
+
+            raise FetchError("not_found", "synthetic fixture has no such page")
+        return FetchedDocument(
+            source_url=url, canonical_url=url, final_url=url, status_code=200,
+            headers=(("content-type", "text/html; charset=utf-8"),), content=body,
+            content_type="text/html", charset="utf-8", captured_at=SystemClock().now(),
+        )
+
+
 @dataclass(frozen=True, slots=True)
 class SyntheticValidationResult:
     mode: str
@@ -137,6 +220,10 @@ class SyntheticValidationResult:
     source_content_sha256: str | None
     minimized_content_sha256: str | None
     minimization_event_sha256: str | None
+    crawl_protocol_version: str | None = None
+    coverage_record_sha256: str | None = None
+    captured_categories: tuple[str, ...] = ()
+    page_count: int = 0
 
     def safe_log_record(self) -> str:
         return json.dumps(
@@ -243,6 +330,9 @@ def execute_synthetic_validation(
             raise RuntimeError("restore inspection requires the kill switch to be tripped")
         return _inspect(repository, validation_id, mode, fetch_called=False)
 
+    if mode == "BOUNDED_SITE_CRAWL_V1":
+        return _bounded_site_crawl_validation(repository, validation_id, stop_signal)
+
     ids = _ids(validation_id)
     now = SystemClock().now()
     if repository.get_business(ids["workspace"], ids["business"]) is None:
@@ -293,6 +383,117 @@ def execute_synthetic_validation(
     if not runner.run_once():
         raise RuntimeError("synthetic validation run was not claimed")
     return _inspect(repository, validation_id, mode, fetch_called=fetcher.called)
+
+
+def _v2_policy() -> CrawlPolicy:
+    return CrawlPolicy(
+        max_pages=25, max_depth=3, max_attempts=2, max_total_bytes=18_000_000,
+        max_response_bytes=1_000_000, max_compressed_bytes=1_000_000,
+        max_duration_seconds=300, per_domain_delay_seconds=0.0, max_redirects=0,
+        cache_ttl_seconds=0, max_total_http_requests=48, max_discovery_fetches=6,
+        max_sitemap_entries_parsed=2_000, max_query_variants_per_path=3,
+        max_path_segments=6, max_pages_per_category=4, no_progress_window=3,
+        low_relevance_floor=20, crawl_protocol_version=_V2_PROTOCOL,
+    )
+
+
+def _bounded_site_crawl_validation(
+    repository: SqlAlchemyResearchRepository,
+    validation_id: str,
+    stop_signal: StopSignal,
+) -> SyntheticValidationResult:
+    """Prove the full deterministic multi-page v2 workflow with no real company."""
+    ids = _ids(validation_id)
+    now = SystemClock().now()
+    if repository.get_business(ids["workspace"], ids["business"]) is None:
+        repository.create_business(
+            Business(
+                id=ids["business"], workspace_id=ids["workspace"],
+                name="Synthetic Phase 1 Bounded Site Crawl Validation",
+                canonical_url="https://synthetic.invalid/", permitted_host="synthetic.invalid",
+                created_by="m67-synthetic-validation", created_at=now,
+            )
+        )
+    run = ResearchRun(
+        id=ids["run"], workspace_id=ids["workspace"], business_id=ids["business"],
+        operation_id=ids["operation"], trace_id=ids["trace"],
+        start_url="https://synthetic.invalid/", permitted_host="synthetic.invalid",
+        policy=_v2_policy(), status=ResearchRunStatus.PENDING,
+        created_by="m67-synthetic-validation", created_at=now, updated_at=now,
+        crawl_protocol_version=_V2_PROTOCOL,
+    )
+    _, created = repository.create_or_get_run(run, f"synthetic:{validation_id}")
+    if not created:
+        raise RuntimeError("synthetic validation id has already been consumed")
+    fetcher = _SyntheticSiteFetcher()
+    identifiers = _DeterministicIdentifiers(validation_id)
+    runner = ResearchWorkflowRunner(
+        repository=repository, fetcher=fetcher, browser=DisabledBrowserFallback(),
+        extractor=ObservationalHtmlExtractor(), clock=SystemClock(), identifiers=identifiers,
+        sleeper=_NoSleep(), capture_minimizer=ProductionPhaseOneCaptureMinimizer(),
+        robots_policy=_SyntheticRobotsPolicy(identifiers),
+        research_authorization=SyntheticResearchAuthorization(),
+        lease_duration=timedelta(seconds=30), stop_signal=stop_signal,
+    )
+    if not runner.run_once():
+        raise RuntimeError("synthetic validation run was not claimed")
+
+    stored = repository.get_run(ids["workspace"], ids["run"])
+    if stored is not None and stored.last_error_code == "kill_switch_active":
+        if fetcher.calls:
+            raise RuntimeError("kill-switch bounded site crawl fetched despite suspension")
+        raise RuntimeError("bounded site crawl suspended by kill switch (closed-state proof)")
+    if stored is None or stored.status is ResearchRunStatus.FAILED:
+        raise RuntimeError("bounded site crawl synthetic validation did not succeed")
+    if stored.crawl_protocol_version != _V2_PROTOCOL:
+        raise RuntimeError("bounded site crawl synthetic validation lost its protocol identity")
+    pages = repository.list_pages(ids["workspace"], ids["run"])
+    captured = [p for p in pages if p.status.value in {"fetched", "cached"}]
+    captured_urls = {p.normalized_url for p in captured}
+    if len(captured) < 3:
+        raise RuntimeError("bounded site crawl captured too few pages")
+    if "https://synthetic.invalid/privacy" in captured_urls:
+        raise RuntimeError("bounded site crawl captured a low-value legal page")
+    coverage = repository.get_coverage_record(ids["workspace"], ids["run"])
+    if coverage is None or coverage.coverage_record_sha256 != coverage.computed_sha256():
+        raise RuntimeError("bounded site crawl coverage record is missing or unsealed")
+    if "commercial_hvac" not in coverage.semantic_categories_captured:
+        raise RuntimeError("bounded site crawl did not capture the commercial-HVAC category")
+    if "request_service_scheduling" not in coverage.semantic_categories_captured:
+        raise RuntimeError("bounded site crawl did not capture the inbound-path category")
+
+    evidence = repository.list_evidence(ids["workspace"], ids["run"])
+    snapshots = [
+        repository.get_snapshot(ids["workspace"], p.snapshot_id)
+        for p in captured
+        if p.snapshot_id is not None
+    ]
+    durable_text = "\n".join(
+        [s.minimized_text for s in snapshots if s is not None]
+        + [item.extracted_fragment for item in evidence]
+    )
+    if any(value in durable_text for value in _PROHIBITED):
+        raise RuntimeError("bounded site crawl retained a prohibited value")
+    if contains_prohibited_contact_value(durable_text):
+        raise RuntimeError("bounded site crawl retained contact-shaped data")
+    # provenance: every evidence item binds exactly one captured page snapshot
+    snapshot_ids = {p.snapshot_id for p in captured if p.snapshot_id is not None}
+    if any(item.snapshot_id not in snapshot_ids for item in evidence):
+        raise RuntimeError("bounded site crawl evidence lost page provenance")
+
+    return SyntheticValidationResult(
+        mode="BOUNDED_SITE_CRAWL_V1",
+        validation_ref_sha256=hashlib.sha256(validation_id.encode()).hexdigest(),
+        run_status=stored.status.value, fetch_called=bool(fetcher.calls),
+        snapshot_count=len([s for s in snapshots if s is not None]),
+        evidence_count=len(evidence), removed_email_count=0, removed_phone_count=0,
+        removed_structured_contact_blocks=0, source_content_sha256=None,
+        minimized_content_sha256=None, minimization_event_sha256=None,
+        crawl_protocol_version=stored.crawl_protocol_version,
+        coverage_record_sha256=coverage.coverage_record_sha256,
+        captured_categories=tuple(coverage.semantic_categories_captured),
+        page_count=len(captured),
+    )
 
 
 def run_deployed_synthetic_validation(

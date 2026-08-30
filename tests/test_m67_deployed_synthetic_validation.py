@@ -94,3 +94,37 @@ def test_deployed_validation_rejects_unbounded_or_unknown_request(
     repository = SqlAlchemyResearchRepository("sqlite:///:memory:")
     with pytest.raises(ValueError):
         execute_synthetic_validation(repository, mode, validation_id, StopSignal(True))
+
+
+def test_bounded_site_crawl_synthetic_validation_proves_multi_page_v2() -> None:
+    repository = SqlAlchemyResearchRepository("sqlite:///:memory:")
+    result = execute_synthetic_validation(
+        repository, "BOUNDED_SITE_CRAWL_V1", "synthetic-bounded-site-crawl-v1", StopSignal(False)
+    )
+    assert result.run_status == "succeeded"
+    assert result.crawl_protocol_version == "phase1-m1@2-bounded-site-crawl"
+    assert result.page_count >= 3
+    assert "commercial_hvac" in result.captured_categories
+    assert "request_service_scheduling" in result.captured_categories
+    assert result.coverage_record_sha256 and len(result.coverage_record_sha256) == 64
+    assert all(value not in result.safe_log_record() for value in PROHIBITED)
+
+
+def test_bounded_site_crawl_synthetic_validation_is_deterministic() -> None:
+    def one() -> str:
+        repo = SqlAlchemyResearchRepository("sqlite:///:memory:")
+        res = execute_synthetic_validation(
+            repo, "BOUNDED_SITE_CRAWL_V1", "synthetic-bounded-site-crawl-v1", StopSignal(False)
+        )
+        assert res.coverage_record_sha256 is not None
+        return f"{res.captured_categories}|{res.page_count}|{res.evidence_count}"
+
+    assert one() == one()
+
+
+def test_bounded_site_crawl_synthetic_validation_blocks_on_kill_switch() -> None:
+    repository = SqlAlchemyResearchRepository("sqlite:///:memory:")
+    with pytest.raises(RuntimeError):
+        execute_synthetic_validation(
+            repository, "BOUNDED_SITE_CRAWL_V1", "synthetic-bounded-kill", StopSignal(True)
+        )

@@ -393,6 +393,11 @@ class BoundedSiteCrawlRunner:
         self._edge(run, state, None, seed_canon, DiscoverySource.SEED,
                    SemanticCategory.HOMEPAGE, seed_score.score, "queued")
 
+        # Discovery honours the kill switch just like page fetches: if research is
+        # suspended, no sitemap probe is made at all.
+        if self._stop_signal is not None and self._stop_signal.is_active():
+            return
+
         directives: tuple[str, ...] = ()
         getter = getattr(self._robots, "sitemap_directives", None)
         if callable(getter):
@@ -439,6 +444,8 @@ class BoundedSiteCrawlRunner:
     def _fetch_sitemap(
         self, run: ResearchRun, raw_url: str, policy: CrawlPolicy, state: _State
     ) -> SitemapParseResult | None:
+        if self._stop_signal is not None and self._stop_signal.is_active():
+            return None
         try:
             normalized = normalize_public_url(raw_url)
             if (urlsplit(normalized).hostname or "") != run.permitted_host:
