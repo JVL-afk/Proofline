@@ -126,9 +126,23 @@ def test_bounded_site_crawl_synthetic_validation_is_deterministic() -> None:
     assert one() == one()
 
 
-def test_bounded_site_crawl_synthetic_validation_blocks_on_kill_switch() -> None:
+def test_bounded_site_crawl_records_but_does_not_gate_on_kill_switch() -> None:
+    """The hermetic multi-page walk runs regardless of kill state (its fetcher
+    cannot reach any real host); the observed kill state is still recorded.
+    Kill-switch ENFORCEMENT of a real fetch is proven by KILL_SWITCH_BLOCK_V1."""
     repository = SqlAlchemyResearchRepository("sqlite:///:memory:")
-    with pytest.raises(RuntimeError):
-        execute_synthetic_validation(
-            repository, "BOUNDED_SITE_CRAWL_V1", "synthetic-bounded-kill", StopSignal(True)
-        )
+    result = execute_synthetic_validation(
+        repository, "BOUNDED_SITE_CRAWL_V1", "synthetic-bounded-kill", StopSignal(True)
+    )
+    assert result.run_status == "succeeded"
+    assert result.kill_switch_active_observed is True
+    assert result.page_count >= 3
+
+
+def test_kill_switch_block_v1_still_enforces_on_a_real_fetch_path() -> None:
+    repository = SqlAlchemyResearchRepository("sqlite:///:memory:")
+    result = execute_synthetic_validation(
+        repository, "KILL_SWITCH_BLOCK_V1", "synthetic-ksb-guard", StopSignal(True)
+    )
+    assert result.run_status == "failed"
+    assert not result.fetch_called

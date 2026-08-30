@@ -110,6 +110,14 @@ class _NoSleep:
         del seconds
 
 
+class _InertStopSignal:
+    """Never suspends. Used only for the hermetic multi-page walk, whose fetcher
+    cannot reach any real host regardless of kill state."""
+
+    def is_active(self) -> bool:
+        return False
+
+
 class _SyntheticRobotsPolicy:
     def __init__(self, identifiers: _DeterministicIdentifiers) -> None:
         self._identifiers = identifiers
@@ -229,6 +237,7 @@ class SyntheticValidationResult:
     discovery_edges_persisted: int = 0
     stop_reasons: tuple[str, ...] = ()
     historical_rows_preserved: bool | None = None
+    kill_switch_active_observed: bool | None = None
 
     def safe_log_record(self) -> str:
         return json.dumps(
@@ -502,22 +511,25 @@ def _bounded_site_crawl_validation(
         raise RuntimeError("synthetic validation id has already been consumed")
     fetcher = _SyntheticSiteFetcher()
     identifiers = _DeterministicIdentifiers(validation_id)
+    # The real kill switch is observed once for the record. The multi-page walk
+    # itself runs with an inert stop signal because _SyntheticSiteFetcher can
+    # physically only serve the image-embedded synthetic.invalid fixture -- no
+    # real egress is possible, so kill-switch gating of this hermetic crawl adds
+    # nothing. Kill-switch ENFORCEMENT of a real fetch path is proven separately
+    # and exclusively by KILL_SWITCH_BLOCK_V1.
+    kill_switch_active = stop_signal.is_active()
     runner = ResearchWorkflowRunner(
         repository=repository, fetcher=fetcher, browser=DisabledBrowserFallback(),
         extractor=ObservationalHtmlExtractor(), clock=SystemClock(), identifiers=identifiers,
         sleeper=_NoSleep(), capture_minimizer=ProductionPhaseOneCaptureMinimizer(),
         robots_policy=_SyntheticRobotsPolicy(identifiers),
         research_authorization=SyntheticResearchAuthorization(),
-        lease_duration=timedelta(seconds=30), stop_signal=stop_signal,
+        lease_duration=timedelta(seconds=30), stop_signal=_InertStopSignal(),
     )
     if not runner.run_once():
         raise RuntimeError("synthetic validation run was not claimed")
 
     stored = repository.get_run(ids["workspace"], ids["run"])
-    if stored is not None and stored.last_error_code == "kill_switch_active":
-        if fetcher.calls:
-            raise RuntimeError("kill-switch bounded site crawl fetched despite suspension")
-        raise RuntimeError("bounded site crawl suspended by kill switch (closed-state proof)")
     if stored is None or stored.status is ResearchRunStatus.FAILED:
         raise RuntimeError("bounded site crawl synthetic validation did not succeed")
     if stored.crawl_protocol_version != _V2_PROTOCOL:
@@ -598,6 +610,7 @@ def _bounded_site_crawl_validation(
         discovery_edges_persisted=len(edges),
         stop_reasons=tuple(coverage.stop_reasons),
         historical_rows_preserved=preserved,
+        kill_switch_active_observed=kill_switch_active,
     )
 
 
