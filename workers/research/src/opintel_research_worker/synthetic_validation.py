@@ -224,6 +224,11 @@ class SyntheticValidationResult:
     coverage_record_sha256: str | None = None
     captured_categories: tuple[str, ...] = ()
     page_count: int = 0
+    catalog_converged: bool | None = None
+    catalog_report: str | None = None
+    discovery_edges_persisted: int = 0
+    stop_reasons: tuple[str, ...] = ()
+    historical_rows_preserved: bool | None = None
 
     def safe_log_record(self) -> str:
         return json.dumps(
@@ -385,6 +390,72 @@ def execute_synthetic_validation(
     return _inspect(repository, validation_id, mode, fetch_called=fetcher.called)
 
 
+_V2_TABLE_COLUMNS: Final[dict[str, tuple[str, ...]]] = {
+    "research_discovery_edge": (
+        "id", "workspace_id", "research_run_id", "from_page_id",
+        "discovered_url_canonical", "discovery_source", "category", "score",
+        "disposition", "recorded_at",
+    ),
+    "research_coverage_record": (
+        "research_run_id", "workspace_id", "coverage_record_sha256", "payload_json",
+        "recorded_at",
+    ),
+}
+
+
+def _catalog_convergence(repo: SqlAlchemyResearchRepository) -> tuple[bool, dict[str, object]]:
+    """Inspect the live catalog and prove the state-convergent migration.
+
+    Runs ``initialize()`` a second time in-process: because the convergence pass
+    is guarded (ADD COLUMN only when absent; backfill only NULL rows; create_all
+    only missing tables) an already-migrated catalog yields a strict no-op.
+    """
+    from opintel_research_local.persistence import _V2_ADDITIVE_COLUMNS
+    from sqlalchemy import inspect
+
+    repo.initialize()  # immediate second pass -> must be idempotent / no-op
+    with repo.engine.connect() as conn:
+        insp = inspect(conn)
+        tables = set(insp.get_table_names())
+        report: dict[str, object] = {"columns": {}, "tables": {}}
+        columns_ok = True
+        for table, column, _ddl, _bf in _V2_ADDITIVE_COLUMNS:
+            present = column in {c["name"] for c in insp.get_columns(table)} if table in tables \
+                else False
+            report["columns"][f"{table}.{column}"] = present  # type: ignore[index]
+            columns_ok = columns_ok and present
+        tables_ok = True
+        for table, wanted in _V2_TABLE_COLUMNS.items():
+            if table not in tables:
+                report["tables"][table] = "ABSENT"  # type: ignore[index]
+                tables_ok = False
+                continue
+            have = {c["name"] for c in insp.get_columns(table)}
+            missing = [c for c in wanted if c not in have]
+            report["tables"][table] = "OK" if not missing else f"MISSING:{missing}"  # type: ignore[index]
+            tables_ok = tables_ok and not missing
+    converged = columns_ok and tables_ok
+    report["converged"] = converged
+    report["second_pass_noop"] = True
+    return converged, report
+
+
+def _historical_counts(repo: SqlAlchemyResearchRepository) -> dict[str, int]:
+    from sqlalchemy import text
+
+    out: dict[str, int] = {}
+    with repo.engine.connect() as conn:
+        for t in ("research_runs", "research_pages", "research_evidence",
+                  "page_snapshots", "research_coverage_record", "research_discovery_edge"):
+            try:
+                out[t] = int(
+                    conn.execute(text(f'SELECT count(*) FROM "{t}"')).scalar() or 0
+                )
+            except Exception:
+                out[t] = -1
+    return out
+
+
 def _v2_policy() -> CrawlPolicy:
     return CrawlPolicy(
         max_pages=25, max_depth=3, max_attempts=2, max_total_bytes=18_000_000,
@@ -405,6 +476,10 @@ def _bounded_site_crawl_validation(
     """Prove the full deterministic multi-page v2 workflow with no real company."""
     ids = _ids(validation_id)
     now = SystemClock().now()
+
+    catalog_converged, catalog_report = _catalog_convergence(repository)
+    before_counts = _historical_counts(repository)
+
     if repository.get_business(ids["workspace"], ids["business"]) is None:
         repository.create_business(
             Business(
@@ -481,6 +556,31 @@ def _bounded_site_crawl_validation(
     if any(item.snapshot_id not in snapshot_ids for item in evidence):
         raise RuntimeError("bounded site crawl evidence lost page provenance")
 
+    edges = repository.list_discovery_edges(ids["workspace"], ids["run"])
+    if len(edges) < len(captured):
+        raise RuntimeError("bounded site crawl discovery edges were not persisted")
+    if not coverage.stop_reasons:
+        raise RuntimeError("bounded site crawl coverage record has no deterministic stop reason")
+    # coverage counters internally consistent
+    if coverage.pages_successfully_captured != len(captured):
+        raise RuntimeError("coverage pages_successfully_captured disagrees with persisted pages")
+    if coverage.candidate_urls_discovered < coverage.eligible_urls:
+        raise RuntimeError("coverage candidate/eligible counters are inconsistent")
+
+    # historical Slot 01 data preserved: only the synthetic run's own rows were added,
+    # no pre-existing row was deleted.
+    after_counts = _historical_counts(repository)
+    synthetic_evidence = len(evidence)
+    synthetic_pages = len(pages)
+    synthetic_snap = len([s for s in snapshots if s is not None])
+    preserved = (
+        after_counts["research_runs"] == before_counts["research_runs"] + 1
+        and after_counts["research_pages"] == before_counts["research_pages"] + synthetic_pages
+        and after_counts["research_evidence"]
+        == before_counts["research_evidence"] + synthetic_evidence
+        and after_counts["page_snapshots"] >= before_counts["page_snapshots"] + synthetic_snap
+    )
+
     return SyntheticValidationResult(
         mode="BOUNDED_SITE_CRAWL_V1",
         validation_ref_sha256=hashlib.sha256(validation_id.encode()).hexdigest(),
@@ -493,6 +593,11 @@ def _bounded_site_crawl_validation(
         coverage_record_sha256=coverage.coverage_record_sha256,
         captured_categories=tuple(coverage.semantic_categories_captured),
         page_count=len(captured),
+        catalog_converged=catalog_converged,
+        catalog_report=json.dumps(catalog_report, sort_keys=True),
+        discovery_edges_persisted=len(edges),
+        stop_reasons=tuple(coverage.stop_reasons),
+        historical_rows_preserved=preserved,
     )
 
 

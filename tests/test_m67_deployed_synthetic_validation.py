@@ -107,6 +107,10 @@ def test_bounded_site_crawl_synthetic_validation_proves_multi_page_v2() -> None:
     assert "commercial_hvac" in result.captured_categories
     assert "request_service_scheduling" in result.captured_categories
     assert result.coverage_record_sha256 and len(result.coverage_record_sha256) == 64
+    assert result.catalog_converged is True
+    assert result.discovery_edges_persisted >= result.page_count
+    assert result.stop_reasons  # deterministic stop reason recorded
+    assert result.historical_rows_preserved is True
     assert all(value not in result.safe_log_record() for value in PROHIBITED)
 
 
