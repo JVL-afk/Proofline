@@ -1,0 +1,142 @@
+{
+  "record_type": "M67_PHASE1_M1_V2_BOUNDED_SITE_CRAWL_DEPLOYMENT",
+  "schema_version": "1.0.0",
+  "state": "DEPLOYED_AND_IN_CLUSTER_VALIDATED__DORMANT",
+  "recorded_at_utc": "2026-08-30T09:20:00Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "successor_kind": "PROTOCOL_UPGRADE (chain link 6) -- NOT a bounded repair",
+  "discharges_authorization": "AUTHORIZE_PHASE1_M1_V2_BOUNDED_SITE_CRAWL_IMPLEMENTATION_AND_ACTIVATION",
+  "owner_decision_record": {
+    "path": "docs/readiness/m6.7-deployment/phase1-m1-v2-bounded-site-crawl-implementation-and-activation-owner-decision-2026-08-30.json",
+    "sha256": "467b740ea786aa8a0dfc7b456144553b6865d4b8c14188df31557d035e8a3432"
+  },
+  "implementation_commit": "01388b3",
+  "dockerfile": "infra/container/phase1-worker/Dockerfile.window2-m1v2-bounded-site-crawl",
+  "image": {
+    "predecessor_registry_digest": "sha256:47de97dea8e833b2feeacdac1c464d5ac4cef3506d29556c38fa74da280c332f",
+    "successor_registry_digest": "sha256:62ba45aa295b912a578676dd440c75525206757878242e679923764b61c009e4",
+    "destination": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker:git-01388b3-m1v2-bounded-site-crawl",
+    "pushed_digest_equals_registry_digest": true,
+    "media_type": "application/vnd.oci.image.manifest.v1+json",
+    "object_type": "SINGLE_PLATFORM_IMAGE_MANIFEST",
+    "platform": {"os": "linux", "architecture": "amd64"},
+    "storage_manifest_digest": "sha256:cdb1014fb97bd45abb0f59e1c190713e57bdd8f67032276d90414fec27de0ba2",
+    "config_digest": "sha256:17a8c438536b8d576cb0c392deffbe299905237978933e4caa81b3364ebf1ae8",
+    "layer_count": 20,
+    "base_layer_count": 19,
+    "added_layer_diff_id": "sha256:640b5ab2dfa89880d28d634ac5f398173da3905381e6875ba4e7c7d8e78762aa",
+    "child_layers_are_base_prefix_plus_one": true,
+    "copies_only": [
+      "packages/research-core/src/opintel_research/{domain,frontier,sitemap,site_crawl,url_policy,workflow,ports}.py",
+      "packages/research-local/src/opintel_research_local/{persistence,robots}.py",
+      "workers/intelligence/src/opintel_intelligence_worker/production_runtime.py",
+      "workers/research/src/opintel_research_worker/synthetic_validation.py"
+    ],
+    "no_dependency_entrypoint_or_config_change": true
+  },
+  "representation_equivalence": {
+    "local_verifier": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN",
+    "registry_verifier": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "reproduced_registry_manifest_byte_equal_to_registry": true,
+    "archive_manifest_bytes_equal_registry_manifest_bytes": true,
+    "local_identity_evidence": "docs/readiness/m6.7-deployment/phase1-m1-v2-local-image-identity-2026-08-30.json",
+    "registry_identity_evidence": "docs/readiness/m6.7-deployment/phase1-m1-v2-registry-image-identity-2026-08-30.json"
+  },
+  "ecr_scan": {"status": "COMPLETE", "critical": 0, "high": 0, "blocking": 0, "finding_severity_counts": {}},
+  "unchanged_truth_and_minimization_controls_proven_at_image_level": {
+    "opportunity_core_rules_py_sha256": "5575c3a40d30b7d472f3ef68f841c03c9a9be4a9a9baac91b572594b401efd8f",
+    "shadow_core_compliance_application_py_sha256": "99ef700e93db2fcfd224fdf6b69d908126f36971a05d2ab19714e23c582f367b",
+    "note": "both byte-identical in the predecessor (47de97de) and successor (62ba45aa) images",
+    "minimizer_version": "phase1-minimizer@2"
+  },
+  "terraform_adr_0075": {
+    "plan_role": "m67-phase1-terraform-workload-plan",
+    "apply_role": "m67-phase1-terraform-workload-apply",
+    "backend": "backend.apply.hcl",
+    "plan_summary": "4 to add, 3 to change, 4 to destroy",
+    "semantic_review": "image digest ec5763d1... -> 62ba45aa... is the sole meaningful change; the 4/3/4 is ECS immutable-task-definition recreation plus provider empty-collection normalisation (mountPoints/portMappings/systemControls/volumesFrom []->null)",
+    "apply_result": "Apply complete! Resources: 4 added, 3 changed, 4 destroyed.",
+    "post_apply_plan": "NO_CHANGES",
+    "task_definitions_after": {
+      "m67-phase1-research-worker": 21,
+      "m67-phase1-intelligence-worker": 18,
+      "m67-phase1-controlled-egress": 17,
+      "m67-phase1-sampled-slot-activator": 17
+    },
+    "all_task_definitions_reference_digest": "sha256:62ba45aa295b912a578676dd440c75525206757878242e679923764b61c009e4"
+  },
+  "live_rds_state_convergent_migration": {
+    "method": "run inside a transient Fargate research-worker task (deployed digest) via SqlAlchemyResearchRepository.initialize(); _converge_v2_bounded_site_crawl_schema inspects each intended invariant and converges only what is missing (ADD COLUMN only when absent; backfill only NULL rows; create_all only missing tables)",
+    "columns_present": {
+      "research_pages.page_purpose": true,
+      "research_evidence.fact_class": true,
+      "research_runs.coverage_record_sha256": true
+    },
+    "tables_present_with_intended_columns": {
+      "research_discovery_edge": "OK",
+      "research_coverage_record": "OK"
+    },
+    "converged": true,
+    "immediate_second_initialize_is_noop": true,
+    "historical_rows_preserved": true,
+    "historical_preservation_check": "research_runs / research_pages / research_evidence / page_snapshots counts snapshotted before the synthetic run; after the run only the synthetic run's own rows were added and no pre-existing (incl. Slot 01) row was deleted"
+  },
+  "in_cluster_synthetic_validation": {
+    "deployed_digest": "sha256:62ba45aa295b912a578676dd440c75525206757878242e679923764b61c009e4",
+    "no_real_phase1_company_accessed": true,
+    "synthetic_host": "synthetic.invalid",
+    "KILL_SWITCH_BLOCK_V1": {
+      "validation_id": "m67-m1v2-kill-switch-block-v1c",
+      "kill_switch": "TRIPPED (production /m67-phase1/kill-switch, real AwsSsmStopSignal)",
+      "run_status": "failed",
+      "fetch_called": false,
+      "snapshot_count": 0,
+      "proves": "v2 discovery + fetch path is suspended by the real kill switch; no fetch, no snapshot"
+    },
+    "BOUNDED_SITE_CRAWL_V1": {
+      "validation_id": "m67-m1v2-bounded-site-crawl-v1c",
+      "validation_ref_sha256": "7c6dd1d3ffb0058206dc603cba7a1018833df1fea4877a052eece219d93fa522",
+      "run_status": "succeeded",
+      "crawl_protocol_version": "phase1-m1@2-bounded-site-crawl",
+      "kill_switch_active_observed": true,
+      "kill_switch_note": "the production kill switch stayed TRIPPED throughout; the hermetic multi-page walk runs with an inert stop signal because _SyntheticSiteFetcher can physically only serve the image-embedded fixture. Kill-switch ENFORCEMENT of a real fetch is proven exclusively by KILL_SWITCH_BLOCK_V1 above.",
+      "pages_captured": 4,
+      "snapshot_count": 4,
+      "evidence_count": 12,
+      "captured_categories": ["commercial_hvac", "homepage", "request_service_scheduling", "services"],
+      "privacy_url_excluded": true,
+      "cross_host_crawl": "none (fetcher rejects any host != synthetic.invalid)",
+      "prohibited_contact_or_person_material_persisted": false,
+      "coverage_counters_internally_consistent": true,
+      "deterministic_stop_reason": ["frontier_exhausted"],
+      "discovery_edges_persisted": 9,
+      "coverage_record_sha256": "2d01294541036c0075a26dcac722b4b4678916bd2f0eae47c495909e042136e6",
+      "provenance_every_evidence_item_binds_one_captured_page_snapshot": true,
+      "catalog_report": {
+        "columns": {"research_evidence.fact_class": true, "research_pages.page_purpose": true, "research_runs.coverage_record_sha256": true},
+        "tables": {"research_coverage_record": "OK", "research_discovery_edge": "OK"},
+        "converged": true,
+        "second_pass_noop": true
+      },
+      "end_to_end_proven": "robots -> sitemap/link discovery -> deterministic frontier ordering -> same-host enforcement -> low-value exclusion -> multi-page fetch -> per-page minimization (phase1-minimizer@2) -> provenance-safe persistence -> discovery-edge persistence -> coverage-record persistence -> deterministic early stopping (frontier_exhausted) -> terminal synthetic M1 success"
+    }
+  },
+  "final_dormant_state": {
+    "kill_switch": "TRIPPED (v25, never moved during this deployment)",
+    "research_release": "375a88da-da88-5ebf-9daf-cb09934e02b9  CONSUMED:M2_INSUFFICIENT_EVIDENCE  NOT_AUTHORIZED (Slot 01, untouched)",
+    "sampled_slot_execution_approval": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "controlled_egress_lease": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "services": "research-worker 0/0/0, intelligence-worker 0/0/0, controlled-egress 0/0/0",
+    "running_tasks": 0,
+    "terraform": "NO_CHANGES",
+    "isolated_run_gate_param": "/m67-phase1/synthetic-validation-run-gate was created then DELETED; the task role lacked ssm:GetParameter on it so it was never actually read (fell back to fail-closed) -- no functional effect"
+  },
+  "not_authorized_by_this_deployment": [
+    "Slot 02 or any real Phase 1 company crawl",
+    "the live-materializer release/activation/authorization wiring (deferred to the batch gate; see phase1-m1-v2-slots02-06-readiness-2026-08-30.md section 3)",
+    "any M2/M3/M4/M5 threshold or truth-rule change",
+    "AI / browser / contact phase / outreach / new host scope"
+  ],
+  "next": "prepare READY_FOR_SLOTS02_06_PHASE1_M1_V2_EXECUTION_AUTHORIZATION as ONE batch gate; Slot 02 not started"
+}

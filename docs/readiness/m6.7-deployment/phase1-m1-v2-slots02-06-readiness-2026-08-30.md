@@ -1,10 +1,13 @@
-# PHASE1_M1_V2_BOUNDED_SITE_CRAWL — implementation complete, deployment runbook, Slots 02–06 readiness
+# PHASE1_M1_V2_BOUNDED_SITE_CRAWL — implementation + deployment complete, Slots 02–06 readiness
 
 - **record_type**: `M67_PHASE1_M1_V2_SLOTS02_06_READINESS`
-- **state**: `IMPLEMENTATION_COMPLETE__DEPLOYMENT_PENDING`
-- **recorded_at_utc**: `2026-08-30T00:00:00Z`
-- **authorization discharged so far**: `AUTHORIZE_PHASE1_M1_V2_BOUNDED_SITE_CRAWL_IMPLEMENTATION_AND_ACTIVATION`
+- **state**: `IMPLEMENTATION_AND_DEPLOYMENT_COMPLETE__READY_FOR_SLOTS02_06_BATCH_AUTHORIZATION`
+- **recorded_at_utc**: `2026-08-30T09:30:00Z`
+- **authorization discharged**: `AUTHORIZE_PHASE1_M1_V2_BOUNDED_SITE_CRAWL_IMPLEMENTATION_AND_ACTIVATION`
   (owner-decision `…owner-decision-2026-08-30.json`, sha256 `467b740ea786aa8a0dfc7b456144553b6865d4b8c14188df31557d035e8a3432`)
+- **deployed digest**: `785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:62ba45aa295b912a578676dd440c75525206757878242e679923764b61c009e4`
+  (chain link 6, protocol-upgrade successor of `sha256:47de97de…`; deployment evidence
+  `phase1-m1-v2-deployment-2026-08-30.json`)
 - **Slot 01**: frozen `PHASE1_M1_V1_HOMEPAGE`, terminal `M1_SUCCESS → M2_INSUFFICIENT_EVIDENCE`. Not reopened.
 - **Slot 02**: NOT started.
 
@@ -60,46 +63,21 @@ multi-page proof + determinism + kill-switch block).
 
 ---
 
-## 2. Deployment runbook — PENDING (AWS SSO now available)
+## 2. Deployment — DONE (`phase1-m1-v2-deployment-2026-08-30.json`)
 
-This is the remaining half of the discharged authorization. It is a single live-infra operation
-and should be run as a focused pass. Steps, in order:
+| Step | Result |
+|---|---|
+| Thin successor image (chain link 6, protocol-upgrade, `Dockerfile.window2-m1v2-bounded-site-crawl` FROM `sha256:47de97de…`) | `sha256:62ba45aa295b912a578676dd440c75525206757878242e679923764b61c009e4` — 19 base layers + 1; COPY-only, no dependency/entrypoint/config change |
+| Representation equivalence | `LOCAL_REPRESENTATION_EQUIVALENT_PROVEN` + `REPRESENTATION_EQUIVALENT_PROVEN`; reproduced registry manifest byte-equal to registry (`phase1-m1-v2-{local,registry}-image-identity-2026-08-30.json`) |
+| ECR scan | COMPLETE, critical/high/blocking **0/0/0** |
+| M2 rules / compliance / minimiser | `rules.py` `5575c3a4…` and `compliance_application.py` `99ef700e…` **byte-identical** in predecessor and successor images; `phase1-minimizer@2` |
+| ADR-0075 Terraform | plan (workload-plan) → semantic review (image digest sole meaningful change) → apply (workload-apply): 4 add / 3 change / 4 destroy → **NO_CHANGES**. Task defs research-worker:21 / intelligence-worker:18 / controlled-egress:17 / sampled-slot-activator:17 |
+| State-convergent DB migration (live RDS, transient Fargate) | `research_pages.page_purpose`, `research_evidence.fact_class`, `research_runs.coverage_record_sha256` present; `research_discovery_edge` + `research_coverage_record` present with intended columns; `converged: true`; immediate second `initialize()` a strict no-op; **historical rows preserved** (only the synthetic run's own rows added, no pre-existing/Slot 01 row deleted) |
+| In-cluster `KILL_SWITCH_BLOCK_V1` | real kill switch TRIPPED → run FAILED, no fetch, no snapshot — v2 fetch path is suspended by the real switch |
+| In-cluster `BOUNDED_SITE_CRAWL_V1` | `succeeded`, protocol `phase1-m1@2-bounded-site-crawl`, 4 pages captured, `commercial_hvac` + `request_service_scheduling` captured, `/privacy` excluded, no cross-host, no prohibited/contact data, coverage counters consistent, stop reason `["frontier_exhausted"]`, 9 discovery edges + coverage record `2d012945…` persisted, per-page provenance intact. No real Phase 1 company touched (host `synthetic.invalid`, image-embedded fixture) |
+| Final dormant state | kill switch TRIPPED (never moved), release `CONSUMED`, approval + egress-lease `NOT_AUTHORIZED`, services 0/0/0, zero tasks, Terraform NO_CHANGES |
 
-1. **Thin successor image = chain link 6** (`… → edda5c6 → 47de97de → <v2>`), tracked as a
-   **protocol-upgrade** successor entry, **not** a repair. New `Dockerfile.window2-m1v2-bounded-site-crawl`
-   FROM the deployed `sha256:47de97de…` image, COPY-ing exactly the changed/added files:
-   `research-core/opintel_research/{domain,frontier,sitemap,site_crawl,url_policy,workflow,ports}.py`,
-   `research-local/opintel_research_local/{persistence,robots}.py`,
-   `intelligence-worker/opintel_intelligence_worker/production_runtime.py`,
-   `research-worker/opintel_research_worker/synthetic_validation.py`. No dependency, entrypoint or
-   config change.
-2. Resolve base to an immutable registry digest; build linux/amd64; generate SBOM + dependency
-   inventory.
-3. Publish through the bounded `m67-phase1-worker-image-publisher`; retrieve the ECR
-   control-plane digest; **representation-equivalence** proven by both
-   `scripts/verify_m67_local_image_identity.py` and `scripts/verify_m67_registry_image_identity.py`
-   (byte-for-byte manifest reproduction from the frozen local image).
-4. **ECR scan COMPLETE**, critical/high/blocking **0/0/0**; append a protocol-upgrade entry to
-   `OPINTEL_REPAIR_SUCCESSOR_{REGISTRY,DEPLOYMENT}_EVIDENCE_PATHS`.
-5. **ADR-0075 Terraform**: `terraform.tfvars` digest bump →
-   plan (role `m67-phase1-terraform-workload-plan`, `backend.apply.hcl`) → **semantic review** →
-   apply (role `m67-phase1-terraform-workload-apply`) → task-def revisions bump → post-apply
-   `terraform plan` = **NO_CHANGES**.
-6. **State-convergent DB migration** verified against the live RDS catalog via a transient
-   Fargate task: `research_pages.page_purpose`, `research_evidence.fact_class`,
-   `research_runs.coverage_record_sha256` present; `research_discovery_edge` and
-   `research_coverage_record` tables present. `_converge_v2_bounded_site_crawl_schema` is a strict
-   no-op on an already-migrated catalog (inspect-then-converge, no marker column). Historical rows
-   preserved.
-7. **In-cluster `synthetic_validation BOUNDED_SITE_CRAWL_V1`** on the deployed image — proves the
-   full deterministic multi-page workflow with **no real Phase 1 company** (host
-   `synthetic.invalid`, image-contained 6-page fixture). Must show: ≥3 pages captured, `/privacy`
-   excluded, coverage record sealed, `commercial_hvac` + `request_service_scheduling` categories
-   captured, zero prohibited/contact-shaped values, per-page provenance intact.
-8. Restore dormancy: kill switch TRIPPED, sentinel/lease `NOT_AUTHORIZED`, services 0/0/0, zero
-   tasks. Commit the deployment + validation evidence records.
-
-**Hard stop after step 8.** No Slot 02, no real company crawl.
+**Hard stop reached.** No Slot 02, no real company crawl.
 
 ---
 
