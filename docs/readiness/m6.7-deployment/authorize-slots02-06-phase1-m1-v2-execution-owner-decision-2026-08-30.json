@@ -1,0 +1,99 @@
+{
+  "record_type": "M67_AUTHORIZE_SLOTS02_06_PHASE1_M1_V2_EXECUTION_OWNER_DECISION",
+  "schema_version": "1.0.0",
+  "state": "OWNER_APPROVED_BY_REFERENCE",
+  "decision_event": "AUTHORIZE_SLOTS02_06_PHASE1_M1_V2_EXECUTION",
+  "recorded_at_utc": "2026-08-30T10:00:00Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "approval_method": "BY_REFERENCE_TO_THE_IMMUTABLE_AUTHORIZATION_PACKAGE. The owner did not author a canonical approval-statement string; the approval binds package SHA-256 d28e42594c943debf0144b3f5ecce57589760881e579ebbf52f6984d8150677a and all exact artifacts and hashes transitively bound by it, plus the four owner directives quoted verbatim below.",
+  "authorization_package": {
+    "path": "docs/readiness/m6.7-deployment/ready-for-slots02-06-phase1-m1-v2-execution-authorization-2026-08-30.json",
+    "sha256": "d28e42594c943debf0144b3f5ecce57589760881e579ebbf52f6984d8150677a",
+    "not_regenerated": true
+  },
+  "transitively_bound_artifacts": {
+    "design": {"path": "docs/readiness/m6.7-deployment/phase1-m1-v2-bounded-site-crawl-design-2026-08-29.md", "sha256": "49ae0a63082b329ace62b9fd860f873983bc81d5befe1d6df67c16487d0d6a8a"},
+    "implementation_owner_decision": {"path": "docs/readiness/m6.7-deployment/phase1-m1-v2-bounded-site-crawl-implementation-and-activation-owner-decision-2026-08-30.json", "sha256": "467b740ea786aa8a0dfc7b456144553b6865d4b8c14188df31557d035e8a3432"},
+    "execution_ceiling_envelope": {"path": "docs/readiness/m6.7-deployment/phase1-m1-v2-execution-ceiling-envelope-2026-08-30.json", "sha256": "dee5075aabbe6b49df6049053d4c20c1c014071a202a1ba86c479059aba7c6f5", "execution_ceilings_sha256": "083b70520f161d4c21aa72cc221cb063dc2b99cf19ab15caa9c0cd7011b0506b"},
+    "deployment_evidence": {"path": "docs/readiness/m6.7-deployment/phase1-m1-v2-deployment-2026-08-30.json", "sha256": "410aa5be5c0e7b9580a7c9561434c4846d9f921acf4a169afd8657261722defd"},
+    "slots02_06_readiness": {"path": "docs/readiness/m6.7-deployment/phase1-m1-v2-slots02-06-readiness-2026-08-30.md", "sha256": "45e4fdc12a3daecd73893af55e53c7a14327c57467112d51e92b1f1213aec3e4"},
+    "frozen_slot_registry": {"path": "infra/container/phase1-worker/phase1-frozen-slot-registry.json", "registry_sha256": "aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2"},
+    "deployed_image_digest": "sha256:62ba45aa295b912a578676dd440c75525206757878242e679923764b61c009e4",
+    "implementation_head_commit": "334d960"
+  },
+  "owner_directive_1_batch_wide_ceilings_verbatim": [
+    "The existing per-slot M1 v2 ceilings remain authoritative and unchanged.",
+    "Additionally, bind a batch-wide ceiling for Slots 02-06 equal to the sum of the five per-slot maxima:",
+    "useful successful page fetches: 125;",
+    "total HTTP requests: 240;",
+    "discovery fetches: 30;",
+    "cumulative raw response bytes: 90,000,000;",
+    "cumulative M1 execution duration: 1,500 seconds;",
+    "paid/source research cost: USD 0.",
+    "These are hard upper safety bounds, not targets.",
+    "Normal deterministic early stopping remains required per slot.",
+    "A slot may never borrow unused per-slot allowance from another slot. Both the per-slot ceiling and the remaining batch ceiling must permit an action."
+  ],
+  "owner_directive_1_machine_values": {
+    "batch_max_useful_page_fetches": 125,
+    "batch_max_total_http_requests": 240,
+    "batch_max_discovery_fetches": 30,
+    "batch_max_total_bytes": 90000000,
+    "batch_max_m1_duration_seconds": 1500,
+    "batch_cost_ceiling_usd": "0",
+    "enforcement": "hard upper safety bounds; a slot action requires BOTH its per-slot envelope headroom AND remaining batch headroom; no cross-slot borrowing; per-slot deterministic early stopping still required"
+  },
+  "owner_directive_2_a09_verbatim": [
+    "I approve the batch to perform the existing bounded A-09 exact-host process for the following frozen mappings only:",
+    "Slot 02 - Webb Air -> webbair.com",
+    "Slot 03 - BNCAIR -> www.bncair.net",
+    "Slot 04 - All Elements Heating & Air -> allelementshvac.com",
+    "Slot 05 - Fintastic Cooling & Heating -> www.callfintastic.com",
+    "Slot 06 - Calvin's Climate -> www.calvinsclimate.com",
+    "This is a conditional owner acceptance under the existing unchanged A-09 policy, not blanket hostname approval.",
+    "For each slot: perform/revalidate the exact bounded A-09 evidence; require the frozen business identity and exact candidate hostname to match; require the existing A-09 acceptance criteria to be satisfied; if satisfied, materialize the exact image-bound APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH decision and continue that slot; if not satisfied, fail that slot closed with the truthful A-09 terminal outcome and proceed to the next frozen slot.",
+    "Do not substitute another hostname.",
+    "Do not redraw or replace the company.",
+    "No further owner signature is required merely to accept an A-09 result that satisfies these exact conditions for these five already-named hosts."
+  ],
+  "owner_directive_3_truthful_terminal_outcomes_verbatim": [
+    "M1_RESEARCH_FAILED; M2_INSUFFICIENT_EVIDENCE; robots-shaped absence; bounded external transport failure; negative/unfavourable opportunity result; are valid truthful company outcomes.",
+    "None may trigger a redraw, replacement, threshold reduction, evidence fabrication, or repair merely to obtain a positive result.",
+    "After sealing the slot result and restoring dormancy, automatically proceed to the next frozen slot.",
+    "Only a concrete internal operational defect stops the batch for owner review."
+  ],
+  "owner_directive_4_truth_taxonomy_verbatim": [
+    "FACT INFERENCE ESTIMATE RECOMMENDATION UNKNOWN remain distinct.",
+    "Public absence is never internal absence.",
+    "Website evidence may establish only what the evidence actually supports.",
+    "Do not infer unsupported response times, lead volume, conversion, CRM usage, missed leads, revenue leakage, staffing, internal workflows, follow-up quality, or similar internal facts.",
+    "Existing M2-M5 thresholds and INSUFFICIENT_EVIDENCE semantics remain unchanged."
+  ],
+  "execution_instruction_verbatim": [
+    "Record this owner decision against the existing immutable package; do not regenerate the package merely to incorporate these clarifications.",
+    "Then execute the batch mechanically: live-materializer v2 wiring -> successor artifact/deployment if required -> synthetic validation -> Slot 02 -> dormant -> Slot 03 -> dormant -> Slot 04 -> dormant -> Slot 05 -> dormant -> Slot 06 -> dormant -> human review.",
+    "For every approved slot: A-09 -> M1 phase1-m1@2-bounded-site-crawl -> if sufficient, deterministic offline M2 -> M3 -> M4 -> M5 -> terminate at or before CONTACT_PHASE_NOT_AUTHORIZED.",
+    "Do not stop for another owner decision between truthful company outcomes.",
+    "If a concrete internal operational defect occurs, stop the batch and diagnose it; this authorization contains no repair budget.",
+    "Do not start Slots 07-24. Do not reopen Slot 01.",
+    "No AI, browser, person/contact processing, outreach, delivery, paid sources, or additional hostname scope is authorized.",
+    "After Slot 06, return one consolidated Slots 02-06 report [11 enumerated sections]. Do not proceed beyond Slot 06."
+  ],
+  "consolidated_report_required_sections": [
+    "A-09 outcome for each frozen host",
+    "M1 coverage and evidence summary for each slot",
+    "exact terminal stage for each slot",
+    "M2 opportunity/economics where reached",
+    "M3/M4/M5 artifacts where reached",
+    "FACT/INFERENCE/ESTIMATE/RECOMMENDATION/UNKNOWN audit",
+    "per-slot request/byte/time counters",
+    "batch cumulative counters",
+    "provenance and minimization status",
+    "authority lifecycle",
+    "final dormant-state proof",
+    "comparison of outcomes across Slots 02-06"
+  ],
+  "no_new_synthesized_approval_statement": true,
+  "next": "execute the authorized batch mechanically; stop only for a concrete internal operational defect; return the consolidated report after Slot 06"
+}
