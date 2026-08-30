@@ -23,6 +23,7 @@ from opintel_research_local.http import decode_http_content
 _REDIRECTS = {301, 302, 303, 307, 308}
 _MAX_ROBOTS_BYTES = 65_536
 _USER_AGENT = "OpportunityIntelligenceResearch"
+_MAX_SITEMAP_DIRECTIVES = 50
 
 
 class RuntimeRobotsPolicy:
@@ -78,6 +79,32 @@ class RuntimeRobotsPolicy:
             reason_code=reason,
             allowed=allowed,
         )
+
+    def sitemap_directives(
+        self, research_run_id: UUID, permitted_host: str, policy: CrawlPolicy
+    ) -> tuple[str, ...]:
+        """Same-run cached ``Sitemap:`` directive URLs from robots.txt.
+
+        Bounded, fail-open to an empty tuple. The caller re-validates every URL
+        (host, TLS, SSRF) before any fetch -- this method performs no I/O beyond
+        the already-cached robots retrieval and does not widen host scope.
+        """
+        cache_key = (research_run_id, permitted_host)
+        if cache_key not in self._cache:
+            self._cache[cache_key] = self._retrieve(permitted_host, policy)
+        _status, body, retrieval_reason = self._cache[cache_key]
+        if retrieval_reason != "robots_loaded" or body is None:
+            return ()
+        directives: list[str] = []
+        for line in body.decode("utf-8", errors="ignore").splitlines():
+            stripped = line.strip()
+            if stripped.lower().startswith("sitemap:"):
+                value = stripped.split(":", 1)[1].strip()
+                if value and value not in directives:
+                    directives.append(value)
+            if len(directives) >= _MAX_SITEMAP_DIRECTIVES:
+                break
+        return tuple(directives)
 
     def _retrieve(self, host: str, policy: CrawlPolicy) -> tuple[int | None, bytes | None, str]:
         try:
