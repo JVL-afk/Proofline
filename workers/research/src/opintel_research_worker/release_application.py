@@ -359,14 +359,20 @@ class BoundedSampledSlotReleaseApplicator:
         current: LiveResearchPermissionRelease,
         approval: SampledSlotExecutionApproval,
     ) -> bool:
-        """Accept an ordinary lock or the exact immutable terminal form of a consumed run."""
+        """Accept an ordinary lock or the exact immutable terminal form of a consumed run.
+
+        A consumed terminal is a valid predecessor for a *different* authorised
+        release: either a different owner statement (v1 repair chains) or, within
+        the Slots 02-06 batch, a different frozen slot's own consumed terminal.
+        """
 
         if current.revoked_at is None:
             return current.suspended_reason is None
-        return bool(
-            current.suspended_reason
-            and current.suspended_reason.startswith("CONSUMED:")
-            and current.owner_approval_sha256 != approval.owner_statement_sha256
+        if not (current.suspended_reason and current.suspended_reason.startswith("CONSUMED:")):
+            return False
+        return (
+            current.owner_approval_sha256 != approval.owner_statement_sha256
+            or current.slot_number != approval.slot_number
         )
 
     def enter_run(self, release: LiveResearchPermissionRelease) -> None:
