@@ -25,14 +25,24 @@ from opintel_opportunity_local import (
     SqlAlchemyOpportunityRepository,
 )
 from opintel_research.domain import (
+    SEMANTIC_CATEGORIES,
     DurablePageBundle,
     ExtractedMaterial,
     MinimizedPageSnapshot,
     PageStatus,
     ResearchEvidence,
     ResearchPage,
+    classify_public_fact,
 )
 from opintel_research_local.persistence import SqlAlchemyResearchRepository
+
+
+def _page_purpose(fragments: list[str]) -> str:
+    joined = " ".join(fragments).lower()
+    for category, keywords in SEMANTIC_CATEGORIES.items():
+        if any(keyword in joined for keyword in keywords):
+            return category.value
+    return "unclassified"
 
 
 def seed_research_evidence(
@@ -121,6 +131,7 @@ def seed_research_evidence(
         snapshot_id=snapshot_id,
         material_id=material_id,
         fetched_at=clock.now(),
+        page_purpose=_page_purpose(fragments),
     )
     evidence = [
         ResearchEvidence(
@@ -141,6 +152,7 @@ def seed_research_evidence(
             extractor_name="m2-fixture",
             extractor_version="1",
             created_at=clock.now(),
+            fact_class=classify_public_fact(fragment),
         )
         for index, fragment in enumerate(fragments)
     ]

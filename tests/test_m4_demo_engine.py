@@ -220,9 +220,9 @@ def test_eligible_audit_produces_complete_traceable_demo_and_mock_runtime(
     for event, value in (
         ("acknowledge", None),
         ("start", None),
-        ("answer", "repair"),
+        ("answer", "unknown"),  # service_need (synthetic or company-derived)
         ("answer", "office"),
-        ("answer", "north_texas"),
+        ("answer", "unknown"),  # service_location
         ("answer", "routine"),
         ("answer", "unknown"),
         ("answer", "simulated_email"),
@@ -814,9 +814,9 @@ def test_safety_and_mock_failure_paths_are_explicit_terminal_simulations(
     for event, value in (
         ("acknowledge", None),
         ("start", None),
-        ("answer", "repair"),
+        ("answer", "unknown"),  # service_need (synthetic or company-derived)
         ("answer", "warehouse"),
-        ("answer", "north_texas"),
+        ("answer", "unknown"),  # service_location
         ("answer", "safety_critical"),
     ):
         safety = client.app.state.demo_runtime_service.apply_event(safety_token, event, value, None)
@@ -829,9 +829,9 @@ def test_safety_and_mock_failure_paths_are_explicit_terminal_simulations(
     for event, value in (
         ("acknowledge", None),
         ("start", None),
-        ("answer", "repair"),
+        ("answer", "unknown"),  # service_need (synthetic or company-derived)
         ("answer", "office"),
-        ("answer", "central_texas"),
+        ("answer", "unknown"),  # service_location
         ("answer", "routine"),
         ("answer", "unknown"),
         ("answer", "simulated_email"),
@@ -903,9 +903,9 @@ def test_deterministic_replay_and_runtime_cannot_mutate_canonical_truth(
         for event, value in (
             ("acknowledge", None),
             ("start", None),
-            ("answer", "repair"),
+            ("answer", "unknown"),  # service_need (synthetic or company-derived)
             ("answer", "office"),
-            ("answer", "north_texas"),
+            ("answer", "unknown"),  # service_location
             ("answer", "routine"),
             ("answer", "unknown"),
             ("answer", "simulated_phone"),

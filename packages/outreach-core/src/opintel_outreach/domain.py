@@ -23,6 +23,7 @@ class OutreachOperationStatus(StrEnum):
 
 class OutreachRevisionState(StrEnum):
     READY_FOR_REVIEW = "ready_for_review"
+    DRAFT_INCOMPLETE = "draft_incomplete"
     QC_FAILED = "qc_failed"
     CONTENT_APPROVED = "content_approved"
     REJECTED = "rejected"
@@ -78,6 +79,7 @@ class ProjectionDisposition(StrEnum):
 
 class ProjectionMode(StrEnum):
     DIRECT_FACT_RESTATEMENT = "direct_fact_restatement"
+    EVIDENCE_DERIVED_FACT = "evidence_derived_fact"
     CONDITIONAL_INFERENCE = "conditional_inference"
     SCOPED_ABSENCE = "scoped_absence"
     CONDITIONAL_RECOMMENDATION = "conditional_recommendation"
@@ -229,6 +231,16 @@ class InternalEconomicContext:
 
 
 @dataclass(frozen=True, slots=True)
+class PersonalizationAssessment:
+    """EVIDENCE_PRESERVING_PERSONALIZATION_V2 personalization-gate result."""
+
+    company_specific_segment_count: int
+    distinct_fact_classes: int
+    rendered_evidence_ids: tuple[UUID, ...]
+    passes_gate: bool
+
+
+@dataclass(frozen=True, slots=True)
 class OutreachQcFinding:
     id: UUID
     code: str
@@ -263,6 +275,8 @@ class OutreachRevision:
     revision_hash: str
     created_by: str
     created_at: datetime
+    personalization: PersonalizationAssessment | None = None
+    unresolved_slot_kinds: tuple[str, ...] = ()
 
     @property
     def hard_qc_passed(self) -> bool:

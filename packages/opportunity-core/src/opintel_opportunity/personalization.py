@@ -308,8 +308,15 @@ _QUOTABLE_CATEGORIES = frozenset(
 _DIGIT = re.compile(r"\d")
 
 
+def short_phrase(phrase: str, max_words: int = 9) -> str:
+    words = _clean_phrase(phrase).split()
+    if len(words) <= max_words:
+        return " ".join(words)
+    return " ".join(words[:max_words]).rstrip(",;:")
+
+
 def reader_fact_sentence(business_name: str, category: FactCategory, phrase: str) -> str:
-    value = _clean_phrase(phrase)
+    value = short_phrase(phrase, 7)
     if category in _QUOTABLE_CATEGORIES and not _DIGIT.search(value):
         if category == FactCategory.INTAKE_SURFACE:
             return f'your website has a public request path — "{value}".'

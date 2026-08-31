@@ -16,7 +16,7 @@ from opintel_outreach import (
     OutreachQualityPolicy,
     OutreachWorkflowRunner,
 )
-from opintel_outreach.composition import CTA, FOLLOW_UP_PRECONDITION
+from opintel_outreach.composition import FOLLOW_UP_PRECONDITION
 from opintel_outreach.domain import (
     ArtifactAudience,
     ArtifactKind,
@@ -147,7 +147,16 @@ def test_complete_package_is_traceable_bounded_and_content_reviewed(
     )
     revision = package["revision"]
     manifest = revision["manifest"]
-    assert revision["state"] == "ready_for_review"
+    # PERSONALIZATION_V2: the composer emits the required sender / postal / opt-out
+    # placeholders, so a fresh package is DRAFT_INCOMPLETE, not send-ready.
+    assert revision["state"] == "draft_incomplete"
+    assert set(revision["unresolved_slot_kinds"]) == {
+        "approved_opt_out_instruction_slot",
+        "required_postal_disclosure_slot",
+        "verified_sender_slot",
+    }
+    assert revision["personalization"]["passes_gate"] is True
+    assert revision["personalization"]["company_specific_segment_count"] >= 1
     assert revision["qc_findings"] == []
     assert manifest["demo_revision_id"] == demo["revision"]["id"]
     assert manifest["audit_revision_id"] == audit["revision"]["id"]
@@ -167,15 +176,20 @@ def test_complete_package_is_traceable_bounded_and_content_reviewed(
     followup = next(item for item in external if item["kind"] == ArtifactKind.FOLLOW_UP_DRAFT)
     assert len(subject["rendered_text"]) <= 60
     assert len(first["rendered_text"].split()) <= 130
-    assert first["rendered_text"].count(CTA) == 1
     assert "not a system deployed" in first["rendered_text"]
+    # PERSONALIZATION_V2: reader-facing facts are evidence-derived and at least one
+    # renders a materially company-specific observation.
     fact_projections = [
         item
         for item in revision["projections"]
-        if item["mode"] == ProjectionMode.DIRECT_FACT_RESTATEMENT
+        if item["mode"] == ProjectionMode.EVIDENCE_DERIVED_FACT
     ]
-    assert len(fact_projections) == 1
+    assert 1 <= len(fact_projections) <= 2
     assert fact_projections[0]["evidence_ids"]
+    business_tokens = set(business["name"].lower().split())
+    for projection in fact_projections:
+        assert projection["rendered_text"]
+        assert projection["rendered_text"].lower().split() != list(business_tokens)
     assert followup["follow_up_usability"] == "conditionally_usable"
     assert followup["external_precondition"] == FOLLOW_UP_PRECONDITION
     assert revision["economic_context"]["external_use_permitted"] is False
@@ -193,7 +207,9 @@ def test_complete_package_is_traceable_bounded_and_content_reviewed(
     assert lineage.status_code == 200
     assert lineage.json()["audit_claim_id"] == fact_projections[0]["source_claim_id"]
     assert lineage.json()["evidence_links"]
-    reviewed = client.post(
+    # PERSONALIZATION_V2: a DRAFT_INCOMPLETE package cannot be content-approved while
+    # the required sender / postal / opt-out placeholders remain unresolved.
+    refused = client.post(
         f"/api/v1/outreach-package-revisions/{revision['id']}/review-decisions",
         headers=auth_headers,
         json={
@@ -204,11 +220,8 @@ def test_complete_package_is_traceable_bounded_and_content_reviewed(
             "reason": "Content wording reviewed; no contact is authorized.",
         },
     )
-    assert reviewed.status_code == 200
-    assert reviewed.json()["revision"]["state"] == "content_approved"
-    assert reviewed.json()["review_valid"] is True
-    assert reviewed.json()["latest_review"]["self_review"] is True
-    assert "does not authorize contact" in reviewed.json()["authority_notice"]
+    assert refused.status_code == 400
+    assert refused.json()["code"] == "invalid_input"
 
 
 @pytest.mark.integration
@@ -386,16 +399,13 @@ def test_replay_second_fact_and_internal_unknown_semantics(
     )
     assert first.content_hash == second.content_hash
     assert first.revision_hash == second.revision_hash
-    assert (
-        len(
-            [
-                item
-                for item in first.projections
-                if item.mode == ProjectionMode.DIRECT_FACT_RESTATEMENT
-            ]
-        )
-        == 1
-    )
+    # PERSONALIZATION_V2: reader facts are evidence-derived; count is min(2, available).
+    derived = [
+        item
+        for item in first.projections
+        if item.mode == ProjectionMode.EVIDENCE_DERIVED_FACT
+    ]
+    assert 1 <= len(derived) <= 2
     with_second = DeterministicOutreachComposer(
         FixedIdentifiers(), select_second_fact=True
     ).compose(
@@ -411,7 +421,7 @@ def test_replay_second_fact_and_internal_unknown_semantics(
             [
                 item
                 for item in with_second.projections
-                if item.mode == ProjectionMode.DIRECT_FACT_RESTATEMENT
+                if item.mode == ProjectionMode.EVIDENCE_DERIVED_FACT
             ]
         )
         <= 2
@@ -685,7 +695,7 @@ def test_scoped_absence_requires_public_scope_and_explicit_uncertainty(
         now=clock.now(),
     )
     fact = next(
-        item for item in revision.projections if item.mode == ProjectionMode.DIRECT_FACT_RESTATEMENT
+        item for item in revision.projections if item.mode == ProjectionMode.EVIDENCE_DERIVED_FACT
     )
     scoped = replace(
         fact,

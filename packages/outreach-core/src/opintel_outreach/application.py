@@ -144,8 +144,16 @@ class OutreachApplicationService:
             OutreachRevisionState.READY_FOR_REVIEW,
             OutreachRevisionState.CONTENT_APPROVED,
             OutreachRevisionState.REVISION_REQUESTED,
+            OutreachRevisionState.DRAFT_INCOMPLETE,
         }:
             raise OutreachValidationError("outreach revision is not reviewable")
+        if (
+            revision.state == OutreachRevisionState.DRAFT_INCOMPLETE
+            and decision == OutreachReviewDecisionType.APPROVE_CONTENT
+        ):
+            raise OutreachValidationError(
+                "outreach draft has unresolved required sender/postal/opt-out placeholders"
+            )
         review = OutreachReviewDecision(
             self._ids.new(),
             revision.id,

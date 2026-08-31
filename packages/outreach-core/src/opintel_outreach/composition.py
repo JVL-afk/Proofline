@@ -11,6 +11,12 @@ from uuid import UUID
 
 from opintel_audit.domain import ClaimType
 from opintel_m0.ports import IdentifierFactory
+from opintel_opportunity.domain import CompanyFact, FactCategory
+from opintel_opportunity.personalization import (
+    is_reader_specific,
+    reader_fact_sentence,
+    short_phrase,
+)
 
 from opintel_outreach.domain import (
     ArtifactAudience,
@@ -28,6 +34,7 @@ from opintel_outreach.domain import (
     OutreachRisk,
     OutreachValidationQuestion,
     OutreachValidity,
+    PersonalizationAssessment,
     ProjectionDisposition,
     ProjectionMode,
     QcSeverity,
@@ -36,20 +43,198 @@ from opintel_outreach.domain import (
     TargetRoleSelection,
 )
 
+_FRAME_STOPWORDS = frozenset(
+    {
+        "your",
+        "site",
+        "offers",
+        "describes",
+        "covers",
+        "has",
+        "the",
+        "and",
+        "for",
+        "new",
+        "public",
+        "request",
+        "path",
+        "contact",
+        "page",
+        "publishes",
+        "response",
+        "expectations",
+        "inquiries",
+        "work",
+        "lists",
+        "service",
+        "area",
+        "website",
+        "with",
+        "that",
+        "this",
+        "from",
+    }
+)
+_WORD = re.compile(r"[A-Za-z]{3,}")
+
+
+def _unresolved_slot_kinds(artifacts: tuple[OutreachArtifact, ...]) -> tuple[str, ...]:
+    kinds: set[str] = set()
+    for artifact in artifacts:
+        if artifact.audience != ArtifactAudience.EXTERNAL:
+            continue
+        for segment in artifact.segments:
+            if str(segment.kind) in _REQUIRED_SLOT_KINDS and _PLACEHOLDER.search(segment.text):
+                kinds.add(str(segment.kind))
+    return tuple(sorted(kinds))
+
+
+def _assess_personalization(
+    source: OutreachCanonicalInputs,
+    projections: tuple[OutreachClaimProjection, ...],
+    artifacts: tuple[OutreachArtifact, ...],
+) -> PersonalizationAssessment:
+    excerpt_by_evidence = {item.id: item.bounded_excerpt.lower() for item in source.evidence}
+    fact_class_by_evidence = {
+        fact.evidence_id: fact.fact_class for fact in source.opportunity.company_facts
+    }
+    projection_by_id = {item.id: item for item in projections}
+    business_tokens = {token.lower() for token in _WORD.findall(source.business_name)}
+    email = next(
+        (item for item in artifacts if item.kind == ArtifactKind.FIRST_CONTACT_EMAIL), None
+    )
+    specific_evidence: list[UUID] = []
+    fact_classes: set[str] = set()
+    if email is not None:
+        for segment in email.segments:
+            if segment.kind != SegmentKind.BOUND_CLAIM or segment.projection_id is None:
+                continue
+            projection = projection_by_id.get(segment.projection_id)
+            if projection is None or projection.mode != ProjectionMode.EVIDENCE_DERIVED_FACT:
+                continue
+            if not projection.evidence_ids:
+                continue
+            residual = {
+                token.lower()
+                for token in _WORD.findall(segment.text)
+                if token.lower() not in _FRAME_STOPWORDS and token.lower() not in business_tokens
+            }
+            for evidence_id in projection.evidence_ids:
+                excerpt = excerpt_by_evidence.get(evidence_id, "")
+                if residual and any(token in excerpt for token in residual):
+                    specific_evidence.append(evidence_id)
+                    if evidence_id in fact_class_by_evidence:
+                        fact_classes.add(fact_class_by_evidence[evidence_id])
+                    break
+    return PersonalizationAssessment(
+        company_specific_segment_count=len(specific_evidence),
+        distinct_fact_classes=len(fact_classes),
+        rendered_evidence_ids=tuple(specific_evidence),
+        passes_gate=len(specific_evidence) >= 1,
+    )
+
 OUTREACH_SCHEMA_VERSION = "outreach.schema@1"
-TEMPLATE_VERSION = "commercial_hvac.lead_response.outreach.v2"
-PROJECTION_POLICY_VERSION = "outreach.projection@1"
+TEMPLATE_VERSION = "commercial_hvac.lead_response.outreach.v3"
+PROJECTION_POLICY_VERSION = "outreach.projection@2"
 TARGET_ROLE_POLICY_VERSION = "outreach.roles.commercial_hvac@1"
-CTA_POLICY_VERSION = "outreach.permission_cta@1"
-QC_POLICY_VERSION = "outreach.qc@1"
+CTA_POLICY_VERSION = "outreach.permission_cta@2"
+QC_POLICY_VERSION = "outreach.qc@2"
 APPROVED_DEFINITION = "commercial_hvac.inbound_lead_response_qualification@1"
 CTA = (
     "Would it be useful to compare the simulation with your actual process and decide whether "
     "the idea is relevant?"
 )
+# EVIDENCE_PRESERVING_PERSONALIZATION_V2: plain-English rendering of the internal
+# recommendation for reader-facing text. Semantics preserved; qualifier retained.
+READER_RECOMMENDATION = (
+    "a step that acknowledges and sorts new service requests could be evaluated."
+)
+NOT_CLAIMING = (
+    "This is not a claim about how your team works today — we have no visibility into that."
+)
+_SCORE_LEAK = re.compile(
+    r"\b(?:high|low)\b[^.]{0,40}\b(?:priority|confidence|band)\b|priority band|review priority",
+    re.I,
+)
+_REQUIRED_SLOT_KINDS = frozenset(
+    {
+        "verified_sender_slot",
+        "required_postal_disclosure_slot",
+        "approved_opt_out_instruction_slot",
+    }
+)
+_PLACEHOLDER = re.compile(r"\{\{[^}]+\}\}")
 SIMULATION_DISCLOSURE = (
     "It is a simulation—not a system deployed, connected, official, or operated by the business."
 )
+
+
+_CTA_QUESTION_HEAD = {
+    "DEMAND_VOLUME": "roughly how many commercial inquiries arrive in a typical month",
+    "RESPONSE_PERFORMANCE": "how after-hours ones are handled today",
+}
+
+
+def _derived_cta(
+    company_facts: tuple[CompanyFact, ...], safe_components: tuple[str, ...]
+) -> str:
+    """Deterministic plain-English discovery CTA anchored on the already-safe
+    demand-volume / response-performance questions. Falls back to the generic
+    CTA when no company fact anchors it."""
+
+    specific = [
+        _clause(fact) for fact in company_facts if is_reader_specific(fact.category, fact.phrase)
+    ]
+    heads = [_CTA_QUESTION_HEAD[c] for c in safe_components if c in _CTA_QUESTION_HEAD]
+    if not specific or not heads:
+        return CTA
+    tail = heads[0] if len(heads) == 1 else f"{heads[0]}, and {heads[1]}"
+    return f"I noticed {specific[0]}. I'm curious — {tail}?"
+
+
+_CATEGORY_RANK = {
+    FactCategory.INTAKE_SURFACE: 0,
+    FactCategory.COMMERCIAL_CONTEXT: 1,
+    FactCategory.SERVICE_AREA_CONTEXT: 2,
+    FactCategory.RESPONSE_COMMITMENT: 3,
+}
+
+
+def _ordered_company_facts(facts: tuple[CompanyFact, ...]) -> tuple[CompanyFact, ...]:
+    """Reader-specific (quotable, digit-free) facts first, then response-commitment.
+    Prefer two distinct fact_class among the first two."""
+
+    reader = [f for f in facts if is_reader_specific(f.category, f.phrase)]
+    other = [f for f in facts if not is_reader_specific(f.category, f.phrase)]
+    reader.sort(key=lambda f: (_CATEGORY_RANK[f.category], str(f.evidence_id)))
+    other.sort(key=lambda f: (_CATEGORY_RANK[f.category], str(f.evidence_id)))
+    ordered = reader + other
+    if len(ordered) >= 3 and ordered[0].fact_class == ordered[1].fact_class:
+        for index in range(2, len(ordered)):
+            if ordered[index].fact_class != ordered[0].fact_class:
+                ordered[1], ordered[index] = ordered[index], ordered[1]
+                break
+    return tuple(ordered)
+
+
+def _clause(fact: CompanyFact) -> str:
+    value = short_phrase(fact.phrase, 7)
+    if fact.category == FactCategory.INTAKE_SURFACE:
+        return f'your site offers "{value}"'
+    if fact.category == FactCategory.COMMERCIAL_CONTEXT:
+        return f'your site describes "{value}"'
+    return f'your site covers "{value}"'
+
+
+_GENERIC_SUBJECT = "A question about commercial service-request intake"
+
+
+def _subject(business_name: str, company_facts: tuple[CompanyFact, ...]) -> str:
+    if company_facts:
+        candidate = f"A note about the {business_name} service path"
+        if len(candidate) <= 60:
+            return candidate
+    return _GENERIC_SUBJECT
 FOLLOW_UP_PRECONDITION = (
     "A human must verify outside M5 that a lawful first contact was actually sent through an "
     "approved future process."
@@ -161,14 +346,25 @@ class DeterministicOutreachComposer:
             False,
         )
         artifacts = self._artifacts(source, projections, questions, risks, economic_context)
+        personalization = _assess_personalization(source, projections, artifacts)
+        unresolved = _unresolved_slot_kinds(artifacts)
         findings = OutreachQualityPolicy(self._ids).evaluate(
-            manifest, source, projections, artifacts, role, questions, risks, economic_context
+            manifest,
+            source,
+            projections,
+            artifacts,
+            role,
+            questions,
+            risks,
+            economic_context,
+            personalization,
         )
-        state = (
-            OutreachRevisionState.QC_FAILED
-            if any(item.severity == QcSeverity.HARD_FAILURE for item in findings)
-            else OutreachRevisionState.READY_FOR_REVIEW
-        )
+        if any(item.severity == QcSeverity.HARD_FAILURE for item in findings):
+            state = OutreachRevisionState.QC_FAILED
+        elif unresolved:
+            state = OutreachRevisionState.DRAFT_INCOMPLETE
+        else:
+            state = OutreachRevisionState.READY_FOR_REVIEW
         content_hash = stable_hash([asdict(item) for item in artifacts])
         body = {
             "manifest": manifest.checksum,
@@ -178,6 +374,8 @@ class DeterministicOutreachComposer:
             "questions": [asdict(item) for item in questions],
             "risks": [asdict(item) for item in risks],
             "economic_context": asdict(economic_context),
+            "personalization": asdict(personalization),
+            "unresolved_slot_kinds": list(unresolved),
             "content_hash": content_hash,
         }
         return OutreachRevision(
@@ -204,6 +402,8 @@ class DeterministicOutreachComposer:
             stable_hash(body),
             created_by,
             now,
+            personalization,
+            unresolved,
         )
 
     def _manifest(self, source: OutreachCanonicalInputs, now: datetime) -> OutreachInputManifest:
@@ -291,30 +491,61 @@ class DeterministicOutreachComposer:
 
     def _projections(self, source: OutreachCanonicalInputs) -> tuple[OutreachClaimProjection, ...]:
         claims = source.audit.revision.claims
-        facts = sorted(
-            (
-                item
-                for item in claims
-                if item.claim_type == ClaimType.FACT and item.predicate in FACT_WORDING
-            ),
-            key=lambda item: FACT_PRIORITY.index(item.predicate),
-        )
-        selected_facts = facts[: 2 if self._select_second_fact else 1]
-        projections: list[OutreachClaimProjection] = [
-            OutreachClaimProjection(
-                self._ids.new(),
-                item.id,
-                str(item.claim_type),
-                ProjectionMode.DIRECT_FACT_RESTATEMENT,
-                ProjectionDisposition.EXTERNAL_ALLOWED,
-                FACT_WORDING[item.predicate],
-                item.evidence_ids,
-                item.observation_ids,
-                item.inference_revision_ids,
-                contradictory_evidence_ids=item.contradictory_evidence_ids,
+        projections: list[OutreachClaimProjection] = []
+        company_facts = _ordered_company_facts(source.opportunity.company_facts)
+        if company_facts:
+            for fact in company_facts[:2]:
+                claim = next(
+                    (
+                        item
+                        for item in claims
+                        if item.claim_type == ClaimType.FACT
+                        and item.predicate == f"finding.{fact.category.value}"
+                        and fact.evidence_id in item.evidence_ids
+                    ),
+                    None,
+                )
+                if claim is None:
+                    continue
+                projections.append(
+                    OutreachClaimProjection(
+                        self._ids.new(),
+                        claim.id,
+                        str(claim.claim_type),
+                        ProjectionMode.EVIDENCE_DERIVED_FACT,
+                        ProjectionDisposition.EXTERNAL_ALLOWED,
+                        reader_fact_sentence(source.business_name, fact.category, fact.phrase),
+                        claim.evidence_ids,
+                        claim.observation_ids,
+                        claim.inference_revision_ids,
+                        contradictory_evidence_ids=claim.contradictory_evidence_ids,
+                    )
+                )
+        else:
+            facts = sorted(
+                (
+                    item
+                    for item in claims
+                    if item.claim_type == ClaimType.FACT and item.predicate in FACT_WORDING
+                ),
+                key=lambda item: FACT_PRIORITY.index(item.predicate),
             )
-            for item in selected_facts
-        ]
+            selected_facts = facts[: 2 if self._select_second_fact else 1]
+            projections.extend(
+                OutreachClaimProjection(
+                    self._ids.new(),
+                    item.id,
+                    str(item.claim_type),
+                    ProjectionMode.DIRECT_FACT_RESTATEMENT,
+                    ProjectionDisposition.EXTERNAL_ALLOWED,
+                    FACT_WORDING[item.predicate],
+                    item.evidence_ids,
+                    item.observation_ids,
+                    item.inference_revision_ids,
+                    contradictory_evidence_ids=item.contradictory_evidence_ids,
+                )
+                for item in selected_facts
+            )
         scoped_absence = next(
             (
                 item
@@ -384,8 +615,12 @@ class DeterministicOutreachComposer:
                     ProjectionMode.CONDITIONAL_RECOMMENDATION,
                     ProjectionDisposition.EXTERNAL_ALLOWED,
                     (
-                        "A structured acknowledgement and qualification workflow could be "
-                        "evaluated for that public request path."
+                        READER_RECOMMENDATION
+                        if company_facts
+                        else (
+                            "A structured acknowledgement and qualification workflow could be "
+                            "evaluated for that public request path."
+                        )
                     ),
                     dependency_claim_ids=recommendation.dependency_claim_ids,
                     required_qualifiers=("could", "evaluated"),
@@ -444,7 +679,8 @@ class DeterministicOutreachComposer:
         facts = [
             item
             for item in projections
-            if item.mode == ProjectionMode.DIRECT_FACT_RESTATEMENT
+            if item.mode
+            in {ProjectionMode.EVIDENCE_DERIVED_FACT, ProjectionMode.DIRECT_FACT_RESTATEMENT}
             and item.disposition == ProjectionDisposition.EXTERNAL_ALLOWED
         ]
         recommendation = next(
@@ -455,7 +691,12 @@ class DeterministicOutreachComposer:
             ),
             None,
         )
-        subject = "A question about commercial service-request intake"
+        company_facts = source.opportunity.company_facts
+        safe_questions = tuple(item for item in questions if item.safe_for_first_contact)[:2]
+        cta_text = _derived_cta(
+            company_facts, tuple(item.affected_component for item in safe_questions)
+        )
+        subject = _subject(source.business_name, company_facts)
         email_segments = [
             ArtifactSegment(
                 self._ids.new(), SegmentKind.SALUTATION, "Hello {{functional_role_or_team}},"
@@ -474,6 +715,10 @@ class DeterministicOutreachComposer:
                     recommendation.id,
                 )
             )
+        if company_facts:
+            email_segments.append(
+                ArtifactSegment(self._ids.new(), SegmentKind.TRANSITION, NOT_CLAIMING)
+            )
         email_segments.extend(
             (
                 ArtifactSegment(
@@ -485,7 +730,7 @@ class DeterministicOutreachComposer:
                 ArtifactSegment(
                     self._ids.new(), SegmentKind.SIMULATION_DISCLOSURE, SIMULATION_DISCLOSURE
                 ),
-                ArtifactSegment(self._ids.new(), SegmentKind.CTA, CTA),
+                ArtifactSegment(self._ids.new(), SegmentKind.CTA, cta_text),
                 ArtifactSegment(
                     self._ids.new(),
                     SegmentKind.VERIFIED_SENDER_SLOT,
@@ -511,7 +756,7 @@ class DeterministicOutreachComposer:
                 "This optional follow-up may be used only after a human verifies the required "
                 "external precondition.",
             ),
-            ArtifactSegment(self._ids.new(), SegmentKind.CTA, CTA),
+            ArtifactSegment(self._ids.new(), SegmentKind.CTA, cta_text),
             ArtifactSegment(
                 self._ids.new(), SegmentKind.VERIFIED_SENDER_SLOT, "{{verified_sender_signature}}"
             ),
@@ -543,9 +788,8 @@ class DeterministicOutreachComposer:
             ArtifactSegment(
                 self._ids.new(), SegmentKind.SIMULATION_DISCLOSURE, SIMULATION_DISCLOSURE
             ),
-            ArtifactSegment(self._ids.new(), SegmentKind.CTA, CTA),
+            ArtifactSegment(self._ids.new(), SegmentKind.CTA, cta_text),
         )
-        safe_questions = tuple(item for item in questions if item.safe_for_first_contact)[:2]
         question_text = "\n".join(f"- {item.wording}" for item in safe_questions)
         risk_text = "\n".join(f"- [{item.kind}] {item.description}" for item in risks) or (
             "No material contradiction was present in the approved source manifest."
@@ -655,6 +899,7 @@ class OutreachQualityPolicy:
         questions: tuple[OutreachValidationQuestion, ...],
         risks: tuple[OutreachRisk, ...],
         economic: InternalEconomicContext,
+        personalization: PersonalizationAssessment | None = None,
     ) -> tuple[OutreachQcFinding, ...]:
         findings: list[OutreachQcFinding] = []
 
@@ -698,7 +943,10 @@ class OutreachQualityPolicy:
                     projection.id,
                 )
                 continue
-            if projection.mode == ProjectionMode.DIRECT_FACT_RESTATEMENT and (
+            if projection.mode in {
+                ProjectionMode.DIRECT_FACT_RESTATEMENT,
+                ProjectionMode.EVIDENCE_DERIVED_FACT,
+            } and (
                 claim.claim_type != ClaimType.FACT
                 or not projection.evidence_ids
                 or not set(projection.evidence_ids).issubset(evidence_ids)
@@ -748,7 +996,19 @@ class OutreachQualityPolicy:
         external_artifacts = [
             item for item in artifacts if item.audience == ArtifactAudience.EXTERNAL
         ]
+        if personalization is not None and not personalization.passes_gate:
+            fail(
+                "no_company_specific_evidence",
+                "The reader-visible first contact contains no materially company-specific "
+                "evidence-backed observation; the company name alone does not qualify.",
+            )
         for item in external_artifacts:
+            if _SCORE_LEAK.search(item.rendered_text):
+                fail(
+                    "internal_score_language_leak",
+                    "Internal HIGH/LOW review-priority language must not appear externally.",
+                    artifact_id=item.id,
+                )
             if FINANCIAL_EXTERNAL.search(item.rendered_text):
                 fail(
                     "external_financial_value",
@@ -799,14 +1059,16 @@ class OutreachQualityPolicy:
                 "First-contact body exceeds 130 words.",
                 artifact_id=first.id,
             )
+        projection_mode = {projection.id: projection.mode for projection in projections}
         first_facts = sum(
             1
             for item in first.segments
             if item.projection_id is not None
-            and next(
-                projection for projection in projections if projection.id == item.projection_id
-            ).mode
-            == ProjectionMode.DIRECT_FACT_RESTATEMENT
+            and projection_mode.get(item.projection_id)
+            in {
+                ProjectionMode.DIRECT_FACT_RESTATEMENT,
+                ProjectionMode.EVIDENCE_DERIVED_FACT,
+            }
         )
         if first_facts < 1 or first_facts > 2:
             fail(
@@ -814,7 +1076,14 @@ class OutreachQualityPolicy:
                 "First contact must contain one or at most two fact projections.",
                 artifact_id=first.id,
             )
-        if first.rendered_text.count(CTA) != 1 or SIMULATION_DISCLOSURE not in first.rendered_text:
+        cta_segment = next(
+            (segment for segment in first.segments if segment.kind == SegmentKind.CTA), None
+        )
+        if (
+            cta_segment is None
+            or first.rendered_text.count(cta_segment.text) != 1
+            or SIMULATION_DISCLOSURE not in first.rendered_text
+        ):
             fail(
                 "cta_or_disclosure",
                 "First contact requires one CTA and the simulation disclosure.",

@@ -30,6 +30,7 @@ from opintel_outreach.domain import (
     OutreachRisk,
     OutreachValidationQuestion,
     OutreachValidity,
+    PersonalizationAssessment,
     ProjectionDisposition,
     ProjectionMode,
     QcSeverity,
@@ -603,6 +604,19 @@ def _revision(item: dict[str, Any]) -> OutreachRevision:
         item["revision_hash"],
         item["created_by"],
         _dt(item["created_at"]),
+        _personalization(item.get("personalization")),
+        tuple(item.get("unresolved_slot_kinds", ())),
+    )
+
+
+def _personalization(item: dict[str, Any] | None) -> PersonalizationAssessment | None:
+    if not item:
+        return None
+    return PersonalizationAssessment(
+        item["company_specific_segment_count"],
+        item["distinct_fact_classes"],
+        tuple(UUID(value) for value in item["rendered_evidence_ids"]),
+        item["passes_gate"],
     )
 
 
