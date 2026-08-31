@@ -10,6 +10,7 @@ from opintel_m0.ports import IdentifierFactory
 from opintel_opportunity.domain import (
     AssumptionRevision,
     Band,
+    CompanyFact,
     EconomicEffect,
     EvidenceReference,
     FactorResult,
@@ -20,22 +21,26 @@ from opintel_opportunity.domain import (
     MissingBehavior,
     Observation,
     OpportunityHypothesisRevision,
+    ResearchRunStats,
     RevisionStatus,
     ScoreSnapshot,
     ValueState,
 )
 from opintel_opportunity.economics import checksum
+from opintel_opportunity.personalization import (
+    LEGACY_SAFE_STATEMENT,
+    build_statement,
+    review_rank_hint,
+    select_company_facts,
+)
 
 DEFINITION_VERSION = "commercial_hvac.inbound_lead_response_qualification@1"
-RULE_VERSION = "commercial_hvac.lead_response.rules@1"
-FACTOR_CONFIG_VERSION = "commercial_hvac.lead_response.heuristic_bands@1"
+RULE_VERSION = "commercial_hvac.lead_response.rules@2"
+FACTOR_CONFIG_VERSION = "commercial_hvac.lead_response.heuristic_bands@2"
 
-SAFE_STATEMENT = (
-    "Public pages show that the business invites commercial HVAC inquiries through observed "
-    "digital channels. A structured acknowledgement and qualification workflow could be evaluated "
-    "for those channels. Current response performance, internal routing, lead volume, conversion, "
-    "feasibility, and economic impact remain unknown pending business verification."
-)
+# Retained for evidence-poor businesses; the company-specific statement builder
+# falls back to this exact text when no company fact qualifies.
+SAFE_STATEMENT = LEGACY_SAFE_STATEMENT
 
 ALTERNATIVES = (
     "Existing staff may answer calls or messages promptly.",
@@ -158,12 +163,14 @@ def detect(
     evidence: tuple[EvidenceReference, ...],
     identifiers: IdentifierFactory,
     now: datetime,
+    business_name: str = "The business",
 ) -> tuple[
     tuple[Observation, ...],
     InferenceRevision | None,
     OpportunityHypothesisRevision | None,
     tuple[InformationGap, ...],
     tuple[AssumptionRevision, ...],
+    tuple[CompanyFact, ...],
 ]:
     industry = _matching(evidence, ("commercial hvac", "commercial heating", "commercial cooling"))
     inbound = _matching(
@@ -213,7 +220,7 @@ def detect(
                 )
             )
     if not industry or not inbound:
-        return tuple(observations), None, None, (), ()
+        return tuple(observations), None, None, (), (), ()
     confidence = Band.LOW if contradiction else Band.HIGH if strong else Band.MEDIUM
     inference = InferenceRevision(
         id=identifiers.new(),
@@ -274,11 +281,24 @@ def detect(
         for key, unit, currency, time_basis in assumption_specs
     )
     placeholder = identifiers.new()
+    company_facts = select_company_facts(logical_hypothesis_id, evidence, identifiers, now)
+    statement = build_statement(business_name, company_facts)
     basis = {
         "definition": DEFINITION_VERSION,
         "observations": [str(item.id) for item in observations],
         "inference": str(inference.id),
         "evidence": [str(item.id) for item in evidence],
+        "company_facts": [
+            {
+                "id": str(fact.id),
+                "category": fact.category.value,
+                "phrase": fact.phrase,
+                "evidence_id": str(fact.evidence_id),
+                "fact_class": fact.fact_class,
+            }
+            for fact in company_facts
+        ],
+        "statement": statement,
     }
     hypothesis = OpportunityHypothesisRevision(
         id=identifiers.new(),
@@ -288,7 +308,7 @@ def detect(
         business_id=business_id,
         analysis_run_id=analysis_run_id,
         definition_version=DEFINITION_VERSION,
-        statement=SAFE_STATEMENT,
+        statement=statement,
         status=HypothesisStatus.NEEDS_INFORMATION
         if contradiction
         else HypothesisStatus.READY_FOR_REVIEW,
@@ -306,8 +326,9 @@ def detect(
         manifest_checksum=checksum(basis),
         created_by="deterministic-rules",
         created_at=now,
+        company_fact_ids=tuple(fact.id for fact in company_facts),
     )
-    return tuple(observations), inference, hypothesis, gaps, assumptions
+    return tuple(observations), inference, hypothesis, gaps, assumptions, company_facts
 
 
 def score_snapshot(
@@ -316,6 +337,8 @@ def score_snapshot(
     economic_status: str,
     has_structured_support: bool,
     now: datetime,
+    company_facts: tuple[CompanyFact, ...] = (),
+    run_stats: ResearchRunStats | None = None,
 ) -> ScoreSnapshot:
     contradicted = bool(hypothesis.contradictory_evidence_ids)
     evidence_band = Band.LOW if contradicted or not has_structured_support else Band.HIGH
@@ -359,6 +382,7 @@ def score_snapshot(
         ),
     )
     priority = "HIGH" if has_structured_support and not contradicted else "LOW"
+    rank_hint = review_rank_hint(priority, company_facts, run_stats)
     return ScoreSnapshot(
         id=score_id,
         hypothesis_id=hypothesis.logical_id,
@@ -366,7 +390,18 @@ def score_snapshot(
         factors=factors,
         review_priority_band=priority,
         manifest_checksum=checksum(
-            {"hypothesis": hypothesis.manifest_checksum, "factors": factors, "priority": priority}
+            {
+                "hypothesis": hypothesis.manifest_checksum,
+                "factors": factors,
+                "priority": priority,
+                "rank_hint": {
+                    "priority_band": rank_hint.priority_band,
+                    "evidence_fact_count": rank_hint.evidence_fact_count,
+                    "distinct_fact_classes": rank_hint.distinct_fact_classes,
+                    "partial_crawl": rank_hint.partial_crawl,
+                },
+            }
         ),
         created_at=now,
+        review_rank_hint=rank_hint,
     )

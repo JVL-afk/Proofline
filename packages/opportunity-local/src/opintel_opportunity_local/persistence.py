@@ -13,9 +13,11 @@ from opintel_opportunity.domain import (
     AnalysisStatus,
     AssumptionRevision,
     Band,
+    CompanyFact,
     EconomicEffect,
     EconomicRun,
     EconomicStatus,
+    FactCategory,
     FactorResult,
     GapPriority,
     HypothesisStatus,
@@ -26,8 +28,10 @@ from opintel_opportunity.domain import (
     OpportunityAnalysisRun,
     OpportunityBundle,
     OpportunityHypothesisRevision,
+    ResearchRunStats,
     ReviewDecision,
     ReviewDecisionType,
+    ReviewRankHint,
     RevisionStatus,
     ScoreSnapshot,
     ValueState,
@@ -43,8 +47,10 @@ from sqlalchemy import (
     UniqueConstraint,
     create_engine,
     event,
+    inspect,
     or_,
     select,
+    text,
     update,
 )
 from sqlalchemy.exc import IntegrityError
@@ -57,6 +63,68 @@ def _json(value: object) -> str:
 
 def _ids(value: str) -> tuple[UUID, ...]:
     return tuple(UUID(item) for item in json.loads(value))
+
+
+def _ids_or_empty(value: str | None) -> tuple[UUID, ...]:
+    return _ids(value) if value else ()
+
+
+def _run_stats_json(value: ResearchRunStats | None) -> str | None:
+    if value is None:
+        return None
+    return _json(
+        {
+            "research_run_id": str(value.research_run_id),
+            "status": value.status,
+            "pages_attempted": value.pages_attempted,
+            "pages_succeeded": value.pages_succeeded,
+            "fact_class_histogram": [list(pair) for pair in value.fact_class_histogram],
+            "captured_page_purposes": [list(pair) for pair in value.captured_page_purposes],
+        }
+    )
+
+
+def _run_stats_from_json(value: str | None) -> ResearchRunStats | None:
+    if not value:
+        return None
+    data = json.loads(value)
+    return ResearchRunStats(
+        research_run_id=UUID(data["research_run_id"]),
+        status=data["status"],
+        pages_attempted=int(data["pages_attempted"]),
+        pages_succeeded=int(data["pages_succeeded"]),
+        fact_class_histogram=tuple(
+            (str(pair[0]), int(pair[1])) for pair in data["fact_class_histogram"]
+        ),
+        captured_page_purposes=tuple(
+            (str(pair[0]), str(pair[1])) for pair in data["captured_page_purposes"]
+        ),
+    )
+
+
+def _rank_hint_json(value: ReviewRankHint | None) -> str | None:
+    if value is None:
+        return None
+    return _json(
+        {
+            "priority_band": value.priority_band,
+            "evidence_fact_count": value.evidence_fact_count,
+            "distinct_fact_classes": value.distinct_fact_classes,
+            "partial_crawl": value.partial_crawl,
+        }
+    )
+
+
+def _rank_hint_from_json(value: str | None) -> ReviewRankHint | None:
+    if not value:
+        return None
+    data = json.loads(value)
+    return ReviewRankHint(
+        priority_band=data["priority_band"],
+        evidence_fact_count=int(data["evidence_fact_count"]),
+        distinct_fact_classes=int(data["distinct_fact_classes"]),
+        partial_crawl=bool(data["partial_crawl"]),
+    )
 
 
 @overload
@@ -73,6 +141,17 @@ def _aware(value: datetime | None) -> datetime | None:
 
 class Base(DeclarativeBase):
     pass
+
+
+# EVIDENCE_PRESERVING_PERSONALIZATION_V2 additive columns applied by a
+# state-convergent, idempotent migration (see initialize()). create_all already
+# creates these on a fresh database; this converges pre-existing databases only.
+# (table, column, DDL type, backfill literal)
+_V2_PERSONALIZATION_COLUMNS: tuple[tuple[str, str, str, str], ...] = (
+    ("opportunity_analysis_runs", "run_stats_json", "TEXT", "NULL"),
+    ("opportunity_hypothesis_revisions", "company_fact_ids_json", "TEXT", "NULL"),
+    ("opportunity_score_snapshots", "review_rank_hint_json", "TEXT", "NULL"),
+)
 
 
 class AnalysisRow(Base):
@@ -105,6 +184,8 @@ class AnalysisRow(Base):
     hypothesis_id: Mapped[str | None] = mapped_column(String(36), nullable=True, index=True)
     current_hypothesis_revision_id: Mapped[str | None] = mapped_column(String(36), nullable=True)
     error_code: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    # EVIDENCE_PRESERVING_PERSONALIZATION_V2: M1 coverage/quality snapshot.
+    run_stats_json: Mapped[str | None] = mapped_column(Text, nullable=True)
 
 
 class ObservationRow(Base):
@@ -168,6 +249,26 @@ class HypothesisRow(Base):
     manifest_checksum: Mapped[str] = mapped_column(String(64))
     created_by: Mapped[str] = mapped_column(String(200))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    # EVIDENCE_PRESERVING_PERSONALIZATION_V2: selected CompanyFact ids.
+    company_fact_ids_json: Mapped[str | None] = mapped_column(Text, nullable=True)
+
+
+class CompanyFactRow(Base):
+    """EVIDENCE_PRESERVING_PERSONALIZATION_V2: one deterministically selected
+    materially company-specific public FACT with exact provenance."""
+
+    __tablename__ = "opportunity_company_facts"
+    id: Mapped[str] = mapped_column(String(36), primary_key=True)
+    hypothesis_id: Mapped[str] = mapped_column(String(36), index=True)
+    category: Mapped[str] = mapped_column(String(40))
+    phrase: Mapped[str] = mapped_column(Text)
+    evidence_id: Mapped[str] = mapped_column(String(36), index=True)
+    fact_class: Mapped[str] = mapped_column(String(40))
+    page_purpose: Mapped[str] = mapped_column(String(40))
+    source_uri: Mapped[str] = mapped_column(String(2048))
+    content_sha256: Mapped[str] = mapped_column(String(64))
+    selector_version: Mapped[str] = mapped_column(String(120))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
 
 
 class GapRow(Base):
@@ -225,6 +326,8 @@ class ScoreRow(Base):
     review_priority_band: Mapped[str] = mapped_column(String(30))
     manifest_checksum: Mapped[str] = mapped_column(String(64))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    # EVIDENCE_PRESERVING_PERSONALIZATION_V2: internal-only ranking signal.
+    review_rank_hint_json: Mapped[str | None] = mapped_column(Text, nullable=True)
 
 
 class ReviewRow(Base):
@@ -278,7 +381,22 @@ class SqlAlchemyOpportunityRepository:
         cursor.close()
 
     def initialize(self) -> None:
-        Base.metadata.create_all(self.engine)
+        with self.engine.begin() as connection:
+            if self.engine.dialect.name == "postgresql":
+                connection.execute(text("SELECT pg_advisory_xact_lock(670002)"))
+            Base.metadata.create_all(connection)
+            inspector = inspect(connection)
+            names = set(inspector.get_table_names())
+            for table, column, ddl_type, backfill in _V2_PERSONALIZATION_COLUMNS:
+                if table not in names:
+                    continue
+                present = {item["name"] for item in inspector.get_columns(table)}
+                if column in present:
+                    continue
+                connection.execute(text(f"ALTER TABLE {table} ADD COLUMN {column} {ddl_type}"))
+                connection.execute(
+                    text(f"UPDATE {table} SET {column} = {backfill} WHERE {column} IS NULL")
+                )
 
     def create_or_get_run(
         self, run: OpportunityAnalysisRun, idempotency_key: str
@@ -425,6 +543,7 @@ class SqlAlchemyOpportunityRepository:
                         if bundle.run.current_hypothesis_revision_id
                         else None
                     ),
+                    run_stats_json=_run_stats_json(bundle.run_stats),
                 )
             )
             session.add_all(self._observation_row(item) for item in bundle.observations)
@@ -434,6 +553,7 @@ class SqlAlchemyOpportunityRepository:
                 session.add(self._hypothesis_row(bundle.hypothesis))
                 session.add_all(self._gap_row(item) for item in bundle.gaps)
                 session.add_all(self._assumption_row(item) for item in bundle.assumptions)
+                session.add_all(self._company_fact_row(item) for item in bundle.company_facts)
                 assert bundle.economic_run and bundle.score_snapshot
                 session.add(self._economic_row(bundle.economic_run))
                 session.add(self._score_row(bundle.score_snapshot))
@@ -530,6 +650,8 @@ class SqlAlchemyOpportunityRepository:
             score_snapshot,
             previous.latest_review,
             False,
+            company_facts=previous.company_facts,
+            run_stats=previous.run_stats,
         )
 
     def save_review(
@@ -592,6 +714,10 @@ class SqlAlchemyOpportunityRepository:
 
     def _load_bundle(self, run: OpportunityAnalysisRun) -> OpportunityBundle:
         with self._sessions() as session:
+            analysis_row = session.get(AnalysisRow, str(run.id))
+            run_stats = (
+                _run_stats_from_json(analysis_row.run_stats_json) if analysis_row else None
+            )
             observations = tuple(
                 self._observation(row)
                 for row in session.scalars(
@@ -618,8 +744,17 @@ class SqlAlchemyOpportunityRepository:
                     (),
                     None,
                     None,
+                    run_stats=run_stats,
                 )
             hypothesis = self._hypothesis(hypothesis_row)
+            company_facts = tuple(
+                self._company_fact(row)
+                for row in session.scalars(
+                    select(CompanyFactRow)
+                    .where(CompanyFactRow.hypothesis_id == str(hypothesis.logical_id))
+                    .order_by(CompanyFactRow.created_at, CompanyFactRow.id)
+                )
+            )
             gaps = tuple(
                 self._gap(row)
                 for row in session.scalars(
@@ -678,6 +813,8 @@ class SqlAlchemyOpportunityRepository:
                 self._score(score_row) if score_row else None,
                 decision,
                 valid,
+                company_facts=company_facts,
+                run_stats=run_stats,
             )
 
     @staticmethod
@@ -802,6 +939,7 @@ class SqlAlchemyOpportunityRepository:
             manifest_checksum=value.manifest_checksum,
             created_by=value.created_by,
             created_at=value.created_at,
+            company_fact_ids_json=_json(value.company_fact_ids),
         )
 
     @staticmethod
@@ -827,6 +965,39 @@ class SqlAlchemyOpportunityRepository:
             UUID(row.score_snapshot_id),
             row.manifest_checksum,
             row.created_by,
+            _aware(row.created_at),
+            _ids_or_empty(row.company_fact_ids_json),
+        )
+
+    @staticmethod
+    def _company_fact_row(value: CompanyFact) -> CompanyFactRow:
+        return CompanyFactRow(
+            id=str(value.id),
+            hypothesis_id=str(value.hypothesis_id),
+            category=value.category.value,
+            phrase=value.phrase,
+            evidence_id=str(value.evidence_id),
+            fact_class=value.fact_class,
+            page_purpose=value.page_purpose,
+            source_uri=value.source_uri,
+            content_sha256=value.content_sha256,
+            selector_version=value.selector_version,
+            created_at=value.created_at,
+        )
+
+    @staticmethod
+    def _company_fact(row: CompanyFactRow) -> CompanyFact:
+        return CompanyFact(
+            UUID(row.id),
+            UUID(row.hypothesis_id),
+            FactCategory(row.category),
+            row.phrase,
+            UUID(row.evidence_id),
+            row.fact_class,
+            row.page_purpose,
+            row.source_uri,
+            row.content_sha256,
+            row.selector_version,
             _aware(row.created_at),
         )
 
@@ -938,6 +1109,7 @@ class SqlAlchemyOpportunityRepository:
             review_priority_band=value.review_priority_band,
             manifest_checksum=value.manifest_checksum,
             created_at=value.created_at,
+            review_rank_hint_json=_rank_hint_json(value.review_rank_hint),
         )
 
     @staticmethod
@@ -959,6 +1131,7 @@ class SqlAlchemyOpportunityRepository:
             row.review_priority_band,
             row.manifest_checksum,
             _aware(row.created_at),
+            _rank_hint_from_json(row.review_rank_hint_json),
         )
 
     @staticmethod

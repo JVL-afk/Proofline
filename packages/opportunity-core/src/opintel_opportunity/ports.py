@@ -14,6 +14,7 @@ from opintel_opportunity.domain import (
     OpportunityAnalysisRun,
     OpportunityBundle,
     OpportunityHypothesisRevision,
+    ResearchRunStats,
     ReviewDecision,
     ScoreSnapshot,
 )
@@ -23,6 +24,12 @@ class EvidenceCatalog(Protocol):
     def list_evidence(
         self, workspace_id: UUID, business_id: UUID, research_run_id: UUID
     ) -> tuple[EvidenceReference, ...]: ...
+
+    def research_run_stats(
+        self, workspace_id: UUID, business_id: UUID, research_run_id: UUID
+    ) -> ResearchRunStats | None: ...
+
+    def business_display_name(self, workspace_id: UUID, business_id: UUID) -> str | None: ...
 
 
 class OpportunityRepository(Protocol):

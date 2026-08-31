@@ -199,6 +199,15 @@ class OpportunityApplicationService:
             ),
             now,
         )
+        prior_score = previous.score_snapshot
+        if prior_score is not None and prior_score.review_rank_hint is not None:
+            score = replace(
+                score,
+                review_rank_hint=replace(
+                    prior_score.review_rank_hint,
+                    priority_band=score.review_priority_band,
+                ),
+            )
         return self._repository.save_recalculation(
             previous, hypothesis, assumption_tuple, economic, score
         )

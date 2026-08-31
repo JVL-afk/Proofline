@@ -92,6 +92,8 @@ class OpportunityBundleView(BaseModel):
     score_snapshot: dict[str, object] | None
     latest_review: dict[str, object] | None
     review_valid: bool
+    company_facts: list[dict[str, object]] = []
+    research_run_stats: dict[str, object] | None = None
 
     @classmethod
     def from_domain(cls, bundle: OpportunityBundle) -> OpportunityBundleView:
@@ -108,4 +110,6 @@ class OpportunityBundleView(BaseModel):
             score_snapshot=asdict(bundle.score_snapshot) if bundle.score_snapshot else None,
             latest_review=asdict(bundle.latest_review) if bundle.latest_review else None,
             review_valid=bundle.review_valid,
+            company_facts=[asdict(item) for item in bundle.company_facts],
+            research_run_stats=asdict(bundle.run_stats) if bundle.run_stats else None,
         )

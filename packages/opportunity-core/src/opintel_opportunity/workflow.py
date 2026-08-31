@@ -52,16 +52,24 @@ class OpportunityWorkflowRunner:
             evidence = self._evidence.list_evidence(
                 run.workspace_id, run.business_id, run.research_run_id
             )
+            run_stats = self._evidence.research_run_stats(
+                run.workspace_id, run.business_id, run.research_run_id
+            )
+            business_name = (
+                self._evidence.business_display_name(run.workspace_id, run.business_id)
+                or "The business"
+            )
             allowed = self._reasoner.validate(tuple(item.id for item in evidence))
             if set(allowed) != {item.id for item in evidence}:
                 raise ValueError("mock reasoner returned IDs outside the supplied evidence set")
-            observations, inference, hypothesis, gaps, assumptions = detect(
+            observations, inference, hypothesis, gaps, assumptions, company_facts = detect(
                 run.id,
                 run.workspace_id,
                 run.business_id,
                 evidence,
                 self._identifiers,
                 self._clock.now(),
+                business_name,
             )
             if hypothesis is None:
                 completed = replace(
@@ -71,7 +79,17 @@ class OpportunityWorkflowRunner:
                     lease_expires_at=None,
                 )
                 self._repository.save_bundle(
-                    OpportunityBundle(completed, observations, inference, None, (), (), None, None)
+                    OpportunityBundle(
+                        completed,
+                        observations,
+                        inference,
+                        None,
+                        (),
+                        (),
+                        None,
+                        None,
+                        run_stats=run_stats,
+                    )
                 )
                 return True
             economic = calculate_economics(
@@ -83,6 +101,8 @@ class OpportunityWorkflowRunner:
                 economic.status,
                 any(item.predicate == "inbound_path.structured_fields" for item in observations),
                 self._clock.now(),
+                company_facts,
+                run_stats,
             )
             hypothesis = replace(
                 hypothesis,
@@ -107,6 +127,8 @@ class OpportunityWorkflowRunner:
                     assumptions,
                     economic,
                     score,
+                    company_facts=company_facts,
+                    run_stats=run_stats,
                 )
             )
             return True

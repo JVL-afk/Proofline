@@ -79,6 +79,15 @@ class ReviewDecisionType(StrEnum):
     REQUEST_INFORMATION = "request_information"
 
 
+class FactCategory(StrEnum):
+    """Deterministic personalization-fact categories (evidence-preserving V2)."""
+
+    INTAKE_SURFACE = "intake_surface"
+    COMMERCIAL_CONTEXT = "commercial_context"
+    RESPONSE_COMMITMENT = "response_commitment"
+    SERVICE_AREA_CONTEXT = "service_area_context"
+
+
 @dataclass(frozen=True, slots=True)
 class EvidenceReference:
     id: UUID
@@ -94,6 +103,60 @@ class EvidenceReference:
     fragment: str
     extractor_name: str
     extractor_version: str
+    fact_class: str = "public_other"
+    page_purpose: str = "unclassified"
+
+
+@dataclass(frozen=True, slots=True)
+class CompanyFact:
+    """One materially company-specific public FACT, selected deterministically.
+
+    ``phrase`` is a whitespace-normalized verbatim substring of the source
+    minimized evidence fragment. It carries provenance; reader-facing prose is
+    rendered separately through fixed semantic frames.
+    """
+
+    id: UUID
+    hypothesis_id: UUID
+    category: FactCategory
+    phrase: str
+    evidence_id: UUID
+    fact_class: str
+    page_purpose: str
+    source_uri: str
+    content_sha256: str
+    selector_version: str
+    created_at: datetime
+
+
+@dataclass(frozen=True, slots=True)
+class ReviewRankHint:
+    """Internal-only ranking signal. Never rendered into external artifacts."""
+
+    priority_band: str
+    evidence_fact_count: int
+    distinct_fact_classes: int
+    partial_crawl: bool
+
+
+@dataclass(frozen=True, slots=True)
+class ResearchRunStats:
+    """Coverage/quality of the M1 crawl behind an analysis run."""
+
+    research_run_id: UUID
+    status: str
+    pages_attempted: int
+    pages_succeeded: int
+    fact_class_histogram: tuple[tuple[str, int], ...]
+    captured_page_purposes: tuple[tuple[str, str], ...]
+
+    @property
+    def pages_failed(self) -> int:
+        return max(self.pages_attempted - self.pages_succeeded, 0)
+
+    @property
+    def partial(self) -> bool:
+        return self.status == "partial" or self.pages_failed > 0
 
 
 @dataclass(frozen=True, slots=True)
@@ -209,6 +272,7 @@ class ScoreSnapshot:
     review_priority_band: str
     manifest_checksum: str
     created_at: datetime
+    review_rank_hint: ReviewRankHint | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -234,6 +298,7 @@ class OpportunityHypothesisRevision:
     manifest_checksum: str
     created_by: str
     created_at: datetime
+    company_fact_ids: tuple[UUID, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
@@ -266,6 +331,8 @@ class OpportunityBundle:
     score_snapshot: ScoreSnapshot | None
     latest_review: ReviewDecision | None = None
     review_valid: bool = False
+    company_facts: tuple[CompanyFact, ...] = ()
+    run_stats: ResearchRunStats | None = None
 
 
 class OpportunityError(Exception):
