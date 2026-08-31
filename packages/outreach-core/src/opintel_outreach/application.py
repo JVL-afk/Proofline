@@ -144,16 +144,14 @@ class OutreachApplicationService:
             OutreachRevisionState.READY_FOR_REVIEW,
             OutreachRevisionState.CONTENT_APPROVED,
             OutreachRevisionState.REVISION_REQUESTED,
+            # PERSONALIZATION_V2: a DRAFT_INCOMPLETE package may have its *wording*
+            # reviewed and approved; it stays not-send-ready via
+            # ``unresolved_slot_kinds`` until a downstream step fills the required
+            # sender / postal / opt-out placeholders. Contact-policy separation is
+            # unchanged.
             OutreachRevisionState.DRAFT_INCOMPLETE,
         }:
             raise OutreachValidationError("outreach revision is not reviewable")
-        if (
-            revision.state == OutreachRevisionState.DRAFT_INCOMPLETE
-            and decision == OutreachReviewDecisionType.APPROVE_CONTENT
-        ):
-            raise OutreachValidationError(
-                "outreach draft has unresolved required sender/postal/opt-out placeholders"
-            )
         review = OutreachReviewDecision(
             self._ids.new(),
             revision.id,

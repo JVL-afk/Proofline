@@ -285,16 +285,6 @@ class CanonicalSampledSlotStageRuntime:
         if len(revisions) != 1:
             raise ValueError("exact M5 operation did not produce one revision")
         revision = revisions[0].revision
-        if revision.state.value == "draft_incomplete":
-            output = _sha(
-                {
-                    "content_hash": revision.content_hash,
-                    "revision_id": str(revision.id),
-                    "state": revision.state.value,
-                    "unresolved_slot_kinds": list(revision.unresolved_slot_kinds),
-                }
-            )
-            raise TruthfulTerminal("M5_DRAFT_INCOMPLETE", revision.id, output)
         reviewed = self._outreach_service.review(
             self._principal,
             revision.id,

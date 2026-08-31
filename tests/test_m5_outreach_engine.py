@@ -207,9 +207,10 @@ def test_complete_package_is_traceable_bounded_and_content_reviewed(
     assert lineage.status_code == 200
     assert lineage.json()["audit_claim_id"] == fact_projections[0]["source_claim_id"]
     assert lineage.json()["evidence_links"]
-    # PERSONALIZATION_V2: a DRAFT_INCOMPLETE package cannot be content-approved while
-    # the required sender / postal / opt-out placeholders remain unresolved.
-    refused = client.post(
+    # PERSONALIZATION_V2: a DRAFT_INCOMPLETE package may have its wording approved,
+    # but it stays not-send-ready (unresolved_slot_kinds persists) until a
+    # downstream step fills the required sender / postal / opt-out placeholders.
+    reviewed = client.post(
         f"/api/v1/outreach-package-revisions/{revision['id']}/review-decisions",
         headers=auth_headers,
         json={
@@ -220,8 +221,10 @@ def test_complete_package_is_traceable_bounded_and_content_reviewed(
             "reason": "Content wording reviewed; no contact is authorized.",
         },
     )
-    assert refused.status_code == 400
-    assert refused.json()["code"] == "invalid_input"
+    assert reviewed.status_code == 200
+    assert reviewed.json()["revision"]["state"] == "content_approved"
+    assert reviewed.json()["revision"]["unresolved_slot_kinds"]
+    assert reviewed.json()["review_valid"] is True
 
 
 @pytest.mark.integration
