@@ -1,0 +1,3 @@
+workers/intelligence/src/opintel_intelligence_worker/coordinator_persistence.py
+workers/intelligence/src/opintel_intelligence_worker/execution.py
+workers/intelligence/src/opintel_intelligence_worker/orchestration.py

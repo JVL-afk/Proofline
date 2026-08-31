@@ -6,6 +6,8 @@
 *.yaml text eol=lf
 *.yml text eol=lf
 *.py text eol=lf
+*.manifest text eol=lf
+infra/terraform/phase1/bundle-manifests/* text eol=lf
 *.ts text eol=lf
 *.tsx text eol=lf
 *.mjs text eol=lf
