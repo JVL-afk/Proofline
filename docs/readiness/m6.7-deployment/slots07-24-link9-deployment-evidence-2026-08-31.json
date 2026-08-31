@@ -1,0 +1,92 @@
+{
+  "record_type": "M67_SLOTS07_24_LINK9_MECHANICAL_ENABLEMENT_DEPLOYMENT_EVIDENCE",
+  "schema_version": "1.0.0",
+  "recorded_at_utc": "2026-08-31T00:00:00Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+  "authority_directive": "AUTHORIZE BOUNDED SLOTS07_24 MECHANICAL ENABLEMENT / LINK 9",
+  "bound_authorization_package_sha256": "41cf105feb2ab1b21038803583867d56ea28e0a3dc99f46e5df91f7f66998251",
+  "source_commit": "f06a011",
+
+  "image": {
+    "chain_link": 9,
+    "dockerfile": "infra/container/phase1-worker/Dockerfile.window2-slots07-24-enablement",
+    "base_link8_digest": "sha256:f346f48e1f18ec053ac38bdbd351e133b2ba074beea46d99062fbeaaf9c90bce",
+    "successor_registry_digest": "sha256:2d688edd2f9ba261fcdf588eac8e57a6d3ecb3fd8ccf5b0e66f53b9894582f63",
+    "registry_repo": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
+    "registry_tag": "git-f06a011-slots07-24-enablement",
+    "local_build_config_digest": "sha256:5e50f1c8f7c8ad1f025e92e433c9708650ebc7080628ca6bb29a1b3a61e2150a",
+    "local_storage_manifest_digest": "sha256:bd3deb7678588365f61ffb4f4b8d7f3786519444b1c32c1b1e579ddc87d70a2c",
+    "manifest_media_type": "application/vnd.oci.image.manifest.v1+json",
+    "manifest_object_type": "SINGLE_PLATFORM_IMAGE_MANIFEST (no index)",
+    "layers": 23,
+    "layer_delta_vs_base": "base 22 + 1 COPY layer; child[:base] == base",
+    "copied_files": [
+      "workers/research/src/opintel_research_worker/release_application.py -> /app/research-worker/opintel_research_worker/release_application.py (in-image sha256 0daec18af2362506449c2f70bae0bafd9133ec60d2f14979effb2750916d170a)",
+      "infra/container/phase1-worker/phase1-a09-decision-registry.json -> /app/config/phase1-a09-decision-registry.json (in-image sha256 2dd0708f8943c40888cd7b58b9086792daa9df99401ad844f5530d98a32f9912)"
+    ],
+    "in_image_assertions_passed": [
+      "release_application._FROZEN_SLOT_SCOPE keys == 1..24; [7]=(Polar Pros, polarprosac.com); [24]=(Blue Northern Air Conditioning, Inc., www.bluenorthernac.com); 25 absent",
+      "phase1-a09-decision-registry.json has 17 APPROVED rows: slots {1,2,3,4,5,7,8,10,11,12,14,16,18,19,20,21,22}",
+      "company_fact_selector@2 / rules@3 / audit deterministic@3 / outreach v4 / projection@3 unchanged; minimizer phase1-minimizer@2 unchanged",
+      "sampled_slot_execution_main + activation_main import OK"
+    ]
+  },
+
+  "representation_equivalence": {
+    "local_verifier": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN",
+    "registry_verifier": "REPRESENTATION_EQUIVALENT_PROVEN",
+    "archive_manifest_digest": "sha256:2d688edd2f9ba261fcdf588eac8e57a6d3ecb3fd8ccf5b0e66f53b9894582f63",
+    "reproduced_registry_manifest_byte_equal_to_registry": true,
+    "platform": "linux/amd64"
+  },
+
+  "ecr_scan": {
+    "status": "COMPLETE",
+    "findingSeverityCounts": {},
+    "critical": 0,
+    "high": 0,
+    "blocking": 0
+  },
+
+  "terraform_adr_0075": {
+    "plan_profile": "m67-phase1-workload-plan",
+    "apply_profile": "m67-phase1-workload-apply",
+    "backend": "backend.apply.hcl (state via m67-phase1-terraform-state-apply)",
+    "plan_summary": "4 to add, 3 to change, 4 to destroy",
+    "authorized_consequences_only": [
+      "image -> sha256:2d688edd2f9ba261fcdf588eac8e57a6d3ecb3fd8ccf5b0e66f53b9894582f63 on all four task definitions",
+      "OPINTEL_RESEARCH_RUNTIME_REVISION -> sha256:2d688edd... on all four (mechanically derived from research_runtime_revision)",
+      "OPINTEL_RELEASE_APPLICATOR_SHA256 45b35f32bf60a87b75443db868a43d2a71a676cc2aba2a53b30a72eea29772db -> 0daec18af2362506449c2f70bae0bafd9133ec60d2f14979effb2750916d170a (sampled-slot-activator only)"
+    ],
+    "unchanged_bindings_absent_from_plan": [
+      "OPINTEL_ACTIVATION_ADAPTER_SHA256 (42d206de...)",
+      "OPINTEL_ACTIVATION_ENTRY_POINT_SHA256 (12eaf66b...)",
+      "OPINTEL_STAGE_COORDINATOR_SHA256 (908e6753...)",
+      "OPINTEL_M1_RUNTIME_SHA256 (884b1f27...)",
+      "OPINTEL_M2_M5_RUNTIME_SHA256 (bc5390bf...)"
+    ],
+    "no_changes_to": ["IAM", "KMS", "network", "database", "storage", "observability", "kill-switch parameter", "approval parameter", "service desired_count (stays 0/0)"],
+    "cosmetic_provider_normalization_only": ["mountPoints=[]", "portMappings=[]", "systemControls=[]", "volumesFrom=[]", "tags {} -> null", "enable_fault_injection known-after-apply"],
+    "apply_result": "Apply complete! Resources: 4 added, 3 changed, 4 destroyed.",
+    "post_apply_no_changes": "terraform plan -detailed-exitcode == 0 : No changes. Your infrastructure matches the configuration.",
+    "deployed_task_definitions": {
+      "m67-phase1-research-worker": 38,
+      "m67-phase1-intelligence-worker": 21,
+      "m67-phase1-sampled-slot-activator": 20,
+      "m67-phase1-controlled-egress": "bumped"
+    }
+  },
+
+  "postgresql_schema": "No migration expected or performed; no additive requirement discovered. The EVIDENCE_PRESERVING_PERSONALIZATION_V2 additive schema (opportunity_company_facts + run_stats_json / company_fact_ids_json / review_rank_hint_json / audit_revisions.findings_json) was already applied and second-pass-idempotent under Link 8.",
+
+  "dormancy_restored": {
+    "kill_switch_parameter": "TRIPPED",
+    "sampled_slot_execution_approval": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "controlled_egress_lease": "{\"state\": \"NOT_AUTHORIZED\"}",
+    "research_release_record_state": "not_authorized (consumed terminal; slots 01-05 consumed)",
+    "ecs_services_desired_running": {"m67-phase1-research-worker": "0/0", "m67-phase1-intelligence-worker": "0/0", "m67-phase1-controlled-egress": "0/0"},
+    "running_or_pending_tasks": 0,
+    "transient_diagnostic_task_definitions_deregistered": true
+  }
+}

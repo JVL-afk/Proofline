@@ -1,0 +1,82 @@
+{
+  "record_type": "M67_SLOTS07_24_PHASE1_M1_V2_PERSONALIZATION_V2_OWNER_DIRECTIVE_MACHINE_VALUES",
+  "schema_version": "1.0.0",
+  "state": "OWNER_DIRECTIVE_RECORDED_MECHANICAL_ENABLEMENT",
+  "decision_event": "AUTHORIZE_SLOTS07_24_PHASE1_M1_V2_PERSONALIZATION_V2_EXECUTION",
+  "recorded_at_utc": "2026-08-31T00:00:00Z",
+  "account_id": "785072247535",
+  "region": "us-east-2",
+
+  "authorization_package": {
+    "path": "docs/readiness/m6.7-authorization/slots07-24-phase1-personalization-v2-batch-authorization-gate-PROPOSAL-2026-08-31.json",
+    "sha256": "41cf105feb2ab1b21038803583867d56ea28e0a3dc99f46e5df91f7f66998251",
+    "not_regenerated": true,
+    "note": "The owner's mechanical-enablement directive names this reviewed gate as the bound reference. The EXECUTION_READY package (slots07-24-phase1-personalization-v2-EXECUTION-READY-2026-08-31.json) incorporates this sha by reference and adds the concrete post-Link-9 facts."
+  },
+
+  "owner_directive_1_batch_wide_ceilings_verbatim": [
+    "I also want a batch-wide ceiling for Slots 07-24 equal to the sum of the 18 sealed per-slot maxima, with per-slot ceilings remaining independently authoritative and unused allowance not transferable between slots.",
+    "useful successful page fetches: 450;",
+    "total HTTP requests: 864;",
+    "discovery fetches: 108;",
+    "cumulative raw response bytes: 324,000,000;",
+    "cumulative M1 execution duration: 5,400 seconds;",
+    "paid/source research cost: USD 0.",
+    "If the package already contains equivalent hard batch ceilings, show them rather than creating new ones. (It does not; these are the calculated 18-slot maxima.)"
+  ],
+  "owner_directive_1_machine_values": {
+    "batch_max_useful_page_fetches": 450,
+    "batch_max_total_http_requests": 864,
+    "batch_max_discovery_fetches": 108,
+    "batch_max_total_bytes": 324000000,
+    "batch_max_m1_duration_seconds": 5400,
+    "batch_cost_ceiling_usd": "0",
+    "enforcement": "hard upper safety bounds; a slot action requires BOTH its per-slot envelope headroom AND remaining batch headroom (min of the two); no cross-slot borrowing; unused per-slot allowance is not transferable between slots; per-slot deterministic early stopping still required"
+  },
+
+  "owner_directive_2_a09_verbatim": [
+    "For each exact mapping (Slots 07-24, immutable), perform the unchanged bounded A-09 evaluation.",
+    "Conditional owner acceptance is granted under the existing A-09 policy: exact frozen slot/identity/hostname -> bounded A-09 evaluation -> criteria PASS -> materialize exact-host APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH; or criteria FAIL -> record truthful NOT_APPROVED result.",
+    "No additional owner signature is required merely because an A-09 result is favorable or unfavorable under the already-approved criteria.",
+    "A failed A-09 must never cause hostname substitution or company replacement.",
+    "Result: 12 of 18 exact hosts APPROVED (07,08,10,11,12,14,16,18,19,20,21,22); 6 NOT_APPROVED (09,13,15,17,23,24); the 6 are absent from the baked registry and the activator fails closed for them."
+  ],
+
+  "owner_directive_3_zero_repair_verbatim": [
+    "The eventual Slots 07-24 execution authorization has zero repair budget.",
+    "A truthful business outcome automatically proceeds to the next frozen slot.",
+    "A concrete internal implementation/control defect stops the batch for owner review.",
+    "Do not use the legacy _MAX_BOUNDED_REPAIRS mechanism for this batch."
+  ],
+
+  "owner_directive_4_link9_mechanical_scope_verbatim": [
+    "Extend the existing frozen Phase 1 release/application scope from Slots 1..6 to the exact frozen registry through Slot 24. Do not broaden it beyond Slot 24.",
+    "Update the release applicator in the minimum possible way so SampledSlotExecutionApproval.exact_scope() accepts only the existing frozen Slots 01-24 and retains exact business/hostname matching.",
+    "Recompute and bind a new canonical sampled_slot_release_applicator_sha256 using the established attestation method appropriate to that binding.",
+    "Update the operator-local Personalization V2 batch materializer from its 02-06 package/scope to the exact 07-24 package and batch directives.",
+    "Bake the resulting exact A-09 decision registry into the Link 9 image.",
+    "No M1, minimizer, M2 threshold, opportunity-definition, economics, M3/M4/M5 semantic, contact-gate, AI, browser, network-policy, privacy, provenance, or delivery change is authorized."
+  ],
+
+  "resulting_bindings": {
+    "sampled_slot_release_applicator_sha256": {
+      "previous": "45b35f32bf60a87b75443db868a43d2a71a676cc2aba2a53b30a72eea29772db",
+      "new": "0daec18af2362506449c2f70bae0bafd9133ec60d2f14979effb2750916d170a",
+      "attestation_method": "sha256 of the exact in-image bytes (LF) of workers/research/src/opintel_research_worker/release_application.py"
+    },
+    "link9_image_digest": "sha256:2d688edd2f9ba261fcdf588eac8e57a6d3ecb3fd8ccf5b0e66f53b9894582f63",
+    "baked_a09_decision_registry_file_sha256": "2dd0708f8943c40888cd7b58b9086792daa9df99401ad844f5530d98a32f9912",
+    "operator_local_batch_materializer": "workers/research/src/opintel_research_worker/authority_materialization_v3.py (+_v3_main.py) - NOT baked into any image"
+  },
+
+  "post_slot_24": [
+    "stop completely",
+    "restore dormancy",
+    "produce one consolidated Slots 07-24 report",
+    "mandatory human review"
+  ],
+
+  "approval_method": "BY_REFERENCE_TO_THE_IMMUTABLE_AUTHORIZATION_PACKAGE at sha256 41cf105feb2ab1b21038803583867d56ea28e0a3dc99f46e5df91f7f66998251 and the EXECUTION_READY package and all artifacts and hashes transitively bound by it, plus the four owner directives quoted verbatim above.",
+  "no_new_synthesized_approval_statement": true,
+  "next": "one final owner approval of the EXECUTION_READY package, then execute the authorized batch mechanically; stop only for a concrete internal operational defect; return the consolidated report after Slot 24. Do not execute Slot 07 before that final approval."
+}

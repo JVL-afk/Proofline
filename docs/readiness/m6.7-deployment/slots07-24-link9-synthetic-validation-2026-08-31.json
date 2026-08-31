@@ -1,0 +1,53 @@
+{
+  "record_type": "M67_SLOTS07_24_LINK9_SYNTHETIC_VALIDATION",
+  "schema_version": "1.0.0",
+  "recorded_at_utc": "2026-08-31T00:00:00Z",
+  "account_id": "785072247535",
+  "authority_directive": "AUTHORIZE BOUNDED SLOTS07_24 MECHANICAL ENABLEMENT / LINK 9",
+  "deployed_image_digest": "sha256:2d688edd2f9ba261fcdf588eac8e57a6d3ecb3fd8ccf5b0e66f53b9894582f63",
+
+  "in_container_validation": {
+    "method": "one transient m67-phase1-research-worker task-def revision (entryPoint override, deregistered in finally) running the deployed Link 9 image; structural only; no network, no SSM, no DB writes, no M1.",
+    "script": "job tmp synth_slots07_24_incontainer.py",
+    "exit_code": 0,
+    "properties": {
+      "P1_slot07_accepted_structurally_by_the_release_applicator": "PASS (SampledSlotExecutionApproval @4 for slot 7 / Polar Pros / polarprosac.com validates)",
+      "P2_slot24_accepted_structurally": "PASS (slot 24 / Blue Northern Air Conditioning, Inc. / www.bluenorthernac.com validates)",
+      "P3_slot25_rejected": "PASS (ValueError: slot number is outside the frozen Phase 1 batch scope (1..24))",
+      "P4_wrong_business_identity_for_an_authorized_slot_rejected": "PASS (ValueError: approval business identity / hostname is not the frozen slot row)",
+      "P5_wrong_hostname_rejected": "PASS (same ValueError; also allowed_source_scope must equal (exact_hostname,))",
+      "P6_absent_or_failed_A09_rejected": "PASS (FrozenA09DecisionRegistry.require_approved(9, 'C&R Services', 'crhvacpro.com') -> ValueError: exact accepted A-09 decision is absent or mismatched; slot 06 Calvin's Climate likewise still absent)",
+      "P7_approved_exact_host_A09_accepted": "PASS (require_approved(7, 'Polar Pros', 'polarprosac.com') -> APPROVED, decision_sha256 cb5d7b06...; slots 1,2,8,10,22 also resolve)",
+      "P8_batch_headroom_clamping_works": "PASS (authority_materialization_v3._clamped_release_ceilings / materialize_v3: a slot action takes min(per-slot envelope headroom, remaining batch headroom); BatchHeadroomExhausted when remaining < 1 - see tests/test_m67_authority_materialization_v3.py::test_materialize_v3_clamps_to_remaining_batch_headroom and ::test_materialize_v3_batch_exhausted_is_not_a_defect)",
+      "P9_per_slot_headroom_remains_independent": "PASS (each slot receives a fresh per-slot envelope budget of 25/48/6/18MB/300s; batch_consumed only subtracts from the batch ceiling, never from the per-slot ceiling; no cross-slot borrowing - tests/test_m67_authority_materialization_v3.py)",
+      "P10_no_alternate_host_substitution_exists": "PASS (_FROZEN_SLOT_SCOPE == the frozen registry rows 1..24 exactly; no hostname->different-slot mapping; A-09 require_approved additionally requires exact business+hostname match)",
+      "P11_link8_personalization_v2_truth_and_personalization_properties_unchanged": "PASS (in-image: selector@2 / rules@3 / audit@3 / outreach v4 / projection@3 / definition@1 unchanged; _bucket: bare 24-7 / emergency -> SERVICE_AVAILABILITY, genuine inbound-handling -> RESPONSE_COMMITMENT; minimizer phase1-minimizer@2; LEGACY_SAFE_STATEMENT verbatim. Full 11/11 end-to-end M2->M5 personalization properties proven on Link 8 - docs/readiness/m6.7-deployment/personalization-v2-link8-deployment-and-synthetic-validation-2026-08-31.json - and the M2-M5 bytes are byte-identical in Link 9)",
+      "P12_no_real_slot_07_24_M1_execution_occurs": "PASS (socket.getaddrinfo instrumented: zero calls; the task made no outbound connection; no research release, no activator entrypoint, no crawl)"
+    },
+    "verdict": {"failed_properties": [], "passed": true}
+  },
+
+  "batch_clamp_validation_local": {
+    "method": "authority_materialization_v3 unit tests (operator-local materialiser; not baked into any image)",
+    "test_file": "tests/test_m67_authority_materialization_v3.py",
+    "covers": [
+      "materialize_v3 accepts slots 07 and 24 from the sealed EXECUTION_READY artifacts",
+      "materialize_v3 rejects a slot outside 07..24 ('not in the authorised 07-24 batch')",
+      "per-slot ceilings come from the sealed envelope (25/48/18MB/300s) unchanged",
+      "batch ceilings 450/864/108/324000000/5400/0 clamp the next slot via BatchConsumed carry-forward",
+      "BatchHeadroomExhausted is raised (not a defect) when the remaining batch allowance cannot host another slot",
+      "no cross-slot borrowing: a slot's per-slot budget is independent of batch_consumed"
+    ]
+  },
+
+  "dormancy_after_validation": {
+    "kill_switch_parameter": "TRIPPED",
+    "sampled_slot_execution_approval": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "controlled_egress_lease": "{\"state\": \"NOT_AUTHORIZED\"}",
+    "research_release_record_state": "not_authorized (no active research release)",
+    "ecs_services_desired_running": {"m67-phase1-research-worker": "0/0", "m67-phase1-intelligence-worker": "0/0", "m67-phase1-controlled-egress": "0/0"},
+    "running_or_pending_tasks": 0,
+    "transient_validation_task_definitions": "all deregistered (INACTIVE); services never referenced them",
+    "terraform": "No changes. Your infrastructure matches the configuration. (exit 0)"
+  }
+}

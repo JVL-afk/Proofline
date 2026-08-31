@@ -1,0 +1,734 @@
+{
+ "acceptance_criteria_exact_existing_process": [
+  "the exact frozen candidate hostname serves a first-party root page with HTTP 200",
+  "the root response is not redirected off the exact host",
+  "robots.txt (HTTP 200 or 404) allows the review agent at the site root",
+  "the frozen business identity is corroborated by distinctive name tokens in the root's visible text (exclusion list identical to scripts/run_m67_manual_exact_host_a09_access_review.py)",
+  "no hard automated-access prohibition in the root's visible text"
+ ],
+ "account_id": "785072247535",
+ "authority_directive": "AUTHORIZE BOUNDED SLOTS07_24 MECHANICAL ENABLEMENT / LINK 9",
+ "bound_authorization_package_sha256": "41cf105feb2ab1b21038803583867d56ea28e0a3dc99f46e5df91f7f66998251",
+ "decision_sha256_construction": "sha256(json.dumps({slot_number, business_identity, exact_hostname, ordered_package_semantic_sha256=3419a018..., root_body_sha256, robots_body_sha256, legal_path, legal_body_sha256, authorization_package_sha256=41cf105f...}, sort_keys=True, separators=(',',':')))",
+ "dynamic_content_note": "Slots 08, 11, 14, 16, 19, 20 serve dynamic root/robots content, so their content-addressed decision_sha256 differs between fetches while the A-09 outcome is identical across all 3 passes. The baked registry binds the exact sealed observation from pass 3 (the sealing pass). The runtime FrozenA09DecisionRegistry.require_approved does not re-fetch or recompute the hash; it checks state + hostname/identity match + hex format.",
+ "method": "bounded read-only exact-host access review: GET https://{host}/robots.txt and https://{host}/ with the OpportunityIntelligenceResearch identity, no followed redirects, <=900 KB per response, content-minimised signal extraction; one same-host legal page collected as supporting evidence when discoverable (absence not disqualifying). Three passes 2026-08-31.",
+ "no_substitution": "No alternate hostname, redraw, replacement, or company substitution for any NOT_APPROVED slot. NOT_APPROVED slots are omitted from the baked registry; the activator fails closed for them and the batch proceeds.",
+ "record_type": "M67_SLOTS07_24_A09_EXACT_HOST_REVIEW_EVIDENCE",
+ "recorded_at_utc": "2026-08-31T00:00:00Z",
+ "results": [
+  {
+   "a09_outcome_stable_across_3_passes": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+   "acceptance_criteria_sealing_pass": {
+    "business_identity_corroborated_on_root": true,
+    "exact_host_serves_first_party_root_http_200": true,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": true
+   },
+   "business_identity": "Polar Pros",
+   "decision_sha256_per_pass": [
+    "cb5d7b06eca3b99f1fa796bb78b227a0f1d71cd6bfba49c6a11a572319a6bd96",
+    "cb5d7b06eca3b99f1fa796bb78b227a0f1d71cd6bfba49c6a11a572319a6bd96",
+    "cb5d7b06eca3b99f1fa796bb78b227a0f1d71cd6bfba49c6a11a572319a6bd96"
+   ],
+   "exact_hostname": "polarprosac.com",
+   "identity_signal_sealing_pass": "BUSINESS_NAME_TOKENS_PRESENT",
+   "robots_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "root_redirect_location_sealing_pass": null,
+   "root_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "sealed_decision_sha256": "cb5d7b06eca3b99f1fa796bb78b227a0f1d71cd6bfba49c6a11a572319a6bd96",
+   "sealed_observation": {
+    "legal_body_sha256": "52c6680a31e4a2efe46b829227d0e0691805d878baf6a8736e68855531f700d3",
+    "observed_at": "2026-08-31T13:11:39.075341+00:00",
+    "robots_body_sha256": "c3cf32e7533b4cf64e74cf710f32c0294b26d93bd4342530825181813a0f9902",
+    "root_body_sha256": "f62bab22ddf4ec33f76d7494aa4ea3c6e40f221f8bbe49894073e2fd39dce8a8",
+    "same_host_legal_path": "/privacy-policy/"
+   },
+   "slot": 7
+  },
+  {
+   "a09_outcome_stable_across_3_passes": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+   "acceptance_criteria_sealing_pass": {
+    "business_identity_corroborated_on_root": true,
+    "exact_host_serves_first_party_root_http_200": true,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": true
+   },
+   "business_identity": "Villas Plumbing & Air Conditioning",
+   "decision_sha256_per_pass": [
+    "69da4adfe51c1d74d6db6fc07b8efcd2fe9de7458c6c373e496ddf82018dd792",
+    "ea661462e18230d7573a2d40b877a40ce620e3620bd5a7d1b3e1a0e061cba757",
+    "1a14247e8ebec9242964c225adf6c9afded654c449fd17527fa9aceb2f670977"
+   ],
+   "exact_hostname": "www.villasplumbing.com",
+   "identity_signal_sealing_pass": "BUSINESS_NAME_TOKENS_PRESENT",
+   "robots_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "root_redirect_location_sealing_pass": null,
+   "root_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "sealed_decision_sha256": "1a14247e8ebec9242964c225adf6c9afded654c449fd17527fa9aceb2f670977",
+   "sealed_observation": {
+    "legal_body_sha256": "5649a364327104dcc8544f880c5dfd289b6eec0bdf3cd4fbe89fc2e728d5d721",
+    "observed_at": "2026-08-31T13:11:39.657969+00:00",
+    "robots_body_sha256": "97e57f989ca47cbe31bf8ab1c5d7b21d0b5265746d7cca3bcf00b66381796496",
+    "root_body_sha256": "25ba0ff60c85e857cbd0a2e5884f353846ead1c4b259e3abee1d63271c84701a",
+    "same_host_legal_path": "/privacy-policy/"
+   },
+   "slot": 8
+  },
+  {
+   "a09_outcome_stable_across_3_passes": "NOT_APPROVED_A09_CRITERIA_NOT_SATISFIED",
+   "acceptance_criteria_sealing_pass": {
+    "business_identity_corroborated_on_root": false,
+    "exact_host_serves_first_party_root_http_200": true,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": true
+   },
+   "business_identity": "C&R Services",
+   "decision_sha256_per_pass": [
+    null,
+    null,
+    null
+   ],
+   "exact_hostname": "crhvacpro.com",
+   "identity_signal_sealing_pass": "BUSINESS_NAME_NOT_CORROBORATED",
+   "robots_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "root_redirect_location_sealing_pass": null,
+   "root_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "sealed_decision_sha256": null,
+   "sealed_observation": {
+    "legal_body_sha256": "6de4896439b0be4710546de9ffa40f8e46cc004164925a56ee01e6a2bbcf9cf7",
+    "observed_at": "2026-08-31T13:11:39.937335+00:00",
+    "robots_body_sha256": "914dc36ce63ce344998433682d2c68ba4429001456fe4accdd218570f5b40afa",
+    "root_body_sha256": "63ee014de82cb73d456dfbaef93ee623901f38d6004f1126923b6eee86a834c7",
+    "same_host_legal_path": "/privacy-policy/"
+   },
+   "slot": 9
+  },
+  {
+   "a09_outcome_stable_across_3_passes": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+   "acceptance_criteria_sealing_pass": {
+    "business_identity_corroborated_on_root": true,
+    "exact_host_serves_first_party_root_http_200": true,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": true
+   },
+   "business_identity": "Vicon Equipment, Inc",
+   "decision_sha256_per_pass": [
+    "6ff924f8c511a62a9809f16c9adb7a65816d38b71b79914c5fa40907fa0f7d8c",
+    "6ff924f8c511a62a9809f16c9adb7a65816d38b71b79914c5fa40907fa0f7d8c",
+    "6ff924f8c511a62a9809f16c9adb7a65816d38b71b79914c5fa40907fa0f7d8c"
+   ],
+   "exact_hostname": "viconequip.com",
+   "identity_signal_sealing_pass": "BUSINESS_NAME_TOKENS_PRESENT",
+   "robots_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "root_redirect_location_sealing_pass": null,
+   "root_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "sealed_decision_sha256": "6ff924f8c511a62a9809f16c9adb7a65816d38b71b79914c5fa40907fa0f7d8c",
+   "sealed_observation": {
+    "legal_body_sha256": "5056d19e1eb94b83787f9ddaba57e4b74a0074660a44ab08529d2da10cdbc79a",
+    "observed_at": "2026-08-31T13:11:42.181406+00:00",
+    "robots_body_sha256": "de75473a39ed9f5f7a796a12f7c422dbf98644ac7e33e845e59a48cbcb48f457",
+    "root_body_sha256": "7e588967cf1e24a6335339cd9f688717de25a9a5acd6723eaaafb9f6cfd5b2bb",
+    "same_host_legal_path": "/privacy-policy/"
+   },
+   "slot": 10
+  },
+  {
+   "a09_outcome_stable_across_3_passes": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+   "acceptance_criteria_sealing_pass": {
+    "business_identity_corroborated_on_root": true,
+    "exact_host_serves_first_party_root_http_200": true,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": true
+   },
+   "business_identity": "Sinclair Heating, Cooling, Plumbing",
+   "decision_sha256_per_pass": [
+    "57ef6631e61e8b099b668df3fbdb49f1b8056fbf5b8dd9faa895a0395066e20e",
+    "fe89bbc7b171306750f3e93bbf09837cbe1a426e7ad6c67d943d78cb7da66253",
+    "b531b66ce531991d54e6520c1ccd47aec58e40ac84a958a0fa9d867afa763d4f"
+   ],
+   "exact_hostname": "www.callsinclair.com",
+   "identity_signal_sealing_pass": "BUSINESS_NAME_TOKENS_PRESENT",
+   "robots_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "root_redirect_location_sealing_pass": null,
+   "root_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "sealed_decision_sha256": "b531b66ce531991d54e6520c1ccd47aec58e40ac84a958a0fa9d867afa763d4f",
+   "sealed_observation": {
+    "legal_body_sha256": "b9903375933622327e4c3bf7c5d4a0ced507377d7309940f345b667d6eefffaf",
+    "observed_at": "2026-08-31T13:11:45.220245+00:00",
+    "robots_body_sha256": "9d53c1073e7e5878f70861052047723d3d12bff23f38c16b3228c44ec2e2b107",
+    "root_body_sha256": "9fc5077a405896588547359586b46e0a585acfd08793eccf5def1aac4b182ad0",
+    "same_host_legal_path": "/privacy-policy/"
+   },
+   "slot": 11
+  },
+  {
+   "a09_outcome_stable_across_3_passes": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+   "acceptance_criteria_sealing_pass": {
+    "business_identity_corroborated_on_root": true,
+    "exact_host_serves_first_party_root_http_200": true,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": true
+   },
+   "business_identity": "Village Plumbing & Air",
+   "decision_sha256_per_pass": [
+    "b259c02eeddc7f6ec5fe3ad92c1472495f4be947b29c9efdadfab7034b1caf63",
+    "b259c02eeddc7f6ec5fe3ad92c1472495f4be947b29c9efdadfab7034b1caf63",
+    "b259c02eeddc7f6ec5fe3ad92c1472495f4be947b29c9efdadfab7034b1caf63"
+   ],
+   "exact_hostname": "villageplumbing.com",
+   "identity_signal_sealing_pass": "BUSINESS_NAME_TOKENS_PRESENT",
+   "robots_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "root_redirect_location_sealing_pass": null,
+   "root_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "sealed_decision_sha256": "b259c02eeddc7f6ec5fe3ad92c1472495f4be947b29c9efdadfab7034b1caf63",
+   "sealed_observation": {
+    "legal_body_sha256": "3f0a14bb6b0fd6543a006f0710d4617b63d4a618cb267e0f8ff61a31a6c89802",
+    "observed_at": "2026-08-31T13:11:48.079915+00:00",
+    "robots_body_sha256": "62536dccd511ecfa3f242eb28c13f30f22209963402f92b1b186677d3ae6a060",
+    "root_body_sha256": "b56b5459a03705ad6d6571d2c1655e523aa32986b12e3118b58d012e132ec102",
+    "same_host_legal_path": "/privacy-policy/"
+   },
+   "slot": 12
+  },
+  {
+   "a09_outcome_stable_across_3_passes": "NOT_APPROVED_A09_CRITERIA_NOT_SATISFIED",
+   "acceptance_criteria_sealing_pass": {
+    "business_identity_corroborated_on_root": false,
+    "exact_host_serves_first_party_root_http_200": false,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": true
+   },
+   "business_identity": "NTX Plumbing & Air",
+   "decision_sha256_per_pass": [
+    null,
+    null,
+    null
+   ],
+   "exact_hostname": "www.ntxplumbing.com",
+   "identity_signal_sealing_pass": "NO_ROOT",
+   "robots_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "root_redirect_location_sealing_pass": null,
+   "root_status_per_pass": [
+    522,
+    522,
+    522
+   ],
+   "sealed_decision_sha256": null,
+   "sealed_observation": {
+    "legal_body_sha256": null,
+    "observed_at": "2026-08-31T13:11:56.082791+00:00",
+    "robots_body_sha256": "8fa3036c68bfcbd32365f6225d24333264093b7cd38d306e106b4dbdc934fd5b",
+    "root_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "same_host_legal_path": null
+   },
+   "slot": 13
+  },
+  {
+   "a09_outcome_stable_across_3_passes": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+   "acceptance_criteria_sealing_pass": {
+    "business_identity_corroborated_on_root": true,
+    "exact_host_serves_first_party_root_http_200": true,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": true
+   },
+   "business_identity": "City Supply Group",
+   "decision_sha256_per_pass": [
+    "66e74bfa826aa6dc697a385651a3d62c8207aa6e94bbcc9966896e796e3f92f6",
+    "37fb5dac8d4e9f66ab572246dd9c558b597f7885fae7cce1e0e72c72fc0197ef",
+    "eda715055d109da34a06236babb2b4872845473da0b85e42bdac279fc6c94976"
+   ],
+   "exact_hostname": "citysupplygroup.com",
+   "identity_signal_sealing_pass": "BUSINESS_NAME_TOKENS_PRESENT",
+   "robots_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "root_redirect_location_sealing_pass": null,
+   "root_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "sealed_decision_sha256": "eda715055d109da34a06236babb2b4872845473da0b85e42bdac279fc6c94976",
+   "sealed_observation": {
+    "legal_body_sha256": "7c5f40f69e19219a696cf630d26237c6152a108aae0df89945df27eb39cdf802",
+    "observed_at": "2026-08-31T13:12:35.368413+00:00",
+    "robots_body_sha256": "964c0c2ffdb0c799291c0d7b1e5ac97d0e61eaaf7e822175c8db7f3f2fce9428",
+    "root_body_sha256": "ced833d48815858852faf641a2820ccf9efb856151f5dd497a2e6266ab6286d9",
+    "same_host_legal_path": "/pages/city-supply-plumbing-terms-conditions"
+   },
+   "slot": 14
+  },
+  {
+   "a09_outcome_stable_across_3_passes": "NOT_APPROVED_A09_CRITERIA_NOT_SATISFIED",
+   "acceptance_criteria_sealing_pass": {
+    "business_identity_corroborated_on_root": false,
+    "exact_host_serves_first_party_root_http_200": false,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": false,
+    "root_not_redirected_off_the_exact_host": false
+   },
+   "business_identity": "HB Mechanical Services",
+   "decision_sha256_per_pass": [
+    null,
+    null,
+    null
+   ],
+   "exact_hostname": "www.hbmechanical.com",
+   "identity_signal_sealing_pass": "NO_ROOT",
+   "robots_status_per_pass": [
+    301,
+    301,
+    301
+   ],
+   "root_redirect_location_sealing_pass": "https://hbmechanical.com/",
+   "root_status_per_pass": [
+    301,
+    301,
+    301
+   ],
+   "sealed_decision_sha256": null,
+   "sealed_observation": {
+    "legal_body_sha256": null,
+    "observed_at": "2026-08-31T13:12:36.588897+00:00",
+    "robots_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "root_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "same_host_legal_path": null
+   },
+   "slot": 15
+  },
+  {
+   "a09_outcome_stable_across_3_passes": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+   "acceptance_criteria_sealing_pass": {
+    "business_identity_corroborated_on_root": true,
+    "exact_host_serves_first_party_root_http_200": true,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": true
+   },
+   "business_identity": "Merit Services",
+   "decision_sha256_per_pass": [
+    "b3216131e678481225f1d6407141efec25aa8bb16f65707ec07289fac0840e81",
+    "694947f91951776e699ff82028dd07cf190c3ef4044c68d36e02e8618bef5c68",
+    "2f2a69a8fed58cdc2413113e1fd278562dc733195b27148ed69cfce6bb7a5c4b"
+   ],
+   "exact_hostname": "meritsvc.com",
+   "identity_signal_sealing_pass": "BUSINESS_NAME_TOKENS_PRESENT",
+   "robots_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "root_redirect_location_sealing_pass": null,
+   "root_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "sealed_decision_sha256": "2f2a69a8fed58cdc2413113e1fd278562dc733195b27148ed69cfce6bb7a5c4b",
+   "sealed_observation": {
+    "legal_body_sha256": null,
+    "observed_at": "2026-08-31T13:12:36.902770+00:00",
+    "robots_body_sha256": "359ff845fd5eb5338811ecb78e4ddbd7e737f92db2c5284ad3345be17dedf3b5",
+    "root_body_sha256": "09cee340194a9eac022d81eccc219de98ed3ffdf82a709dff54e6badc662afe9",
+    "same_host_legal_path": null
+   },
+   "slot": 16
+  },
+  {
+   "a09_outcome_stable_across_3_passes": "NOT_APPROVED_A09_CRITERIA_NOT_SATISFIED",
+   "acceptance_criteria_sealing_pass": {
+    "business_identity_corroborated_on_root": false,
+    "exact_host_serves_first_party_root_http_200": false,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": false
+   },
+   "business_identity": "Hermetic Compressors of Houston",
+   "decision_sha256_per_pass": [
+    null,
+    null,
+    null
+   ],
+   "exact_hostname": "hch-inc.com",
+   "identity_signal_sealing_pass": "NO_ROOT",
+   "robots_status_per_pass": [
+    404,
+    404,
+    404
+   ],
+   "root_redirect_location_sealing_pass": "http://hermeticcompressorsofhouston.com",
+   "root_status_per_pass": [
+    302,
+    302,
+    302
+   ],
+   "sealed_decision_sha256": null,
+   "sealed_observation": {
+    "legal_body_sha256": null,
+    "observed_at": "2026-08-31T13:12:49.094255+00:00",
+    "robots_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "root_body_sha256": "11a9ba71b93504b607ea9a2549b6da424cbeadaf7560446457e62b2cd7699a76",
+    "same_host_legal_path": null
+   },
+   "slot": 17
+  },
+  {
+   "a09_outcome_stable_across_3_passes": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+   "acceptance_criteria_sealing_pass": {
+    "business_identity_corroborated_on_root": true,
+    "exact_host_serves_first_party_root_http_200": true,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": true
+   },
+   "business_identity": "Elite Air Conditioning & Plumbing",
+   "decision_sha256_per_pass": [
+    "07e286bc1f9c9a8291664bf73a74397fe0c9bb3a9b086af661de43b4181be6eb",
+    "07e286bc1f9c9a8291664bf73a74397fe0c9bb3a9b086af661de43b4181be6eb",
+    "07e286bc1f9c9a8291664bf73a74397fe0c9bb3a9b086af661de43b4181be6eb"
+   ],
+   "exact_hostname": "eliteaustinac.com",
+   "identity_signal_sealing_pass": "BUSINESS_NAME_TOKENS_PRESENT",
+   "robots_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "root_redirect_location_sealing_pass": null,
+   "root_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "sealed_decision_sha256": "07e286bc1f9c9a8291664bf73a74397fe0c9bb3a9b086af661de43b4181be6eb",
+   "sealed_observation": {
+    "legal_body_sha256": "345659e60d26f835a1f033eb85996cf936f5dca69270d82d8450f3f3c26fca60",
+    "observed_at": "2026-08-31T13:12:49.405294+00:00",
+    "robots_body_sha256": "3463e276e80dace85efea93e7c620160fcc7d26daa2b1b09e3126b390522b45e",
+    "root_body_sha256": "25dccb49eec7cb3f98a98036238955af79de1c67735858f97d541e84d5bbffbc",
+    "same_host_legal_path": "/privacy-policy/"
+   },
+   "slot": 18
+  },
+  {
+   "a09_outcome_stable_across_3_passes": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+   "acceptance_criteria_sealing_pass": {
+    "business_identity_corroborated_on_root": true,
+    "exact_host_serves_first_party_root_http_200": true,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": true
+   },
+   "business_identity": "A-Plus Air Conditioning & Home Solutions",
+   "decision_sha256_per_pass": [
+    "4a36e0604a171008e22649481a17dd9ca8f32d8a47f3131806af95cc3afa15a3",
+    "cf066e42461f0eebed808397dcfb32df932f7f82050e49147dd2107fe9292a4a",
+    "cf066e42461f0eebed808397dcfb32df932f7f82050e49147dd2107fe9292a4a"
+   ],
+   "exact_hostname": "www.aplusac.com",
+   "identity_signal_sealing_pass": "BUSINESS_NAME_TOKENS_PRESENT",
+   "robots_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "root_redirect_location_sealing_pass": null,
+   "root_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "sealed_decision_sha256": "cf066e42461f0eebed808397dcfb32df932f7f82050e49147dd2107fe9292a4a",
+   "sealed_observation": {
+    "legal_body_sha256": "0b431c4e6fdef7189fa2626bc0d81589bc6c48f4d6a5f3d0bc8775831ef537e7",
+    "observed_at": "2026-08-31T13:12:52.023102+00:00",
+    "robots_body_sha256": "36dbd1fb55bae7ac22d2c9f2e42d54502fc5afb233c50e4baab0715ead48e586",
+    "root_body_sha256": "54549785eee626a4e3f74ff9c88821d00a1b7df69739e6692cd6524034e49532",
+    "same_host_legal_path": "/privacy-policy/"
+   },
+   "slot": 19
+  },
+  {
+   "a09_outcome_stable_across_3_passes": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+   "acceptance_criteria_sealing_pass": {
+    "business_identity_corroborated_on_root": true,
+    "exact_host_serves_first_party_root_http_200": true,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": true
+   },
+   "business_identity": "E+M Emergency Air Conditioning",
+   "decision_sha256_per_pass": [
+    "ece574d46c1efb1b46f25ba1ad0cf00fa49d441bf63e85bdf65418dec916b14d",
+    "bfe6982dae6fc10ca7665c2fbbb9a24b93523de6768248677999c68ef55f46c7",
+    "0b8e2330652f2a95cf24bdb2c13bc651be25a2e4fa087eda7ef2f1f6a3ae6ebd"
+   ],
+   "exact_hostname": "www.emergencyac.org",
+   "identity_signal_sealing_pass": "BUSINESS_NAME_TOKENS_PRESENT",
+   "robots_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "root_redirect_location_sealing_pass": null,
+   "root_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "sealed_decision_sha256": "0b8e2330652f2a95cf24bdb2c13bc651be25a2e4fa087eda7ef2f1f6a3ae6ebd",
+   "sealed_observation": {
+    "legal_body_sha256": "ebdc94adb6394b96f904d0b6db3a91485bc125ff70ec9f9809040405e172ac4c",
+    "observed_at": "2026-08-31T13:12:54.525309+00:00",
+    "robots_body_sha256": "5550ff8b68fb8ac0a3d7bb50aed7a52dd6cb17b729054636ee6ecbbd1ad7d249",
+    "root_body_sha256": "d2c46e2672c76141b2687112f39657774f140e265be46db2e4a56d000a28a0cf",
+    "same_host_legal_path": "/legal-disclaimer/"
+   },
+   "slot": 20
+  },
+  {
+   "a09_outcome_stable_across_3_passes": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+   "acceptance_criteria_sealing_pass": {
+    "business_identity_corroborated_on_root": true,
+    "exact_host_serves_first_party_root_http_200": true,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": true
+   },
+   "business_identity": "Comfort-Air Engineering & Primo Plumbing",
+   "decision_sha256_per_pass": [
+    "70aff90639dd802055cbeef6fafa44edc3d753214028e109793c1ef06754938f",
+    "70aff90639dd802055cbeef6fafa44edc3d753214028e109793c1ef06754938f",
+    "70aff90639dd802055cbeef6fafa44edc3d753214028e109793c1ef06754938f"
+   ],
+   "exact_hostname": "www.comfort-air.com",
+   "identity_signal_sealing_pass": "BUSINESS_NAME_TOKENS_PRESENT",
+   "robots_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "root_redirect_location_sealing_pass": null,
+   "root_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "sealed_decision_sha256": "70aff90639dd802055cbeef6fafa44edc3d753214028e109793c1ef06754938f",
+   "sealed_observation": {
+    "legal_body_sha256": "390d60dfd1f2ea3f888f2ca1c6e526c9c5ea9b578297811ec9c28d0fb59d9ac3",
+    "observed_at": "2026-08-31T13:12:54.816635+00:00",
+    "robots_body_sha256": "8e88c79ee945c2c6b45f269573cfb83f728f083d65f977495782b73477b5ae13",
+    "root_body_sha256": "e29f48a8b1dfb1ba0e0098ccd8e77a8edaa78d2dc7e62a515c51331fb67022bd",
+    "same_host_legal_path": "/privacy-policy/"
+   },
+   "slot": 21
+  },
+  {
+   "a09_outcome_stable_across_3_passes": "APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH",
+   "acceptance_criteria_sealing_pass": {
+    "business_identity_corroborated_on_root": true,
+    "exact_host_serves_first_party_root_http_200": true,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": true
+   },
+   "business_identity": "Ramsey",
+   "decision_sha256_per_pass": [
+    "2e8b8d72951570427a836133fd9d0357f3da96d66ce222d01283445e1b20fa08",
+    "2e8b8d72951570427a836133fd9d0357f3da96d66ce222d01283445e1b20fa08",
+    "2e8b8d72951570427a836133fd9d0357f3da96d66ce222d01283445e1b20fa08"
+   ],
+   "exact_hostname": "www.ramseyandco.com",
+   "identity_signal_sealing_pass": "BUSINESS_NAME_TOKENS_PRESENT",
+   "robots_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "root_redirect_location_sealing_pass": null,
+   "root_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "sealed_decision_sha256": "2e8b8d72951570427a836133fd9d0357f3da96d66ce222d01283445e1b20fa08",
+   "sealed_observation": {
+    "legal_body_sha256": null,
+    "observed_at": "2026-08-31T13:12:55.206681+00:00",
+    "robots_body_sha256": "f7303e9024f268aca430b2c133327fedbc4bfebde7e1f6e6650041cb4e595535",
+    "root_body_sha256": "ca4f851a19cb72b127d803c8e69550b5824ae960121837cec3b739494e6f8b99",
+    "same_host_legal_path": null
+   },
+   "slot": 22
+  },
+  {
+   "a09_outcome_stable_across_3_passes": "NOT_APPROVED_A09_CRITERIA_NOT_SATISFIED",
+   "acceptance_criteria_sealing_pass": {
+    "business_identity_corroborated_on_root": false,
+    "exact_host_serves_first_party_root_http_200": true,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": true,
+    "root_not_redirected_off_the_exact_host": true
+   },
+   "business_identity": "C&S Air",
+   "decision_sha256_per_pass": [
+    null,
+    null,
+    null
+   ],
+   "exact_hostname": "www.candsair.com",
+   "identity_signal_sealing_pass": "BUSINESS_NAME_NOT_CORROBORATED",
+   "robots_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "root_redirect_location_sealing_pass": null,
+   "root_status_per_pass": [
+    200,
+    200,
+    200
+   ],
+   "sealed_decision_sha256": null,
+   "sealed_observation": {
+    "legal_body_sha256": "7555ae37ddae3c2717bdc8c3fc1707f0a6dce0dc52445cecf25fbb580542663d",
+    "observed_at": "2026-08-31T13:12:57.007460+00:00",
+    "robots_body_sha256": "eebf7a9b523dc54bad5ce300954e835cb098aa3fd49697d144babc89fbcf5847",
+    "root_body_sha256": "4837d2da89dddbf06f2c5d3f5fdf979f394749f37fb6b05af71669d4c70f1651",
+    "same_host_legal_path": "/privacy-policy/"
+   },
+   "slot": 23
+  },
+  {
+   "a09_outcome_stable_across_3_passes": "NOT_APPROVED_A09_CRITERIA_NOT_SATISFIED",
+   "acceptance_criteria_sealing_pass": {
+    "business_identity_corroborated_on_root": false,
+    "exact_host_serves_first_party_root_http_200": false,
+    "no_hard_automated_access_prohibition": true,
+    "robots_allows_review_agent_at_root": false,
+    "root_not_redirected_off_the_exact_host": false
+   },
+   "business_identity": "Blue Northern Air Conditioning, Inc.",
+   "decision_sha256_per_pass": [
+    null,
+    null,
+    null
+   ],
+   "exact_hostname": "www.bluenorthernac.com",
+   "identity_signal_sealing_pass": "NO_ROOT",
+   "robots_status_per_pass": [
+    301,
+    301,
+    301
+   ],
+   "root_redirect_location_sealing_pass": "https://bluenorthernac.com/",
+   "root_status_per_pass": [
+    301,
+    301,
+    301
+   ],
+   "sealed_decision_sha256": null,
+   "sealed_observation": {
+    "legal_body_sha256": null,
+    "observed_at": "2026-08-31T13:12:57.595198+00:00",
+    "robots_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "root_body_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "same_host_legal_path": null
+   },
+   "slot": 24
+  }
+ ],
+ "runner": {
+  "byte_identical_to": "docs/readiness/m6.7-deployment/slots02-06-a09-exact-host-review-runner-2026-08-30.py (sha256 e4ef8e510d3b369ca19a7b447459ddb60d68f915ea7c2160947f8932a96e5db8) except the SLOTS list and the bound authorization_package_sha256",
+  "path": "docs/readiness/m6.7-authorization/slots07-24-a09-exact-host-review-runner-2026-08-31.py",
+  "sha256": "eeddce63f3cb38fdba83a35592df9043ff2ae432e475e00a5a11adabe2d72613"
+ },
+ "schema_version": "1.0.0",
+ "summary": {
+  "approved": [
+   7,
+   8,
+   10,
+   11,
+   12,
+   14,
+   16,
+   18,
+   19,
+   20,
+   21,
+   22
+  ],
+  "not_approved": [
+   9,
+   13,
+   15,
+   17,
+   23,
+   24
+  ]
+ }
+}
