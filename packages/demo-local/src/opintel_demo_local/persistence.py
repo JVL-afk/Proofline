@@ -35,6 +35,8 @@ from opintel_demo.domain import (
     RecordingCue,
     RuntimeSession,
     RuntimeTerminal,
+    ServiceAreaOption,
+    ServiceCategoryOption,
     SessionIssuance,
     SessionState,
     SyntheticPersona,
@@ -795,6 +797,17 @@ def _specification(item: dict[str, Any]) -> DemoSpecification:
         tuple(tuple(value) for value in item["conversation_utterances"]),
         cues,
         technical,
+        tuple(
+            ServiceCategoryOption(v["label"], UUID(v["evidence_id"]), v["fact_class"])
+            for v in item.get("service_categories", [])
+        ),
+        tuple(
+            ServiceAreaOption(v["label"], UUID(v["evidence_id"]), v["fact_class"])
+            for v in item.get("service_area_context", [])
+        ),
+        tuple(
+            (pair[0], UUID(pair[1])) for pair in item.get("personalization_provenance", [])
+        ),
     )
 
 

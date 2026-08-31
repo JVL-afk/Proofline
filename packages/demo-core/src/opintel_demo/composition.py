@@ -11,6 +11,7 @@ from uuid import UUID
 
 from opintel_audit.domain import ClaimType
 from opintel_m0.ports import IdentifierFactory
+from opintel_opportunity.domain import CompanyFact, FactCategory
 
 from opintel_demo.domain import (
     ComponentInstance,
@@ -31,16 +32,28 @@ from opintel_demo.domain import (
     QualificationQuestion,
     RecordingCue,
     RuntimeTerminal,
+    ServiceAreaOption,
+    ServiceCategoryOption,
     SyntheticPersona,
     TechnicalDemoSpecification,
 )
 from opintel_demo.policy import SAFETY_HANDOFF_MESSAGE
 
 DEMO_SCHEMA_VERSION = "demo.schema@1"
-COMPOSITION_POLICY_VERSION = "demo.commercial_hvac.lead_response@1"
+COMPOSITION_POLICY_VERSION = "demo.commercial_hvac.lead_response@2"
 COMPONENT_REGISTRY_VERSION = "demo.components@1"
 STATE_MACHINE_VERSION = "demo.lead_response.machine@1"
-QUESTION_SET_VERSION = "demo.commercial_hvac.questions@1"
+QUESTION_SET_VERSION = "demo.commercial_hvac.questions@2"
+_OPTION_FACT_CLASSES = frozenset(
+    {"public_inbound_path", "public_service_description", "public_service_area"}
+)
+
+
+def _option_label(phrase: str, limit: int = 48) -> str:
+    text = " ".join(phrase.split()).strip().rstrip(".;:,")
+    if len(text) > limit:
+        text = text[:limit].rsplit(" ", 1)[0].strip()
+    return text
 SYNTHETIC_DATASET_VERSION = "demo.synthetic_personas@1"
 RUNTIME_VERSION = "demo.runtime@1"
 SECURITY_PROFILE_VERSION = "demo.security.local_separate_origin@1"
@@ -318,12 +331,55 @@ class DeterministicDemoComposer:
                 SYNTHETIC_DATASET_VERSION,
             ),
         )
+        company_facts: tuple[CompanyFact, ...] = source.opportunity.company_facts
+        evidence_id_set = {item.id for item in source.evidence}
+        service_categories: list[ServiceCategoryOption] = []
+        service_area_context: list[ServiceAreaOption] = []
+        provenance: list[tuple[str, UUID]] = []
+        seen_labels: set[str] = set()
+        for fact in company_facts:
+            if fact.evidence_id not in evidence_id_set:
+                continue
+            label = _option_label(fact.phrase)
+            if not label or label.lower() in seen_labels:
+                continue
+            if fact.category in (
+                FactCategory.COMMERCIAL_CONTEXT,
+                FactCategory.INTAKE_SURFACE,
+            ):
+                service_categories.append(
+                    ServiceCategoryOption(label, fact.evidence_id, fact.fact_class)
+                )
+                seen_labels.add(label.lower())
+                provenance.append((label, fact.evidence_id))
+            elif fact.category == FactCategory.SERVICE_AREA_CONTEXT:
+                service_area_context.append(
+                    ServiceAreaOption(label, fact.evidence_id, fact.fact_class)
+                )
+                seen_labels.add(label.lower())
+                provenance.append((label, fact.evidence_id))
+        if service_categories:
+            need_values: tuple[str, ...] = (
+                *(item.label for item in service_categories),
+                "other",
+                "unknown",
+            )
+        else:
+            need_values = ("repair", "maintenance", "replacement_quote", "unknown")
+        if service_area_context:
+            location_values: tuple[str, ...] = (
+                *(item.label for item in service_area_context),
+                "other",
+                "unknown",
+            )
+        else:
+            location_values = ("north_texas", "central_texas", "gulf_coast", "other", "unknown")
         questions = (
             QualificationQuestion(
                 "service_need",
                 "Which simulated commercial HVAC need best matches this scenario?",
                 "single_choice",
-                ("repair", "maintenance", "replacement_quote", "unknown"),
+                need_values,
                 True,
                 "Demonstrate service-intent collection without asserting business policy.",
             ),
@@ -337,9 +393,11 @@ class DeterministicDemoComposer:
             ),
             QualificationQuestion(
                 "service_location",
-                "Select a synthetic Texas service region.",
+                "Select a simulated service location for this scenario."
+                if service_area_context
+                else "Select a synthetic Texas service region.",
                 "single_choice",
-                ("north_texas", "central_texas", "gulf_coast", "other", "unknown"),
+                location_values,
                 True,
                 "Route geography uncertainty to human validation; no service-area promise.",
             ),
@@ -438,6 +496,24 @@ class DeterministicDemoComposer:
             ),
             deployment_status="PROPOSED SIMULATION — NOT IMPLEMENTED FOR THE TARGET BUSINESS",
         )
+        commercial_phrase = next(
+            (
+                item.label
+                for item in service_categories
+                if any(
+                    fact.category == FactCategory.COMMERCIAL_CONTEXT
+                    and _option_label(fact.phrase) == item.label
+                    for fact in company_facts
+                )
+            ),
+            None,
+        )
+        welcome = (
+            "This scripted simulation demonstrates a proposed intake workflow for "
+            f'{source.business_name} ("{commercial_phrase}").'
+            if commercial_phrase
+            else "This scripted simulation demonstrates a proposed intake workflow."
+        )
         return DemoSpecification(
             DEMO_SCHEMA_VERSION,
             source.business_name,
@@ -454,12 +530,15 @@ class DeterministicDemoComposer:
             actions,
             tuple(statements),
             (
-                ("welcome", "This scripted simulation demonstrates a proposed intake workflow."),
+                ("welcome", welcome),
                 ("clarify", "Please choose one of the available synthetic responses."),
                 ("handoff", "This simulated case now requires human review."),
             ),
             cues,
             technical,
+            tuple(service_categories),
+            tuple(service_area_context),
+            tuple(provenance),
         )
 
     @staticmethod
@@ -589,6 +668,40 @@ class DemoQualityPolicy:
                 fail("personal_data", "Persona content resembles operative contact data.")
         source_claims = {item.id: item for item in source.audit.revision.claims}
         manifest_evidence = set(manifest.evidence_ids)
+
+        option_lineage: list[tuple[UUID, str]] = [
+            (item.evidence_id, item.fact_class) for item in specification.service_categories
+        ]
+        option_lineage.extend(
+            (item.evidence_id, item.fact_class) for item in specification.service_area_context
+        )
+        for evidence_id, fact_class in option_lineage:
+            if evidence_id not in manifest_evidence or fact_class not in _OPTION_FACT_CLASSES:
+                fail(
+                    "unsupported_option_personalization",
+                    "A company-derived demo option lacks allowed evidence lineage.",
+                )
+        provenance_labels = {label for label, _ in specification.personalization_provenance}
+        _SYNTHETIC_OPTION_BASE = {
+            "repair",
+            "maintenance",
+            "replacement_quote",
+            "unknown",
+            "north_texas",
+            "central_texas",
+            "gulf_coast",
+            "other",
+        }
+        for question in specification.questions:
+            if question.id not in {"service_need", "service_location"}:
+                continue
+            for value in question.allowed_values:
+                if value not in _SYNTHETIC_OPTION_BASE and value not in provenance_labels:
+                    fail(
+                        "unsupported_option_personalization",
+                        "An injected demo option is not bound to accepted evidence provenance.",
+                    )
+
         for statement in specification.statements:
             if statement.kind == DemoStatementKind.SOURCE_FACT:
                 claim = (

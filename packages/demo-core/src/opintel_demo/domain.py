@@ -159,6 +159,23 @@ class SyntheticPersona:
 
 
 @dataclass(frozen=True, slots=True)
+class ServiceCategoryOption:
+    """EVIDENCE_PRESERVING_PERSONALIZATION_V2: a company-derived service option
+    bound to the exact evidence row that supports it."""
+
+    label: str
+    evidence_id: UUID
+    fact_class: str
+
+
+@dataclass(frozen=True, slots=True)
+class ServiceAreaOption:
+    label: str
+    evidence_id: UUID
+    fact_class: str
+
+
+@dataclass(frozen=True, slots=True)
 class QualificationQuestion:
     id: str
     prompt: str
@@ -248,6 +265,10 @@ class DemoSpecification:
     conversation_utterances: tuple[tuple[str, str], ...]
     recording_cues: tuple[RecordingCue, ...]
     technical_specification: TechnicalDemoSpecification
+    # EVIDENCE_PRESERVING_PERSONALIZATION_V2: evidence-derived scenario config.
+    service_categories: tuple[ServiceCategoryOption, ...] = ()
+    service_area_context: tuple[ServiceAreaOption, ...] = ()
+    personalization_provenance: tuple[tuple[str, UUID], ...] = ()
 
 
 @dataclass(frozen=True, slots=True)
