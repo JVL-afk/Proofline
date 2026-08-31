@@ -1,0 +1,63 @@
+# M6.7 Phase 1 EVIDENCE-PRESERVING PERSONALIZATION V2 execution successor (chain link 8).
+#
+# Thin successor to the deployed Slots-02-06 execution image (chain link 7,
+# registry digest sha256:34e5974f068c6d9633e87aa6d212e687814878a903bcdb7a53adbc7cec241291).
+#
+# Carries exactly the M2..M5 deterministic composition changes accepted by the
+# owner (implementation + owner review A + B):
+#   * opportunity-core: personalization.py (NEW deterministic company_fact_selector@2
+#     + SERVICE_AVAILABILITY vs RESPONSE_COMMITMENT semantic correction), rules.py
+#     (@3, evidence-derived M2 statement + internal-only ReviewRankHint),
+#     domain.py (CompanyFact / FactCategory{..,SERVICE_AVAILABILITY} / ReviewRankHint
+#     / ResearchRunStats), workflow.py, application.py, contracts.py, ports.py;
+#   * opportunity-local: adapters.py (fact_class/page_purpose propagation +
+#     run-stats / business-name catalog methods), persistence.py
+#     (opportunity_company_facts table + additive columns + state-convergent
+#     migration + canonical CompanyFact ordering);
+#   * audit-core: composition.py (audit.commercial_hvac.deterministic@3 -
+#     AuditFinding taxonomy incl. OBSERVED_SERVICE_AVAILABILITY + crawl coverage),
+#     domain.py (AuditFinding / FindingKind);
+#   * audit-local: persistence.py (additive findings_json + idempotent migration);
+#   * demo-core: composition.py (evidence-derived service/location options with
+#     truthful synthetic fallback + option QC), domain.py
+#     (ServiceCategoryOption / ServiceAreaOption);
+#   * demo-local: persistence.py (spec deser for the new option fields);
+#   * outreach-core: composition.py (outreach.v4 / projection@3 -
+#     EVIDENCE_DERIVED_FACT, personalization gate, internal_score_language_leak,
+#     DRAFT_INCOMPLETE, safe-question CTA), domain.py
+#     (ProjectionMode.EVIDENCE_DERIVED_FACT / PersonalizationAssessment /
+#     DRAFT_INCOMPLETE), application.py (DRAFT_INCOMPLETE reviewability);
+#   * outreach-local: persistence.py (personalization + unresolved_slot_kinds deser).
+#
+# No dependency, entry point, minimizer, M1 bounded-site-crawl workflow, M2
+# qualification threshold, economics, contact-phase-gate, provenance or safety
+# control change. workers/intelligence/production_runtime.py and the
+# stage-coordinator files (orchestration.py / coordinator_persistence.py /
+# execution.py) are byte-unchanged. scripts/sampled_slot_bundle.py is a
+# CI/tfvars calculator and is NOT baked in (runtime recomputation deferred).
+FROM localhost/m67-phase1-worker:git-ff42632-m1v2-slots02-06
+
+ARG SOURCE_COMMIT
+LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}" \
+      org.opencontainers.image.title="M6.7 Phase 1 M2-M5 Evidence-Preserving Personalization V2" \
+      org.opencontainers.image.base.digest="sha256:34e5974f068c6d9633e87aa6d212e687814878a903bcdb7a53adbc7cec241291"
+
+COPY packages/opportunity-core/src/opintel_opportunity/application.py     /app/opportunity-core/opintel_opportunity/application.py
+COPY packages/opportunity-core/src/opintel_opportunity/contracts.py       /app/opportunity-core/opintel_opportunity/contracts.py
+COPY packages/opportunity-core/src/opintel_opportunity/domain.py          /app/opportunity-core/opintel_opportunity/domain.py
+COPY packages/opportunity-core/src/opintel_opportunity/personalization.py /app/opportunity-core/opintel_opportunity/personalization.py
+COPY packages/opportunity-core/src/opintel_opportunity/ports.py           /app/opportunity-core/opintel_opportunity/ports.py
+COPY packages/opportunity-core/src/opintel_opportunity/rules.py           /app/opportunity-core/opintel_opportunity/rules.py
+COPY packages/opportunity-core/src/opintel_opportunity/workflow.py        /app/opportunity-core/opintel_opportunity/workflow.py
+COPY packages/opportunity-local/src/opintel_opportunity_local/adapters.py    /app/opportunity-local/opintel_opportunity_local/adapters.py
+COPY packages/opportunity-local/src/opintel_opportunity_local/persistence.py /app/opportunity-local/opintel_opportunity_local/persistence.py
+COPY packages/audit-core/src/opintel_audit/composition.py       /app/audit-core/opintel_audit/composition.py
+COPY packages/audit-core/src/opintel_audit/domain.py            /app/audit-core/opintel_audit/domain.py
+COPY packages/audit-local/src/opintel_audit_local/persistence.py /app/audit-local/opintel_audit_local/persistence.py
+COPY packages/demo-core/src/opintel_demo/composition.py         /app/demo-core/opintel_demo/composition.py
+COPY packages/demo-core/src/opintel_demo/domain.py              /app/demo-core/opintel_demo/domain.py
+COPY packages/demo-local/src/opintel_demo_local/persistence.py  /app/demo-local/opintel_demo_local/persistence.py
+COPY packages/outreach-core/src/opintel_outreach/application.py /app/outreach-core/opintel_outreach/application.py
+COPY packages/outreach-core/src/opintel_outreach/composition.py /app/outreach-core/opintel_outreach/composition.py
+COPY packages/outreach-core/src/opintel_outreach/domain.py      /app/outreach-core/opintel_outreach/domain.py
+COPY packages/outreach-local/src/opintel_outreach_local/persistence.py /app/outreach-local/opintel_outreach_local/persistence.py
