@@ -319,11 +319,21 @@ _QUOTABLE_CATEGORIES = frozenset(
 _DIGIT = re.compile(r"\d")
 
 
+_TRAIL = "-,;:.&/|" + chr(0x2013) + chr(0x2014)  # punct + en/em dash
+
+
 def short_phrase(phrase: str, max_words: int = 9) -> str:
     words = _clean_phrase(phrase).split()
-    if len(words) <= max_words:
-        return " ".join(words)
-    return " ".join(words[:max_words]).rstrip(",;:")
+    if len(words) > max_words:
+        words = words[:max_words]
+    # drop trailing dangling connector words / punctuation so a truncated quote
+    # does not end mid-clause.
+    while words and (
+        words[-1].strip(_TRAIL) == ""
+        or words[-1].lower() in {"and", "or", "the", "a", "for", "to", "of", "with"}
+    ):
+        words.pop()
+    return " ".join(words).rstrip(_TRAIL + " ")
 
 
 def reader_fact_sentence(business_name: str, category: FactCategory, phrase: str) -> str:
