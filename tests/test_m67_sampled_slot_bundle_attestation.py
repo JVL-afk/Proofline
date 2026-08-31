@@ -164,6 +164,8 @@ def test_member_digests_match_raw_file_bytes(name: str) -> None:
     ],
 )
 def test_tfvars_binding_equals_canonical_calculator(name: str, tfvar: str) -> None:
+    if not TFVARS.is_file():
+        pytest.skip("terraform.tfvars is operator-local and absent in this checkout")
     text = TFVARS.read_text(encoding="utf-8")
     match = re.search(rf'^{tfvar}\s*=\s*"([0-9a-f]{{64}})"', text, re.M)
     assert match, f"{tfvar} not found in terraform.tfvars"
