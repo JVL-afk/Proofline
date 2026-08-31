@@ -1,0 +1,93 @@
+{
+  "allelements": {
+    "m2_priority_band": "LOW",
+    "m2_statement": "All Elements Heating & Air publicly presents a public request path (\"Commercial HVAC - All Elements Heating & Air LLC Get Free Quote Air Conditioning Heating HVAC Service Agreements Commercial Services Commercial HVAC More\"), describes commercial HVAC work (\"Contact - All Elements Heating & Air LLC Get Free Quote Air Conditioning Heating HVAC Service Agreements Commercial Services Commercial HVAC More Commercial\"), and publishes response expectations for new inquiries on its contact page. Given those observed public intake surfaces, a structured acknowledgement and qualification workflow could be evaluated. Current response performance, internal routing, lead volume, conversion, feasibility, and economic impact remain unknown pending business verification.",
+    "m3_finding_kinds": [
+      "crawl_coverage",
+      "observed_commercial_context",
+      "observed_intake_surface",
+      "observed_response_commitment",
+      "what_remains_unknown"
+    ],
+    "m4_service_location": [
+      "north_texas",
+      "central_texas",
+      "gulf_coast",
+      "other",
+      "unknown"
+    ],
+    "m4_service_need": [
+      "Commercial HVAC - All Elements Heating & Air",
+      "Contact - All Elements Heating & Air LLC Get",
+      "other",
+      "unknown"
+    ],
+    "m5_first_email": "Hello {{functional_role_or_team}},\n\nyour website has a public request path \u2014 \"Commercial HVAC - All Elements Heating\".\n\nyour site describes commercial HVAC work \u2014 \"Contact - All Elements Heating & Air\".\n\na step that acknowledges and sorts new service requests could be evaluated.\n\nThis is not a claim about how your team works today \u2014 we have no visibility into that.\n\nWe prepared a short deterministic simulation based only on approved public information.\n\nIt is a simulation\u2014not a system deployed, connected, official, or operated by the business.\n\nI noticed your site offers \"Commercial HVAC - All Elements Heating\". I'm curious \u2014 roughly how many commercial inquiries arrive in a typical month, and how after-hours ones are handled today?\n\n{{verified_sender_signature}}\n\n{{required_postal_disclosure}}\n\n{{approved_opt_out_instruction}}",
+    "m5_personalization": {
+      "company_specific_segment_count": 2,
+      "distinct_fact_classes": 2,
+      "passes_gate": true
+    },
+    "m5_subject": "A note about the All Elements Heating & Air service path"
+  },
+  "bncair": {
+    "m2_priority_band": "LOW",
+    "m2_statement": "BNCAIR publicly presents a public request path (\"Contact Us\") and describes commercial HVAC work (\"Commercial HVAC Services\"). Given those observed public intake surfaces, a structured acknowledgement and qualification workflow could be evaluated. Current response performance, internal routing, lead volume, conversion, feasibility, and economic impact remain unknown pending business verification.",
+    "m3_finding_kinds": [
+      "crawl_coverage",
+      "observed_commercial_context",
+      "observed_intake_surface",
+      "what_remains_unknown"
+    ],
+    "m4_service_location": [
+      "north_texas",
+      "central_texas",
+      "gulf_coast",
+      "other",
+      "unknown"
+    ],
+    "m4_service_need": [
+      "Contact Us",
+      "Commercial HVAC Services",
+      "other",
+      "unknown"
+    ],
+    "m5_first_email": "Hello {{functional_role_or_team}},\n\nyour website has a public request path \u2014 \"Contact Us\".\n\nyour site describes commercial HVAC work \u2014 \"Commercial HVAC Services\".\n\na step that acknowledges and sorts new service requests could be evaluated.\n\nThis is not a claim about how your team works today \u2014 we have no visibility into that.\n\nWe prepared a short deterministic simulation based only on approved public information.\n\nIt is a simulation\u2014not a system deployed, connected, official, or operated by the business.\n\nI noticed your site offers \"Contact Us\". I'm curious \u2014 roughly how many commercial inquiries arrive in a typical month, and how after-hours ones are handled today?\n\n{{verified_sender_signature}}\n\n{{required_postal_disclosure}}\n\n{{approved_opt_out_instruction}}",
+    "m5_personalization": {
+      "company_specific_segment_count": 1,
+      "distinct_fact_classes": 1,
+      "passes_gate": true
+    },
+    "m5_subject": "A note about the BNCAIR service path"
+  },
+  "webbair": {
+    "m2_priority_band": "HIGH",
+    "m2_statement": "Webb Air publicly presents a public request path (\"Request Estimate Schedule Service Air Conditioning Air Conditioning Service Air Conditioning Maintenance Air Conditioning Installation Ductless HVAC Heating\"), describes commercial HVAC work (\"What Defines Light Commercial HVAC\"), publishes response expectations for new inquiries on its contact page, and lists a public service area (\"Service Areas\"). Given those observed public intake surfaces, a structured acknowledgement and qualification workflow could be evaluated. Current response performance, internal routing, lead volume, conversion, feasibility, and economic impact remain unknown pending business verification.",
+    "m3_finding_kinds": [
+      "crawl_coverage",
+      "observed_commercial_context",
+      "observed_intake_surface",
+      "observed_response_commitment",
+      "observed_service_area",
+      "what_remains_unknown"
+    ],
+    "m4_service_location": [
+      "Service Areas",
+      "other",
+      "unknown"
+    ],
+    "m4_service_need": [
+      "Request Estimate Schedule Service Air",
+      "What Defines Light Commercial HVAC",
+      "other",
+      "unknown"
+    ],
+    "m5_first_email": "Hello {{functional_role_or_team}},\n\nyour website has a public request path \u2014 \"Request Estimate Schedule Service Air Conditioning Air\".\n\nyour site describes commercial HVAC work \u2014 \"What Defines Light Commercial HVAC\".\n\na step that acknowledges and sorts new service requests could be evaluated.\n\nThis is not a claim about how your team works today \u2014 we have no visibility into that.\n\nWe prepared a short deterministic simulation based only on approved public information.\n\nIt is a simulation\u2014not a system deployed, connected, official, or operated by the business.\n\nI noticed your site offers \"Request Estimate Schedule Service Air Conditioning Air\". I'm curious \u2014 roughly how many commercial inquiries arrive in a typical month, and how after-hours ones are handled today?\n\n{{verified_sender_signature}}\n\n{{required_postal_disclosure}}\n\n{{approved_opt_out_instruction}}",
+    "m5_personalization": {
+      "company_specific_segment_count": 2,
+      "distinct_fact_classes": 2,
+      "passes_gate": true
+    },
+    "m5_subject": "A note about the Webb Air service path"
+  }
+}

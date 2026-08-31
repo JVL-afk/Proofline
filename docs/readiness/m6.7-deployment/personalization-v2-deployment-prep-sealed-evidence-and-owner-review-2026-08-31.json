@@ -1,0 +1,96 @@
+{
+  "record_type": "M67_PERSONALIZATION_V2_DEPLOYMENT_PREP_SEALED_EVIDENCE_AND_OWNER_REVIEW",
+  "prepared_at": "2026-08-31",
+  "implementation_head": "a2198e1",
+  "branch": "worktree-slot01-window2-execution",
+  "status": "PAUSED_FOR_OWNER_REVIEW_BEFORE_IMAGE_BUILD_AND_TERRAFORM",
+  "authorization": "Deploy-prep authorization for M2-M5 EVIDENCE-PRESERVING PERSONALIZATION V2 (this session).",
+
+  "step_1_preflight_dormancy": {
+    "kill_switch": "TRIPPED (v33, unchanged)",
+    "research_release": "not_authorized, revoked_at set, suspended_reason CONSUMED:M2_INSUFFICIENT_EVIDENCE (v35)",
+    "sampled_slot_execution_approval": "NOT_AUTHORIZED (v31)",
+    "controlled_egress_lease": "NOT_AUTHORIZED (v15)",
+    "ecs_services": "research-worker 0/0/0 (:22), intelligence-worker 0/0/0 (:19), controlled-egress 0/0/0 (:18)",
+    "running_tasks": 0,
+    "terraform": "No changes. Your infrastructure matches the configuration. (plan -detailed-exitcode = 0)",
+    "verdict": "FULLY DORMANT"
+  },
+
+  "step_2_bounded_readonly_evidence_export": {
+    "purpose": "Replace the reconstructed PERSONALIZATION_V2 regression fixtures with exact sealed Slot 02-04 M1 evidence rows.",
+    "method": "Owner registered ONE transient revision of the existing m67-phase1-research-worker family (exact deployed image sha256:34e5974f..., read-only diagnostic entryPoint); operator RunTask'd once; owner deregistered in finally. run_invpc3.py pattern.",
+    "transient_task_definitions": {
+      "m67-phase1-research-worker:29": "aborted on a client-side column-name bug (research_runs has no crawl_protocol_version); all SELECTs read-only, 0 rows emitted, 0 mutation; INACTIVE (deregistered)",
+      "m67-phase1-research-worker:30": "corrected SELECT succeeded, exit 0; INACTIVE (deregistered)"
+    },
+    "select_scope": "research_runs (status + page counts), research_pages (normalized_url + page_purpose + status), research_evidence (extracted_fragment + fact_class + content_sha256 + locator + snapshot_version + source_uri + page_id) for the three sealed businesses' latest completed research run. SELECT only. extracted_fragment is already-minimised contact-scrubbed public text authorised for durable storage; a defensive contact scrub was re-applied on export.",
+    "post_export_state": "kill switch TRIPPED v33 unchanged, services 0/0/0 unchanged, 0 running tasks, transient revisions INACTIVE, no AWS/DB mutation other than task-definition register/deregister + ephemeral task execution.",
+    "export_artifact": "tests/fixtures/personalization_v2_sealed_evidence.json",
+
+    "exact_sealed_row_counts": {
+      "Webb Air": {
+        "run_status": "succeeded", "pages_attempted": 24, "pages_succeeded": 24, "evidence": 161,
+        "fact_class_histogram": {"public_service_description": 89, "public_other": 41, "public_inbound_path": 29, "public_service_area": 2}
+      },
+      "BNCAIR": {
+        "run_status": "succeeded", "pages_attempted": 3, "pages_succeeded": 3, "evidence": 20,
+        "fact_class_histogram": {"public_service_description": 12, "public_inbound_path": 5, "public_other": 3}
+      },
+      "All Elements Heating & Air": {
+        "run_status": "partial", "pages_attempted": 20, "pages_succeeded": 13, "pages_failed": 7, "evidence": 115,
+        "fact_class_histogram": {"public_service_description": 84, "public_other": 24, "public_inbound_path": 4, "public_about": 3}
+      }
+    },
+    "match_to_prior_review_doc": "IDENTICAL. Every page count, run status, evidence count and fact_class histogram matches slots02-04-m5-product-quality-review-2026-08-30.md exactly."
+  },
+
+  "step_3_regression_against_exact_fixtures": {
+    "method": "Rebuilt the three fixtures from the exact sealed rows (one seeded page per distinct page_purpose so the deterministic selector's page-purpose ranking is faithful); ran the full M1->M5 pipeline; regenerated the golden.",
+    "result": "All 9 structural PERSONALIZATION_V2 fixture tests PASS on the exact sealed evidence (Webb response/service facts survive; All Elements partial-crawl visible in M3; BNCAIR sparse; name alone fails gate; all-public_other fails M5 approval; DRAFT_INCOMPLETE; no score leak; 3 companies diverge; byte-identical determinism).",
+    "sealed_golden_candidate": "tests/fixtures/personalization_v2_golden_sealed_candidate.json (NOT yet promoted to personalization_v2_golden.json - pending owner ruling on OWNER_REVIEW_ITEM_A)"
+  },
+
+  "step_4_semantic_comparison_reconstructed_vs_exact_sealed": {
+    "Webb Air": "STRUCTURALLY IDENTICAL. Band HIGH=HIGH. M3 finding kinds identical set (6): intake, commercial, response_commitment, service_area, what_remains_unknown, crawl_coverage. M5 personalization identical (2 segments / 2 fact classes / passes_gate). Only the exact quoted minimized page text changes (the intended re-pin).",
+    "BNCAIR": "STRUCTURALLY IDENTICAL. Band LOW=LOW. M3 finding kinds identical set (4): intake, commercial, what_remains_unknown, crawl_coverage. M5 personalization identical (1 / 1 / passes_gate). service_location synthetic fallback in both. Only exact quotes change.",
+    "All Elements Heating & Air": {
+      "band": "LOW = LOW (unchanged)",
+      "partial_crawl_visible_in_M3": "yes = yes (unchanged)",
+      "DRAFT_INCOMPLETE": "yes = yes (unchanged)",
+      "passes_personalization_gate": "true = true (unchanged)",
+      "three_bounded_deltas": [
+        "M3 finding kinds: reconstructed had observed_service_area; exact sealed has observed_response_commitment instead. Count unchanged (5). Cause: the sealed All Elements crawl produced ZERO public_service_area rows (the site's 'Marshall, TX' / 'East Texas' geo content classified as public_service_description / public_other, because M1 classify_public_fact keys public_service_area on the literal phrases 'service area' / 'areas we serve' / 'cities we serve' / 'locations', none of which appear); and it DID produce 5 response-commitment cue rows (public_other: 'Fast & Reliable Service, 24/7', ' 24 Hour Emergency Services and Free Quotes' x4).",
+        "M4 service_location: reconstructed was company-derived ('Areas we serve: Marshall, Texas...'); exact sealed falls back to the synthetic Texas-region set (north_texas / central_texas / gulf_coast / other / unknown) because there is no public_service_area evidence. service_need remains company-derived in both.",
+        "M5 personalization assessment: reconstructed 1 company-specific segment / 1 fact class; exact sealed 2 segments / 2 fact classes (more personalized, not less). Both pass the gate."
+      ],
+      "assessment": "NOT a threshold / economics / truth-rule / mechanism change. The V2 mechanism behaves correctly on the exact data - it selects different but equally valid, equally evidence-bound facts. It is a fixture-accuracy correction: the reconstruction guessed a public_service_area fact class the real classifier does not assign, and missed a 24/7 response cue the real site publishes. Every authorization validation target still holds. But the golden EXPECTATIONS for All Elements do change, so this is surfaced for an explicit owner ruling per the authorization's instruction to 'stop for owner review rather than silently changing the golden expectations'."
+    }
+  },
+
+  "OWNER_REVIEW_ITEM_A": {
+    "question": "Is the All Elements golden-expectation change (service_area finding -> response_commitment finding; service_location company-derived -> synthetic fallback; personalization 1/1 -> 2/2) a MATERIAL contradiction that should halt deployment, or an acceptable fixture-accuracy correction to proceed with?",
+    "recommendation": "PROCEED with the exact re-pinned golden. Webb Air and BNCAIR are byte-identical; the All Elements delta is bounded, non-regressive (still LOW, still 5 findings, still passes the gate with MORE personalization, still shows partial crawl), and confirms the V2 mechanism on the exact sealed data. No threshold, economics, or truth-rule behaviour differs."
+  },
+
+  "OWNER_REVIEW_ITEM_B": {
+    "question": "How should sampled_slot_stage_coordinator_sha256 and sampled_slot_m2_m5_runtime_sha256 be computed for the link-8 tfvars update?",
+    "finding": "There is NO in-repo generator for these two bundle-binding hashes anywhere in the repository or the readiness docs. They were introduced in commit f1e1acf as REPLACE_WITH_SHA256 placeholders and have been STATIC declared attestations since the original v5 deployment (values fe0f34c9... / 40e6511a..., unchanged through v5 -> link 6 -> link 7). The runtime binding check (release_application.py) only verifies tfvars-env == approval-envelope consistency; it never recomputes a hash from source. The link-7 deployment evidence explicitly states these four bundle bindings are NOT recomputed: 'other four approval bindings: unchanged ... image digest is authoritative'.",
+    "options": [
+      "B1 (link-7 precedent): leave stage_coordinator_sha256 and m2_m5_runtime_sha256 UNCHANGED; the successor image digest carries the attestation. Update only worker_image_uri / controlled_egress_image_uri / research_runtime_revision (the successor digest). This is the exact link-7 pattern and requires no invented method.",
+      "B2: define and document a new deterministic method (e.g. in-image sha256sum of a sorted tar of a named file set - production_runtime.py + the M2-M5 composition modules for m2_m5_runtime; orchestration.py + coordinator_persistence.py + execution.py for stage_coordinator) and record the exact file list + method in the link-8 deployment evidence for owner verification.",
+      "B3: owner supplies the exact bundle definition / values."
+    ],
+    "recommendation": "B1 - follow the link-7 precedent (image digest authoritative). The authorization's instruction to 'update only ... stage_coordinator_sha256; m2_m5_runtime_sha256; exact successor image digest' presumes a well-defined target value that does not exist in-repo; inventing a bundle-hash method risks a wrong attestation. If the owner wants the attestations to visibly reflect the M2-M5 source change, choose B2 and I will implement and document the method."
+  },
+
+  "not_done_pending_owner": [
+    "image chain link 8 build / publish / representation-equivalence / ECR scan",
+    "tfvars update",
+    "ADR-0075 terraform plan + semantic review",
+    "PostgreSQL additive migration + convergence + idempotency verification",
+    "synthetic end-to-end validation",
+    "Slots 07-24 batch authorization gate"
+  ],
+  "constraints_honored": "One bounded read-only in-VPC SELECT export only; no real-company execution; Slots 02-04 not rerun; Slots 07-24 not started; M6.6 / Claude / AI not activated; no benchmarks or economic assumptions; no M2 threshold change; environment restored to full dormancy; Terraform NO_CHANGES."
+}

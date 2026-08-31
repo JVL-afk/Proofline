@@ -1,0 +1,2430 @@
+{
+ "_source": "ONE bounded read-only in-VPC SELECT export of the sealed Slot 02-04 M1 evidence (research-worker transient task defs :29 aborted on a client-side column-name bug with 0 rows / 0 mutation, :30 succeeded; both INACTIVE). extracted_fragment is already-minimised contact-scrubbed public text; a defensive contact scrub was re-applied on export.",
+ "companies": {
+  "Webb Air": {
+   "slot": 2,
+   "business_id": "15ea883c-cd9d-5166-b97a-969bdddebecd",
+   "exact_hostname": "webbair.com",
+   "run_status": "succeeded",
+   "pages_attempted": 24,
+   "pages_succeeded": 24,
+   "fact_class_histogram": {
+    "public_inbound_path": 29,
+    "public_other": 41,
+    "public_service_area": 2,
+    "public_service_description": 89
+   },
+   "page_status_counts": {
+    "fetched": 24
+   },
+   "evidence": [
+    {
+     "fragment": "Furnace Maintenance, Furnace Service, Heater Maintenance & Heating Service | Fort Worth, TX | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nHeating Service\nHeating Service in Fort Worth, TX\nWhen temperatures drop across North Texas, a reliable heating system becomes the backbone of your home’s comfort and safety. At\nWebb Air\n, we deliver comprehensive heating service designed to keep your furnace, heat pump, or dual-system running at peak performance throughout every cold snap and winter season. Founded by Horace Webb in 1936, we are a family-owned and operated HVAC company serving the greater Fort Worth, TX area, and our decades of experience have taught us that proactive heating service is the single most effective way to prevent unexpected breakdowns, reduce energy costs, and extend the lifespan of your equipment.\nThe U.S. Department of Energy estimates that heating accounts for roughly 29 percent of a typical household’s energy bill, making it the single largest energy expense in most American homes. Without regular professional maintenance, that figure can climb even higher as systems lose efficiency due to dirty components, worn parts, and neglected calibrations. Our approach to heating service is rooted in thorough diagnostics and preventive care that address small issues before they become costly heating repair emergencies.\nOur Comprehensive Heating Servi",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "heating",
+     "content_sha256": "a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39"
+    },
+    {
+     "fragment": "AC Repair, Heating Service, AC Service & HVAC Installation | Fort Worth, TX | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nPlease note that information is still forthcoming and evolving. There are several unknowns at the state level, and changes are inevitable.\nTo help reduce inflation, decrease carbon emissions, and more, the U.S. Government has passed the Inflation Reduction Act (IRA), which includes several tax credits for installing ENERGY STAR® certified home heating and cooling products. The IRA consists of rebates and tax credits for HVAC.\nTax Section 25C: Nonbusiness Energy Property Credit\nTax Section 179D: Commercial Buildings Energy-Efficiency Tax Deduction\nUp to $4,000 for electrical load service center\nProvides rebates for energy efficiency upgrades that improve a single-family homes or multi-family building’s overall energy performance.\nThe Consortium for Energy Efficiency (CEE) is an award-winning non-profit comprised of U.S. and Canadian energy efficiency administrators working together to accelerate the development and availability of energy-efficient products and services. CEE harmonizes program approaches in North America by supporting the production and market adoption of energy-efficient and connected equipment, installation and maintenance guidance, and facilitating program opportunities for each unique customer.\nLMI is determined at the var",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "faq",
+     "content_sha256": "ebf62e86d081d8926a2db6313698c93e9f495dab5314bc5a8f7f64c291ac3174",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:ebf62e86d081d8926a2db6313698c93e9f495dab5314bc5a8f7f64c291ac3174"
+    },
+    {
+     "fragment": "Arlington, TX",
+     "fact_class": "public_other",
+     "page_purpose": "residential_hvac",
+     "content_sha256": "4fa2f0ec410ded9470296e883b4f3d06d5727a0be5f034fdd9ed2c7abf98608e",
+     "locator": "heading:6",
+     "snapshot_version": "minimized-sha256:4fa2f0ec410ded9470296e883b4f3d06d5727a0be5f034fdd9ed2c7abf98608e"
+    },
+    {
+     "fragment": "Flat-Rate Pricing | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nWebb Air employs a customer-friendly, flat-rate pricing system for residential repairs. Flat-rate pricing is based on national averages for estimated repair time allowances. It is intended to provide consumers with a fair and level pricing system that eliminates the risk of inaccurate estimates and repairs that take longer than they should. Let’s face it, because of varying experience levels, some technicians take longer than others to make the same repair. With flat rate pricing, it doesn’t matter. If a repair takes longer than the allotted time, that’s our problem not yours.\nOnce the initial repair has been selected, approved, and completed the Webb Air technician will perform a multi point inspection on the entire system. This is important because sometimes there are underlying issues that may have contributed to the initial system failure. In some cases the technician may find the need to make additional adjustments or repairs. The bottom line is, we want to be thorough and make sure we leave your system performing the way it should.\nYou know the prices before the work is performed\nAs a consumer you should be aware that many companies advertise low initial diagnostic fees or claims that they do not charge overtime or additional after hours service fees. Lots of companies use this technique to g",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "estimate_quote",
+     "content_sha256": "4b739c84cba682974bd9cb0fdb20ae0f61c12f01cb5c74c4ff6d79ee7a82fcc4",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:4b739c84cba682974bd9cb0fdb20ae0f61c12f01cb5c74c4ff6d79ee7a82fcc4"
+    },
+    {
+     "fragment": "Furnace Installation Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a",
+     "locator": "heading:9",
+     "snapshot_version": "minimized-sha256:9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a"
+    },
+    {
+     "fragment": "Understanding Residential HVAC Maintenance Programs in Arlington",
+     "fact_class": "public_service_description",
+     "page_purpose": "residential_hvac",
+     "content_sha256": "4fa2f0ec410ded9470296e883b4f3d06d5727a0be5f034fdd9ed2c7abf98608e",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:4fa2f0ec410ded9470296e883b4f3d06d5727a0be5f034fdd9ed2c7abf98608e"
+    },
+    {
+     "fragment": "Industry Trends and the Future of AC Service",
+     "fact_class": "public_other",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5",
+     "locator": "heading:5",
+     "snapshot_version": "minimized-sha256:ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5"
+    },
+    {
+     "fragment": "Air Conditioning Service in Fort Worth, TX",
+     "fact_class": "public_service_description",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5"
+    },
+    {
+     "fragment": "Air Conditioning Service, HVAC Service, AC Service Near Me & AC Service | Fort Worth, TX | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5"
+    },
+    {
+     "fragment": "Fort Worth, TX",
+     "fact_class": "public_other",
+     "page_purpose": "heating",
+     "content_sha256": "a91e983bb101f6f90c3289a7bd4bce23decea3973974e78f5945733a6f34591c",
+     "locator": "heading:6",
+     "snapshot_version": "minimized-sha256:a91e983bb101f6f90c3289a7bd4bce23decea3973974e78f5945733a6f34591c"
+    },
+    {
+     "fragment": "What Defines Light Commercial HVAC",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658",
+     "locator": "heading:1",
+     "snapshot_version": "minimized-sha256:19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658"
+    },
+    {
+     "fragment": "Fort Worth, TX",
+     "fact_class": "public_other",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "206ab3e66f0e429694f7fc152587d81cc6d0854e8bc155e03e3cd570de03baaa",
+     "locator": "heading:6",
+     "snapshot_version": "minimized-sha256:206ab3e66f0e429694f7fc152587d81cc6d0854e8bc155e03e3cd570de03baaa"
+    },
+    {
+     "fragment": "Get Started With a Commercial Maintenance Program",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "c606b847875be7eaaa2e682b94a009afb2696880bbf14288dc4c4048dfa92bbf",
+     "locator": "heading:6",
+     "snapshot_version": "minimized-sha256:c606b847875be7eaaa2e682b94a009afb2696880bbf14288dc4c4048dfa92bbf"
+    },
+    {
+     "fragment": "Service Areas | Webb Air",
+     "fact_class": "public_service_area",
+     "page_purpose": "service_area_location",
+     "content_sha256": "65944d03799a0b631ba142c84a0431d64ea45b02d73e7e6279c52c418830caaa",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:65944d03799a0b631ba142c84a0431d64ea45b02d73e7e6279c52c418830caaa"
+    },
+    {
+     "fragment": "Commercial Maintenance Programs in Arlington, TX",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "c606b847875be7eaaa2e682b94a009afb2696880bbf14288dc4c4048dfa92bbf",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:c606b847875be7eaaa2e682b94a009afb2696880bbf14288dc4c4048dfa92bbf"
+    },
+    {
+     "fragment": "Air Conditioning Service, HVAC Service, AC Service Near Me & AC Service | Fort Worth, TX | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nAir Conditioning Service\nAir Conditioning Service in Fort Worth, TX\nWhen temperatures in Fort Worth climb into the triple digits during peak summer months, a properly functioning air conditioning system is not a luxury but a necessity. At\nWebb Air\n, we deliver comprehensive air conditioning service designed to keep your home or business comfortable throughout every season. Founded by Horace Webb in 1936, we are a family-owned and operated HVAC company serving the greater Fort Worth, TX area, and our decades of experience have taught us that regular AC service is the single most important factor in extending the life of your cooling equipment while maintaining peak energy efficiency.\nThe demand for reliable AC service continues to grow as average summer temperatures rise and homeowners become increasingly aware of the relationship between system maintenance and energy costs. According to the U.S. Department of Energy, heating and cooling account for approximately 48 percent of the energy used in a typical American home. A poorly maintained air conditioning system can consume 15 to 25 percent more energy than one that receives regular professional attention. Our commitment to honest, courteous, thorough, and professional service e",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5"
+    },
+    {
+     "fragment": "The Webb Air Difference",
+     "fact_class": "public_other",
+     "page_purpose": "service_area_location",
+     "content_sha256": "725edf174fbb21995df85e58e772fce82074241e28aa7922a8ee3de2391199a0",
+     "locator": "heading:3",
+     "snapshot_version": "minimized-sha256:725edf174fbb21995df85e58e772fce82074241e28aa7922a8ee3de2391199a0"
+    },
+    {
+     "fragment": "Air Conditioning Maintenance, AC Maintenance Near Me & AC Maintenance | Fort Worth, TX | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nAir Conditioning Maintenance\nAir Conditioning Maintenance in Fort Worth, TX\nKeeping your air conditioning system in peak condition is not a luxury in Fort Worth, TX — it is a necessity. With summer temperatures routinely climbing above 100 degrees, a well-maintained AC system is the difference between a comfortable home and a potentially dangerous living environment. At\nWebb Air\n, we have been delivering honest, courteous, thorough, and professional services since 1936 when Horace Webb founded our family-owned and operated HVAC company. Over the decades, we have refined our air conditioning maintenance programs to help homeowners and business owners across the greater Fort Worth area get the maximum performance and longevity from their cooling systems.\nAccording to the U.S. Department of Energy, heating and cooling account for roughly 48 percent of a typical household’s energy consumption, making HVAC systems the single largest energy expense in most American homes. Regular AC maintenance can reduce that energy usage by 15 to 25 percent, depending on the age and condition of the equipment. These are not abstract numbers. For families in Fort Worth dealing with extended cooling seasons that often stretch from April through October,",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "566e8fc27da37e4b19153053a589213508a72ae4036b5bba36c035b802a751c5",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:566e8fc27da37e4b19153053a589213508a72ae4036b5bba36c035b802a751c5"
+    },
+    {
+     "fragment": "Arlington, TX",
+     "fact_class": "public_other",
+     "page_purpose": "service_area_location",
+     "content_sha256": "c27ce9156978841cae23ae77516876d6467f46cca3c820a04d53697c3170a9df",
+     "locator": "heading:7",
+     "snapshot_version": "minimized-sha256:c27ce9156978841cae23ae77516876d6467f46cca3c820a04d53697c3170a9df"
+    },
+    {
+     "fragment": "AC Repair, Heating Service, Heating Repair & HVAC Installation | Fort Worth, TX | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nWelcome To Webb Air Of Fort Worth\nCommercial Maintenance\nWebb Air's commercial installation group specializes in light commercial systems, such as rooftop systems, chillers, boilers, variable volume systems and unit heaters.\nA Top Quality Heating & Cooling Service Company\nFor affordable residential and commercial HVAC expertise, Webb Air is the smart choice in the Fort Worth Metroplex. We set ourselves above the rest through unequaled quality. Contact us at ([PHONE_REDACTED] for\ndesign, installation, complex retrofit, seasonal maintenance plans, and skilled repair of all heating and cooling equipment types. We specialize in everything from home/building automation and indoor air quality to\nWhat Makes Webb Air Worth Choosing\nSave On Your Next HVAC Service:\nHeating Tune-Up\nAir Conditioning Tune-Up\nWebb Air offers a 10% discount, to all active duty military personnel, reservists, retired or disabled veterans, on service repairs.\nHVAC Installation\nAC Service\nHeating Repair\nHeating Service ∴ Fort Worth, TX\nFast, Friendly, and fair. I have been using Webb for 6yrs at a Commercial business and have always received excellent service.\nTheir service plan is a great tool to keep equipment working properly and filters changed 2x a year for forgetful",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "heating",
+     "content_sha256": "a91e983bb101f6f90c3289a7bd4bce23decea3973974e78f5945733a6f34591c",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:a91e983bb101f6f90c3289a7bd4bce23decea3973974e78f5945733a6f34591c"
+    },
+    {
+     "fragment": "Central AC Maintenance",
+     "fact_class": "public_service_description",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "566e8fc27da37e4b19153053a589213508a72ae4036b5bba36c035b802a751c5",
+     "locator": "heading:7",
+     "snapshot_version": "minimized-sha256:566e8fc27da37e4b19153053a589213508a72ae4036b5bba36c035b802a751c5"
+    },
+    {
+     "fragment": "The Webb Air Methodology",
+     "fact_class": "public_other",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "c606b847875be7eaaa2e682b94a009afb2696880bbf14288dc4c4048dfa92bbf",
+     "locator": "heading:4",
+     "snapshot_version": "minimized-sha256:c606b847875be7eaaa2e682b94a009afb2696880bbf14288dc4c4048dfa92bbf"
+    },
+    {
+     "fragment": "The Webb Air Advantage",
+     "fact_class": "public_other",
+     "page_purpose": "service_area_location",
+     "content_sha256": "c27ce9156978841cae23ae77516876d6467f46cca3c820a04d53697c3170a9df",
+     "locator": "heading:3",
+     "snapshot_version": "minimized-sha256:c27ce9156978841cae23ae77516876d6467f46cca3c820a04d53697c3170a9df"
+    },
+    {
+     "fragment": "Fort Worth, TX",
+     "fact_class": "public_other",
+     "page_purpose": "heating",
+     "content_sha256": "9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a",
+     "locator": "heading:12",
+     "snapshot_version": "minimized-sha256:9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a"
+    },
+    {
+     "fragment": "Commercial Maintenance Programs | Arlington, TX | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "0e5a3d59aadeb864c299cb3c866b24abdc10d89413a02d7155374eaaf220e195",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:0e5a3d59aadeb864c299cb3c866b24abdc10d89413a02d7155374eaaf220e195"
+    },
+    {
+     "fragment": "Arlington, TX: Quality HVAC Services by Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "service_area_location",
+     "content_sha256": "c27ce9156978841cae23ae77516876d6467f46cca3c820a04d53697c3170a9df",
+     "locator": "heading:1",
+     "snapshot_version": "minimized-sha256:c27ce9156978841cae23ae77516876d6467f46cca3c820a04d53697c3170a9df"
+    },
+    {
+     "fragment": "Industry Trends and the Future of Heating Service",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39",
+     "locator": "heading:5",
+     "snapshot_version": "minimized-sha256:a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39"
+    },
+    {
+     "fragment": "Heating Maintenance",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39",
+     "locator": "heading:7",
+     "snapshot_version": "minimized-sha256:a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39"
+    },
+    {
+     "fragment": "Professional AC Installation Services in Arlington, TX",
+     "fact_class": "public_service_description",
+     "page_purpose": "service_area_location",
+     "content_sha256": "7ba80e1711cbae02adfb16d400da1c88a1a7ce58ae7268369a4d31782210ea6f",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:7ba80e1711cbae02adfb16d400da1c88a1a7ce58ae7268369a4d31782210ea6f"
+    },
+    {
+     "fragment": "Heating Maintenance",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "bd8cbb37e5cee80648a2d397a3e32a7fa61135dbd6b844f33561b4963be2906a",
+     "locator": "heading:7",
+     "snapshot_version": "minimized-sha256:bd8cbb37e5cee80648a2d397a3e32a7fa61135dbd6b844f33561b4963be2906a"
+    },
+    {
+     "fragment": "Service Areas",
+     "fact_class": "public_service_area",
+     "page_purpose": "service_area_location",
+     "content_sha256": "65944d03799a0b631ba142c84a0431d64ea45b02d73e7e6279c52c418830caaa",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:65944d03799a0b631ba142c84a0431d64ea45b02d73e7e6279c52c418830caaa"
+    },
+    {
+     "fragment": "Fort Worth, TX",
+     "fact_class": "public_other",
+     "page_purpose": "repair",
+     "content_sha256": "f8fa32ddfbd0254c73d35549fe7522a2ef7f169ce68ac4d1137f3124041833f7",
+     "locator": "heading:8",
+     "snapshot_version": "minimized-sha256:f8fa32ddfbd0254c73d35549fe7522a2ef7f169ce68ac4d1137f3124041833f7"
+    },
+    {
+     "fragment": "Towns We Service",
+     "fact_class": "public_other",
+     "page_purpose": "service_area_location",
+     "content_sha256": "65944d03799a0b631ba142c84a0431d64ea45b02d73e7e6279c52c418830caaa",
+     "locator": "heading:6",
+     "snapshot_version": "minimized-sha256:65944d03799a0b631ba142c84a0431d64ea45b02d73e7e6279c52c418830caaa"
+    },
+    {
+     "fragment": "AC Installation, HVAC Installation, Air Conditioner Installation & Air Conditioning Installation | Fort Worth, TX | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "192eade6b1144bb69ebde9f0d7dd4d58307fe562eb13db0ea5234f4f21bc8c75",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:192eade6b1144bb69ebde9f0d7dd4d58307fe562eb13db0ea5234f4f21bc8c75"
+    },
+    {
+     "fragment": "Commercial HVAC Near Me, Commercial HVAC, Commercial Heating & Commercial Air Conditioning | Fort Worth, TX | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658"
+    },
+    {
+     "fragment": "AC Repair and AC Service for Light Commercial Systems",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658",
+     "locator": "heading:4",
+     "snapshot_version": "minimized-sha256:19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658"
+    },
+    {
+     "fragment": "Benefits Of a Regularly Tuned-Up Air Conditioning System",
+     "fact_class": "public_service_description",
+     "page_purpose": "residential_hvac",
+     "content_sha256": "5dc13ccd5fc239528a3a72290d782f450b7ec0d056835ffe70aebc5d509bedef",
+     "locator": "heading:1",
+     "snapshot_version": "minimized-sha256:5dc13ccd5fc239528a3a72290d782f450b7ec0d056835ffe70aebc5d509bedef"
+    },
+    {
+     "fragment": "Air Conditioner Service",
+     "fact_class": "public_other",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5",
+     "locator": "heading:8",
+     "snapshot_version": "minimized-sha256:ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5"
+    },
+    {
+     "fragment": "Furnace Repair, AC Service, Heating Installation & HVAC Near Me | Arlington, TX | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "service_area_location",
+     "content_sha256": "c27ce9156978841cae23ae77516876d6467f46cca3c820a04d53697c3170a9df",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:c27ce9156978841cae23ae77516876d6467f46cca3c820a04d53697c3170a9df"
+    },
+    {
+     "fragment": "Fort Worth, TX",
+     "fact_class": "public_other",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "566e8fc27da37e4b19153053a589213508a72ae4036b5bba36c035b802a751c5",
+     "locator": "heading:9",
+     "snapshot_version": "minimized-sha256:566e8fc27da37e4b19153053a589213508a72ae4036b5bba36c035b802a751c5"
+    },
+    {
+     "fragment": "Commercial Maintenance Programs ∴ Arlington, TX",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "0e5a3d59aadeb864c299cb3c866b24abdc10d89413a02d7155374eaaf220e195",
+     "locator": "heading:6",
+     "snapshot_version": "minimized-sha256:0e5a3d59aadeb864c299cb3c866b24abdc10d89413a02d7155374eaaf220e195"
+    },
+    {
+     "fragment": "Heater Installation, Heating Replacement, Heating Replacement & Furnace Installation | Fort Worth, TX | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nHeating Installation\nHeating Installation Services in Fort Worth, TX\nWhen temperatures drop across North Texas, having a reliable heating system is not a luxury but a necessity. At\nWebb Air\n, we have been delivering dependable heating installation services to homeowners and businesses in the Fort Worth, TX area since our founding by Horace Webb in 1936. As a family-owned and operated HVAC company, we understand that choosing a new heating system represents a significant investment. That is why we approach every installation with the same commitment to quality, honesty, and professionalism that has sustained our reputation across multiple generations of customers.\nThe heating installation process involves far more than simply placing a new unit in your home. It requires careful assessment of your property, precise load calculations, expert equipment selection, and meticulous installation practices to ensure your system operates at peak efficiency for years to come. We continuously provide the highest quality products and services when it comes to heating and cooling installation, maintenance, and repair, making sure every step of the process meets or exceeds industry standards.\nUnderstanding the Heating Installation ",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "heating",
+     "content_sha256": "9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a"
+    },
+    {
+     "fragment": "Fort Worth, TX",
+     "fact_class": "public_other",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5",
+     "locator": "heading:9",
+     "snapshot_version": "minimized-sha256:ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5"
+    },
+    {
+     "fragment": "LMI",
+     "fact_class": "public_other",
+     "page_purpose": "faq",
+     "content_sha256": "ebf62e86d081d8926a2db6313698c93e9f495dab5314bc5a8f7f64c291ac3174",
+     "locator": "heading:12",
+     "snapshot_version": "minimized-sha256:ebf62e86d081d8926a2db6313698c93e9f495dab5314bc5a8f7f64c291ac3174"
+    },
+    {
+     "fragment": "Types of Heat Pumps We Install and Service",
+     "fact_class": "public_other",
+     "page_purpose": "heating",
+     "content_sha256": "9b78a8a784c5c5482ab47127b8194365886d6c38be03e2db816e509afef49914",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:9b78a8a784c5c5482ab47127b8194365886d6c38be03e2db816e509afef49914"
+    },
+    {
+     "fragment": "Heat Pump Repair, Heat Pump Installation, Heat Pump Installation Near Me & Heat Pump Replacement | Fort Worth, TX | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nHeat pumps have rapidly become one of the most sought-after HVAC solutions for homeowners across the United States, and the Fort Worth, TX area is no exception. Unlike traditional systems that generate heat by burning fuel, heat pumps work by transferring thermal energy from one location to another, making them remarkably efficient for both heating and cooling. At\nWebb Air\n, we specialize in HVAC installation, heating service, and AC service, and we have seen firsthand how heat pump technology has transformed home comfort for families throughout the greater Fort Worth area. As a family-owned and operated HVAC company founded by Horace Webb in 1936, we bring decades of experience to every heat pump project we undertake.\nThe key components of a heat pump system include an outdoor unit containing a compressor and condenser coil, an indoor air handler with an evaporator coil, a refrigerant that circulates between the two units, and an expansion valve that regulates refrigerant flow. The refrigerant absorbs and releases heat as it cycles between liquid and gas states, creating an efficient heat exchange process. Modern heat pumps use variable-speed compressors that adjust output to match your home’s exact hea",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "heating",
+     "content_sha256": "9b78a8a784c5c5482ab47127b8194365886d6c38be03e2db816e509afef49914",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:9b78a8a784c5c5482ab47127b8194365886d6c38be03e2db816e509afef49914"
+    },
+    {
+     "fragment": "AC Tune-up Saves Money, Extends Equipment Life, Reduces Risk of Breakdown and Improves Cooling Your Fort Worth, TX Home!",
+     "fact_class": "public_service_description",
+     "page_purpose": "residential_hvac",
+     "content_sha256": "5dc13ccd5fc239528a3a72290d782f450b7ec0d056835ffe70aebc5d509bedef",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:5dc13ccd5fc239528a3a72290d782f450b7ec0d056835ffe70aebc5d509bedef"
+    },
+    {
+     "fragment": "Fort Worth, TX",
+     "fact_class": "public_other",
+     "page_purpose": "service_area_location",
+     "content_sha256": "65944d03799a0b631ba142c84a0431d64ea45b02d73e7e6279c52c418830caaa",
+     "locator": "heading:7",
+     "snapshot_version": "minimized-sha256:65944d03799a0b631ba142c84a0431d64ea45b02d73e7e6279c52c418830caaa"
+    },
+    {
+     "fragment": "Emergency Service",
+     "fact_class": "public_other",
+     "page_purpose": "contact_mechanism",
+     "content_sha256": "6d1c6019962ea7b98799bb3b0438303f0cd5474150c1adc2fb58d1f247cc73c1",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:6d1c6019962ea7b98799bb3b0438303f0cd5474150c1adc2fb58d1f247cc73c1"
+    },
+    {
+     "fragment": "AC Maintenance, AC Maintenance Near Me & Air Conditioning Maintenance | Arlington, TX | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nAC Maintenance Arlington, TX\nAC Maintenance in Arlington, TX: Keep Your Cooling System Running Smoothly with Webb Air\nArlington, TX\n, you know how crucial a well-functioning air conditioning system is during the hot summer months. Founded by Horace Webb in 1936, Webb Air is a family-owned and operated HVAC company that has been serving the greater Fort Worth, TX area for over 85 years. Our team of skilled technicians is dedicated to providing the highest quality AC maintenance services to ensure your cooling system operates at peak efficiency throughout the season.\nAt Webb Air, we understand that regular AC maintenance is essential for extending the lifespan of your equipment, reducing energy costs, and preventing unexpected breakdowns. Our comprehensive maintenance plans are designed to keep your air conditioner running smoothly, even during the most demanding periods of the year.\nJust like your car, your air conditioning system requires regular tune-ups to maintain optimal performance. Neglecting maintenance can lead to a variety of issues, including reduced cooling capacity, higher energy bills, and premature system failure. By investing in routine\nDuring maintenance visits, our technicians clean and replace air filters, ensurin",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "service_area_location",
+     "content_sha256": "725edf174fbb21995df85e58e772fce82074241e28aa7922a8ee3de2391199a0",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:725edf174fbb21995df85e58e772fce82074241e28aa7922a8ee3de2391199a0"
+    },
+    {
+     "fragment": "Central AC Maintenance",
+     "fact_class": "public_service_description",
+     "page_purpose": "service_area_location",
+     "content_sha256": "725edf174fbb21995df85e58e772fce82074241e28aa7922a8ee3de2391199a0",
+     "locator": "heading:6",
+     "snapshot_version": "minimized-sha256:725edf174fbb21995df85e58e772fce82074241e28aa7922a8ee3de2391199a0"
+    },
+    {
+     "fragment": "The Importance of Regular Heating Maintenance",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "bd8cbb37e5cee80648a2d397a3e32a7fa61135dbd6b844f33561b4963be2906a",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:bd8cbb37e5cee80648a2d397a3e32a7fa61135dbd6b844f33561b4963be2906a"
+    },
+    {
+     "fragment": "HVAC Financing | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "financing",
+     "content_sha256": "86c3a63ed6c6b7bdbf8a857aa6ac58761526fbc9375ef4df3c0e3a1443d91931",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:86c3a63ed6c6b7bdbf8a857aa6ac58761526fbc9375ef4df3c0e3a1443d91931"
+    },
+    {
+     "fragment": "Choose Webb Air for Your HVAC Needs in Arlington, TX",
+     "fact_class": "public_service_description",
+     "page_purpose": "service_area_location",
+     "content_sha256": "c27ce9156978841cae23ae77516876d6467f46cca3c820a04d53697c3170a9df",
+     "locator": "heading:5",
+     "snapshot_version": "minimized-sha256:c27ce9156978841cae23ae77516876d6467f46cca3c820a04d53697c3170a9df"
+    },
+    {
+     "fragment": "Air Conditioning Maintenance, AC Maintenance Near Me & AC Maintenance | Fort Worth, TX | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "566e8fc27da37e4b19153053a589213508a72ae4036b5bba36c035b802a751c5",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:566e8fc27da37e4b19153053a589213508a72ae4036b5bba36c035b802a751c5"
+    },
+    {
+     "fragment": "Heating Maintenance ∴ Fort Worth, TX",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "bd8cbb37e5cee80648a2d397a3e32a7fa61135dbd6b844f33561b4963be2906a",
+     "locator": "heading:6",
+     "snapshot_version": "minimized-sha256:bd8cbb37e5cee80648a2d397a3e32a7fa61135dbd6b844f33561b4963be2906a"
+    },
+    {
+     "fragment": "The Connection Between Ductwork and HVAC Longevity",
+     "fact_class": "public_service_description",
+     "page_purpose": "repair",
+     "content_sha256": "f8fa32ddfbd0254c73d35549fe7522a2ef7f169ce68ac4d1137f3124041833f7",
+     "locator": "heading:6",
+     "snapshot_version": "minimized-sha256:f8fa32ddfbd0254c73d35549fe7522a2ef7f169ce68ac4d1137f3124041833f7"
+    },
+    {
+     "fragment": "Fort Worth, TX",
+     "fact_class": "public_other",
+     "page_purpose": "financing",
+     "content_sha256": "86c3a63ed6c6b7bdbf8a857aa6ac58761526fbc9375ef4df3c0e3a1443d91931",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:86c3a63ed6c6b7bdbf8a857aa6ac58761526fbc9375ef4df3c0e3a1443d91931"
+    },
+    {
+     "fragment": "Components of Our Comprehensive Maintenance Service",
+     "fact_class": "public_service_description",
+     "page_purpose": "residential_hvac",
+     "content_sha256": "4fa2f0ec410ded9470296e883b4f3d06d5727a0be5f034fdd9ed2c7abf98608e",
+     "locator": "heading:1",
+     "snapshot_version": "minimized-sha256:4fa2f0ec410ded9470296e883b4f3d06d5727a0be5f034fdd9ed2c7abf98608e"
+    },
+    {
+     "fragment": "Commercial Maintenance Programs | Arlington, TX | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nCommercial Maintenance Programs Arlington, TX\nCommercial Maintenance Programs in Arlington, TX\nKeeping a commercial property comfortable, energy efficient, and operational throughout the Texas seasons takes more than reactive repairs. It requires a structured, proactive plan tailored to the unique demands of your building, your occupants, and your equipment. At Webb Air, our commercial maintenance programs in Arlington, TX are designed to give business owners, property managers, and facility directors the peace of mind that comes from knowing your HVAC systems are being looked after by experienced professionals who understand what it takes to keep North Texas commercial spaces running smoothly.\nFounded by Horace Webb in 1936, Webb Air is a family-owned and operated HVAC company serving the greater Fort Worth, TX area. Our decades of hands-on experience in heating and cooling installation, maintenance, and repair have shaped a maintenance program philosophy built on honesty, courtesy, thoroughness, and professionalism. When you bring us in to manage the upkeep of your commercial HVAC equipment, you are working with a team that has spent generations refining its craft.\nWhy Commercial Properties in Arlington Need a Dedicated Maintenance Program\nArlington summers can push ",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "c606b847875be7eaaa2e682b94a009afb2696880bbf14288dc4c4048dfa92bbf",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:c606b847875be7eaaa2e682b94a009afb2696880bbf14288dc4c4048dfa92bbf"
+    },
+    {
+     "fragment": "Heating Maintenance ∴ Fort Worth, TX",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39",
+     "locator": "heading:6",
+     "snapshot_version": "minimized-sha256:a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39"
+    },
+    {
+     "fragment": "Commercial Maintenance Programs ∴ Arlington, TX",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "c606b847875be7eaaa2e682b94a009afb2696880bbf14288dc4c4048dfa92bbf",
+     "locator": "heading:7",
+     "snapshot_version": "minimized-sha256:c606b847875be7eaaa2e682b94a009afb2696880bbf14288dc4c4048dfa92bbf"
+    },
+    {
+     "fragment": "HVAC Financing | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nFast, Friendly, and fair. I have been using Webb for 6yrs at a Commercial business and have always received excellent service.\nTheir service plan is a great tool to keep equipment working properly and filters changed 2x a year for forgetful people like me!\nWebb Air has met the highest standards for technical know-how, customer service, and ethical practices. Our team of heating and AC technicians is a small group of experienced individuals, hand-picked for their industry knowledge, professionalism, and customer focus. They are background checked, drug-screened and NATE-certified, so you can rest assured your HVAC systems are in the best hands in the field.\nServices We Offer\nCommercial Maintenance Programs\nHVAC Products\nAir Conditioning\nHeating\nLight Commercial HVAC\nCompany Information\nService Areas\nFort Worth, TX 76104\nFort Worth, TX\nServices & Areas Served",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "financing",
+     "content_sha256": "86c3a63ed6c6b7bdbf8a857aa6ac58761526fbc9375ef4df3c0e3a1443d91931",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:86c3a63ed6c6b7bdbf8a857aa6ac58761526fbc9375ef4df3c0e3a1443d91931"
+    },
+    {
+     "fragment": "What Our Heating Maintenance Service Includes",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "bd8cbb37e5cee80648a2d397a3e32a7fa61135dbd6b844f33561b4963be2906a",
+     "locator": "heading:1",
+     "snapshot_version": "minimized-sha256:bd8cbb37e5cee80648a2d397a3e32a7fa61135dbd6b844f33561b4963be2906a"
+    },
+    {
+     "fragment": "Response Times and Service Accessibility",
+     "fact_class": "public_other",
+     "page_purpose": "service_area_location",
+     "content_sha256": "65944d03799a0b631ba142c84a0431d64ea45b02d73e7e6279c52c418830caaa",
+     "locator": "heading:3",
+     "snapshot_version": "minimized-sha256:65944d03799a0b631ba142c84a0431d64ea45b02d73e7e6279c52c418830caaa"
+    },
+    {
+     "fragment": "Furnace Maintenance, Furnace Service, Heater Maintenance & Heating Service | Fort Worth, TX | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39"
+    },
+    {
+     "fragment": "Air Conditioner Installation",
+     "fact_class": "public_service_description",
+     "page_purpose": "service_area_location",
+     "content_sha256": "7ba80e1711cbae02adfb16d400da1c88a1a7ce58ae7268369a4d31782210ea6f",
+     "locator": "heading:7",
+     "snapshot_version": "minimized-sha256:7ba80e1711cbae02adfb16d400da1c88a1a7ce58ae7268369a4d31782210ea6f"
+    },
+    {
+     "fragment": "Schedule Your AC Maintenance with Webb Air Today",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "service_area_location",
+     "content_sha256": "725edf174fbb21995df85e58e772fce82074241e28aa7922a8ee3de2391199a0",
+     "locator": "heading:4",
+     "snapshot_version": "minimized-sha256:725edf174fbb21995df85e58e772fce82074241e28aa7922a8ee3de2391199a0"
+    },
+    {
+     "fragment": "Fort Worth, TX",
+     "fact_class": "public_other",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "192eade6b1144bb69ebde9f0d7dd4d58307fe562eb13db0ea5234f4f21bc8c75",
+     "locator": "heading:12",
+     "snapshot_version": "minimized-sha256:192eade6b1144bb69ebde9f0d7dd4d58307fe562eb13db0ea5234f4f21bc8c75"
+    },
+    {
+     "fragment": "What Comprehensive AC Service Includes",
+     "fact_class": "public_other",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5",
+     "locator": "heading:1",
+     "snapshot_version": "minimized-sha256:ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5"
+    },
+    {
+     "fragment": "Commercial Maintenance Programs in Fort Worth, TX",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "206ab3e66f0e429694f7fc152587d81cc6d0854e8bc155e03e3cd570de03baaa",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:206ab3e66f0e429694f7fc152587d81cc6d0854e8bc155e03e3cd570de03baaa"
+    },
+    {
+     "fragment": "Fort Worth, TX",
+     "fact_class": "public_other",
+     "page_purpose": "about",
+     "content_sha256": "9b4dbc45249978b05f36aef257f4e82347b11020856bcd3478f66cd6f3b08454",
+     "locator": "heading:6",
+     "snapshot_version": "minimized-sha256:9b4dbc45249978b05f36aef257f4e82347b11020856bcd3478f66cd6f3b08454"
+    },
+    {
+     "fragment": "Arlington, TX",
+     "fact_class": "public_other",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "0e5a3d59aadeb864c299cb3c866b24abdc10d89413a02d7155374eaaf220e195",
+     "locator": "heading:7",
+     "snapshot_version": "minimized-sha256:0e5a3d59aadeb864c299cb3c866b24abdc10d89413a02d7155374eaaf220e195"
+    },
+    {
+     "fragment": "Heating Repair and Heating Service for Commercial Properties",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658",
+     "locator": "heading:3",
+     "snapshot_version": "minimized-sha256:19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658"
+    },
+    {
+     "fragment": "Types of Heating Systems We Install",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a"
+    },
+    {
+     "fragment": "Key Benefits of Professional Light Commercial HVAC Maintenance",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658",
+     "locator": "heading:5",
+     "snapshot_version": "minimized-sha256:19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658"
+    },
+    {
+     "fragment": "Contact Us | Webb Air",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "contact_mechanism",
+     "content_sha256": "6d1c6019962ea7b98799bb3b0438303f0cd5474150c1adc2fb58d1f247cc73c1",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:6d1c6019962ea7b98799bb3b0438303f0cd5474150c1adc2fb58d1f247cc73c1"
+    },
+    {
+     "fragment": "Contact Us",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "contact_mechanism",
+     "content_sha256": "6d1c6019962ea7b98799bb3b0438303f0cd5474150c1adc2fb58d1f247cc73c1",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:6d1c6019962ea7b98799bb3b0438303f0cd5474150c1adc2fb58d1f247cc73c1"
+    },
+    {
+     "fragment": "Signs Your Air Conditioning System Needs Professional Service",
+     "fact_class": "public_service_description",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5",
+     "locator": "heading:3",
+     "snapshot_version": "minimized-sha256:ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5"
+    },
+    {
+     "fragment": "AC Repair Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5",
+     "locator": "heading:7",
+     "snapshot_version": "minimized-sha256:ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5"
+    },
+    {
+     "fragment": "When to Consider a New Heating Installation",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a",
+     "locator": "heading:4",
+     "snapshot_version": "minimized-sha256:9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a"
+    },
+    {
+     "fragment": "Arlington, TX",
+     "fact_class": "public_other",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "c606b847875be7eaaa2e682b94a009afb2696880bbf14288dc4c4048dfa92bbf",
+     "locator": "heading:8",
+     "snapshot_version": "minimized-sha256:c606b847875be7eaaa2e682b94a009afb2696880bbf14288dc4c4048dfa92bbf"
+    },
+    {
+     "fragment": "Understanding the Heating Installation Process",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a",
+     "locator": "heading:1",
+     "snapshot_version": "minimized-sha256:9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a"
+    },
+    {
+     "fragment": "Commercial Maintenance Programs | Arlington, TX | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nCommercial Maintenance Programs Arlington, TX\nUnderstanding Commercial HVAC Maintenance in Arlington\nCommercial HVAC systems require specialized attention that goes beyond standard residential service approaches. At Webb Air, we recognize that Arlington businesses depend on reliable climate control to maintain productive work environments, protect valuable equipment, and ensure customer comfort throughout the year. Our commercial maintenance programs address the unique demands of larger, more complex systems that operate under heavier loads and longer run times than typical residential units. These systems often incorporate multiple zones, sophisticated control systems, and specialized ventilation requirements that demand experienced technicians who understand the intricacies of commercial-grade equipment.\nThe Arlington business community faces particular challenges with North Texas weather patterns, where temperatures can swing from freezing winters to scorching summers exceeding 100 degrees Fahrenheit. This extreme temperature variation places tremendous stress on commercial HVAC systems, making regular maintenance not just advisable but essential for uninterrupted business operations. We’ve developed our maintenance programs specifically to address these regional ch",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "0e5a3d59aadeb864c299cb3c866b24abdc10d89413a02d7155374eaaf220e195",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:0e5a3d59aadeb864c299cb3c866b24abdc10d89413a02d7155374eaaf220e195"
+    },
+    {
+     "fragment": "How Our Commercial Maintenance Programs Work",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "206ab3e66f0e429694f7fc152587d81cc6d0854e8bc155e03e3cd570de03baaa",
+     "locator": "heading:1",
+     "snapshot_version": "minimized-sha256:206ab3e66f0e429694f7fc152587d81cc6d0854e8bc155e03e3cd570de03baaa"
+    },
+    {
+     "fragment": "Heating Service, Furnace Maintenance, Furnace Service & Heater Maintenance | Fort Worth, TX | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "bd8cbb37e5cee80648a2d397a3e32a7fa61135dbd6b844f33561b4963be2906a",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:bd8cbb37e5cee80648a2d397a3e32a7fa61135dbd6b844f33561b4963be2906a"
+    },
+    {
+     "fragment": "Understanding Commercial HVAC Maintenance in Arlington",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "0e5a3d59aadeb864c299cb3c866b24abdc10d89413a02d7155374eaaf220e195",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:0e5a3d59aadeb864c299cb3c866b24abdc10d89413a02d7155374eaaf220e195"
+    },
+    {
+     "fragment": "Air Conditioning Maintenance in Fort Worth, TX",
+     "fact_class": "public_service_description",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "566e8fc27da37e4b19153053a589213508a72ae4036b5bba36c035b802a751c5",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:566e8fc27da37e4b19153053a589213508a72ae4036b5bba36c035b802a751c5"
+    },
+    {
+     "fragment": "Heat Pump Performance in the Fort Worth Climate",
+     "fact_class": "public_other",
+     "page_purpose": "heating",
+     "content_sha256": "9b78a8a784c5c5482ab47127b8194365886d6c38be03e2db816e509afef49914",
+     "locator": "heading:4",
+     "snapshot_version": "minimized-sha256:9b78a8a784c5c5482ab47127b8194365886d6c38be03e2db816e509afef49914"
+    },
+    {
+     "fragment": "Contact Us | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nExperiencing an emergency? Skip the form and give us a call right away, no matter the hour. Phones are answered 24 hours/monitored. Email responses are sent the next business day.\nEmergency Service Available\nEmergency Service\nRequests after 10:00pm will be contacted after 8:00am the following day.\nFort Worth, TX 76104\nFast, Friendly, and fair. I have been using Webb for 6yrs at a Commercial business and have always received excellent service.\nTheir service plan is a great tool to keep equipment working properly and filters changed 2x a year for forgetful people like me!\nWebb Air has met the highest standards for technical know-how, customer service, and ethical practices. Our team of heating and AC technicians is a small group of experienced individuals, hand-picked for their industry knowledge, professionalism, and customer focus. They are background checked, drug-screened and NATE-certified, so you can rest assured your HVAC systems are in the best hands in the field.\nServices We Offer\nCommercial Maintenance Programs\nHVAC Products\nAir Conditioning\nHeating\nLight Commercial HVAC\nCompany Information\nService Areas\nFort Worth, TX 76104\nFort Worth, TX\nServices & Areas Served",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "contact_mechanism",
+     "content_sha256": "6d1c6019962ea7b98799bb3b0438303f0cd5474150c1adc2fb58d1f247cc73c1",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:6d1c6019962ea7b98799bb3b0438303f0cd5474150c1adc2fb58d1f247cc73c1"
+    },
+    {
+     "fragment": "Customized Service Schedules for Arlington Businesses",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "0e5a3d59aadeb864c299cb3c866b24abdc10d89413a02d7155374eaaf220e195",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:0e5a3d59aadeb864c299cb3c866b24abdc10d89413a02d7155374eaaf220e195"
+    },
+    {
+     "fragment": "Comprehensive HVAC Solutions for Arlington Residents",
+     "fact_class": "public_service_description",
+     "page_purpose": "service_area_location",
+     "content_sha256": "c27ce9156978841cae23ae77516876d6467f46cca3c820a04d53697c3170a9df",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:c27ce9156978841cae23ae77516876d6467f46cca3c820a04d53697c3170a9df"
+    },
+    {
+     "fragment": "Air Conditioner Installation",
+     "fact_class": "public_service_description",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "192eade6b1144bb69ebde9f0d7dd4d58307fe562eb13db0ea5234f4f21bc8c75",
+     "locator": "heading:10",
+     "snapshot_version": "minimized-sha256:192eade6b1144bb69ebde9f0d7dd4d58307fe562eb13db0ea5234f4f21bc8c75"
+    },
+    {
+     "fragment": "25C",
+     "fact_class": "public_other",
+     "page_purpose": "faq",
+     "content_sha256": "ebf62e86d081d8926a2db6313698c93e9f495dab5314bc5a8f7f64c291ac3174",
+     "locator": "heading:18",
+     "snapshot_version": "minimized-sha256:ebf62e86d081d8926a2db6313698c93e9f495dab5314bc5a8f7f64c291ac3174"
+    },
+    {
+     "fragment": "Arlington, TX",
+     "fact_class": "public_other",
+     "page_purpose": "service_area_location",
+     "content_sha256": "725edf174fbb21995df85e58e772fce82074241e28aa7922a8ee3de2391199a0",
+     "locator": "heading:8",
+     "snapshot_version": "minimized-sha256:725edf174fbb21995df85e58e772fce82074241e28aa7922a8ee3de2391199a0"
+    },
+    {
+     "fragment": "Our Approach to Light Commercial HVAC Installation",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658"
+    },
+    {
+     "fragment": "Why Commercial Properties in Arlington Need a Dedicated Maintenance Program",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "c606b847875be7eaaa2e682b94a009afb2696880bbf14288dc4c4048dfa92bbf",
+     "locator": "heading:1",
+     "snapshot_version": "minimized-sha256:c606b847875be7eaaa2e682b94a009afb2696880bbf14288dc4c4048dfa92bbf"
+    },
+    {
+     "fragment": "Residential and Commercial AC Service Applications",
+     "fact_class": "public_service_description",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5",
+     "locator": "heading:4",
+     "snapshot_version": "minimized-sha256:ec84545fd1e5aab06bf33280162e0997370c73793a07f61aa1e09f87ab71b4a5"
+    },
+    {
+     "fragment": "AC Company, AC Contractor, HVAC Contractor & HVAC Company | Fort Worth, TX | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "about",
+     "content_sha256": "9b4dbc45249978b05f36aef257f4e82347b11020856bcd3478f66cd6f3b08454",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:9b4dbc45249978b05f36aef257f4e82347b11020856bcd3478f66cd6f3b08454"
+    },
+    {
+     "fragment": "Commercial HVAC Near Me, Commercial HVAC, Commercial Heating & Commercial Air Conditioning | Fort Worth, TX | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nLight Commercial HVAC\nLight Commercial HVAC Services in Fort Worth, TX\nWhen it comes to keeping your business comfortable and productive, a reliable HVAC system is not a luxury but a necessity. At\nWebb Air\n, we understand that light commercial properties face unique heating and cooling challenges that differ significantly from residential or large-scale industrial environments. From retail storefronts and small office buildings to restaurants, medical clinics, and houses of worship, light commercial HVAC systems must balance performance, energy efficiency, and cost-effectiveness in ways that demand specialized expertise. Founded by Horace Webb in 1936, we are a family-owned and operated HVAC company serving the greater Fort Worth, TX area, and we bring decades of experience to every light commercial project we undertake.\nWhat Defines Light Commercial HVAC\nLight commercial HVAC refers to heating, ventilation, and air conditioning systems designed for smaller commercial spaces, typically ranging from 1,000 to 25,000 square feet. These systems occupy a middle ground between residential units and heavy commercial or industrial equipment. They include packaged rooftop units, split systems, ductless mini-split confi",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658"
+    },
+    {
+     "fragment": "Commercial HVAC Maintenance Plans, Commercial Air Conditioning Maintenance Plans, Commercial Furnace Service Plans & Commercial Furnace Maintenance Plans | Fort Worth, TX | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nCommercial Maintenance Programs\nCommercial Maintenance Programs in Fort Worth, TX\nKeeping a commercial HVAC system running at peak performance requires more than occasional repairs when something breaks down. It demands a proactive, systematic approach that identifies potential issues before they escalate into costly emergencies. At\nWebb Air\n, we have built our commercial maintenance programs around the philosophy that prevention is always more effective and affordable than reaction. Founded by Horace Webb in 1936, we are a family-owned and operated HVAC company serving the greater Fort Worth, TX area, and our decades of experience have shown us firsthand how proper maintenance extends equipment life, reduces energy costs, and keeps commercial environments comfortable year-round.\nCommercial buildings account for approximately 18 percent of total energy consumption in the United States, and HVAC systems represent nearly 40 percent of that figure. These statistics underscore how critical it is for business owners and facility managers to ensure their heating and cooling equipment operates efficiently. Our commercial maintenance programs are designed ",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "206ab3e66f0e429694f7fc152587d81cc6d0854e8bc155e03e3cd570de03baaa",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:206ab3e66f0e429694f7fc152587d81cc6d0854e8bc155e03e3cd570de03baaa"
+    },
+    {
+     "fragment": "Webb Air‘s Comprehensive AC Maintenance Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "service_area_location",
+     "content_sha256": "725edf174fbb21995df85e58e772fce82074241e28aa7922a8ee3de2391199a0",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:725edf174fbb21995df85e58e772fce82074241e28aa7922a8ee3de2391199a0"
+    },
+    {
+     "fragment": "Flat-Rate Pricing | Webb Air",
+     "fact_class": "public_other",
+     "page_purpose": "estimate_quote",
+     "content_sha256": "4b739c84cba682974bd9cb0fdb20ae0f61c12f01cb5c74c4ff6d79ee7a82fcc4",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:4b739c84cba682974bd9cb0fdb20ae0f61c12f01cb5c74c4ff6d79ee7a82fcc4"
+    },
+    {
+     "fragment": "Residential Maintenance Programs | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "residential_hvac",
+     "content_sha256": "5dc13ccd5fc239528a3a72290d782f450b7ec0d056835ffe70aebc5d509bedef",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:5dc13ccd5fc239528a3a72290d782f450b7ec0d056835ffe70aebc5d509bedef"
+    },
+    {
+     "fragment": "Our Comprehensive Heating Service Process",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39",
+     "locator": "heading:1",
+     "snapshot_version": "minimized-sha256:a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39"
+    },
+    {
+     "fragment": "Installation, Maintenance, and Repair Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "9b78a8a784c5c5482ab47127b8194365886d6c38be03e2db816e509afef49914",
+     "locator": "heading:5",
+     "snapshot_version": "minimized-sha256:9b78a8a784c5c5482ab47127b8194365886d6c38be03e2db816e509afef49914"
+    },
+    {
+     "fragment": "Fort Worth, TX",
+     "fact_class": "public_other",
+     "page_purpose": "heating",
+     "content_sha256": "a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39",
+     "locator": "heading:8",
+     "snapshot_version": "minimized-sha256:a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39"
+    },
+    {
+     "fragment": "AC Repair, Heating Service, AC Service & HVAC Installation | Fort Worth, TX | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "faq",
+     "content_sha256": "ebf62e86d081d8926a2db6313698c93e9f495dab5314bc5a8f7f64c291ac3174",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:ebf62e86d081d8926a2db6313698c93e9f495dab5314bc5a8f7f64c291ac3174"
+    },
+    {
+     "fragment": "Preventive Maintenance for Long-Term Performance",
+     "fact_class": "public_service_description",
+     "page_purpose": "repair",
+     "content_sha256": "f8fa32ddfbd0254c73d35549fe7522a2ef7f169ce68ac4d1137f3124041833f7",
+     "locator": "heading:5",
+     "snapshot_version": "minimized-sha256:f8fa32ddfbd0254c73d35549fe7522a2ef7f169ce68ac4d1137f3124041833f7"
+    },
+    {
+     "fragment": "Residential Maintenance Programs | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nAC Tune-up Saves Money, Extends Equipment Life, Reduces Risk of Breakdown and Improves Cooling Your Fort Worth, TX Home!\nAir Conditioning\nHeating systems\nare like cars, they work hard but need to be checked and serviced on a regular basis. Running your system without a checkup would be like never changing the oil in your car. Dirty filters, clogged condenser coils and slow draining condensate lines are problems that can lead to bigger issues. It is a proven fact that having your system tuned up restores system performance and lost capacity of your air conditioner. Reduced capacity increases run time and can add unnecessary utility costs and operational breakdowns.\nBenefits Of a Regularly Tuned-Up Air Conditioning System\nto set up your $129.00* (*per system) Tune Up for AC or Heating System today! For Twice a Year, Enhanced Regularly Scheduled Tune Ups See our Maintenance Programs below! More comprehensive – Better Value!\nWebb Air‘s Residential Maintenance Program in Fort Worth, TX\nIt is safe to assume that most people are concerned with rising energy costs. An average air conditioning unit that is low on refrigerant or operating with a dirty condenser coil can cost more than an annual maintenance agreement in additional energy costs alone. These conditions will also result in reduced",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "residential_hvac",
+     "content_sha256": "5dc13ccd5fc239528a3a72290d782f450b7ec0d056835ffe70aebc5d509bedef",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:5dc13ccd5fc239528a3a72290d782f450b7ec0d056835ffe70aebc5d509bedef"
+    },
+    {
+     "fragment": "Commercial Maintenance Programs | Arlington, TX | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "c606b847875be7eaaa2e682b94a009afb2696880bbf14288dc4c4048dfa92bbf",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:c606b847875be7eaaa2e682b94a009afb2696880bbf14288dc4c4048dfa92bbf"
+    },
+    {
+     "fragment": "Heating System Installation",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a",
+     "locator": "heading:10",
+     "snapshot_version": "minimized-sha256:9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a"
+    },
+    {
+     "fragment": "What Our Commercial Maintenance Program Includes",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "c606b847875be7eaaa2e682b94a009afb2696880bbf14288dc4c4048dfa92bbf",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:c606b847875be7eaaa2e682b94a009afb2696880bbf14288dc4c4048dfa92bbf"
+    },
+    {
+     "fragment": "Signs Your Heating System Needs Professional Attention",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39",
+     "locator": "heading:3",
+     "snapshot_version": "minimized-sha256:a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39"
+    },
+    {
+     "fragment": "Fort Worth, TX",
+     "fact_class": "public_other",
+     "page_purpose": "residential_hvac",
+     "content_sha256": "5dc13ccd5fc239528a3a72290d782f450b7ec0d056835ffe70aebc5d509bedef",
+     "locator": "heading:3",
+     "snapshot_version": "minimized-sha256:5dc13ccd5fc239528a3a72290d782f450b7ec0d056835ffe70aebc5d509bedef"
+    },
+    {
+     "fragment": "Fort Worth, TX",
+     "fact_class": "public_other",
+     "page_purpose": "heating",
+     "content_sha256": "9b78a8a784c5c5482ab47127b8194365886d6c38be03e2db816e509afef49914",
+     "locator": "heading:10",
+     "snapshot_version": "minimized-sha256:9b78a8a784c5c5482ab47127b8194365886d6c38be03e2db816e509afef49914"
+    },
+    {
+     "fragment": "Heating Installation Services in Fort Worth, TX",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a"
+    },
+    {
+     "fragment": "Heating Service, Furnace Maintenance, Furnace Service & Heater Maintenance | Fort Worth, TX | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nHeating Maintenance\nThe Importance of Regular Heating Maintenance\nYour heating system works tirelessly during cold months to keep your home comfortable and safe. At\nWebb Air\n, we understand that proper heating maintenance isn’t just about preventing breakdowns—it’s about ensuring your system operates at peak efficiency, saves energy, and provides reliable warmth when you need it most. Regular maintenance extends the life of your heating equipment and helps avoid costly emergency repairs during the coldest days of winter.\nMany homeowners in Fort Worth underestimate the impact that routine maintenance has on their heating systems. A well-maintained furnace or heat pump can operate up to 95% efficiency, while neglected systems often drop below 60% efficiency within just a few years. This dramatic decrease translates directly into higher energy bills and reduced comfort levels throughout your home. By investing in regular maintenance, you’re protecting both your comfort and your wallet.\nWhat Our Heating Maintenance Service Includes\nWhen you schedule heating maintenance with Webb Air, our certified technicians perform a comprehensive inspection and tune-up of your entire heating system. We begin by examining your thermostat calibr",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "heating",
+     "content_sha256": "bd8cbb37e5cee80648a2d397a3e32a7fa61135dbd6b844f33561b4963be2906a",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:bd8cbb37e5cee80648a2d397a3e32a7fa61135dbd6b844f33561b4963be2906a"
+    },
+    {
+     "fragment": "Furnace Repair, AC Service, Heating Installation & HVAC Near Me | Arlington, TX | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nArlington, TX\nHeating Installation, HVAC Near Me, AC Service & Furnace Repair\nin Arlington, TX\nArlington, TX: Quality HVAC Services by Webb Air\nArlington, TX, a vibrant city nestled in the heart of the Dallas-Fort Worth metroplex, is home to numerous residents and businesses that rely on dependable heating and cooling services. Founded by Horace Webb in 1936, Webb Air has been a trusted name in the HVAC industry, serving the greater Fort Worth TX area with unwavering commitment to quality and customer satisfaction.\nAs a family-owned and operated HVAC company, Webb Air understands the importance of maintaining a comfortable indoor environment in the face of Texas’s ever-changing weather conditions. Our team of skilled technicians is well-versed in the unique challenges that Arlington residents face when it comes to their heating and cooling needs.\nComprehensive HVAC Solutions for Arlington Residents\nWebb Air offers a wide range of HVAC services designed to cater to the specific requirements of Arlington homeowners and businesses. Our expertise includes:\nWhether you need a new air conditioning system for your home or a comprehensive heating solution for your commercial property, Webb Air has the knowledge and experience to handle the job e",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "service_area_location",
+     "content_sha256": "c27ce9156978841cae23ae77516876d6467f46cca3c820a04d53697c3170a9df",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:c27ce9156978841cae23ae77516876d6467f46cca3c820a04d53697c3170a9df"
+    },
+    {
+     "fragment": "Types of Air Conditioning Systems We Install",
+     "fact_class": "public_service_description",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "192eade6b1144bb69ebde9f0d7dd4d58307fe562eb13db0ea5234f4f21bc8c75",
+     "locator": "heading:3",
+     "snapshot_version": "minimized-sha256:192eade6b1144bb69ebde9f0d7dd4d58307fe562eb13db0ea5234f4f21bc8c75"
+    },
+    {
+     "fragment": "AC Repair, Heating Service, Heating Repair & HVAC Installation | Fort Worth, TX | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "a91e983bb101f6f90c3289a7bd4bce23decea3973974e78f5945733a6f34591c",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:a91e983bb101f6f90c3289a7bd4bce23decea3973974e78f5945733a6f34591c"
+    },
+    {
+     "fragment": "Air Conditioning Installation in Fort Worth, TX",
+     "fact_class": "public_service_description",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "192eade6b1144bb69ebde9f0d7dd4d58307fe562eb13db0ea5234f4f21bc8c75",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:192eade6b1144bb69ebde9f0d7dd4d58307fe562eb13db0ea5234f4f21bc8c75"
+    },
+    {
+     "fragment": "Service Areas | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nService Areas\nService Areas\nWebb Air\n, we’re proud to serve the Fort Worth, Texas community and its surrounding areas with comprehensive HVAC installation, AC repair, AC service, and air conditioning installation. Since our founding by Horace Webb in 1936, we’ve established ourselves as the trusted family-owned and operated HVAC company that homeowners and businesses throughout the region rely on for their heating and cooling needs. Our service territory encompasses the diverse neighborhoods, commercial districts, and industrial zones that make up the greater Fort Worth metroplex, ensuring that quality climate control solutions are always within reach.\nUnderstanding the unique climate challenges of North Texas, we’ve tailored our services to meet the specific needs of each community we serve. The scorching summers that regularly push temperatures above 100 degrees Fahrenheit demand reliable air conditioning systems, while the occasional winter cold snaps require efficient heating solutions. Our technicians possess intimate knowledge of the local weather patterns, building codes, and architectural styles common to the Fort Worth area, allowing us to provide customized HVAC solutions that perform optimally in our regional conditions.\nOur primary service area covers the entire Fort Worth metropolitan regi",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "service_area_location",
+     "content_sha256": "65944d03799a0b631ba142c84a0431d64ea45b02d73e7e6279c52c418830caaa",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:65944d03799a0b631ba142c84a0431d64ea45b02d73e7e6279c52c418830caaa"
+    },
+    {
+     "fragment": "Arlington, TX",
+     "fact_class": "public_other",
+     "page_purpose": "service_area_location",
+     "content_sha256": "7ba80e1711cbae02adfb16d400da1c88a1a7ce58ae7268369a4d31782210ea6f",
+     "locator": "heading:9",
+     "snapshot_version": "minimized-sha256:7ba80e1711cbae02adfb16d400da1c88a1a7ce58ae7268369a4d31782210ea6f"
+    },
+    {
+     "fragment": "Industrial HVAC",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658",
+     "locator": "heading:10",
+     "snapshot_version": "minimized-sha256:19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658"
+    },
+    {
+     "fragment": "Fort Worth, TX",
+     "fact_class": "public_other",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658",
+     "locator": "heading:11",
+     "snapshot_version": "minimized-sha256:19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658"
+    },
+    {
+     "fragment": "Commercial HVAC Maintenance Plans, Commercial Air Conditioning Maintenance Plans, Commercial Furnace Service Plans & Commercial Furnace Maintenance Plans | Fort Worth, TX | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "206ab3e66f0e429694f7fc152587d81cc6d0854e8bc155e03e3cd570de03baaa",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:206ab3e66f0e429694f7fc152587d81cc6d0854e8bc155e03e3cd570de03baaa"
+    },
+    {
+     "fragment": "HVAC Installation",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a",
+     "locator": "heading:11",
+     "snapshot_version": "minimized-sha256:9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a"
+    },
+    {
+     "fragment": "AC Maintenance in Arlington, TX: Keep Your Cooling System Running Smoothly with Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "service_area_location",
+     "content_sha256": "725edf174fbb21995df85e58e772fce82074241e28aa7922a8ee3de2391199a0",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:725edf174fbb21995df85e58e772fce82074241e28aa7922a8ee3de2391199a0"
+    },
+    {
+     "fragment": "Duct Repair and Maintenance Services in Fort Worth, TX",
+     "fact_class": "public_service_description",
+     "page_purpose": "repair",
+     "content_sha256": "f8fa32ddfbd0254c73d35549fe7522a2ef7f169ce68ac4d1137f3124041833f7",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:f8fa32ddfbd0254c73d35549fe7522a2ef7f169ce68ac4d1137f3124041833f7"
+    },
+    {
+     "fragment": "Heating Installation",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a",
+     "locator": "heading:8",
+     "snapshot_version": "minimized-sha256:9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a"
+    },
+    {
+     "fragment": "Heating Service in Fort Worth, TX",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39"
+    },
+    {
+     "fragment": "Webb Air‘s Residential Maintenance Program in Fort Worth, TX",
+     "fact_class": "public_service_description",
+     "page_purpose": "residential_hvac",
+     "content_sha256": "5dc13ccd5fc239528a3a72290d782f450b7ec0d056835ffe70aebc5d509bedef",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:5dc13ccd5fc239528a3a72290d782f450b7ec0d056835ffe70aebc5d509bedef"
+    },
+    {
+     "fragment": "AC Installation, HVAC Installation, Air Conditioner Installation & Air Conditioning Installation | Fort Worth, TX | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nAir Conditioning Installation\nAir Conditioning Installation in Fort Worth, TX\nWhen summer temperatures in Fort Worth regularly climb above 100 degrees, having a reliable air conditioning system is not a luxury but an absolute necessity. At\nWebb Air\n, we have been helping families and businesses stay cool since our founding by Horace Webb in 1936. As a family-owned and operated HVAC company serving the greater Fort Worth, TX area, we understand the unique climate challenges that North Texas presents and bring decades of expertise to every air conditioning installation project we undertake. Whether you are building a new home, replacing an aging unit, or upgrading to a more efficient system, our team delivers honest, courteous, thorough, and professional services designed to ensure your year-round comfort.\nMany homeowners underestimate the importance of proper air conditioning installation, but the truth is that even the highest-quality equipment will underperform if it is not installed correctly. According to the U.S. Department of Energy, improper installation can reduce system efficiency by up to 30 percent, leading to higher utility bills, uneven cooling, and a significantly shorter equipment lifespan.",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "192eade6b1144bb69ebde9f0d7dd4d58307fe562eb13db0ea5234f4f21bc8c75",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:192eade6b1144bb69ebde9f0d7dd4d58307fe562eb13db0ea5234f4f21bc8c75"
+    },
+    {
+     "fragment": "Heater Installation, Heating Replacement, Heating Replacement & Furnace Installation | Fort Worth, TX | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a"
+    },
+    {
+     "fragment": "Heat Pump Repair, Heat Pump Installation, Heat Pump Installation Near Me & Heat Pump Replacement | Fort Worth, TX | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "9b78a8a784c5c5482ab47127b8194365886d6c38be03e2db816e509afef49914",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:9b78a8a784c5c5482ab47127b8194365886d6c38be03e2db816e509afef49914"
+    },
+    {
+     "fragment": "Fort Worth, TX",
+     "fact_class": "public_other",
+     "page_purpose": "estimate_quote",
+     "content_sha256": "4b739c84cba682974bd9cb0fdb20ae0f61c12f01cb5c74c4ff6d79ee7a82fcc4",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:4b739c84cba682974bd9cb0fdb20ae0f61c12f01cb5c74c4ff6d79ee7a82fcc4"
+    },
+    {
+     "fragment": "Serving the Community of Arlington, TX",
+     "fact_class": "public_other",
+     "page_purpose": "service_area_location",
+     "content_sha256": "c27ce9156978841cae23ae77516876d6467f46cca3c820a04d53697c3170a9df",
+     "locator": "heading:4",
+     "snapshot_version": "minimized-sha256:c27ce9156978841cae23ae77516876d6467f46cca3c820a04d53697c3170a9df"
+    },
+    {
+     "fragment": "CEE",
+     "fact_class": "public_other",
+     "page_purpose": "faq",
+     "content_sha256": "ebf62e86d081d8926a2db6313698c93e9f495dab5314bc5a8f7f64c291ac3174",
+     "locator": "heading:7",
+     "snapshot_version": "minimized-sha256:ebf62e86d081d8926a2db6313698c93e9f495dab5314bc5a8f7f64c291ac3174"
+    },
+    {
+     "fragment": "Fort Worth, TX",
+     "fact_class": "public_other",
+     "page_purpose": "heating",
+     "content_sha256": "bd8cbb37e5cee80648a2d397a3e32a7fa61135dbd6b844f33561b4963be2906a",
+     "locator": "heading:8",
+     "snapshot_version": "minimized-sha256:bd8cbb37e5cee80648a2d397a3e32a7fa61135dbd6b844f33561b4963be2906a"
+    },
+    {
+     "fragment": "When to Schedule Your Heating Maintenance",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "heating",
+     "content_sha256": "bd8cbb37e5cee80648a2d397a3e32a7fa61135dbd6b844f33561b4963be2906a",
+     "locator": "heading:3",
+     "snapshot_version": "minimized-sha256:bd8cbb37e5cee80648a2d397a3e32a7fa61135dbd6b844f33561b4963be2906a"
+    },
+    {
+     "fragment": "AC Company, AC Contractor, HVAC Contractor & HVAC Company | Fort Worth, TX | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\n115 S Riverside Drive Fort Worth, TX 76104 –\nFounded by Horace B. Webb in 1941, Webb Air is a family-owned and operated HVAC company serving the greater Fort Worth TX area.\nIn the late 1930’s Horace owned a barber shop in Downtown Fort Worth. In between haircuts, HB passed the time talking to customers and reading books and magazines. He came across an article in a June 1939 edition of Popular Mechanics about a process that used evaporated water to cool surrounding air. He was inspired to design and construct his own evaporative cooling unit to make the shop more comfortable for patrons. It was an instant success. He soon left the front door to the shop open to allow passersby to experience the cooled air. It was not long before he was constructing Webb Coolers for residents and merchants in the Fort Worth area.\nDuring the late 1930’s and early 1940’s with the help of family members the production and installation of Webb Coolers continued on a part-time basis until 1946. It was around this time that HB left his career as a barber to produce Webb Coolers full time for businesses and homes all over Fort Worth. In 1949, Webb Air became the first authorized dealer of Carrier Air Conditioning Systems in the Fort Worth area and has been a proud de",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "about",
+     "content_sha256": "9b4dbc45249978b05f36aef257f4e82347b11020856bcd3478f66cd6f3b08454",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:9b4dbc45249978b05f36aef257f4e82347b11020856bcd3478f66cd6f3b08454"
+    },
+    {
+     "fragment": "Heat Pump Service",
+     "fact_class": "public_other",
+     "page_purpose": "heating",
+     "content_sha256": "9b78a8a784c5c5482ab47127b8194365886d6c38be03e2db816e509afef49914",
+     "locator": "heading:8",
+     "snapshot_version": "minimized-sha256:9b78a8a784c5c5482ab47127b8194365886d6c38be03e2db816e509afef49914"
+    },
+    {
+     "fragment": "Air Conditioner Installation, Air Conditioning Installation, HVAC Installation & AC Installation | Arlington, TX | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nAC Installation Arlington, TX\nProfessional AC Installation Services in Arlington, TX\ntemperatures soar, a properly installed air conditioning system becomes essential for your comfort and well-being. At Webb Air, we specialize in precise AC installation that ensures optimal performance and energy efficiency for your home or business. Founded by Horace Webb in 1936, Webb Air is a family-owned and operated HVAC company serving the greater Fort Worth TX area, including Arlington and surrounding communities.\nAC installation requires expertise and precision that goes beyond simply connecting components. Our certified technicians conduct thorough assessments of your space to determine the appropriate system size and configuration. This crucial step prevents common issues like short cycling, insufficient cooling, and excessive energy consumption that result from improper sizing. We meticulously evaluate your property’s square footage, insulation quality, window placement, and existing ductwork to recommend the perfect cooling solution.\nArlington’s climate presents unique challenges for air conditioning systems. With summer temperatures regularly exceeding 95°F and high humidity levels, your AC system must be spe",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "service_area_location",
+     "content_sha256": "7ba80e1711cbae02adfb16d400da1c88a1a7ce58ae7268369a4d31782210ea6f",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:7ba80e1711cbae02adfb16d400da1c88a1a7ce58ae7268369a4d31782210ea6f"
+    },
+    {
+     "fragment": "Air Duct Installation, Duct Repair, Air Duct Repair & Duct Services | Fort Worth, TX | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nDuct Repair and Maintenance Services in Fort Worth, TX\nYour ductwork is the circulatory system of your home’s heating and cooling setup. Every time your furnace fires up in the winter or your air conditioner kicks on during a sweltering Fort Worth summer, conditioned air travels through an intricate network of ducts before reaching your living spaces. When those ducts develop problems, the consequences extend far beyond comfort. Energy waste, poor indoor air quality, uneven temperatures, and premature strain on your HVAC equipment are all direct results of ductwork that has been neglected or damaged over time. At\nWebb Air\n, we deliver comprehensive duct repair and maintenance services designed to restore efficiency, improve air quality, and protect the longevity of your entire HVAC system.\nAccording to the U.S. Department of Energy, the average home loses approximately 20 to 30 percent of conditioned air through leaks, holes, and poorly connected ducts. That means nearly a third of the energy you pay for may never actually reach the rooms where you need it. In a climate like Fort Worth, TX, where summers regularly push past 100 degrees and winter cold snaps can drop temperatures into the twenties, that level of energy loss translate",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "repair",
+     "content_sha256": "f8fa32ddfbd0254c73d35549fe7522a2ef7f169ce68ac4d1137f3124041833f7",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:f8fa32ddfbd0254c73d35549fe7522a2ef7f169ce68ac4d1137f3124041833f7"
+    },
+    {
+     "fragment": "Industry Trends Shaping Commercial HVAC Maintenance",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "206ab3e66f0e429694f7fc152587d81cc6d0854e8bc155e03e3cd570de03baaa",
+     "locator": "heading:4",
+     "snapshot_version": "minimized-sha256:206ab3e66f0e429694f7fc152587d81cc6d0854e8bc155e03e3cd570de03baaa"
+    },
+    {
+     "fragment": "A Top Quality Heating & Cooling Service Company",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "a91e983bb101f6f90c3289a7bd4bce23decea3973974e78f5945733a6f34591c",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:a91e983bb101f6f90c3289a7bd4bce23decea3973974e78f5945733a6f34591c"
+    },
+    {
+     "fragment": "Air Conditioner Installation, Air Conditioning Installation, HVAC Installation & AC Installation | Arlington, TX | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "service_area_location",
+     "content_sha256": "7ba80e1711cbae02adfb16d400da1c88a1a7ce58ae7268369a4d31782210ea6f",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:7ba80e1711cbae02adfb16d400da1c88a1a7ce58ae7268369a4d31782210ea6f"
+    },
+    {
+     "fragment": "Air Duct Installation, Duct Repair, Air Duct Repair & Duct Services | Fort Worth, TX | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "repair",
+     "content_sha256": "f8fa32ddfbd0254c73d35549fe7522a2ef7f169ce68ac4d1137f3124041833f7",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:f8fa32ddfbd0254c73d35549fe7522a2ef7f169ce68ac4d1137f3124041833f7"
+    },
+    {
+     "fragment": "AC Maintenance, Air Conditioning Maintenance & AC Maintenance Near Me | Arlington, TX | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "residential_hvac",
+     "content_sha256": "4fa2f0ec410ded9470296e883b4f3d06d5727a0be5f034fdd9ed2c7abf98608e",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:4fa2f0ec410ded9470296e883b4f3d06d5727a0be5f034fdd9ed2c7abf98608e"
+    },
+    {
+     "fragment": "AC Maintenance, Air Conditioning Maintenance & AC Maintenance Near Me | Arlington, TX | Webb Air\nWebb Air will remain open throughout this weekend, and going into next week for emergency service. We will do everything in our power to get your system back in working conditions if it stops working. Please understand, the safety of our employees is very important to us, all service calls will be determined based on the road conditions.\nRequest Estimate\nSchedule Service\nAir Conditioning\nAir Conditioning Service\nAir Conditioning Maintenance\nAir Conditioning Installation\nDuctless HVAC\nHeating\nHeating Service\nHeating Maintenance\nHeating Installation\nHigh Velocity HVAC\nCommercial\nLight Commercial HVAC\nCommercial Maintenance Programs\nService Areas\nResidential Maintenance Programs Arlington, TX\nUnderstanding Residential HVAC Maintenance Programs in Arlington\nHomeowners in Arlington, TX face unique climate challenges that demand reliable heating and cooling systems throughout the year. With summer temperatures regularly exceeding 95 degrees Fahrenheit and winter cold snaps that can drop below freezing, your HVAC system works overtime to maintain comfortable indoor temperatures. At Webb Air, we’ve developed comprehensive residential maintenance programs specifically designed to address these demanding conditions while maximizing system efficiency and longevity. Our maintenance programs go beyond simple filter changes, encompassing thorough system evaluations, preventive care measures, and proactive component monitoring that helps identify potential issues before they develop into costly repairs.\nThe importance of regular HVAC maintenance cannot be overstated, particularly in Arlington’s variable climate where systems transition frequently between heating and cooling modes. Research indicates that properly maintained HVAC systems operate up to 25% more efficiently than neglected units, translating to significant energy savings over time. Additionally, regular maintenance extends",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "residential_hvac",
+     "content_sha256": "4fa2f0ec410ded9470296e883b4f3d06d5727a0be5f034fdd9ed2c7abf98608e",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:4fa2f0ec410ded9470296e883b4f3d06d5727a0be5f034fdd9ed2c7abf98608e"
+    },
+    {
+     "fragment": "Why Routine Heating Service Matters",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:a090bb4e9004e62b5759f09daf22db43494206c6b65da50284e1677c999ebd39"
+    },
+    {
+     "fragment": "Fort Worth, TX",
+     "fact_class": "public_other",
+     "page_purpose": "contact_mechanism",
+     "content_sha256": "6d1c6019962ea7b98799bb3b0438303f0cd5474150c1adc2fb58d1f247cc73c1",
+     "locator": "heading:4",
+     "snapshot_version": "minimized-sha256:6d1c6019962ea7b98799bb3b0438303f0cd5474150c1adc2fb58d1f247cc73c1"
+    },
+    {
+     "fragment": "Industry Trends Shaping Light Commercial HVAC",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658",
+     "locator": "heading:6",
+     "snapshot_version": "minimized-sha256:19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658"
+    },
+    {
+     "fragment": "Cooling System Installation",
+     "fact_class": "public_service_description",
+     "page_purpose": "service_area_location",
+     "content_sha256": "7ba80e1711cbae02adfb16d400da1c88a1a7ce58ae7268369a4d31782210ea6f",
+     "locator": "heading:6",
+     "snapshot_version": "minimized-sha256:7ba80e1711cbae02adfb16d400da1c88a1a7ce58ae7268369a4d31782210ea6f"
+    },
+    {
+     "fragment": "Cooling System Installation",
+     "fact_class": "public_service_description",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "192eade6b1144bb69ebde9f0d7dd4d58307fe562eb13db0ea5234f4f21bc8c75",
+     "locator": "heading:9",
+     "snapshot_version": "minimized-sha256:192eade6b1144bb69ebde9f0d7dd4d58307fe562eb13db0ea5234f4f21bc8c75"
+    },
+    {
+     "fragment": "The Future of Heating Technology",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a",
+     "locator": "heading:5",
+     "snapshot_version": "minimized-sha256:9dc2238dbddbf4d148388de92e305b6f07e8f4dc330a8076b3949fd39870178a"
+    },
+    {
+     "fragment": "Light Commercial HVAC Services in Fort Worth, TX",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:19cabc88ef8918eba62e0ea02372c5c1e5cb4ec477a4efaf381065e3b47d8658"
+    },
+    {
+     "fragment": "AC Maintenance, AC Maintenance Near Me & Air Conditioning Maintenance | Arlington, TX | Webb Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "service_area_location",
+     "content_sha256": "725edf174fbb21995df85e58e772fce82074241e28aa7922a8ee3de2391199a0",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:725edf174fbb21995df85e58e772fce82074241e28aa7922a8ee3de2391199a0"
+    },
+    {
+     "fragment": "The Webb Air Installation Process",
+     "fact_class": "public_service_description",
+     "page_purpose": "service_area_location",
+     "content_sha256": "7ba80e1711cbae02adfb16d400da1c88a1a7ce58ae7268369a4d31782210ea6f",
+     "locator": "heading:1",
+     "snapshot_version": "minimized-sha256:7ba80e1711cbae02adfb16d400da1c88a1a7ce58ae7268369a4d31782210ea6f"
+    },
+    {
+     "fragment": "Fort Worth, TX",
+     "fact_class": "public_other",
+     "page_purpose": "faq",
+     "content_sha256": "ebf62e86d081d8926a2db6313698c93e9f495dab5314bc5a8f7f64c291ac3174",
+     "locator": "heading:39",
+     "snapshot_version": "minimized-sha256:ebf62e86d081d8926a2db6313698c93e9f495dab5314bc5a8f7f64c291ac3174"
+    }
+   ]
+  },
+  "BNCAIR": {
+   "slot": 3,
+   "business_id": "491df72b-8535-5ba8-bd3f-caf9eac50f8c",
+   "exact_hostname": "www.bncair.net",
+   "run_status": "succeeded",
+   "pages_attempted": 3,
+   "pages_succeeded": 3,
+   "fact_class_histogram": {
+    "public_inbound_path": 5,
+    "public_other": 3,
+    "public_service_description": 12
+   },
+   "page_status_counts": {
+    "fetched": 3
+   },
+   "evidence": [
+    {
+     "fragment": "Residential HVAC Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "services",
+     "content_sha256": "fd7de21e31f4b4e8623058c158beec1c8f8c988e9ff429599023220c5d600b3d",
+     "locator": "heading:6",
+     "snapshot_version": "minimized-sha256:fd7de21e31f4b4e8623058c158beec1c8f8c988e9ff429599023220c5d600b3d"
+    },
+    {
+     "fragment": "Commercial HVAC Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "unclassified",
+     "content_sha256": "00fb719a926fcc3f0389b14ed70fb0f75118c1194e8fb6ddca7690e1434b3bc2",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:00fb719a926fcc3f0389b14ed70fb0f75118c1194e8fb6ddca7690e1434b3bc2"
+    },
+    {
+     "fragment": "Contact Us",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "contact_mechanism",
+     "content_sha256": "109ffdd77fc3db6054395d706f0d095ac335890c70c1cda2f91ef7f95792b7bf",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:109ffdd77fc3db6054395d706f0d095ac335890c70c1cda2f91ef7f95792b7bf"
+    },
+    {
+     "fragment": "HVAC Maintenance and Service",
+     "fact_class": "public_service_description",
+     "page_purpose": "services",
+     "content_sha256": "fd7de21e31f4b4e8623058c158beec1c8f8c988e9ff429599023220c5d600b3d",
+     "locator": "heading:4",
+     "snapshot_version": "minimized-sha256:fd7de21e31f4b4e8623058c158beec1c8f8c988e9ff429599023220c5d600b3d"
+    },
+    {
+     "fragment": "Commercial HVAC Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "services",
+     "content_sha256": "fd7de21e31f4b4e8623058c158beec1c8f8c988e9ff429599023220c5d600b3d",
+     "locator": "heading:5",
+     "snapshot_version": "minimized-sha256:fd7de21e31f4b4e8623058c158beec1c8f8c988e9ff429599023220c5d600b3d"
+    },
+    {
+     "fragment": "BNCAIR\nServices\nCommercial & Residential HVAC Services\nClick Here for Free Estimates for Commercial Preventative Maintenance\nClick Here For Residential or Commercial Repair or Installs\nHigh Quality, Skilled Air Conditioning & Heating Service in Dallas-Fort Worth Metroplex, Tarrant County and surrounding areas\nOur team is ready to help you. We service commercial in the DFW metroplex. We serve our residential clients in Tarrant County and the surrounding areas. No job is too large or too small for us. We are licensed and insured for your protection.\nWe service all air conditioning and heating units on the market including these:\nCommercial HVAC Services\nWe change filters, belts and provide routine maintenance on a scheduled basis to our commercial clients. Learn More about the different commercial HVAC services that we offer.\nResidential HVAC Services\nNeed a service call or a new system installation? We are the team to trust with all of your Fort Worth HVAC system needs. Give us a call so that we can discuss your needs.\n5437 Camarillo Dr, Keller, TX 76244\nHigh Quality, Skilled Air Conditioning & Heating Service in the Dallas-Fort Worth Metroplex",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "unclassified",
+     "content_sha256": "00fb719a926fcc3f0389b14ed70fb0f75118c1194e8fb6ddca7690e1434b3bc2",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:00fb719a926fcc3f0389b14ed70fb0f75118c1194e8fb6ddca7690e1434b3bc2"
+    },
+    {
+     "fragment": "We service all air conditioning and heating units on the market including these:",
+     "fact_class": "public_service_description",
+     "page_purpose": "unclassified",
+     "content_sha256": "00fb719a926fcc3f0389b14ed70fb0f75118c1194e8fb6ddca7690e1434b3bc2",
+     "locator": "heading:1",
+     "snapshot_version": "minimized-sha256:00fb719a926fcc3f0389b14ed70fb0f75118c1194e8fb6ddca7690e1434b3bc2"
+    },
+    {
+     "fragment": "High Quality, Skilled Air Conditioning & Heating Service in the Dallas-Fort Worth Metroplex",
+     "fact_class": "public_service_description",
+     "page_purpose": "unclassified",
+     "content_sha256": "00fb719a926fcc3f0389b14ed70fb0f75118c1194e8fb6ddca7690e1434b3bc2",
+     "locator": "heading:4",
+     "snapshot_version": "minimized-sha256:00fb719a926fcc3f0389b14ed70fb0f75118c1194e8fb6ddca7690e1434b3bc2"
+    },
+    {
+     "fragment": "Services - BNCAIR\nServices\nCommercial & Residential HVAC Services\nServices\nAir Conditioning, Heating, and HVAC Equipment Installation\nWe offer a wide range of HVAC products to meet your needs of cooling and heating the facility or home that you are in. If you are replacing existing HVAC equipment we can discuss newer types of HVAC products that may serve you better and provide a lower energy cost. We offer air conditioners, furnaces, heat pumps, air quality filters and solutions, and thermostats as a factory authorized dealer of the major HVAC companies. We’d love to discuss your needs for residential or commercial HVAC services in the Dallas-Fort Worth Metroplex. We are currently running several specials on a variety of products.\nIf you upgrade an older HVAC system you will love the benefits that you receive from doing so. You will quickly notice lower energy bills and better efficiency in cooling and heating your place. Your monthly utility bills will drastically be reduced as you consume less and less energy. If you are questioning the costs of upgrading or replacing an old unit, we’d love to discuss what to expect from the upgrade and costs. Most of our clients cover the cost of the new installation pretty quickly with the energy savings that they receive in lower utility bills.\nHVAC Repair\nAnyone that lives or works in Fort Worth understands that air conditioning is absolutely crucial to our peace of mind and safety. When you are in a bind and need HVAC, air conditioning repair, we are the team to call. Our trustworthy staff can assist and get you scheduled quickly for air conditioning repair when you need it the most. While heating is less of an issue in our area, we are also available to fix furnaces and heating equipment as well during the winter months.\nWe can check out your existing ductwork and provide you with a quality assessment. If your ductwork needs replacing we are ready to handle the job, big or small. Typically, we have a quick turn around with t",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "services",
+     "content_sha256": "fd7de21e31f4b4e8623058c158beec1c8f8c988e9ff429599023220c5d600b3d",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:fd7de21e31f4b4e8623058c158beec1c8f8c988e9ff429599023220c5d600b3d"
+    },
+    {
+     "fragment": "BNCAIR",
+     "fact_class": "public_other",
+     "page_purpose": "unclassified",
+     "content_sha256": "00fb719a926fcc3f0389b14ed70fb0f75118c1194e8fb6ddca7690e1434b3bc2",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:00fb719a926fcc3f0389b14ed70fb0f75118c1194e8fb6ddca7690e1434b3bc2"
+    },
+    {
+     "fragment": "High Quality, Skilled Air Conditioning & Heating Service in the Dallas-Fort Worth Metroplex",
+     "fact_class": "public_service_description",
+     "page_purpose": "contact_mechanism",
+     "content_sha256": "109ffdd77fc3db6054395d706f0d095ac335890c70c1cda2f91ef7f95792b7bf",
+     "locator": "heading:1",
+     "snapshot_version": "minimized-sha256:109ffdd77fc3db6054395d706f0d095ac335890c70c1cda2f91ef7f95792b7bf"
+    },
+    {
+     "fragment": "Contact Us - BNCAIR",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "contact_mechanism",
+     "content_sha256": "109ffdd77fc3db6054395d706f0d095ac335890c70c1cda2f91ef7f95792b7bf",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:109ffdd77fc3db6054395d706f0d095ac335890c70c1cda2f91ef7f95792b7bf"
+    },
+    {
+     "fragment": "Residential HVAC Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "unclassified",
+     "content_sha256": "00fb719a926fcc3f0389b14ed70fb0f75118c1194e8fb6ddca7690e1434b3bc2",
+     "locator": "heading:3",
+     "snapshot_version": "minimized-sha256:00fb719a926fcc3f0389b14ed70fb0f75118c1194e8fb6ddca7690e1434b3bc2"
+    },
+    {
+     "fragment": "Services - BNCAIR",
+     "fact_class": "public_other",
+     "page_purpose": "services",
+     "content_sha256": "fd7de21e31f4b4e8623058c158beec1c8f8c988e9ff429599023220c5d600b3d",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:fd7de21e31f4b4e8623058c158beec1c8f8c988e9ff429599023220c5d600b3d"
+    },
+    {
+     "fragment": "Services",
+     "fact_class": "public_other",
+     "page_purpose": "services",
+     "content_sha256": "fd7de21e31f4b4e8623058c158beec1c8f8c988e9ff429599023220c5d600b3d",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:fd7de21e31f4b4e8623058c158beec1c8f8c988e9ff429599023220c5d600b3d"
+    },
+    {
+     "fragment": "Air Conditioning, Heating, and HVAC Equipment Installation",
+     "fact_class": "public_service_description",
+     "page_purpose": "services",
+     "content_sha256": "fd7de21e31f4b4e8623058c158beec1c8f8c988e9ff429599023220c5d600b3d",
+     "locator": "heading:1",
+     "snapshot_version": "minimized-sha256:fd7de21e31f4b4e8623058c158beec1c8f8c988e9ff429599023220c5d600b3d"
+    },
+    {
+     "fragment": "HVAC Repair",
+     "fact_class": "public_service_description",
+     "page_purpose": "services",
+     "content_sha256": "fd7de21e31f4b4e8623058c158beec1c8f8c988e9ff429599023220c5d600b3d",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:fd7de21e31f4b4e8623058c158beec1c8f8c988e9ff429599023220c5d600b3d"
+    },
+    {
+     "fragment": "High Quality, Skilled Air Conditioning & Heating Service in the Dallas-Fort Worth Metroplex",
+     "fact_class": "public_service_description",
+     "page_purpose": "services",
+     "content_sha256": "fd7de21e31f4b4e8623058c158beec1c8f8c988e9ff429599023220c5d600b3d",
+     "locator": "heading:8",
+     "snapshot_version": "minimized-sha256:fd7de21e31f4b4e8623058c158beec1c8f8c988e9ff429599023220c5d600b3d"
+    },
+    {
+     "fragment": "High Quality, Skilled Air Conditioning & Heating Service in Dallas-Fort Worth Metroplex, Tarrant County and surrounding areas",
+     "fact_class": "public_service_description",
+     "page_purpose": "unclassified",
+     "content_sha256": "00fb719a926fcc3f0389b14ed70fb0f75118c1194e8fb6ddca7690e1434b3bc2",
+     "locator": "heading:0",
+     "snapshot_version": "minimized-sha256:00fb719a926fcc3f0389b14ed70fb0f75118c1194e8fb6ddca7690e1434b3bc2"
+    },
+    {
+     "fragment": "Contact Us - BNCAIR\nServices\nCommercial & Residential HVAC Services\n5437 Camarillo Dr, Keller, TX 76244\n5437 Camarillo Dr, Keller, TX 76244\nHigh Quality, Skilled Air Conditioning & Heating Service in the Dallas-Fort Worth Metroplex",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "contact_mechanism",
+     "content_sha256": "109ffdd77fc3db6054395d706f0d095ac335890c70c1cda2f91ef7f95792b7bf",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:109ffdd77fc3db6054395d706f0d095ac335890c70c1cda2f91ef7f95792b7bf"
+    }
+   ]
+  },
+  "All Elements Heating & Air": {
+   "slot": 4,
+   "business_id": "6e8a8f8e-b6b9-562c-84e6-6aa2faa40806",
+   "exact_hostname": "allelementshvac.com",
+   "run_status": "partial",
+   "pages_attempted": 20,
+   "pages_succeeded": 13,
+   "fact_class_histogram": {
+    "public_about": 3,
+    "public_inbound_path": 4,
+    "public_other": 24,
+    "public_service_description": 84
+   },
+   "page_status_counts": {
+    "failed": 7,
+    "fetched": 13
+   },
+   "evidence": [
+    {
+     "fragment": "How long has All Elements Heating & Air been in business?",
+     "fact_class": "public_service_description",
+     "page_purpose": "about",
+     "content_sha256": "52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e",
+     "locator": "heading:30",
+     "snapshot_version": "minimized-sha256:52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e"
+    },
+    {
+     "fragment": "Contact - All Elements Heating & Air LLC\nGet Free Quote\nAir Conditioning\nHeating\nHVAC\nService Agreements\nCommercial Services\nCommercial HVAC\nMore Commercial\nMarshall, TX\nWascom, TX\nCarthage, TX\nJefferson, TX\nHallsville, TX\nMarshall, TX 75672\nMarshall, TX 75672\nGet Free Quote\nWascom, TX\nMarshall, TX\nJefferson, TX\nHallsville, TX\nGet Free Quote\nCopyright © 2026 All Elements Heating & Air LLC\nFind8 Performance Marketing",
+     "fact_class": "public_service_description",
+     "page_purpose": "contact_mechanism",
+     "content_sha256": "41ae4cf8af7af508500c666e36d789513c6d1d86aec48358a696f28f386d236a",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:41ae4cf8af7af508500c666e36d789513c6d1d86aec48358a696f28f386d236a"
+    },
+    {
+     "fragment": "Expert Service When You Need It Most",
+     "fact_class": "public_other",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807",
+     "locator": "heading:17",
+     "snapshot_version": "minimized-sha256:5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807"
+    },
+    {
+     "fragment": "6 Signs You Need Air Conditioning Repair",
+     "fact_class": "public_service_description",
+     "page_purpose": "repair",
+     "content_sha256": "1b71662dbefc44634af36e122e3166ad768bcbabaa6a0b1c382d0c481618d7ee",
+     "locator": "heading:16",
+     "snapshot_version": "minimized-sha256:1b71662dbefc44634af36e122e3166ad768bcbabaa6a0b1c382d0c481618d7ee"
+    },
+    {
+     "fragment": "Fast & Responsive Service",
+     "fact_class": "public_other",
+     "page_purpose": "repair",
+     "content_sha256": "1b71662dbefc44634af36e122e3166ad768bcbabaa6a0b1c382d0c481618d7ee",
+     "locator": "heading:12",
+     "snapshot_version": "minimized-sha256:1b71662dbefc44634af36e122e3166ad768bcbabaa6a0b1c382d0c481618d7ee"
+    },
+    {
+     "fragment": "Commercial Refrigeration",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807",
+     "locator": "heading:7",
+     "snapshot_version": "minimized-sha256:5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807"
+    },
+    {
+     "fragment": "Do you offer emergency commercial HVAC repairs?",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807",
+     "locator": "heading:32",
+     "snapshot_version": "minimized-sha256:5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807"
+    },
+    {
+     "fragment": "Customized Comfort with Mini-Split Heating & Cooling",
+     "fact_class": "public_service_description",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "43df12acd95f72e89e590c21fe9317c8968d0b8d60030f12e843b1760d7c2afb",
+     "locator": "heading:15",
+     "snapshot_version": "minimized-sha256:43df12acd95f72e89e590c21fe9317c8968d0b8d60030f12e843b1760d7c2afb"
+    },
+    {
+     "fragment": "When should I call for emergency service?",
+     "fact_class": "public_other",
+     "page_purpose": "heating",
+     "content_sha256": "166adc487385166777742cc19aea8a9d62d1ac4e285bd35f2143100b91a7ad97",
+     "locator": "heading:35",
+     "snapshot_version": "minimized-sha256:166adc487385166777742cc19aea8a9d62d1ac4e285bd35f2143100b91a7ad97"
+    },
+    {
+     "fragment": "Service Agreements - All Elements Heating & Air LLC",
+     "fact_class": "public_service_description",
+     "page_purpose": "services",
+     "content_sha256": "b6326e573e22aabc85a9b3824bdac341c51ddfea3c91418ee7a80b782193e2f0",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:b6326e573e22aabc85a9b3824bdac341c51ddfea3c91418ee7a80b782193e2f0"
+    },
+    {
+     "fragment": "Heater Maintenance - All Elements Heating & Air LLC",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "4c93c32c2f76cec6f9ada7f984980c2d6bf6fc94b31a726d419303d93eb3bffb",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:4c93c32c2f76cec6f9ada7f984980c2d6bf6fc94b31a726d419303d93eb3bffb"
+    },
+    {
+     "fragment": "Mini-Split Systems - All Elements Heating & Air LLC",
+     "fact_class": "public_service_description",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "43df12acd95f72e89e590c21fe9317c8968d0b8d60030f12e843b1760d7c2afb",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:43df12acd95f72e89e590c21fe9317c8968d0b8d60030f12e843b1760d7c2afb"
+    },
+    {
+     "fragment": "Targeted Heating & Cooling",
+     "fact_class": "public_service_description",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "43df12acd95f72e89e590c21fe9317c8968d0b8d60030f12e843b1760d7c2afb",
+     "locator": "heading:7",
+     "snapshot_version": "minimized-sha256:43df12acd95f72e89e590c21fe9317c8968d0b8d60030f12e843b1760d7c2afb"
+    },
+    {
+     "fragment": "Heater Repair - All Elements Heating & Air LLC\nGet Free Quote\nAir Conditioning\nHeating\nHVAC\nService Agreements\nCommercial Services\nCommercial HVAC\nMore Commercial\nMarshall, TX\nWascom, TX\nCarthage, TX\nJefferson, TX\nHallsville, TX\nEast Texas Heater Repair\nStay Warm, Stay Safe—Reliable Heating When It Counts\nA working heater isn’t always at the top of mind in East Texas until temperatures suddenly plunge. Whether you have a gas furnace, heat pump, or electric heating system, dependable service is crucial when the cold sets in. When\n, like it did in January 2025, having dependable heating can mean the difference between comfort and chaos. We’re here to make sure your family stays warm when it matters most.\nAt All Elements Heating & Air, we’re more than just\nair conditioning\nexperts—we’re also your go-to team for heater repairs. A broken heater isn’t simply a stressful inconvenience; it can be a serious concern, especially for families with young children or elderly loved ones. That’s why we act quickly to restore warmth to your home with expert service and genuine care.\nReliable Heater Repair Services\nEast Texas homeowners choose All Elements Heating & Air because we do more than fix heaters—we provide dependable service backed by expertise, honesty, and a commitment to your comfort. No matter the issue, we’re here to help.\nWith us, what you see is what you get—clear, competitive quotes with no hidden costs or surprises.\nService\nWe don’t just work here; we also live here. We understand the unique heating needs of East Texas homes and provide tailored solutions to fit our local climate.\n24 Hour Emergency Services and Free Quotes\nHeating emergencies don’t wait, and neither do we. Whether your heater breaks down in the middle of the night or on a holiday, our 24/7 emergency service ensures you get fast, reliable repairs when you need them most. All Elements Heating & Air is committed to keeping your home warm and welcoming, whether you need a routine check-up or an urgent ",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "166adc487385166777742cc19aea8a9d62d1ac4e285bd35f2143100b91a7ad97",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:166adc487385166777742cc19aea8a9d62d1ac4e285bd35f2143100b91a7ad97"
+    },
+    {
+     "fragment": "Contact - All Elements Heating & Air LLC",
+     "fact_class": "public_service_description",
+     "page_purpose": "contact_mechanism",
+     "content_sha256": "41ae4cf8af7af508500c666e36d789513c6d1d86aec48358a696f28f386d236a",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:41ae4cf8af7af508500c666e36d789513c6d1d86aec48358a696f28f386d236a"
+    },
+    {
+     "fragment": "Protect Your HVAC System & Your Wallet",
+     "fact_class": "public_service_description",
+     "page_purpose": "services",
+     "content_sha256": "b6326e573e22aabc85a9b3824bdac341c51ddfea3c91418ee7a80b782193e2f0",
+     "locator": "heading:4",
+     "snapshot_version": "minimized-sha256:b6326e573e22aabc85a9b3824bdac341c51ddfea3c91418ee7a80b782193e2f0"
+    },
+    {
+     "fragment": "Fast & Reliable Service, 24/7",
+     "fact_class": "public_other",
+     "page_purpose": "about",
+     "content_sha256": "52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e",
+     "locator": "heading:20",
+     "snapshot_version": "minimized-sha256:52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e"
+    },
+    {
+     "fragment": "Efficient Service",
+     "fact_class": "public_other",
+     "page_purpose": "maintenance",
+     "content_sha256": "e664aeeafc49d59b37af372951e47405578f327e1065be6550b7cc21cce48b0b",
+     "locator": "heading:14",
+     "snapshot_version": "minimized-sha256:e664aeeafc49d59b37af372951e47405578f327e1065be6550b7cc21cce48b0b"
+    },
+    {
+     "fragment": "East Texas Heater Maintenance",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "4c93c32c2f76cec6f9ada7f984980c2d6bf6fc94b31a726d419303d93eb3bffb",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:4c93c32c2f76cec6f9ada7f984980c2d6bf6fc94b31a726d419303d93eb3bffb"
+    },
+    {
+     "fragment": "24 Hour Emergency Services and Free Quotes",
+     "fact_class": "public_other",
+     "page_purpose": "heating",
+     "content_sha256": "166adc487385166777742cc19aea8a9d62d1ac4e285bd35f2143100b91a7ad97",
+     "locator": "heading:15",
+     "snapshot_version": "minimized-sha256:166adc487385166777742cc19aea8a9d62d1ac4e285bd35f2143100b91a7ad97"
+    },
+    {
+     "fragment": "Don’t Get Left in the Cold—Upgrade Your Heating Today",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "6bab188f0bf33d113abcc91105e216ba4157355622e78466c840d314f9fc65ca",
+     "locator": "heading:3",
+     "snapshot_version": "minimized-sha256:6bab188f0bf33d113abcc91105e216ba4157355622e78466c840d314f9fc65ca"
+    },
+    {
+     "fragment": "24 Hour Emergency Services and Free Quotes",
+     "fact_class": "public_other",
+     "page_purpose": "heating",
+     "content_sha256": "166adc487385166777742cc19aea8a9d62d1ac4e285bd35f2143100b91a7ad97",
+     "locator": "heading:37",
+     "snapshot_version": "minimized-sha256:166adc487385166777742cc19aea8a9d62d1ac4e285bd35f2143100b91a7ad97"
+    },
+    {
+     "fragment": "Customized Commercial HVAC Maintenance Plans",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253",
+     "locator": "heading:5",
+     "snapshot_version": "minimized-sha256:eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253"
+    },
+    {
+     "fragment": "Do you offer financing for HVAC replacements?",
+     "fact_class": "public_service_description",
+     "page_purpose": "about",
+     "content_sha256": "52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e",
+     "locator": "heading:33",
+     "snapshot_version": "minimized-sha256:52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e"
+    },
+    {
+     "fragment": "Why Businesses Trust All Elements Heating & Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807",
+     "locator": "heading:12",
+     "snapshot_version": "minimized-sha256:5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807"
+    },
+    {
+     "fragment": "What types of systems for you service?",
+     "fact_class": "public_other",
+     "page_purpose": "about",
+     "content_sha256": "52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e",
+     "locator": "heading:32",
+     "snapshot_version": "minimized-sha256:52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e"
+    },
+    {
+     "fragment": "East Texas Air Conditioner Replacement & Installation",
+     "fact_class": "public_service_description",
+     "page_purpose": "installation",
+     "content_sha256": "95a0a386af4d4be478ec2fbbfc68172a36db3ef98126bbeb8b28ae4e59fde3de",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:95a0a386af4d4be478ec2fbbfc68172a36db3ef98126bbeb8b28ae4e59fde3de"
+    },
+    {
+     "fragment": "Energy-Efficient HVAC Options",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253",
+     "locator": "heading:12",
+     "snapshot_version": "minimized-sha256:eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253"
+    },
+    {
+     "fragment": "East Texas A/C Maintenance",
+     "fact_class": "public_service_description",
+     "page_purpose": "maintenance",
+     "content_sha256": "e664aeeafc49d59b37af372951e47405578f327e1065be6550b7cc21cce48b0b",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:e664aeeafc49d59b37af372951e47405578f327e1065be6550b7cc21cce48b0b"
+    },
+    {
+     "fragment": "Air Conditioning Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "about",
+     "content_sha256": "52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e",
+     "locator": "heading:6",
+     "snapshot_version": "minimized-sha256:52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e"
+    },
+    {
+     "fragment": "5 Signs Your Commercial HVAC System Needs Service",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253",
+     "locator": "heading:22",
+     "snapshot_version": "minimized-sha256:eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253"
+    },
+    {
+     "fragment": "Hallsville, TX",
+     "fact_class": "public_other",
+     "page_purpose": "heating",
+     "content_sha256": "4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e",
+     "locator": "heading:10",
+     "snapshot_version": "minimized-sha256:4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e"
+    },
+    {
+     "fragment": "Our Services",
+     "fact_class": "public_other",
+     "page_purpose": "heating",
+     "content_sha256": "4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e",
+     "locator": "heading:18",
+     "snapshot_version": "minimized-sha256:4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e"
+    },
+    {
+     "fragment": "More Commercial - All Elements Heating & Air LLC",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807"
+    },
+    {
+     "fragment": "Carthage, TX",
+     "fact_class": "public_other",
+     "page_purpose": "heating",
+     "content_sha256": "4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e",
+     "locator": "heading:9",
+     "snapshot_version": "minimized-sha256:4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e"
+    },
+    {
+     "fragment": "A/C Maintenance - All Elements Heating & Air LLC",
+     "fact_class": "public_service_description",
+     "page_purpose": "maintenance",
+     "content_sha256": "e664aeeafc49d59b37af372951e47405578f327e1065be6550b7cc21cce48b0b",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:e664aeeafc49d59b37af372951e47405578f327e1065be6550b7cc21cce48b0b"
+    },
+    {
+     "fragment": "Reliable Air Conditioner Repair Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "repair",
+     "content_sha256": "1b71662dbefc44634af36e122e3166ad768bcbabaa6a0b1c382d0c481618d7ee",
+     "locator": "heading:5",
+     "snapshot_version": "minimized-sha256:1b71662dbefc44634af36e122e3166ad768bcbabaa6a0b1c382d0c481618d7ee"
+    },
+    {
+     "fragment": "All Elements Heating & Air LLC: HVAC Services - Marshall, TX",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e"
+    },
+    {
+     "fragment": "Are mini-splits more energy-efficient than traditional HVAC systems?",
+     "fact_class": "public_service_description",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "43df12acd95f72e89e590c21fe9317c8968d0b8d60030f12e843b1760d7c2afb",
+     "locator": "heading:28",
+     "snapshot_version": "minimized-sha256:43df12acd95f72e89e590c21fe9317c8968d0b8d60030f12e843b1760d7c2afb"
+    },
+    {
+     "fragment": "Texas Weather Won’t Wait—Neither Do We",
+     "fact_class": "public_other",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253",
+     "locator": "heading:20",
+     "snapshot_version": "minimized-sha256:eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253"
+    },
+    {
+     "fragment": "Priority Service",
+     "fact_class": "public_other",
+     "page_purpose": "services",
+     "content_sha256": "b6326e573e22aabc85a9b3824bdac341c51ddfea3c91418ee7a80b782193e2f0",
+     "locator": "heading:8",
+     "snapshot_version": "minimized-sha256:b6326e573e22aabc85a9b3824bdac341c51ddfea3c91418ee7a80b782193e2f0"
+    },
+    {
+     "fragment": "Uneven Heating",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "6bab188f0bf33d113abcc91105e216ba4157355622e78466c840d314f9fc65ca",
+     "locator": "heading:21",
+     "snapshot_version": "minimized-sha256:6bab188f0bf33d113abcc91105e216ba4157355622e78466c840d314f9fc65ca"
+    },
+    {
+     "fragment": "East Texas Specialized Commercial HVAC Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807"
+    },
+    {
+     "fragment": "East Texas Commercial HVAC Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253"
+    },
+    {
+     "fragment": "Commercial HVAC Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "about",
+     "content_sha256": "52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e",
+     "locator": "heading:8",
+     "snapshot_version": "minimized-sha256:52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e"
+    },
+    {
+     "fragment": "Reliable HVAC Services in East Texas",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e"
+    },
+    {
+     "fragment": "How often should commercial HVAC systems be serviced?",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807",
+     "locator": "heading:30",
+     "snapshot_version": "minimized-sha256:5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807"
+    },
+    {
+     "fragment": "Contact",
+     "fact_class": "public_other",
+     "page_purpose": "contact_mechanism",
+     "content_sha256": "41ae4cf8af7af508500c666e36d789513c6d1d86aec48358a696f28f386d236a",
+     "locator": "heading:1",
+     "snapshot_version": "minimized-sha256:41ae4cf8af7af508500c666e36d789513c6d1d86aec48358a696f28f386d236a"
+    },
+    {
+     "fragment": "East Texas New Heater Install",
+     "fact_class": "public_other",
+     "page_purpose": "heating",
+     "content_sha256": "6bab188f0bf33d113abcc91105e216ba4157355622e78466c840d314f9fc65ca",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:6bab188f0bf33d113abcc91105e216ba4157355622e78466c840d314f9fc65ca"
+    },
+    {
+     "fragment": "Why Join Our HVAC Maintenance Plan?",
+     "fact_class": "public_service_description",
+     "page_purpose": "services",
+     "content_sha256": "b6326e573e22aabc85a9b3824bdac341c51ddfea3c91418ee7a80b782193e2f0",
+     "locator": "heading:5",
+     "snapshot_version": "minimized-sha256:b6326e573e22aabc85a9b3824bdac341c51ddfea3c91418ee7a80b782193e2f0"
+    },
+    {
+     "fragment": "How often should my commercial HVAC system be serviced?",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253",
+     "locator": "heading:32",
+     "snapshot_version": "minimized-sha256:eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253"
+    },
+    {
+     "fragment": "Uneven Cooling",
+     "fact_class": "public_service_description",
+     "page_purpose": "installation",
+     "content_sha256": "95a0a386af4d4be478ec2fbbfc68172a36db3ef98126bbeb8b28ae4e59fde3de",
+     "locator": "heading:21",
+     "snapshot_version": "minimized-sha256:95a0a386af4d4be478ec2fbbfc68172a36db3ef98126bbeb8b28ae4e59fde3de"
+    },
+    {
+     "fragment": "Can you help improve energy efficiency for my business?",
+     "fact_class": "public_other",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807",
+     "locator": "heading:31",
+     "snapshot_version": "minimized-sha256:5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807"
+    },
+    {
+     "fragment": "Why East Texas Businesses Trust All Elements Heating & Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253",
+     "locator": "heading:15",
+     "snapshot_version": "minimized-sha256:eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253"
+    },
+    {
+     "fragment": "PROFESSIONAL A/C TUNE-UPS FOR LASTING PERFORMANCE",
+     "fact_class": "public_other",
+     "page_purpose": "maintenance",
+     "content_sha256": "e664aeeafc49d59b37af372951e47405578f327e1065be6550b7cc21cce48b0b",
+     "locator": "heading:17",
+     "snapshot_version": "minimized-sha256:e664aeeafc49d59b37af372951e47405578f327e1065be6550b7cc21cce48b0b"
+    },
+    {
+     "fragment": "How can I book a service appointment?",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "about",
+     "content_sha256": "52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e",
+     "locator": "heading:35",
+     "snapshot_version": "minimized-sha256:52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e"
+    },
+    {
+     "fragment": "Reliable Heater Maintenance Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "4c93c32c2f76cec6f9ada7f984980c2d6bf6fc94b31a726d419303d93eb3bffb",
+     "locator": "heading:5",
+     "snapshot_version": "minimized-sha256:4c93c32c2f76cec6f9ada7f984980c2d6bf6fc94b31a726d419303d93eb3bffb"
+    },
+    {
+     "fragment": "A/C Not Cooling Properly",
+     "fact_class": "public_service_description",
+     "page_purpose": "repair",
+     "content_sha256": "1b71662dbefc44634af36e122e3166ad768bcbabaa6a0b1c382d0c481618d7ee",
+     "locator": "heading:17",
+     "snapshot_version": "minimized-sha256:1b71662dbefc44634af36e122e3166ad768bcbabaa6a0b1c382d0c481618d7ee"
+    },
+    {
+     "fragment": "5 Common Commercial HVAC & Refrigeration Issues",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807",
+     "locator": "heading:19",
+     "snapshot_version": "minimized-sha256:5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807"
+    },
+    {
+     "fragment": "24/7 Emergency Service & Expert Commercial Solutions",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807",
+     "locator": "heading:18",
+     "snapshot_version": "minimized-sha256:5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807"
+    },
+    {
+     "fragment": "Longview, TX",
+     "fact_class": "public_other",
+     "page_purpose": "heating",
+     "content_sha256": "4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e",
+     "locator": "heading:8",
+     "snapshot_version": "minimized-sha256:4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e"
+    },
+    {
+     "fragment": "Heating Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "about",
+     "content_sha256": "52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e",
+     "locator": "heading:7",
+     "snapshot_version": "minimized-sha256:52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e"
+    },
+    {
+     "fragment": "Prevent Costly Repairs with A/C Maintenance in East Texas",
+     "fact_class": "public_service_description",
+     "page_purpose": "maintenance",
+     "content_sha256": "e664aeeafc49d59b37af372951e47405578f327e1065be6550b7cc21cce48b0b",
+     "locator": "heading:1",
+     "snapshot_version": "minimized-sha256:e664aeeafc49d59b37af372951e47405578f327e1065be6550b7cc21cce48b0b"
+    },
+    {
+     "fragment": "A/C Maintenance - All Elements Heating & Air LLC\nGet Free Quote\nAir Conditioning\nHeating\nHVAC\nService Agreements\nCommercial Services\nCommercial HVAC\nMore Commercial\nMarshall, TX\nWascom, TX\nCarthage, TX\nJefferson, TX\nHallsville, TX\nPrevent Costly Repairs with A/C Maintenance in East Texas\nEast Texas A/C Maintenance\nTexas Heat is Tough—Your A/C Should Be Tougher!\nRegular A/C maintenance isn’t just about preventing breakdowns—it’s about lowering energy bills, improving cooling performance, and extending the life of your system. At All Elements Heating & Air, we provide comprehensive air conditioning maintenance services to ensure your A/C runs at peak efficiency all year long. Whether you own a residential or commercial air conditioning system, regular tune-ups ensure optimal performance and help prevent breakdowns during the hottest months.\nbetter cooling, lower energy costs, and a longer lifespan for your A/C\nRegular maintenance of your air conditioning system is crucial for optimal performance and longevity. Just like a car, your air conditioner needs regular attention to ensure it runs smoothly and efficiently. Here are some key benefits of keeping up with routine A/C maintenance:\nA clean and properly serviced AC system uses less energy, lowering utility bills.\nRoutine maintenance helps prevent wear and tear, reducing the need for frequent air conditioning repair.\nIdentifying minor issues early prevents costly air conditioner repair service later.\nConsistent Cooling Performance\nPrevents uneven cooling, weak airflow, and thermostat issues.\nEast Texas homeowners rely on\nAll Elements Heating & Air\n, so you stay cool and comfortable all summer long. With expert service, honest pricing, and a commitment to your comfort,\nWith us, what you see is what you get—clear, competitive quotes with no hidden costs or surprises.\nEfficient Service\nWe don’t just work here; we also live here. We understand the unique cooling needs of East Texas homes and provide tailored solutions to ",
+     "fact_class": "public_service_description",
+     "page_purpose": "maintenance",
+     "content_sha256": "e664aeeafc49d59b37af372951e47405578f327e1065be6550b7cc21cce48b0b",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:e664aeeafc49d59b37af372951e47405578f327e1065be6550b7cc21cce48b0b"
+    },
+    {
+     "fragment": "New A/C Installation - All Elements Heating & Air LLC\nGet Free Quote\nAir Conditioning\nHeating\nHVAC\nService Agreements\nCommercial Services\nCommercial HVAC\nMore Commercial\nMarshall, TX\nWascom, TX\nCarthage, TX\nJefferson, TX\nHallsville, TX\nEast Texas Air Conditioner Replacement & Installation\nIs your air conditioner struggling to keep up with the Texas heat?\nWhen it’s time for a new air conditioner, choosing the right system and A/C company is essential. At All Elements Heating & Air, we provide expert air conditioner replacement and installation services, ensuring your new system is energy-efficient, properly sized, and built to last. Whether you need a new air conditioner estimate for your home or business, our certified air conditioning contractors are here to help.\nrequest a free estimate\nProfessional Air Conditioner Replacement & Installation Services\nAll Elements Heating & Air\n, so you can enjoy reliable cooling when you need it most.\nWe evaluate your home’s size, layout, and cooling needs to recommend the best system.\nOur certified technicians ensure proper setup, airflow, and system calibration for peak performance.\nWe back our installations with manufacturer warranties and our service guarantee.\nEast Texas homeowners trust\nAll Elements Heating & Air\nWith us, what you see is what you get—clear, competitive quotes with no hidden costs or surprises.\nService\nWe don’t just work here; we also live here. We understand the unique cooling needs of East Texas homes and provide tailored solutions to fit our local climate.\nAll Elements Heating & Air\nCentral Air Conditioning\n– Delivers whole-home cooling with powerful, even airflow.\nConstant air conditioning repairs add up and may cost more than a replacement.\nUneven Cooling\nMost air conditioners last 10-15 years before performance declines.\nAwesome customer service. Very affordable. The tech that came out was great and super helpful in explaining things to my husband. He even offered some money saving tips and advice! High",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "installation",
+     "content_sha256": "95a0a386af4d4be478ec2fbbfc68172a36db3ef98126bbeb8b28ae4e59fde3de",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:95a0a386af4d4be478ec2fbbfc68172a36db3ef98126bbeb8b28ae4e59fde3de"
+    },
+    {
+     "fragment": "Texas Heat is Tough—Your A/C Should Be Tougher!",
+     "fact_class": "public_other",
+     "page_purpose": "maintenance",
+     "content_sha256": "e664aeeafc49d59b37af372951e47405578f327e1065be6550b7cc21cce48b0b",
+     "locator": "heading:3",
+     "snapshot_version": "minimized-sha256:e664aeeafc49d59b37af372951e47405578f327e1065be6550b7cc21cce48b0b"
+    },
+    {
+     "fragment": "What types of commercial HVAC systems do you service?",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807",
+     "locator": "heading:29",
+     "snapshot_version": "minimized-sha256:5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807"
+    },
+    {
+     "fragment": "Waskom, TX",
+     "fact_class": "public_other",
+     "page_purpose": "heating",
+     "content_sha256": "4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e",
+     "locator": "heading:6",
+     "snapshot_version": "minimized-sha256:4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e"
+    },
+    {
+     "fragment": "Expert Service for Specialized Commercial HVAC Systems",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807",
+     "locator": "heading:5",
+     "snapshot_version": "minimized-sha256:5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807"
+    },
+    {
+     "fragment": "East Texas Ductless Mini-Split Installation & Repair",
+     "fact_class": "public_service_description",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "43df12acd95f72e89e590c21fe9317c8968d0b8d60030f12e843b1760d7c2afb",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:43df12acd95f72e89e590c21fe9317c8968d0b8d60030f12e843b1760d7c2afb"
+    },
+    {
+     "fragment": "Commercial HVAC Installation & Replacement",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253",
+     "locator": "heading:10",
+     "snapshot_version": "minimized-sha256:eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253"
+    },
+    {
+     "fragment": "Comprehensive HVAC Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "about",
+     "content_sha256": "52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e",
+     "locator": "heading:5",
+     "snapshot_version": "minimized-sha256:52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e"
+    },
+    {
+     "fragment": "Your Trusted HVAC Experts in East Texas",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e",
+     "locator": "heading:4",
+     "snapshot_version": "minimized-sha256:4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e"
+    },
+    {
+     "fragment": "About - All Elements Heating & Air LLC",
+     "fact_class": "public_service_description",
+     "page_purpose": "about",
+     "content_sha256": "52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e"
+    },
+    {
+     "fragment": "Service Agreements - All Elements Heating & Air LLC\nGet Free Quote\nAir Conditioning\nHeating\nHVAC\nService Agreements\nCommercial Services\nCommercial HVAC\nMore Commercial\nMarshall, TX\nWascom, TX\nCarthage, TX\nJefferson, TX\nHallsville, TX\nEast Texas HVAC Maintenance Plans\nService Agreements\non your car—so why neglect your HVAC system? While your heating and cooling may seem to be working fine,\nProtect Your HVAC System & Your Wallet\nAll Elements Heating & Air\n, we make HVAC maintenance\ncomprehensive service agreements\n, our plans guarantee that we'll visit and inspect your HVAC system\ntwice a year. Additionally, our 4 Star and 5 Star plans offer same-day service for emergencies during regular operating hours. These service plans also come with significant discounts on parts, all designed to lower your overall HVAC service costs in Marshall, Texas.\nWhy Join Our HVAC Maintenance Plan?\nKeeping your HVAC system in top shape isn’t just about comfort—it’s about\nAll Elements Heating & Air\nHVAC maintenance plans\nroutine tune-ups, priority service, and exclusive discounts\n, ensuring your heating and cooling system runs\nRoutine check-ups ensure your system operates at peak performance, reducing energy consumption and lowering utility bills.\nConsistent maintenance minimizes wear and tear, helping your HVAC system last years longer and perform better.\nPriority Service\nService agreement holders receive priority scheduling, ensuring prompt attention, especially during peak seasons.\nEast Texas homeowners choose All Elements Heating & Air because we do more than fix heaters—we provide dependable service backed by expertise, honesty, and a commitment to your comfort. No matter the issue, we’re here to help.\nHVAC\nWith us, what you see is what you get—clear, competitive quotes with no hidden fees and affordable plans.\nService\nWe value your time, prioritize your comfort, and strive to provide fast times and efficient service.\nProudly Serving Marshall, Longview, Hallsville, and Byond in East ",
+     "fact_class": "public_service_description",
+     "page_purpose": "services",
+     "content_sha256": "b6326e573e22aabc85a9b3824bdac341c51ddfea3c91418ee7a80b782193e2f0",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:b6326e573e22aabc85a9b3824bdac341c51ddfea3c91418ee7a80b782193e2f0"
+    },
+    {
+     "fragment": "Heater Repair - All Elements Heating & Air LLC",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "166adc487385166777742cc19aea8a9d62d1ac4e285bd35f2143100b91a7ad97",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:166adc487385166777742cc19aea8a9d62d1ac4e285bd35f2143100b91a7ad97"
+    },
+    {
+     "fragment": "HVAC Solutions That Keep Your Business Moving",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253",
+     "locator": "heading:3",
+     "snapshot_version": "minimized-sha256:eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253"
+    },
+    {
+     "fragment": "Consistent Cooling Performance",
+     "fact_class": "public_service_description",
+     "page_purpose": "maintenance",
+     "content_sha256": "e664aeeafc49d59b37af372951e47405578f327e1065be6550b7cc21cce48b0b",
+     "locator": "heading:10",
+     "snapshot_version": "minimized-sha256:e664aeeafc49d59b37af372951e47405578f327e1065be6550b7cc21cce48b0b"
+    },
+    {
+     "fragment": "Do you provide HVAC services for both homes and businesses?",
+     "fact_class": "public_service_description",
+     "page_purpose": "about",
+     "content_sha256": "52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e",
+     "locator": "heading:31",
+     "snapshot_version": "minimized-sha256:52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e"
+    },
+    {
+     "fragment": "New A/C Installation - All Elements Heating & Air LLC",
+     "fact_class": "public_service_description",
+     "page_purpose": "installation",
+     "content_sha256": "95a0a386af4d4be478ec2fbbfc68172a36db3ef98126bbeb8b28ae4e59fde3de",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:95a0a386af4d4be478ec2fbbfc68172a36db3ef98126bbeb8b28ae4e59fde3de"
+    },
+    {
+     "fragment": "How do I know if my commercial HVAC system needs to be replaced?",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253",
+     "locator": "heading:34",
+     "snapshot_version": "minimized-sha256:eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253"
+    },
+    {
+     "fragment": "What causes an A/C unit to stop cooling?",
+     "fact_class": "public_service_description",
+     "page_purpose": "repair",
+     "content_sha256": "1b71662dbefc44634af36e122e3166ad768bcbabaa6a0b1c382d0c481618d7ee",
+     "locator": "heading:29",
+     "snapshot_version": "minimized-sha256:1b71662dbefc44634af36e122e3166ad768bcbabaa6a0b1c382d0c481618d7ee"
+    },
+    {
+     "fragment": "Heater Maintenance - All Elements Heating & Air LLC\nGet Free Quote\nAir Conditioning\nHeating\nHVAC\nService Agreements\nCommercial Services\nCommercial HVAC\nMore Commercial\nMarshall, TX\nWascom, TX\nCarthage, TX\nJefferson, TX\nHallsville, TX\nEast Texas Heater Maintenance\nYour heater is the heart of your home’s comfort during the cold months. Without regular maintenance, even the best systems can falter—resulting in unexpected breakdowns, higher energy bills, and chilly nights. At All Elements Heating & Air, our comprehensive heater maintenance service is designed to keep your gas furnace, heat pump, or electric heater operating at peak efficiency, ensuring you stay warm all winter long.\neven heating throughout your home\nReliable Heater Maintenance Services\nAll Elements Heating & Air\ndesigned to improve performance and extend your system’s lifespan.\nelectrical connections, refrigerant levels, motor performance, thermostat function, filters, and more\nEast Texas homeowners choose All Elements Heating & Air because we do more than fix heaters—we provide dependable service backed by expertise, honesty, and a commitment to your comfort. No matter the issue, we’re here to help.\nHeating\nWith us, what you see is what you get—clear, competitive quotes with no hidden costs or surprises.\nService\nWe don’t just work here; we also live here. We understand the unique heating needs of East Texas homes and provide tailored solutions to fit our local climate.\nkeep your heater running at peak performance\nAll Elements Heating & Air\nHVAC maintenance plan\nPriority Service\nCall ([PHONE_REDACTED] today to enroll and enjoy priority service!\nAwesome customer service. Very affordable. The tech that came out was great and super helpful in explaining things to my husband. He even offered some money saving tips and advice! Highly recommend\nweak airflow, uneven heating, higher energy bills, strange noises, or takes longer to warm your home\nHVAC\nscheduled tune-ups, priority service, and discounts on repair",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "heating",
+     "content_sha256": "4c93c32c2f76cec6f9ada7f984980c2d6bf6fc94b31a726d419303d93eb3bffb",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:4c93c32c2f76cec6f9ada7f984980c2d6bf6fc94b31a726d419303d93eb3bffb"
+    },
+    {
+     "fragment": "East Texas A/C Repair",
+     "fact_class": "public_service_description",
+     "page_purpose": "repair",
+     "content_sha256": "1b71662dbefc44634af36e122e3166ad768bcbabaa6a0b1c382d0c481618d7ee",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:1b71662dbefc44634af36e122e3166ad768bcbabaa6a0b1c382d0c481618d7ee"
+    },
+    {
+     "fragment": "Commercial HVAC - All Elements Heating & Air LLC\nGet Free Quote\nAir Conditioning\nHeating\nHVAC\nService Agreements\nCommercial Services\nCommercial HVAC\nMore Commercial\nMarshall, TX\nWascom, TX\nCarthage, TX\nJefferson, TX\nHallsville, TX\nEast Texas Commercial HVAC Services\nReliable HVAC Solutions for Businesses of All Sizes\nCommercial HVAC\nHVAC Solutions That Keep Your Business Moving\nA well-functioning HVAC system is essential for maintaining a comfortable, efficient, and productive workspace. Whether you manage an office, restaurant, retail store, or large industrial facility, a reliable heating and cooling system ensures employees stay comfortable, customers feel welcomed, and equipment runs smoothly. At All Elements Heating & Air, we specialize in expert commercial HVAC installation, maintenance, and repair to keep your business running without disruptions.\nTexas weather can be unpredictable—one moment scorching heat, the next a sudden cold front. When your business relies on a properly functioning HVAC system to maintain productivity and comfort, you can’t afford unexpected breakdowns. Whether your system needs a simple tune-up, emergency repairs, or a full-scale replacement, our team of experienced HVAC contractors is here to deliver reliable solutions with minimal disruption to your operations.\nCustomized Commercial HVAC Maintenance Plans\nHVAC failures can be costly and disruptive, but routine maintenance helps prevent unexpected breakdowns while\nAll Elements Heating & Air\ntailored to your business’s specific needs, ensuring your heating and cooling systems run at peak performance year-round.\nWe work with business owners to develop\nspecialized service plans\nthat match your HVAC demands, schedule, and budget.\n, saving you money in the long run while keeping your business comfortable and operational.\nBenefits of Routine HVAC Maintenance for Businesses:\nA properly maintained HVAC unit lasts\nCommercial HVAC Installation & Replacement\nUpgrading your commercial HVAC syste",
+     "fact_class": "public_inbound_path",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253"
+    },
+    {
+     "fragment": "About All Elements Heating & Air",
+     "fact_class": "public_service_description",
+     "page_purpose": "about",
+     "content_sha256": "52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e"
+    },
+    {
+     "fragment": "What types of commercial properties do you service?",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253",
+     "locator": "heading:35",
+     "snapshot_version": "minimized-sha256:eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253"
+    },
+    {
+     "fragment": "Jefferson, TX",
+     "fact_class": "public_other",
+     "page_purpose": "heating",
+     "content_sha256": "4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e",
+     "locator": "heading:7",
+     "snapshot_version": "minimized-sha256:4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e"
+    },
+    {
+     "fragment": "Do you offer emergency commercial HVAC repairs?",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253",
+     "locator": "heading:36",
+     "snapshot_version": "minimized-sha256:eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253"
+    },
+    {
+     "fragment": "More Than HVAC—We Keep Your Business Running Smoothly",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807",
+     "locator": "heading:3",
+     "snapshot_version": "minimized-sha256:5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807"
+    },
+    {
+     "fragment": "Which Heating System is Right for You?",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "6bab188f0bf33d113abcc91105e216ba4157355622e78466c840d314f9fc65ca",
+     "locator": "heading:5",
+     "snapshot_version": "minimized-sha256:6bab188f0bf33d113abcc91105e216ba4157355622e78466c840d314f9fc65ca"
+    },
+    {
+     "fragment": "Can regular HVAC maintenance lower my energy bills?",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253",
+     "locator": "heading:33",
+     "snapshot_version": "minimized-sha256:eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253"
+    },
+    {
+     "fragment": "HVAC System Maintenance",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e",
+     "locator": "heading:21",
+     "snapshot_version": "minimized-sha256:4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e"
+    },
+    {
+     "fragment": "Mini-Split Systems - All Elements Heating & Air LLC\nGet Free Quote\nAir Conditioning\nHeating\nHVAC\nService Agreements\nCommercial Services\nCommercial HVAC\nMore Commercial\nMarshall, TX\nWascom, TX\nCarthage, TX\nJefferson, TX\nHallsville, TX\nEast Texas Ductless Mini-Split Installation & Repair\non spaces you’re not using. Unlike traditional HVAC systems,\nAll Elements Heating & Air\ncustom heating and cooling solutions\nto traditional heating and cooling.\nSay Hello to Zoned Heating & Cooling!\nversatile, energy-efficient heating and cooling\ncustomized climate control, lower energy costs, or a duct-free alternative to traditional HVAC\n, mini-splits offer an easy-to-install alternative to central HVAC systems.\nTargeted Heating & Cooling\nless energy than traditional HVAC systems\nEast Texas homeowners choose All Elements Heating & Air because we do more than install mini-split systems—we provide expert guidance, honest service, and custom solutions designed for your comfort. Whether you’re upgrading your home’s efficiency, adding climate control to a new space, or looking for a better way to heat and cool individual rooms, our team is here to help every step of the way.\nHVAC\nOur certified experts install and service all major mini-split brands.\nWith us, what you see is what you get—clear, competitive quotes with no hidden costs or surprises. Flexible financing available.\nService\nWe don’t just work here; we also live here. We understand the unique heating needs of East Texas homes and provide tailored solutions to fit our local climate.\nCustomized Comfort with Mini-Split Heating & Cooling\nfor heating and cooling\nAll Elements Heating & Air\ncompared to traditional HVAC systems. Whether for a\nAwesome customer service. Very affordable. The tech that came out was great and super helpful in explaining things to my husband. He even offered some money saving tips and advice! Highly recommend\nAre mini-splits more energy-efficient than traditional HVAC systems?\nboth heating and cooling\nMarshal",
+     "fact_class": "public_about",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "43df12acd95f72e89e590c21fe9317c8968d0b8d60030f12e843b1760d7c2afb",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:43df12acd95f72e89e590c21fe9317c8968d0b8d60030f12e843b1760d7c2afb"
+    },
+    {
+     "fragment": "All Elements Heating & Air LLC: HVAC Services - Marshall, TX\nGet Free Quote\nAir Conditioning\nHeating\nHVAC\nService Agreements\nCommercial Services\nCommercial HVAC\nMore Commercial\nMarshall, TX\nWascom, TX\nCarthage, TX\nJefferson, TX\nHallsville, TX\nReliable HVAC Services in East Texas\nStay Comfortable Year-Round with Expert Heating & Cooling Services\nEast Texas weather is\ndependable HVAC system\nis essential to keep your home or business comfortable\nYour Trusted HVAC Experts in East Texas\nMarshall, TX\nWaskom, TX\nJefferson, TX\nLongview, TX\nCarthage, TX\nHallsville, TX\nfor 24-hour emergency service!\nHVAC\nCertified furnace contractors and air conditioning contractors trained to service all major brands.\nReliable Service\nWhether it’s an air conditioner repair service or a new furnace quote, we provide quick, hassle-free solutions.\nNo hidden fees—just honest service with clear estimates.\nWe understand the unique heating & cooling needs of East Texas homes.\nOur Services\nAir Conditioning Repair & Installation\nGet fast and reliable air conditioning repair or a new air conditioner estimate for an energy-efficient system.\nHeating Services\nStay warm with expert heater repair and installation. We service all major brands and systems, including heat pumps, gas furnaces, and electric heating systems.\nHVAC System Maintenance\nService Agreements\nCommercial HVAC Services\nComplete HVAC solutions for businesses, including air conditioning contractors for installations, repairs, and maintenance.\nCommercial HVAC\nMore Commercial\nMarshall, TX 75672\nGet Free Quote\nWascom, TX\nMarshall, TX\nJefferson, TX\nHallsville, TX\nGet Free Quote\nCopyright © 2026 All Elements Heating & Air LLC\nFind8 Performance Marketing",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e"
+    },
+    {
+     "fragment": "Why Choose All Elements for Your HVAC Needs?",
+     "fact_class": "public_service_description",
+     "page_purpose": "about",
+     "content_sha256": "52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e",
+     "locator": "heading:11",
+     "snapshot_version": "minimized-sha256:52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e"
+    },
+    {
+     "fragment": "Commercial HVAC - All Elements Heating & Air LLC",
+     "fact_class": "public_service_description",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:eb047d48c95e3144f7e6cf42fbe2e74462de31803615b0732a3a287751b9c253"
+    },
+    {
+     "fragment": "Heating Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e",
+     "locator": "heading:20",
+     "snapshot_version": "minimized-sha256:4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e"
+    },
+    {
+     "fragment": "New Heater Installation - All Elements Heating & Air LLC",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "6bab188f0bf33d113abcc91105e216ba4157355622e78466c840d314f9fc65ca",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:6bab188f0bf33d113abcc91105e216ba4157355622e78466c840d314f9fc65ca"
+    },
+    {
+     "fragment": "24 Hour Emergency Services and Free Quotes",
+     "fact_class": "public_other",
+     "page_purpose": "about",
+     "content_sha256": "52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e",
+     "locator": "heading:17",
+     "snapshot_version": "minimized-sha256:52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e"
+    },
+    {
+     "fragment": "Air Conditioning Repair & Installation",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e",
+     "locator": "heading:19",
+     "snapshot_version": "minimized-sha256:4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e"
+    },
+    {
+     "fragment": "Professional Air Conditioner Replacement & Installation Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "installation",
+     "content_sha256": "95a0a386af4d4be478ec2fbbfc68172a36db3ef98126bbeb8b28ae4e59fde3de",
+     "locator": "heading:5",
+     "snapshot_version": "minimized-sha256:95a0a386af4d4be478ec2fbbfc68172a36db3ef98126bbeb8b28ae4e59fde3de"
+    },
+    {
+     "fragment": "East Texas Heater Repair",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "166adc487385166777742cc19aea8a9d62d1ac4e285bd35f2143100b91a7ad97",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:166adc487385166777742cc19aea8a9d62d1ac4e285bd35f2143100b91a7ad97"
+    },
+    {
+     "fragment": "Your Local HVAC Expert",
+     "fact_class": "public_service_description",
+     "page_purpose": "about",
+     "content_sha256": "52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e",
+     "locator": "heading:24",
+     "snapshot_version": "minimized-sha256:52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e"
+    },
+    {
+     "fragment": "Reliable Heater Repair Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "166adc487385166777742cc19aea8a9d62d1ac4e285bd35f2143100b91a7ad97",
+     "locator": "heading:5",
+     "snapshot_version": "minimized-sha256:166adc487385166777742cc19aea8a9d62d1ac4e285bd35f2143100b91a7ad97"
+    },
+    {
+     "fragment": "New Heater Installation - All Elements Heating & Air LLC\nGet Free Quote\nAir Conditioning\nHeating\nHVAC\nService Agreements\nCommercial Services\nCommercial HVAC\nMore Commercial\nMarshall, TX\nWascom, TX\nCarthage, TX\nJefferson, TX\nHallsville, TX\nEast Texas New Heater Install\nStay Warm All Winter—Upgrade to a High-Efficiency Heating System\nDon’t Get Left in the Cold—Upgrade Your Heating Today\nnew, high-efficiency heating system\nWhen it’s time to upgrade your heating system, you need a\ntrusted heating and air conditioning company\nAll Elements Heating & Air\nfurnace replacement services\ntailored to your home or business. Whether you need a\nnew furnace quote\nenergy-efficient heating options\nWhich Heating System is Right for You?\nyour home’s size, insulation, fuel availability, and heating needs\nboth heating and cooling\ncustomizable zoned heating\nEast Texas homeowners choose All Elements Heating & Air because we do more than replace and install heaters—we provide dependable service backed by expertise, honesty, and a commitment to your comfort. No matter the issue, we’re here to help.\nWith us, what you see is what you get—clear, competitive quotes with no hidden costs or surprises.\nService\nWe don’t just work here; we also live here. We understand the unique heating needs of East Texas homes and provide tailored solutions to fit our local climate.\nAll Elements Heating & Air\nMost heating systems start to lose efficiency after a decade, leading to\nhigher energy costs and reduced performance\nreliable heating when you need it most\nand improve overall performance.\nUneven Heating\noverheating issues or dust buildup\nAwesome customer service. Very affordable. The tech that came out was great and super helpful in explaining things to my husband. He even offered some money saving tips and advice! Highly recommend\nYes! High-efficiency heating systems\nuse less energy while delivering better performance\n, so you can upgrade your heating system\nMarshall, TX 75672\nGet Free Quote\nWascom, TX\nMarsh",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "6bab188f0bf33d113abcc91105e216ba4157355622e78466c840d314f9fc65ca",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:6bab188f0bf33d113abcc91105e216ba4157355622e78466c840d314f9fc65ca"
+    },
+    {
+     "fragment": "Commercial HVAC Services",
+     "fact_class": "public_service_description",
+     "page_purpose": "heating",
+     "content_sha256": "4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e",
+     "locator": "heading:23",
+     "snapshot_version": "minimized-sha256:4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e"
+    },
+    {
+     "fragment": "A/C Repair - All Elements Heating & Air LLC",
+     "fact_class": "public_service_description",
+     "page_purpose": "repair",
+     "content_sha256": "1b71662dbefc44634af36e122e3166ad768bcbabaa6a0b1c382d0c481618d7ee",
+     "locator": "html:title",
+     "snapshot_version": "minimized-sha256:1b71662dbefc44634af36e122e3166ad768bcbabaa6a0b1c382d0c481618d7ee"
+    },
+    {
+     "fragment": "Say Hello to Zoned Heating & Cooling!",
+     "fact_class": "public_service_description",
+     "page_purpose": "cooling_ac",
+     "content_sha256": "43df12acd95f72e89e590c21fe9317c8968d0b8d60030f12e843b1760d7c2afb",
+     "locator": "heading:4",
+     "snapshot_version": "minimized-sha256:43df12acd95f72e89e590c21fe9317c8968d0b8d60030f12e843b1760d7c2afb"
+    },
+    {
+     "fragment": "24 Hour Emergency Services and Free Quotes",
+     "fact_class": "public_other",
+     "page_purpose": "repair",
+     "content_sha256": "1b71662dbefc44634af36e122e3166ad768bcbabaa6a0b1c382d0c481618d7ee",
+     "locator": "heading:15",
+     "snapshot_version": "minimized-sha256:1b71662dbefc44634af36e122e3166ad768bcbabaa6a0b1c382d0c481618d7ee"
+    },
+    {
+     "fragment": "East Texas HVAC Maintenance Plans",
+     "fact_class": "public_service_description",
+     "page_purpose": "services",
+     "content_sha256": "b6326e573e22aabc85a9b3824bdac341c51ddfea3c91418ee7a80b782193e2f0",
+     "locator": "heading:2",
+     "snapshot_version": "minimized-sha256:b6326e573e22aabc85a9b3824bdac341c51ddfea3c91418ee7a80b782193e2f0"
+    },
+    {
+     "fragment": "Marshall, TX",
+     "fact_class": "public_other",
+     "page_purpose": "heating",
+     "content_sha256": "4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e",
+     "locator": "heading:5",
+     "snapshot_version": "minimized-sha256:4368a99b48a3d6b21b0279971a4e15f4d06ce45a51d11d87f377842c4a1b236e"
+    },
+    {
+     "fragment": "A/C Repair - All Elements Heating & Air LLC\nGet Free Quote\nAir Conditioning\nHeating\nHVAC\nService Agreements\nCommercial Services\nCommercial HVAC\nMore Commercial\nMarshall, TX\nWascom, TX\nCarthage, TX\nJefferson, TX\nHallsville, TX\nEast Texas A/C Repair\nStay Cool with Expert Air Conditioning Repair Services\nWhen summer temperatures soar in East Texas, a broken air conditioner isn’t just inconvenient—it’s an emergency. At All Elements Heating & Air, we provide fast, expert A/C repair service to keep your home cool and comfortable. Whether your system is blowing warm air, making strange noises, or not turning on at all, our experienced technicians can diagnose and fix the problem quickly.\nWe service\nReliable Air Conditioner Repair Services\nAir conditioning problems can be frustrating, but fixing them doesn’t have to be. Whether your system is\nefficient, hassle-free service\nfix all types of cooling issues\nAir Conditioning Repair?\nEast Texas homeowners trust\nAll Elements Heating & Air\nhonest, expert service\nWith us, what you see is what you get—clear, competitive quotes with no hidden costs or surprises.\nFast & Responsive Service\nWe don’t just work here; we also live here. We understand the unique cooling needs of East Texas homes and provide tailored solutions to fit our local climate.\n24 Hour Emergency Services and Free Quotes\nWhen your A/C breaks down, you need fast, reliable service you can trust. At\nAll Elements Heating & Air\ncooling performance, airflow, refrigerant levels, and electrical connections\n6 Signs You Need Air Conditioning Repair\nYour air conditioning system works hard to keep you comfortable, but over time, wear and tear can lead to issues. If you notice any of the following issues, it’s time to call a professional air conditioning company for assistance. Our experienced team is equipped to manage all types of A/C problems, including:\nA/C Not Cooling Properly\nInsufficient cooling could be due to low refrigerant levels, a clogged air filter, or a failing comp",
+     "fact_class": "public_service_description",
+     "page_purpose": "repair",
+     "content_sha256": "1b71662dbefc44634af36e122e3166ad768bcbabaa6a0b1c382d0c481618d7ee",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:1b71662dbefc44634af36e122e3166ad768bcbabaa6a0b1c382d0c481618d7ee"
+    },
+    {
+     "fragment": "About - All Elements Heating & Air LLC\nGet Free Quote\nAir Conditioning\nHeating\nHVAC\nService Agreements\nCommercial Services\nCommercial HVAC\nMore Commercial\nMarshall, TX\nWascom, TX\nCarthage, TX\nJefferson, TX\nHallsville, TX\nAbout All Elements Heating & Air\nTrusted HVAC Experts Serving East Texas Since 2012\nAt All Elements Heating & Air, we believe that true comfort goes beyond a working HVAC system—it’s about the peace of mind that comes from knowing your home or business is in expert hands. Since 2012, we’ve been dedicated to delivering high-quality heating, cooling, and air quality solutions to homeowners and businesses across Marshall, Longview, and the surrounding East Texas communities. Founded by Matthew Cody Kuhn, an HVAC expert with industry experience dating back to 2006, our company was built on expertise, integrity, and a commitment to customer satisfaction.\n, our mission is to provide top-tier workmanship, transparent pricing, and long-lasting solutions. We service all makes and models of residential and commercial heating and cooling systems, including chillers, boilers, water source equipment, pneumatics, ventilation fans, and heat pumps. Our experienced technicians specialize in heat load calculations and\ncustom HVAC designs\n, optimizing every system for performance, efficiency, and your specific needs.\nComprehensive HVAC Services\nAt All Elements Heating & Air, we do more than just repair heating and cooling systems—we offer tailored solutions to guarantee lasting comfort, energy efficiency, and system reliability. Whether you’re facing an unexpected breakdown, seeking ways to improve\n, our team has the skills and expertise to manage it all. We take a customized approach to every service, ensuring your HVAC system is optimized for your unique home or business needs.\nfull range of residential and commercial HVAC services\nAir Conditioning Services\nHeating Services\nCommercial HVAC Services\nHVAC installation, maintenance, and repairs\nfor businesses of all si",
+     "fact_class": "public_about",
+     "page_purpose": "about",
+     "content_sha256": "52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:52c4841e730a3bb65f6591cf6ef5e06963d99984fbdd397d876e57a2fd511c4e"
+    },
+    {
+     "fragment": "More Commercial - All Elements Heating & Air LLC\nGet Free Quote\nAir Conditioning\nHeating\nHVAC\nService Agreements\nCommercial Services\nCommercial HVAC\nMore Commercial\nMarshall, TX\nWascom, TX\nCarthage, TX\nJefferson, TX\nHallsville, TX\nEast Texas Specialized Commercial HVAC Services\nRefrigeration, boilers, automation—whatever your business needs, we have the expertise.\nMore Commercial\nMore Than HVAC—We Keep Your Business Running Smoothly\nYour business relies on more than just heating and cooling—\nAll Elements Heating & Air\ngoes beyond standard HVAC service.\ntailored to your commercial needs.\nAt All Elements Heating & Air LLC, we take pride in being more than just a typical HVAC service provider. Since 2012, our dedicated team has been passionate about delivering customized heating, cooling, and refrigeration solutions that cater to the unique needs of businesses big and small in Marshall, TX, and the surrounding community. Whether it’s boilers, chillers, ice machines, or ventilation fans, we’re here to ensure your operations run smoothly and efficiently. We understand that every business is different, which is why we focus on building personal relationships and delivering specialized services that truly make a difference.\nExpert Service for Specialized Commercial HVAC Systems\nYour business depends on\nmore than just heating and cooling\nice machines for a restaurant, ventilation systems for an industrial facility, or VRF technology for a multi-zone building\nWe offer precision installation, maintenance, and repair services for boilers and chillers, ensuring optimal temperature control for large facilities.\nCommercial Refrigeration\nOur team provides installation and servicing of commercial ice makers, essential for restaurants, hotels, and healthcare facilities.\nWe integrate advanced controls for optimized HVAC performance and energy efficiency, allowing for smart climate control solutions.\nOur team is experienced in installing and servicing VRF systems, offering flexible an",
+     "fact_class": "public_about",
+     "page_purpose": "commercial_hvac",
+     "content_sha256": "5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807",
+     "locator": "visible-text:0-2000",
+     "snapshot_version": "minimized-sha256:5ec163627f459bf00e75772dbe574e428d57ff34e166bfb45eeaa10483f6e807"
+    }
+   ]
+  }
+ }
+}
