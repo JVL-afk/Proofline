@@ -1,0 +1,139 @@
+{
+  "record_type": "M67_PERSONALIZATION_V2_OWNER_REVIEW_A_AND_B_COMPLETION",
+  "prepared_at": "2026-08-31",
+  "implementation_head": "6d95fea",
+  "branch": "worktree-slot01-window2-execution",
+  "status": "REVIEW_A_AND_B_COMPLETE__AWAITING_OWNER_ACCEPTANCE_BEFORE_LINK_8_BUILD",
+  "predecessor": "personalization-v2-deployment-prep-sealed-evidence-and-owner-review-2026-08-31.json (bd4f350)",
+  "full_regression": "833 passed, 3 skipped (PostgreSQL-only), 0 failed",
+  "environment": "FULLY DORMANT throughout: kill switch TRIPPED v33, research-release not_authorized v35, sampled-slot-execution-approval NOT_AUTHORIZED v31, controlled-egress-lease NOT_AUTHORIZED v15, services 0/0/0 (research-worker:22 / intelligence-worker:19 / controlled-egress:18), 0 running tasks. No AWS/DB mutation this round (only local code). Link 8 not built, Terraform not modified, PostgreSQL migration not run, Slots 07-24 not started.",
+
+  "A_semantic_review": {
+    "issue": "company_fact_selector@1 classified bare service-availability language ('24/7', '24 Hour Emergency Services', 'Fast & Reliable Service, 24/7', same-day service) as RESPONSE_COMMITMENT. A public statement that emergency service is available 24/7 is not, by itself, a response-time or acknowledgement commitment.",
+
+    "exact_all_elements_diagnosis": {
+      "sealed_response_cue_rows_under_selector_at_1": 5,
+      "every_one_is_a_bare_availability_claim": [
+        "public_other: 'Fast & Reliable Service, 24/7'",
+        "public_other: '24 Hour Emergency Services and Free Quotes' (x4)",
+        "public_service_description/commercial: '24/7 Emergency Service & Expert Commercial Solutions' (this row buckets as COMMERCIAL_CONTEXT, not the response bucket)",
+        "public_service_description/services: 'Service Agreements ... same-day ...'"
+      ],
+      "none_describe_inbound_response_or_acknowledgement": true,
+      "sealed_public_service_area_rows": 0,
+      "geo_content_present_but_classified_elsewhere": "'All Elements Heating & Air LLC: HVAC Services - Marshall, TX', 'East Texas Commercial HVAC Services', 'Marshall, TX' etc. classified public_service_description / public_other because M1 classify_public_fact keys public_service_area on the literal phrases 'service area' / 'areas we serve' / 'cities we serve' / 'locations', none of which appear. Accepted as an exact-fixture correction; no company-derived service-area option is manufactured; the synthetic M4 location fallback is preserved."
+    },
+
+    "before_after_selector_behaviour": {
+      "selector_version": "commercial_hvac.company_fact_selector@1 -> @2",
+      "RESPONSE_COMMITMENT_cues": "BROAD list (business day, same day, answered, monitored, after hours, respond, response, next day, 24 hours, 24/7, 24 hour, ...) -> TIGHT list of phrases that inherently describe inbound handling (phones/calls answered, email response(s), responses are sent, respond/reply to your, call you back, return your call, contacted after/within, acknowledge your, by the next business day, response time(s), ...). Bare 24/7 / 24-hour / same-day / emergency / fast-service removed.",
+      "SERVICE_AVAILABILITY": "NEW FactCategory (lowest priority). Cues: 24/7, 24-7, 24 hour, 24-hour, around the clock, same-day service, emergency service(s), day or night, ... Fact classes: public_inbound_path / faq / about / other / service_description. Fixed digit-safe frame; never a reader-specific personalization anchor; not an M4 option.",
+      "bucket_precedence": "_bucket now checks RESPONSE_COMMITMENT FIRST, so a contact page that actually publishes response behaviour is classified as a response commitment even though it is also an intake surface. Then INTAKE_SURFACE, SERVICE_AREA_CONTEXT, COMMERCIAL_CONTEXT, SERVICE_AVAILABILITY.",
+      "M3": "supporting_excerpt is now the exact bound verbatim substring (not a blind 280-char prefix). New OBSERVED_SERVICE_AVAILABILITY finding kind, explicitly labelled 'an availability signal, not a statement of inbound response or acknowledgement behaviour'.",
+
+      "All Elements": {
+        "before_selector_at_1": "CompanyFacts: INTAKE, COMMERCIAL, RESPONSE_COMMITMENT (from '24/7' text), (no SERVICE_AREA). M3: observed_response_commitment. Wrong.",
+        "after_selector_at_2": "CompanyFacts: INTAKE, COMMERCIAL, SERVICE_AVAILABILITY. M3: observed_service_availability. observed_response_commitment ABSENT (no genuine inbound-response language in the sealed crawl). observed_service_area ABSENT (no public_service_area rows). M4 service_location = synthetic fallback [north_texas, central_texas, gulf_coast, other, unknown]. Still LOW / 5 findings / passes personalization gate (2 segments) / partial-crawl 13/20 visible in M3 / DRAFT_INCOMPLETE."
+      }
+    },
+
+    "webbair_response_commitment_regression_proof": {
+      "selected_RESPONSE_COMMITMENT_CompanyFact": {
+        "fact_class": "public_inbound_path",
+        "page_purpose": "contact_mechanism",
+        "phrase": "Phones are answered 24 hours/monitored.",
+        "matched_cue": "phones are answered"
+      },
+      "M3_finding": "Observed response commitment: the captured contact page states how inbound inquiries are answered or returned (\"Phones are answered 24 hours/monitored.\").",
+      "number_safety": "the token '24' is a verbatim substring of the cited fragment (unsupported_precision QC passes).",
+      "conclusion": "Webb Air's actual contact-page response language ('phones are answered ... email responses are sent ... contacted after ...') qualifies as RESPONSE_COMMITMENT; the '24/7 emergency service' style text on other Webb pages is separately captured as OBSERVED_SERVICE_AVAILABILITY.",
+      "regression_tests": [
+        "test_webbair_response_and_service_facts_survive_to_reader_output (asserts the RESPONSE finding's supporting_excerpt contains a genuine inbound-response cue)",
+        "test_bare_availability_is_never_a_response_commitment ('24 Hour Emergency Services and Free Quotes' / 'Fast & Reliable Service, 24/7' / 'Same-day service available' -> SERVICE_AVAILABILITY; 'Phones are answered 24 hours; email responses are sent the next business day' / 'We will call you back within one business day' / 'Requests submitted after 10pm are contacted after 8am the following day' -> RESPONSE_COMMITMENT; 'Around the clock emergency service' -> SERVICE_AVAILABILITY, not dropped)",
+        "test_all_elements_availability_not_response_after_correction (observed_service_availability present; observed_response_commitment / observed_service_area absent; synthetic service_location)"
+      ]
+    },
+
+    "corrected_exact_fixture_golden": {
+      "path": "tests/fixtures/personalization_v2_golden.json",
+      "source": "the EXACT sealed Slot 02-04 M1 rows (tests/fixtures/personalization_v2_sealed_evidence.json), one seeded page per page_purpose; historical Slot 02-04 artifacts not mutated or reinterpreted.",
+      "webbair": "HIGH; findings [crawl_coverage, observed_commercial_context, observed_intake_surface, observed_response_commitment, observed_service_area, observed_service_availability, what_remains_unknown]; personalization 2 segments / 2 fact classes / passes_gate",
+      "bncair": "LOW; findings [crawl_coverage, observed_commercial_context, observed_intake_surface, what_remains_unknown]; personalization 1/1/passes; service_location synthetic fallback",
+      "allelements": "LOW; findings [crawl_coverage, observed_commercial_context, observed_intake_surface, observed_service_availability, what_remains_unknown]; personalization 2/2/passes; service_location synthetic fallback; partial crawl 13/20 visible",
+      "divergence": "3 distinct M2 statements, M5 emails, subjects; different finding sets (7 / 4 / 5); Webb HIGH, others LOW; determinism (identical evidence -> byte-identical) proven"
+    },
+
+    "policy_versions_changed_by_A": {
+      "commercial_hvac.company_fact_selector": "@1 -> @2",
+      "commercial_hvac.company_statement": "@1 -> @2",
+      "commercial_hvac.lead_response.rules": "@2 -> @3",
+      "audit.commercial_hvac.deterministic": "@2 -> @3",
+      "outreach.projection": "@2 -> @3",
+      "commercial_hvac.lead_response.outreach (template)": "v3 -> v4",
+      "UNCHANGED": "opportunity definition @1, economics formula @1, heuristic_bands@2 (bands unchanged), demo.commercial_hvac.lead_response@2 / questions@2 (SERVICE_AVAILABILITY is not an M4 option), all M1 versions, all QC policy versions, M2 qualification thresholds, HIGH/LOW logic"
+    }
+  },
+
+  "B_canonical_bundle_attestations": {
+    "calculator": "scripts/sampled_slot_bundle.py",
+    "algorithm": "m67.sampled-slot-bundle@1",
+    "canonical_serialization": "utf8( concat, for every member in the frozen lexicographic manifest order, of ( relpath + 0x00 + sha256_hex(verbatim file bytes) + 0x0a ) ), then sha256. No filesystem traversal order, mtimes, absolute paths, Git state or environment metadata influence the result.",
+    "fail_closed": "manifest missing / empty / unsorted / duplicate / commented / whitespace / backslash-separated -> BundleManifestError. A member that is absolute, escapes the repo root, is a directory, or does not exist -> BundleManifestError. The calculator never returns a digest in any of these cases.",
+    "manifests": {
+      "infra/terraform/phase1/bundle-manifests/stage_coordinator.manifest": [
+        "workers/intelligence/src/opintel_intelligence_worker/coordinator_persistence.py",
+        "workers/intelligence/src/opintel_intelligence_worker/execution.py",
+        "workers/intelligence/src/opintel_intelligence_worker/orchestration.py"
+      ],
+      "infra/terraform/phase1/bundle-manifests/m2_m5_runtime.manifest": [
+        "packages/audit-core/src/opintel_audit/{application,composition,domain,workflow}.py",
+        "packages/audit-local/src/opintel_audit_local/{adapters,persistence}.py",
+        "packages/demo-core/src/opintel_demo/{application,composition,domain,policy,workflow}.py",
+        "packages/demo-local/src/opintel_demo_local/{adapters,persistence}.py",
+        "packages/opportunity-core/src/opintel_opportunity/{application,domain,economics,personalization,rules,workflow}.py",
+        "packages/opportunity-local/src/opintel_opportunity_local/{adapters,persistence}.py",
+        "packages/outreach-core/src/opintel_outreach/{application,composition,domain,workflow}.py",
+        "packages/outreach-local/src/opintel_outreach_local/{adapters,persistence}.py",
+        "workers/intelligence/src/opintel_intelligence_worker/production_runtime.py"
+      ],
+      "deliberately_excluded": "ports.py (Protocol-only, no runtime effect), contracts.py (API/pydantic, not in the coordinator path), __init__.py (re-exports), demo-core/runtime.py (interactive demo-session playback, not exercised by production_runtime._m4 which only composes+reviews). Manifests are pinned LF via .gitattributes."
+    },
+    "computed_digests": {
+      "sampled_slot_stage_coordinator_sha256": {
+        "value": "908e6753adca3d862eeebcd02dd6994e71ea020bc73db6be4fc671f818e56892",
+        "member_count": 3,
+        "prior_tfvars_value": "fe0f34c9ef67c1aa5158aad8cf21206a31f167093f1aaa6350e9ba8f1cc54801",
+        "note": "the stage-coordinator file set is byte-identical to link 7; the value nonetheless changes because the prior value was a static historical placeholder, never method-derived. This is the first canonical computation."
+      },
+      "sampled_slot_m2_m5_runtime_sha256": {
+        "value": "bc5390bfbe6024bbe44fd712cd7eca6cf260f26c87bf3df6db1b1513b18b790b",
+        "member_count": 28,
+        "prior_tfvars_value": "40e6511a00738980a7604a7d60c1c3419b396e049748f06ec0dae8116a5ebed3",
+        "note": "the bound M2-M5 implementation changed (personalization V2 + owner review A)."
+      },
+      "member_sha256_list": "docs/readiness artifact and `python -m scripts.sampled_slot_bundle --json` output; per-member digests recorded in the link-8 deployment evidence."
+    },
+    "tfvars_updated": "infra/terraform/phase1/terraform.tfvars (operator-local, gitignored) set to both canonical digests. sampled_slot_activation_entry_point_sha256 / sampled_slot_release_applicator_sha256 / sampled_slot_activation_adapter_sha256 / sampled_slot_m1_runtime_sha256 UNCHANGED (out of this authorization's scope).",
+    "tests": "tests/test_m67_sampled_slot_bundle_attestation.py (22 tests): same bytes + same manifest -> same digest (incl. against a temp-materialised repo); filesystem discovery / write order cannot change the digest; changing one bound byte changes the digest; changing an unbound file does not; missing / unsorted / duplicate / empty / ghost-member manifest fails closed with BundleManifestError; every member digest equals sha256 of the raw file bytes; the tfvars binding values equal the canonical calculator (CI-enforced, skips only if the operator-local terraform.tfvars is absent); the calculator covers exactly the two authorized bindings.",
+    "runtime_recomputation": "DEFERRED and documented. In-image container-startup recomputation would require modifying release_application.py (bound by sampled_slot_release_applicator_sha256) or sampled_slot_execution_main.py (bound by sampled_slot_activation_entry_point_sha256), both outside this authorization's scope. The tfvars values are CI-proven equal to the canonical calculator, so the attestation IS source-derived at commit/build time; production continues to prove string equality of those canonical digests (env == approval envelope). This is stated plainly, not claimed as a runtime source-derivation.",
+    "policy_versions_changed_by_B": "none (new tooling + manifests + tests only; the two tfvars binding values change to their canonical computations)."
+  },
+
+  "updated_deployment_impact": {
+    "image": "chain link 8 from HEAD (currently 6d95fea). Changed vs link 7: the M2-M5 composition libraries (opportunity personalization.py + rules.py + domain.py + persistence/adapters, audit/demo/outreach composition.py + domain.py + persistence/adapters). workers/intelligence/production_runtime.py is byte-unchanged vs the pre-V2 baseline 48f0959 (git diff empty). The stage-coordinator files (orchestration.py / coordinator_persistence.py / execution.py) are byte-unchanged.",
+    "tfvars_binding_changes": "sampled_slot_stage_coordinator_sha256 fe0f34c9 -> 908e6753 (canonical, file set unchanged); sampled_slot_m2_m5_runtime_sha256 40e6511a -> bc5390bf (canonical, implementation changed); worker_image_uri / controlled_egress_image_uri / research_runtime_revision -> the link-8 @sha256 digest. Four other bindings UNCHANGED.",
+    "terraform_expected": "the two binding strings + the three image-digest strings change the ECS task-definition environment on the sampled-slot-activator (both binding env values) and the image on all four task definitions -> immutable task-definition recreation (add/change/destroy on task defs) + in-place service updates; all service desired_count 0 -> 0. Same shape as the link-7 apply. Exact plan review deferred until this review is accepted.",
+    "db_migration": "unchanged from the prior deploy-prep doc: additive-only (opportunity_company_facts table + 3 nullable columns + audit_revisions.findings_json), state-convergent, idempotent. FactCategory / FindingKind enum additions are code-only (stored as strings in existing columns).",
+    "runtime_terminals": "unchanged. DRAFT_INCOMPLETE remains a revision state only.",
+    "frozen_artifacts": "Slot 02-04 rows validate under their pinned @1 / v2 policy versions; V2 output validates under selector@2 / rules@3 / deterministic@3 / projection@3 / v4. Comparison code must branch on the recorded version."
+  },
+
+  "not_done_pending_owner_acceptance": [
+    "image chain link 8 build / publish / representation-equivalence / ECR scan COMPLETE 0/0/0",
+    "ADR-0075 terraform plan + semantic review",
+    "additive state-convergent PostgreSQL migration + live convergence + idempotency verification",
+    "synthetic end-to-end validation",
+    "restore-dormancy + Terraform NO_CHANGES confirmation",
+    "Slots 07-24 batch authorization gate"
+  ]
+}
