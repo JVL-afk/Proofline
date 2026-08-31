@@ -10,11 +10,20 @@ from datetime import datetime
 from uuid import UUID
 
 from opintel_m0.ports import IdentifierFactory
-from opintel_opportunity.domain import EconomicStatus, OpportunityBundle, RevisionStatus, ValueState
+from opintel_opportunity.domain import (
+    CompanyFact,
+    EconomicStatus,
+    FactCategory,
+    OpportunityBundle,
+    ResearchRunStats,
+    RevisionStatus,
+    ValueState,
+)
 
 from opintel_audit.domain import (
     AuditClaim,
     AuditEvidence,
+    AuditFinding,
     AuditInputManifest,
     AuditKind,
     AuditQcError,
@@ -23,14 +32,47 @@ from opintel_audit.domain import (
     AuditSection,
     AuditValidity,
     ClaimType,
+    FindingKind,
     FreshnessState,
     QcFinding,
     QcSeverity,
 )
 
 AUDIT_SCHEMA_VERSION = "audit.schema@1"
-COMPOSITION_POLICY_VERSION = "audit.commercial_hvac.deterministic@1"
+COMPOSITION_POLICY_VERSION = "audit.commercial_hvac.deterministic@2"
 QC_POLICY_VERSION = "audit.qc@1"
+
+# EVIDENCE_PRESERVING_PERSONALIZATION_V2: fixed finding frames. The frame inserts
+# a supported, verbatim-derived phrase; it never adds a claim or strengthens it.
+_FINDING_KIND_BY_CATEGORY: dict[FactCategory, FindingKind] = {
+    FactCategory.INTAKE_SURFACE: FindingKind.OBSERVED_INTAKE_SURFACE,
+    FactCategory.COMMERCIAL_CONTEXT: FindingKind.OBSERVED_COMMERCIAL_CONTEXT,
+    FactCategory.RESPONSE_COMMITMENT: FindingKind.OBSERVED_RESPONSE_COMMITMENT,
+    FactCategory.SERVICE_AREA_CONTEXT: FindingKind.OBSERVED_SERVICE_AREA,
+}
+
+
+def _finding_frame(category: FactCategory, phrase: str) -> str:
+    value = phrase.strip().rstrip(".;:,")
+    if category == FactCategory.INTAKE_SURFACE:
+        return (
+            "Observed intake surface: the captured public pages present a request path "
+            f'("{value}").'
+        )
+    if category == FactCategory.COMMERCIAL_CONTEXT:
+        return (
+            "Observed commercial-service context: the captured public pages describe "
+            f'commercial HVAC work ("{value}").'
+        )
+    if category == FactCategory.RESPONSE_COMMITMENT:
+        return (
+            "Observed response commitment: the captured contact page publishes response "
+            "expectations for new inquiries."
+        )
+    return (
+        "Observed service-area context: the captured public pages list a service area "
+        f'("{value}").'
+    )
 
 SECTION_DEFINITIONS = (
     ("scope", "Audit scope and limitations"),
@@ -92,17 +134,54 @@ class DeterministicAuditComposer:
         manifest = self._manifest(source, evidence, now)
         claims_by_section: dict[str, list[AuditClaim]] = {key: [] for key, _ in SECTION_DEFINITIONS}
 
+        audit_findings: list[AuditFinding] = []
+        company_facts: tuple[CompanyFact, ...] = source.company_facts
+        observation_by_evidence = {item.evidence_id: item for item in source.observations}
+        for fact in company_facts:
+            item = evidence_by_id.get(fact.evidence_id)
+            if item is None:
+                continue
+            observation = observation_by_evidence.get(fact.evidence_id)
+            observation_ids = (observation.id,) if observation is not None else ()
+            claim = self._claim(
+                "facts",
+                ClaimType.FACT,
+                hypothesis.business_id,
+                f"finding.{fact.category.value}",
+                _finding_frame(fact.category, fact.phrase),
+                evidence_ids=(item.id,),
+                observation_ids=observation_ids,
+            )
+            claims_by_section["facts"].append(claim)
+            audit_findings.append(
+                AuditFinding(
+                    id=self._ids.new(),
+                    kind=_FINDING_KIND_BY_CATEGORY[fact.category],
+                    text=claim.display_text,
+                    claim_id=claim.id,
+                    evidence_ids=(item.id,),
+                    observation_ids=observation_ids,
+                    fact_class=fact.fact_class,
+                    supporting_excerpt=item.bounded_excerpt[:280],
+                )
+            )
+
         for observation in source.observations:
             item = evidence_by_id.get(observation.evidence_id)
             if item is None:
                 continue
+            headline = (
+                f"Supporting public excerpt ({observation.predicate}): {item.bounded_excerpt}"
+                if company_facts
+                else f"The captured public surface states or exposes: {item.bounded_excerpt}"
+            )
             claims_by_section["facts"].append(
                 self._claim(
                     "facts",
                     ClaimType.FACT,
                     hypothesis.business_id,
                     observation.predicate,
-                    f"The captured public surface states or exposes: {item.bounded_excerpt}",
+                    headline,
                     evidence_ids=(item.id,),
                     observation_ids=(observation.id,),
                 )
@@ -181,14 +260,38 @@ class DeterministicAuditComposer:
         )
         claims_by_section["solution"].append(recommendation)
 
+        stats = source.run_stats
+        scope_limitation = (
+            "This audit is limited to cited public digital surfaces and canonical M2 "
+            "records. Internal operations and actual business impact remain unknown "
+            "unless explicitly verified."
+        )
+        if stats is not None and stats.partial:
+            scope_limitation += (
+                f" Coverage was partial ({stats.pages_succeeded} of {stats.pages_attempted} "
+                "pages captured); absence of a fact may reflect incomplete capture."
+            )
         section_items: dict[str, tuple[dict[str, object], ...]] = {
-            "scope": (
+            "scope": ({"limitation": scope_limitation},),
+            "facts": (
                 {
-                    "limitation": (
-                        "This audit is limited to cited public digital surfaces and canonical M2 "
-                        "records. Internal operations and actual business impact remain unknown "
-                        "unless explicitly verified."
-                    )
+                    "coverage": {
+                        "status": stats.status if stats is not None else "not_recorded",
+                        "pages_attempted": stats.pages_attempted if stats is not None else 0,
+                        "pages_succeeded": stats.pages_succeeded if stats is not None else 0,
+                        "pages_failed": stats.pages_failed if stats is not None else 0,
+                        "partial": bool(stats is not None and stats.partial),
+                        "fact_class_histogram": (
+                            [list(pair) for pair in stats.fact_class_histogram]
+                            if stats is not None
+                            else []
+                        ),
+                        "captured_page_purposes": (
+                            [list(pair) for pair in stats.captured_page_purposes]
+                            if stats is not None
+                            else []
+                        ),
+                    }
                 },
             ),
             "business_scope": (
@@ -260,17 +363,22 @@ class DeterministicAuditComposer:
                     section_items.get(key, ()),
                 )
             )
+        audit_findings.extend(self._coverage_findings(source))
         claim_tuple = tuple(claims)
         section_tuple = tuple(sections)
+        finding_tuple = tuple(audit_findings)
         findings = AuditQualityPolicy(self._ids).evaluate(
             manifest, source, evidence, section_tuple, claim_tuple
         )
         hard_failure = any(item.severity == QcSeverity.HARD_FAILURE for item in findings)
-        rendered = self._render(section_tuple, {item.id: item for item in claim_tuple})
+        rendered = self._render(
+            section_tuple, {item.id: item for item in claim_tuple}, finding_tuple
+        )
         body = {
             "manifest": manifest.checksum,
             "sections": [asdict(item) for item in section_tuple],
             "claims": [asdict(item) for item in claim_tuple],
+            "findings": [asdict(item) for item in finding_tuple],
             "rendered": rendered,
         }
         return AuditRevision(
@@ -294,7 +402,43 @@ class DeterministicAuditComposer:
             rendered_text=rendered,
             created_by=created_by,
             created_at=now,
+            findings=finding_tuple,
         )
+
+    def _coverage_findings(self, source: OpportunityBundle) -> list[AuditFinding]:
+        blocking = sorted(
+            {
+                gap.affected_component
+                for gap in source.gaps
+                if str(gap.economic_effect) == "blocks_model"
+            }
+        )
+        unknown = AuditFinding(
+            id=self._ids.new(),
+            kind=FindingKind.WHAT_REMAINS_UNKNOWN,
+            text=(
+                "What remains unknown: internal response performance, routing, lead volume, "
+                "conversion, and verified customer value are not publicly observable"
+                + (f" (blocking gaps: {', '.join(blocking)})." if blocking else ".")
+            ),
+        )
+        stats: ResearchRunStats | None = source.run_stats
+        if stats is None:
+            coverage_text = "Crawl coverage: not recorded for this analysis run."
+        elif stats.partial:
+            coverage_text = (
+                f"Crawl coverage: {stats.pages_succeeded} of {stats.pages_attempted} pages "
+                "captured (partial); absence of a fact may reflect incomplete capture."
+            )
+        else:
+            coverage_text = (
+                f"Crawl coverage: {stats.pages_succeeded} of {stats.pages_attempted} pages "
+                "captured (complete)."
+            )
+        coverage = AuditFinding(
+            id=self._ids.new(), kind=FindingKind.CRAWL_COVERAGE, text=coverage_text
+        )
+        return [unknown, coverage]
 
     def _manifest(
         self, source: OpportunityBundle, evidence: tuple[AuditEvidence, ...], now: datetime
@@ -401,7 +545,11 @@ class DeterministicAuditComposer:
         )
 
     @staticmethod
-    def _render(sections: tuple[AuditSection, ...], claims: dict[UUID, AuditClaim]) -> str:
+    def _render(
+        sections: tuple[AuditSection, ...],
+        claims: dict[UUID, AuditClaim],
+        findings: tuple[AuditFinding, ...] = (),
+    ) -> str:
         lines: list[str] = []
         for section in sections:
             lines.append(section.title)
@@ -411,6 +559,9 @@ class DeterministicAuditComposer:
             )
             for structured in section.structured_items:
                 lines.append(json.dumps(structured, sort_keys=True, default=str))
+        if findings:
+            lines.append("Findings")
+            lines.extend(f"[{finding.kind.upper()}] {finding.text}" for finding in findings)
         return "\n".join(lines)
 
 

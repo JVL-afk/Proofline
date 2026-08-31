@@ -71,6 +71,32 @@ class AuditReviewDecisionType(StrEnum):
     REQUEST_REVISION = "request_revision"
 
 
+class FindingKind(StrEnum):
+    """EVIDENCE_PRESERVING_PERSONALIZATION_V2 concise audit-finding taxonomy."""
+
+    OBSERVED_INTAKE_SURFACE = "observed_intake_surface"
+    OBSERVED_COMMERCIAL_CONTEXT = "observed_commercial_context"
+    OBSERVED_RESPONSE_COMMITMENT = "observed_response_commitment"
+    OBSERVED_SERVICE_AREA = "observed_service_area"
+    WHAT_REMAINS_UNKNOWN = "what_remains_unknown"
+    CRAWL_COVERAGE = "crawl_coverage"
+
+
+@dataclass(frozen=True, slots=True)
+class AuditFinding:
+    """Concise evidence-linked finding. Exact provenance is retained; the raw
+    minimized excerpt is demoted to ``supporting_excerpt`` (not the headline)."""
+
+    id: UUID
+    kind: FindingKind
+    text: str
+    claim_id: UUID | None = None
+    evidence_ids: tuple[UUID, ...] = ()
+    observation_ids: tuple[UUID, ...] = ()
+    fact_class: str | None = None
+    supporting_excerpt: str | None = None
+
+
 @dataclass(frozen=True, slots=True)
 class AuditEvidence:
     id: UUID
@@ -177,6 +203,7 @@ class AuditRevision:
     rendered_text: str
     created_by: str
     created_at: datetime
+    findings: tuple[AuditFinding, ...] = ()
 
     @property
     def hard_qc_passed(self) -> bool:

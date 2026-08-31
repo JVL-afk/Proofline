@@ -12,6 +12,7 @@ from uuid import UUID
 from opintel_audit.domain import (
     AuditBundle,
     AuditClaim,
+    AuditFinding,
     AuditInputManifest,
     AuditKind,
     AuditOperation,
@@ -23,6 +24,7 @@ from opintel_audit.domain import (
     AuditSection,
     AuditValidity,
     ClaimType,
+    FindingKind,
     QcFinding,
     QcSeverity,
 )
@@ -35,8 +37,10 @@ from sqlalchemy import (
     UniqueConstraint,
     create_engine,
     event,
+    inspect,
     or_,
     select,
+    text,
     update,
 )
 from sqlalchemy.exc import IntegrityError
@@ -118,6 +122,8 @@ class AuditRevisionRow(Base):
     rendered_text: Mapped[str] = mapped_column(Text)
     created_by: Mapped[str] = mapped_column(String(200))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    # EVIDENCE_PRESERVING_PERSONALIZATION_V2: concise finding taxonomy + coverage.
+    findings_json: Mapped[str | None] = mapped_column(Text, nullable=True)
 
 
 class AuditReviewRow(Base):
@@ -166,7 +172,17 @@ class SqlAlchemyAuditRepository:
         cursor.close()
 
     def initialize(self) -> None:
-        Base.metadata.create_all(self.engine)
+        with self.engine.begin() as connection:
+            if self.engine.dialect.name == "postgresql":
+                connection.execute(text("SELECT pg_advisory_xact_lock(670003)"))
+            Base.metadata.create_all(connection)
+            inspector = inspect(connection)
+            if "audit_revisions" in inspector.get_table_names():
+                present = {item["name"] for item in inspector.get_columns("audit_revisions")}
+                if "findings_json" not in present:
+                    connection.execute(
+                        text("ALTER TABLE audit_revisions ADD COLUMN findings_json TEXT")
+                    )
 
     def create_or_get_operation(self, operation: AuditOperation) -> tuple[AuditOperation, bool]:
         try:
@@ -406,6 +422,7 @@ class SqlAlchemyAuditRepository:
             rendered_text=value.rendered_text,
             created_by=value.created_by,
             created_at=value.created_at,
+            findings_json=_json([asdict(item) for item in value.findings]),
         )
 
     @staticmethod
@@ -480,6 +497,19 @@ class SqlAlchemyAuditRepository:
             )
             for item in json.loads(row.qc_json)
         )
+        audit_findings = tuple(
+            AuditFinding(
+                UUID(item["id"]),
+                FindingKind(item["kind"]),
+                item["text"],
+                UUID(item["claim_id"]) if item.get("claim_id") else None,
+                tuple(UUID(value) for value in item.get("evidence_ids", ())),
+                tuple(UUID(value) for value in item.get("observation_ids", ())),
+                item.get("fact_class"),
+                item.get("supporting_excerpt"),
+            )
+            for item in json.loads(row.findings_json or "[]")
+        )
         return AuditRevision(
             UUID(row.id),
             UUID(row.audit_id),
@@ -499,6 +529,7 @@ class SqlAlchemyAuditRepository:
             row.rendered_text,
             row.created_by,
             _aware(row.created_at),
+            audit_findings,
         )
 
     @staticmethod
