@@ -80,12 +80,20 @@ class ReviewDecisionType(StrEnum):
 
 
 class FactCategory(StrEnum):
-    """Deterministic personalization-fact categories (evidence-preserving V2)."""
+    """Deterministic personalization-fact categories (evidence-preserving V2).
+
+    RESPONSE_COMMITMENT requires evidence that explicitly describes how or when an
+    inbound contact (inquiry, request, call, email, form) is answered, returned,
+    or responded to. Bare service-availability claims ("24/7 service", "24-hour
+    service", "same-day service", "emergency service") are SERVICE_AVAILABILITY,
+    not RESPONSE_COMMITMENT.
+    """
 
     INTAKE_SURFACE = "intake_surface"
     COMMERCIAL_CONTEXT = "commercial_context"
     RESPONSE_COMMITMENT = "response_commitment"
     SERVICE_AREA_CONTEXT = "service_area_context"
+    SERVICE_AVAILABILITY = "service_availability"
 
 
 @dataclass(frozen=True, slots=True)

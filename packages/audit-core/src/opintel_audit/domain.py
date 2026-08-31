@@ -78,6 +78,7 @@ class FindingKind(StrEnum):
     OBSERVED_COMMERCIAL_CONTEXT = "observed_commercial_context"
     OBSERVED_RESPONSE_COMMITMENT = "observed_response_commitment"
     OBSERVED_SERVICE_AREA = "observed_service_area"
+    OBSERVED_SERVICE_AVAILABILITY = "observed_service_availability"
     WHAT_REMAINS_UNKNOWN = "what_remains_unknown"
     CRAWL_COVERAGE = "crawl_coverage"
 

@@ -134,8 +134,8 @@ def _assess_personalization(
     )
 
 OUTREACH_SCHEMA_VERSION = "outreach.schema@1"
-TEMPLATE_VERSION = "commercial_hvac.lead_response.outreach.v3"
-PROJECTION_POLICY_VERSION = "outreach.projection@2"
+TEMPLATE_VERSION = "commercial_hvac.lead_response.outreach.v4"
+PROJECTION_POLICY_VERSION = "outreach.projection@3"
 TARGET_ROLE_POLICY_VERSION = "outreach.roles.commercial_hvac@1"
 CTA_POLICY_VERSION = "outreach.permission_cta@2"
 QC_POLICY_VERSION = "outreach.qc@2"
@@ -199,6 +199,7 @@ _CATEGORY_RANK = {
     FactCategory.COMMERCIAL_CONTEXT: 1,
     FactCategory.SERVICE_AREA_CONTEXT: 2,
     FactCategory.RESPONSE_COMMITMENT: 3,
+    FactCategory.SERVICE_AVAILABILITY: 4,
 }
 
 

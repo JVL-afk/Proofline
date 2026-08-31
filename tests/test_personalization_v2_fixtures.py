@@ -1,18 +1,23 @@
 """EVIDENCE_PRESERVING_PERSONALIZATION_V2 deterministic regression fixtures.
 
-The three company fixtures are faithful reconstructions of the sealed Slot 02-04
-M1 evidence, drawn from the quoted public page text in
-``docs/readiness/m6.7-deployment/slots02-04-m5-product-quality-review-2026-08-30.md``
-(Webb Air / BNCAIR / All Elements Heating & Air). They are immutable: no real
-research is run. Golden values are pinned against these reconstructions and must
-be re-verified against a one-shot read-only evidence export before deployment.
+The three company fixtures are the EXACT sealed Slot 02-04 M1 evidence rows, from
+one bounded read-only in-VPC SELECT export
+(``tests/fixtures/personalization_v2_sealed_evidence.json``). They are immutable
+frozen fixtures: no real research is run and the historical Slot 02-04 artifacts
+are never mutated or reinterpreted.
 
-Validation targets (from the implementation authorization):
+Validation targets (implementation + deploy-prep authorization):
 * Webb Air, BNCAIR and All Elements produce materially different M2/M3/M4/M5
   outputs where their evidence differs;
 * identical evidence produces byte-identical composer output;
-* Webb Air response / service facts survive into reader-facing output;
-* All Elements partial-crawl status is visible in M3;
+* Webb Air's actual contact-page response language survives into reader-facing
+  output as a RESPONSE_COMMITMENT;
+* bare service-availability claims ("24 Hour Emergency Services",
+  "Fast & Reliable Service, 24/7") are SERVICE_AVAILABILITY, never
+  RESPONSE_COMMITMENT (owner semantic review, 2026-08-31);
+* All Elements partial-crawl status is visible in M3; its absence of
+  public_service_area evidence is an accepted exact-fixture correction (the
+  synthetic M4 location fallback is preserved);
 * BNCAIR stays appropriately sparse rather than padded;
 * the company name alone never satisfies the personalization gate;
 * all-public_other evidence fails company-specific M5 approval;
@@ -48,6 +53,22 @@ from opintel_research_local import SqlAlchemyResearchRepository
 from test_m2_opportunity_engine import seed_research_evidence
 
 GOLDEN = Path(__file__).parent / "fixtures" / "personalization_v2_golden.json"
+SEALED = Path(__file__).parent / "fixtures" / "personalization_v2_sealed_evidence.json"
+
+_SEALED_DATA = json.loads(SEALED.read_text(encoding="utf-8"))["companies"]
+
+
+def _sealed_spec(name: str) -> dict[str, object]:
+    c = _SEALED_DATA[name]
+    return {
+        "name": name,
+        "pages_attempted": c["pages_attempted"],
+        "pages_succeeded": c["pages_succeeded"],
+        "run_status": c["run_status"],
+        "fragments": [e["fragment"] for e in c["evidence"]],
+        "fact_classes": [e["fact_class"] for e in c["evidence"]],
+        "page_purposes": [e["page_purpose"] for e in c["evidence"]],
+    }
 
 
 class FixedIdentifiers:
@@ -59,45 +80,12 @@ class FixedIdentifiers:
         return uuid5(UUID(int=0), f"pv2-fixed-{self.index}")
 
 
-# --- fixtures: faithful reconstructions of sealed Slot 02-04 M1 evidence -------
+# --- fixtures: EXACT sealed Slot 02-04 M1 evidence (in-VPC SELECT export) ------
 
-WEBB_AIR = {
-    "name": "Webb Air",
-    "pages_attempted": 24,
-    "pages_succeeded": 24,
-    "run_status": "succeeded",
-    "fragments": [
-        "Request service or a free estimate — contact us to schedule service online",
-        "Light Commercial HVAC and Commercial Maintenance Programs for Fort Worth businesses",
-        "Phones are answered 24 hours and monitored. Email responses are sent the next "
-        "business day. Requests after 10:00pm will be contacted after 8:00am the following day.",
-        "Service areas we serve: Fort Worth, TX and Arlington, TX",
-        "NATE-certified technicians and a military discount",
-    ],
-}
-BNCAIR = {
-    "name": "BNCAIR",
-    "pages_attempted": 3,
-    "pages_succeeded": 3,
-    "run_status": "succeeded",
-    "fragments": [
-        "Request service for commercial and residential HVAC — Click Here for Free Estimate",
-        "BNCAIR provides commercial HVAC and residential heating and cooling services",
-        "Contact Us - BNCAIR",
-    ],
-}
-ALL_ELEMENTS = {
-    "name": "All Elements Heating & Air",
-    "pages_attempted": 20,
-    "pages_succeeded": 13,
-    "run_status": "partial",
-    "fragments": [
-        "All Elements Heating and Air provides commercial HVAC, heating, air conditioning, "
-        "mini-split, maintenance and installation",
-        "Areas we serve: Marshall, Texas and the surrounding area",
-        "Contact us to request service for your facility",
-    ],
-}
+WEBB_AIR = _sealed_spec("Webb Air")
+BNCAIR = _sealed_spec("BNCAIR")
+ALL_ELEMENTS = _sealed_spec("All Elements Heating & Air")
+
 # Negative: evidence forced to public_other; still triggers an M2 hypothesis via
 # the fragment text but yields no CompanyFact.
 ALL_PUBLIC_OTHER = {
@@ -137,6 +125,7 @@ def _run_pipeline(
         pages_succeeded=int(spec["pages_succeeded"]),
         run_status=str(spec["run_status"]),
         fact_classes=spec.get("fact_classes"),  # type: ignore[arg-type]
+        page_purposes=spec.get("page_purposes"),  # type: ignore[arg-type]
     )
     created = client.post(
         f"/api/v1/businesses/{business['id']}/opportunity-analysis-runs",
@@ -324,7 +313,9 @@ def test_webbair_response_and_service_facts_survive_to_reader_output(
     statement = webb["m2"]["hypothesis"]["statement"].lower()  # type: ignore[index]
     assert "webb air" in statement
     assert "commercial" in statement
-    assert "response expectations" in statement  # response commitment survives
+    # Webb Air's actual contact-page response language qualifies as a
+    # RESPONSE_COMMITMENT (phones answered / email responses / contacted after).
+    assert "how inbound inquiries are answered" in statement
     assert "unknown" in statement and "response performance" in statement  # truth tail intact
 
     email = _first_email_text(webb["m5"]).lower()
@@ -334,6 +325,87 @@ def test_webbair_response_and_service_facts_survive_to_reader_output(
     assert "observed_response_commitment" in finding_kinds
     assert "observed_service_area" in finding_kinds
     assert "observed_commercial_context" in finding_kinds
+    # The Webb response-commitment finding cites a fragment that actually
+    # describes inbound handling, not mere availability.
+    resp = next(
+        f for f in webb["m3"]["findings"]  # type: ignore[index]
+        if f["kind"] == "observed_response_commitment"
+    )
+    excerpt = (resp["supporting_excerpt"] or "").lower()
+    assert any(
+        cue in excerpt
+        for cue in ("phones are answered", "email response", "contacted after", "next business day")
+    )
+
+
+@pytest.mark.integration
+def test_bare_availability_is_never_a_response_commitment(
+    pipelines: dict[str, dict[str, object]],
+) -> None:
+    """Owner semantic review (2026-08-31): '24 Hour Emergency Services' /
+    'Fast & Reliable Service, 24/7' are SERVICE_AVAILABILITY, not
+    RESPONSE_COMMITMENT."""
+    from datetime import UTC, datetime
+    from uuid import uuid4
+
+    from opintel_opportunity.domain import EvidenceReference, FactCategory
+    from opintel_opportunity.personalization import _bucket
+
+    def bucket(fragment: str, fact_class: str) -> FactCategory | None:
+        return _bucket(
+            EvidenceReference(
+                uuid4(), uuid4(), uuid4(), uuid4(), uuid4(), "v", "u",
+                datetime.now(UTC), "x" * 64, "l", fragment, "e", "1", fact_class, "unclassified",
+            )
+        )
+
+    # bare availability -> SERVICE_AVAILABILITY, not RESPONSE_COMMITMENT
+    assert bucket("24 Hour Emergency Services and Free Quotes", "public_other") == (
+        FactCategory.SERVICE_AVAILABILITY
+    )
+    assert bucket("Fast & Reliable Service, 24/7", "public_other") == (
+        FactCategory.SERVICE_AVAILABILITY
+    )
+    assert bucket("Same-day service available", "public_other") == (
+        FactCategory.SERVICE_AVAILABILITY
+    )
+    # genuine inbound-response language -> RESPONSE_COMMITMENT
+    assert bucket(
+        "Phones are answered 24 hours; email responses are sent the next business day.",
+        "public_inbound_path",
+    ) == FactCategory.RESPONSE_COMMITMENT
+    assert bucket(
+        "We will call you back within one business day of your request.", "public_faq"
+    ) == FactCategory.RESPONSE_COMMITMENT
+    assert bucket(
+        "Requests submitted after 10pm are contacted after 8am the following day.",
+        "public_inbound_path",
+    ) == FactCategory.RESPONSE_COMMITMENT
+    # availability text is still recognised as an availability fact, not dropped
+    assert bucket("Around the clock emergency service", "public_service_description") == (
+        FactCategory.SERVICE_AVAILABILITY
+    )
+
+
+@pytest.mark.integration
+def test_all_elements_availability_not_response_after_correction(
+    pipelines: dict[str, dict[str, object]],
+) -> None:
+    ae = pipelines["allelements"]
+    finding_kinds = {f["kind"] for f in ae["m3"]["findings"]}  # type: ignore[index]
+    # All Elements' only response-cue evidence is "24/7" / "24 hour emergency
+    # service" -> availability, NOT a response commitment.
+    assert "observed_response_commitment" not in finding_kinds
+    assert "observed_service_availability" in finding_kinds
+    # no manufactured service-area option (no public_service_area evidence)
+    assert "observed_service_area" not in finding_kinds
+    q = next(
+        x for x in ae["m4"]["specification"]["questions"]  # type: ignore[index]
+        if x["id"] == "service_location"
+    )
+    assert list(q["allowed_values"]) == [
+        "north_texas", "central_texas", "gulf_coast", "other", "unknown",
+    ]
 
 
 @pytest.mark.integration
@@ -355,10 +427,11 @@ def test_all_elements_partial_crawl_visible_in_m3(
 def test_bncair_is_sparse_not_padded(pipelines: dict[str, dict[str, object]]) -> None:
     bncair = pipelines["bncair"]
     finding_kinds = {f["kind"] for f in bncair["m3"]["findings"]}  # type: ignore[index]
-    # No response-commitment or service-area evidence -> those findings are absent,
-    # not invented.
+    # No response-commitment / service-area / availability evidence -> those
+    # findings are absent, not invented.
     assert "observed_response_commitment" not in finding_kinds
     assert "observed_service_area" not in finding_kinds
+    assert "observed_service_availability" not in finding_kinds
     m5 = bncair["m5"]
     derived = [p for p in m5.projections if p.mode == ProjectionMode.EVIDENCE_DERIVED_FACT]  # type: ignore[attr-defined]
     assert 1 <= len(derived) <= 2

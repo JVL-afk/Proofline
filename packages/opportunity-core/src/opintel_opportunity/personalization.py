@@ -30,8 +30,8 @@ from opintel_opportunity.domain import (
     ReviewRankHint,
 )
 
-SELECTOR_VERSION = "commercial_hvac.company_fact_selector@1"
-STATEMENT_FRAME_VERSION = "commercial_hvac.company_statement@1"
+SELECTOR_VERSION = "commercial_hvac.company_fact_selector@2"
+STATEMENT_FRAME_VERSION = "commercial_hvac.company_statement@2"
 
 # Fixed hypothetical scaffold. Retains every existing UNKNOWN and the "could"
 # conditional. Must keep the substrings "response performance", "internal
@@ -56,6 +56,7 @@ _CATEGORY_ORDER: tuple[FactCategory, ...] = (
     FactCategory.COMMERCIAL_CONTEXT,
     FactCategory.RESPONSE_COMMITMENT,
     FactCategory.SERVICE_AREA_CONTEXT,
+    FactCategory.SERVICE_AVAILABILITY,
 )
 
 
@@ -90,31 +91,83 @@ _PAGE_PURPOSE_PRIORITY: tuple[str, ...] = (
     "unclassified",
 )
 
-_RESPONSE_CUES: tuple[str, ...] = (
-    "business day",
-    "same day",
-    "same-day",
-    "answered",
-    "monitored",
-    "after hours",
-    "after-hours",
+# RESPONSE_COMMITMENT (selector@2): only phrases that inherently describe how an
+# inbound contact is acknowledged / answered / returned / responded to. Bare
+# service-availability language ("24/7", "24-hour service", "same-day service",
+# "emergency service", "fast service") is deliberately NOT here -- it is
+# SERVICE_AVAILABILITY.
+_RESPONSE_COMMITMENT_CUES: tuple[str, ...] = (
+    "phones are answered",
+    "phone is answered",
+    "phones answered",
+    "calls are answered",
+    "call is answered",
+    "calls answered",
+    "we answer your",
+    "answered 24",
+    "answered around",
+    "answered within",
+    "answered the same",
+    "answered the next",
+    "email response",
+    "email responses",
+    "responses are sent",
+    "respond to your",
+    "respond to inquiries",
+    "respond to inquiry",
+    "respond to requests",
+    "we respond within",
+    "we will respond",
+    "respond within",
+    "response within",
+    "reply to your",
+    "reply within",
+    "we reply within",
+    "we will reply",
     "call you back",
-    "call back",
-    "callback",
+    "call back within",
+    "callback within",
+    "return your call",
+    "returned within",
     "get back to you",
-    "respond",
-    "response",
-    "we reply",
-    "replies",
-    "next day",
-    "within one",
-    "within 1",
-    "24 hours",
+    "we will contact you",
+    "contacted after",
+    "contacted within",
+    "contacted the following",
+    "contacted the next",
+    "acknowledge your",
+    "acknowledged within",
+    "by the next business day",
+    "next business day",
+    "same business day",
+    "within one business day",
+    "response time",
+    "response times",
+)
+# SERVICE_AVAILABILITY (selector@2): a bare public availability claim. Eligible
+# for a supporting availability fact; never upgraded to response behaviour.
+_SERVICE_AVAILABILITY_CUES: tuple[str, ...] = (
     "24/7",
+    "24-7",
     "24 hour",
+    "24-hour",
+    "24 hours a day",
+    "hours a day, 7 days",
+    "around the clock",
+    "round-the-clock",
+    "same day service",
+    "same-day service",
+    "emergency service",
+    "emergency services",
+    "available any time",
+    "day or night",
 )
 _RESPONSE_FACT_CLASSES = frozenset(
     {"public_inbound_path", "public_faq", "public_about", "public_other"}
+)
+_AVAILABILITY_FACT_CLASSES = frozenset(
+    {"public_inbound_path", "public_faq", "public_about", "public_other",
+     "public_service_description"}
 )
 _INTAKE_KEYWORDS: tuple[str, ...] = (
     "request service",
@@ -199,14 +252,24 @@ def _extract_phrase(fragment: str, keywords: tuple[str, ...]) -> str | None:
 
 def _bucket(item: EvidenceReference) -> FactCategory | None:
     low = _normalize(item.fragment).lower()
+    # RESPONSE_COMMITMENT is the most specific, highest-value signal: a page that
+    # actually states how inbound contact is handled is classified as a response
+    # commitment even when it is also an intake surface (a contact page usually is
+    # both). Checked first so the specific classification wins.
+    if item.fact_class in _RESPONSE_FACT_CLASSES and any(
+        k in low for k in _RESPONSE_COMMITMENT_CUES
+    ):
+        return FactCategory.RESPONSE_COMMITMENT
     if item.fact_class == "public_inbound_path" and any(k in low for k in _INTAKE_KEYWORDS):
         return FactCategory.INTAKE_SURFACE
     if item.fact_class == "public_service_area" and any(k in low for k in _SERVICE_AREA_KEYWORDS):
         return FactCategory.SERVICE_AREA_CONTEXT
-    if item.fact_class in _RESPONSE_FACT_CLASSES and any(k in low for k in _RESPONSE_CUES):
-        return FactCategory.RESPONSE_COMMITMENT
     if item.fact_class == "public_service_description" and "commercial" in low:
         return FactCategory.COMMERCIAL_CONTEXT
+    if item.fact_class in _AVAILABILITY_FACT_CLASSES and any(
+        k in low for k in _SERVICE_AVAILABILITY_CUES
+    ):
+        return FactCategory.SERVICE_AVAILABILITY
     return None
 
 
@@ -221,8 +284,9 @@ def _rank_key(item: EvidenceReference) -> tuple[int, int, str]:
 _CATEGORY_KEYWORDS: dict[FactCategory, tuple[str, ...]] = {
     FactCategory.INTAKE_SURFACE: _INTAKE_KEYWORDS,
     FactCategory.COMMERCIAL_CONTEXT: _COMMERCIAL_KEYWORDS,
-    FactCategory.RESPONSE_COMMITMENT: _RESPONSE_CUES,
+    FactCategory.RESPONSE_COMMITMENT: _RESPONSE_COMMITMENT_CUES,
     FactCategory.SERVICE_AREA_CONTEXT: _SERVICE_AREA_KEYWORDS,
+    FactCategory.SERVICE_AVAILABILITY: _SERVICE_AVAILABILITY_CUES,
 }
 
 
@@ -232,7 +296,7 @@ def select_company_facts(
     identifiers: IdentifierFactory,
     now: datetime,
 ) -> tuple[CompanyFact, ...]:
-    """Deterministic ``company_fact_selector@1``. At most one fact per category,
+    """Deterministic ``company_fact_selector@2``. At most one fact per category,
     fixed category order, cap 4. A category with no qualifying evidence is
     simply absent -- public absence is never rendered as a claim."""
 
@@ -288,8 +352,13 @@ def statement_clause(category: FactCategory, phrase: str) -> str:
     if category == FactCategory.COMMERCIAL_CONTEXT:
         return f'describes commercial HVAC work ("{value}")'
     if category == FactCategory.RESPONSE_COMMITMENT:
-        return "publishes response expectations for new inquiries on its contact page"
-    return f'lists a public service area ("{value}")'
+        return (
+            "publishes on its contact page how inbound inquiries are answered and "
+            "returned"
+        )
+    if category == FactCategory.SERVICE_AREA_CONTEXT:
+        return f'lists a public service area ("{value}")'
+    return "advertises around-the-clock or emergency service availability"
 
 
 def build_statement(business_name: str, facts: tuple[CompanyFact, ...]) -> str:
@@ -344,7 +413,9 @@ def reader_fact_sentence(business_name: str, category: FactCategory, phrase: str
         if category == FactCategory.COMMERCIAL_CONTEXT:
             return f'your site describes commercial HVAC work — "{value}".'
         return f'your site lists a public service area — "{value}".'
-    return "your contact page publishes response expectations for new inquiries."
+    if category == FactCategory.SERVICE_AVAILABILITY:
+        return "your site also advertises around-the-clock or emergency service availability."
+    return "your contact page describes how inbound inquiries are answered and returned."
 
 
 def is_reader_specific(category: FactCategory, phrase: str) -> bool:

@@ -35,7 +35,7 @@ from opintel_opportunity.personalization import (
 )
 
 DEFINITION_VERSION = "commercial_hvac.inbound_lead_response_qualification@1"
-RULE_VERSION = "commercial_hvac.lead_response.rules@2"
+RULE_VERSION = "commercial_hvac.lead_response.rules@3"
 FACTOR_CONFIG_VERSION = "commercial_hvac.lead_response.heuristic_bands@2"
 
 # Retained for evidence-poor businesses; the company-specific statement builder

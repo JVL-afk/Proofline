@@ -45,6 +45,116 @@ def _page_purpose(fragments: list[str]) -> str:
     return "unclassified"
 
 
+def _seed_multi_page(
+    repository: SqlAlchemyResearchRepository,
+    clock: FakeClock,
+    run: dict[str, object],
+    workspace_id: UUID,
+    business_id: UUID,
+    run_id: UUID,
+    fragments: list[str],
+    fact_classes: list[str],
+    page_purposes: list[str],
+) -> None:
+    """One page per distinct page_purpose; each fragment's evidence lands on the
+    page matching its purpose (faithful to a real bounded crawl)."""
+    by_purpose: dict[str, list[int]] = {}
+    for i, purpose in enumerate(page_purposes):
+        by_purpose.setdefault(purpose, []).append(i)
+    for purpose, indices in by_purpose.items():
+        text = "\n".join(fragments[i] for i in indices)
+        text_bytes = text.encode("utf-8")
+        digest = hashlib.sha256(text_bytes).hexdigest()
+        snapshot_id = uuid4()
+        page_id = uuid4()
+        material_id = uuid4()
+        snapshot = MinimizedPageSnapshot(
+            id=snapshot_id,
+            workspace_id=workspace_id,
+            business_id=business_id,
+            research_run_id=run_id,
+            operation_id=UUID(run["operation_id"]),
+            trace_id=UUID(run["trace_id"]),
+            source_url=f"https://example.com/{purpose}",
+            canonical_url=f"https://example.com/{purpose}",
+            final_url=f"https://example.com/{purpose}",
+            snapshot_version=f"sha256:{digest}",
+            captured_at=clock.now(),
+            source_content_sha256=digest,
+            content_sha256=digest,
+            content_type="text/html",
+            charset="utf-8",
+            status_code=200,
+            content_length=len(text_bytes),
+            minimized_text=text,
+            minimizer_version="m2-controlled-fixture@1",
+            minimization_event_sha256=digest,
+            removed_email_count=0,
+            removed_phone_count=0,
+            removed_structured_contact_blocks=0,
+            required_evidence_markers=tuple(fragments[i] for i in indices),
+        )
+        material = ExtractedMaterial(
+            id=material_id,
+            snapshot_id=snapshot_id,
+            extractor_name="m2-fixture",
+            extractor_version="1",
+            title="Fixture",
+            metadata=(),
+            headings=(),
+            visible_text=text,
+            links=(),
+            forms=(),
+            buttons=(),
+            contacts=(),
+            structured_data=(),
+            technology_signals=(),
+            prompt_injection_suspected=False,
+            created_at=clock.now(),
+        )
+        page = ResearchPage(
+            id=page_id,
+            workspace_id=workspace_id,
+            business_id=business_id,
+            research_run_id=run_id,
+            requested_url=f"https://example.com/{purpose}",
+            normalized_url=f"https://example.com/{purpose}",
+            depth=1,
+            status=PageStatus.FETCHED,
+            snapshot_id=snapshot_id,
+            material_id=material_id,
+            fetched_at=clock.now(),
+            page_purpose=purpose,
+        )
+        evidence = tuple(
+            ResearchEvidence(
+                id=uuid4(),
+                workspace_id=workspace_id,
+                business_id=business_id,
+                research_run_id=run_id,
+                operation_id=UUID(run["operation_id"]),
+                trace_id=UUID(run["trace_id"]),
+                page_id=page_id,
+                snapshot_id=snapshot_id,
+                snapshot_version=f"sha256:{digest}",
+                source_uri=f"https://example.com/{purpose}",
+                captured_at=clock.now(),
+                content_sha256=digest,
+                locator=f"fixture:{i}",
+                extracted_fragment=fragments[i],
+                extractor_name="m2-fixture",
+                extractor_version="1",
+                created_at=clock.now(),
+                fact_class=fact_classes[i],
+            )
+            for i in indices
+        )
+        repository.save_page_bundle(
+            page,
+            DurablePageBundle(snapshot=snapshot, material=material, evidence=evidence),
+        )
+
+
 def seed_research_evidence(
     client: TestClient,
     headers: dict[str, str],
@@ -58,6 +168,7 @@ def seed_research_evidence(
     pages_succeeded: int = 0,
     run_status: str = "pending",
     fact_classes: list[str] | None = None,
+    page_purposes: list[str] | None = None,
 ) -> tuple[dict[str, object], dict[str, object]]:
     business_response = client.post(
         "/api/v1/businesses",
@@ -79,6 +190,25 @@ def seed_research_evidence(
     workspace_id = UUID(business["workspace_id"])
     business_id = UUID(business["id"])
     run_id = UUID(run["id"])
+
+    if page_purposes is not None:
+        _seed_multi_page(
+            repository, clock, run, workspace_id, business_id, run_id,
+            fragments,
+            fact_classes or [classify_public_fact(f) for f in fragments],
+            page_purposes,
+        )
+        if run_status != "pending" or pages_attempted or pages_succeeded:
+            repository.complete_run(
+                run_id,
+                run_status if run_status != "pending" else "succeeded",
+                pages_attempted or 1,
+                pages_succeeded or 1,
+                sum(len(f) for f in fragments),
+                clock.now(),
+            )
+        return business, run
+
     snapshot_id = uuid4()
     page_id = uuid4()
     material_id = uuid4()

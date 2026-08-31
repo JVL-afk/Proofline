@@ -1,36 +1,38 @@
 {
   "allelements": {
     "m2_priority_band": "LOW",
-    "m2_statement": "All Elements Heating & Air publicly presents a public request path (\"Contact us to request service for your facility\"), describes commercial HVAC work (\"All Elements Heating and Air provides commercial HVAC, heating, air conditioning, mini-split, maintenance and installation\"), and lists a public service area (\"Areas we serve: Marshall, Texas and the surrounding area\"). Given those observed public intake surfaces, a structured acknowledgement and qualification workflow could be evaluated. Current response performance, internal routing, lead volume, conversion, feasibility, and economic impact remain unknown pending business verification.",
+    "m2_statement": "All Elements Heating & Air publicly presents a public request path (\"Commercial HVAC - All Elements Heating & Air LLC Get Free Quote Air Conditioning Heating HVAC Service Agreements Commercial Services Commercial HVAC More\"), describes commercial HVAC work (\"Contact - All Elements Heating & Air LLC Get Free Quote Air Conditioning Heating HVAC Service Agreements Commercial Services Commercial HVAC More Commercial\"), and advertises around-the-clock or emergency service availability. Given those observed public intake surfaces, a structured acknowledgement and qualification workflow could be evaluated. Current response performance, internal routing, lead volume, conversion, feasibility, and economic impact remain unknown pending business verification.",
     "m3_finding_kinds": [
       "crawl_coverage",
       "observed_commercial_context",
       "observed_intake_surface",
-      "observed_service_area",
+      "observed_service_availability",
       "what_remains_unknown"
     ],
     "m4_service_location": [
-      "Areas we serve: Marshall, Texas and the",
+      "north_texas",
+      "central_texas",
+      "gulf_coast",
       "other",
       "unknown"
     ],
     "m4_service_need": [
-      "Contact us to request service for your facility",
-      "All Elements Heating and Air provides",
+      "Commercial HVAC - All Elements Heating & Air",
+      "Contact - All Elements Heating & Air LLC Get",
       "other",
       "unknown"
     ],
-    "m5_first_email": "Hello {{functional_role_or_team}},\n\nyour website has a public request path \u2014 \"Contact us to request service for your\".\n\nyour site describes commercial HVAC work \u2014 \"All Elements Heating and Air provides commercial\".\n\na step that acknowledges and sorts new service requests could be evaluated.\n\nThis is not a claim about how your team works today \u2014 we have no visibility into that.\n\nWe prepared a short deterministic simulation based only on approved public information.\n\nIt is a simulation\u2014not a system deployed, connected, official, or operated by the business.\n\nI noticed your site offers \"Contact us to request service for your\". I'm curious \u2014 roughly how many commercial inquiries arrive in a typical month, and how after-hours ones are handled today?\n\n{{verified_sender_signature}}\n\n{{required_postal_disclosure}}\n\n{{approved_opt_out_instruction}}",
+    "m5_first_email": "Hello {{functional_role_or_team}},\n\nyour website has a public request path \u2014 \"Commercial HVAC - All Elements Heating\".\n\nyour site describes commercial HVAC work \u2014 \"Contact - All Elements Heating & Air\".\n\na step that acknowledges and sorts new service requests could be evaluated.\n\nThis is not a claim about how your team works today \u2014 we have no visibility into that.\n\nWe prepared a short deterministic simulation based only on approved public information.\n\nIt is a simulation\u2014not a system deployed, connected, official, or operated by the business.\n\nI noticed your site offers \"Commercial HVAC - All Elements Heating\". I'm curious \u2014 roughly how many commercial inquiries arrive in a typical month, and how after-hours ones are handled today?\n\n{{verified_sender_signature}}\n\n{{required_postal_disclosure}}\n\n{{approved_opt_out_instruction}}",
     "m5_personalization": {
-      "company_specific_segment_count": 1,
-      "distinct_fact_classes": 1,
+      "company_specific_segment_count": 2,
+      "distinct_fact_classes": 2,
       "passes_gate": true
     },
     "m5_subject": "A note about the All Elements Heating & Air service path"
   },
   "bncair": {
     "m2_priority_band": "LOW",
-    "m2_statement": "BNCAIR publicly presents a public request path (\"Contact Us - BNCAIR\") and describes commercial HVAC work (\"BNCAIR provides commercial HVAC and residential heating and cooling services\"). Given those observed public intake surfaces, a structured acknowledgement and qualification workflow could be evaluated. Current response performance, internal routing, lead volume, conversion, feasibility, and economic impact remain unknown pending business verification.",
+    "m2_statement": "BNCAIR publicly presents a public request path (\"Contact Us\") and describes commercial HVAC work (\"Commercial HVAC Services\"). Given those observed public intake surfaces, a structured acknowledgement and qualification workflow could be evaluated. Current response performance, internal routing, lead volume, conversion, feasibility, and economic impact remain unknown pending business verification.",
     "m3_finding_kinds": [
       "crawl_coverage",
       "observed_commercial_context",
@@ -45,12 +47,12 @@
       "unknown"
     ],
     "m4_service_need": [
-      "Contact Us - BNCAIR",
-      "BNCAIR provides commercial HVAC and residential",
+      "Contact Us",
+      "Commercial HVAC Services",
       "other",
       "unknown"
     ],
-    "m5_first_email": "Hello {{functional_role_or_team}},\n\nyour website has a public request path \u2014 \"Contact Us - BNCAIR\".\n\nyour site describes commercial HVAC work \u2014 \"BNCAIR provides commercial HVAC and residential heating\".\n\na step that acknowledges and sorts new service requests could be evaluated.\n\nThis is not a claim about how your team works today \u2014 we have no visibility into that.\n\nWe prepared a short deterministic simulation based only on approved public information.\n\nIt is a simulation\u2014not a system deployed, connected, official, or operated by the business.\n\nI noticed your site offers \"Contact Us - BNCAIR\". I'm curious \u2014 roughly how many commercial inquiries arrive in a typical month, and how after-hours ones are handled today?\n\n{{verified_sender_signature}}\n\n{{required_postal_disclosure}}\n\n{{approved_opt_out_instruction}}",
+    "m5_first_email": "Hello {{functional_role_or_team}},\n\nyour website has a public request path \u2014 \"Contact Us\".\n\nyour site describes commercial HVAC work \u2014 \"Commercial HVAC Services\".\n\na step that acknowledges and sorts new service requests could be evaluated.\n\nThis is not a claim about how your team works today \u2014 we have no visibility into that.\n\nWe prepared a short deterministic simulation based only on approved public information.\n\nIt is a simulation\u2014not a system deployed, connected, official, or operated by the business.\n\nI noticed your site offers \"Contact Us\". I'm curious \u2014 roughly how many commercial inquiries arrive in a typical month, and how after-hours ones are handled today?\n\n{{verified_sender_signature}}\n\n{{required_postal_disclosure}}\n\n{{approved_opt_out_instruction}}",
     "m5_personalization": {
       "company_specific_segment_count": 1,
       "distinct_fact_classes": 1,
@@ -60,27 +62,28 @@
   },
   "webbair": {
     "m2_priority_band": "HIGH",
-    "m2_statement": "Webb Air publicly presents a public request path (\"Request service or a free estimate \u2014 contact us to schedule service online\"), describes commercial HVAC work (\"Light Commercial HVAC and Commercial Maintenance Programs for Fort Worth businesses\"), publishes response expectations for new inquiries on its contact page, and lists a public service area (\"Service areas we serve: Fort Worth, TX and Arlington, TX\"). Given those observed public intake surfaces, a structured acknowledgement and qualification workflow could be evaluated. Current response performance, internal routing, lead volume, conversion, feasibility, and economic impact remain unknown pending business verification.",
+    "m2_statement": "Webb Air publicly presents a public request path (\"Request Estimate Schedule Service Air Conditioning Air Conditioning Service Air Conditioning Maintenance Air Conditioning Installation Ductless HVAC Heating\"), describes commercial HVAC work (\"What Defines Light Commercial HVAC\"), publishes on its contact page how inbound inquiries are answered and returned, lists a public service area (\"Service Areas\"), and advertises around-the-clock or emergency service availability. Given those observed public intake surfaces, a structured acknowledgement and qualification workflow could be evaluated. Current response performance, internal routing, lead volume, conversion, feasibility, and economic impact remain unknown pending business verification.",
     "m3_finding_kinds": [
       "crawl_coverage",
       "observed_commercial_context",
       "observed_intake_surface",
       "observed_response_commitment",
       "observed_service_area",
+      "observed_service_availability",
       "what_remains_unknown"
     ],
     "m4_service_location": [
-      "Service areas we serve: Fort Worth, TX and",
+      "Service Areas",
       "other",
       "unknown"
     ],
     "m4_service_need": [
-      "Request service or a free estimate \u2014 contact us",
-      "Light Commercial HVAC and Commercial",
+      "Request Estimate Schedule Service Air",
+      "What Defines Light Commercial HVAC",
       "other",
       "unknown"
     ],
-    "m5_first_email": "Hello {{functional_role_or_team}},\n\nyour website has a public request path \u2014 \"Request service or a free estimate\".\n\nyour site describes commercial HVAC work \u2014 \"Light Commercial HVAC and Commercial Maintenance Programs\".\n\na step that acknowledges and sorts new service requests could be evaluated.\n\nThis is not a claim about how your team works today \u2014 we have no visibility into that.\n\nWe prepared a short deterministic simulation based only on approved public information.\n\nIt is a simulation\u2014not a system deployed, connected, official, or operated by the business.\n\nI noticed your site offers \"Request service or a free estimate\". I'm curious \u2014 roughly how many commercial inquiries arrive in a typical month, and how after-hours ones are handled today?\n\n{{verified_sender_signature}}\n\n{{required_postal_disclosure}}\n\n{{approved_opt_out_instruction}}",
+    "m5_first_email": "Hello {{functional_role_or_team}},\n\nyour website has a public request path \u2014 \"Request Estimate Schedule Service Air Conditioning Air\".\n\nyour site describes commercial HVAC work \u2014 \"What Defines Light Commercial HVAC\".\n\na step that acknowledges and sorts new service requests could be evaluated.\n\nThis is not a claim about how your team works today \u2014 we have no visibility into that.\n\nWe prepared a short deterministic simulation based only on approved public information.\n\nIt is a simulation\u2014not a system deployed, connected, official, or operated by the business.\n\nI noticed your site offers \"Request Estimate Schedule Service Air Conditioning Air\". I'm curious \u2014 roughly how many commercial inquiries arrive in a typical month, and how after-hours ones are handled today?\n\n{{verified_sender_signature}}\n\n{{required_postal_disclosure}}\n\n{{approved_opt_out_instruction}}",
     "m5_personalization": {
       "company_specific_segment_count": 2,
       "distinct_fact_classes": 2,

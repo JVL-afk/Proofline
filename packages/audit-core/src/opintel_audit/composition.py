@@ -39,7 +39,7 @@ from opintel_audit.domain import (
 )
 
 AUDIT_SCHEMA_VERSION = "audit.schema@1"
-COMPOSITION_POLICY_VERSION = "audit.commercial_hvac.deterministic@2"
+COMPOSITION_POLICY_VERSION = "audit.commercial_hvac.deterministic@3"
 QC_POLICY_VERSION = "audit.qc@1"
 
 # EVIDENCE_PRESERVING_PERSONALIZATION_V2: fixed finding frames. The frame inserts
@@ -49,6 +49,7 @@ _FINDING_KIND_BY_CATEGORY: dict[FactCategory, FindingKind] = {
     FactCategory.COMMERCIAL_CONTEXT: FindingKind.OBSERVED_COMMERCIAL_CONTEXT,
     FactCategory.RESPONSE_COMMITMENT: FindingKind.OBSERVED_RESPONSE_COMMITMENT,
     FactCategory.SERVICE_AREA_CONTEXT: FindingKind.OBSERVED_SERVICE_AREA,
+    FactCategory.SERVICE_AVAILABILITY: FindingKind.OBSERVED_SERVICE_AVAILABILITY,
 }
 
 
@@ -66,12 +67,18 @@ def _finding_frame(category: FactCategory, phrase: str) -> str:
         )
     if category == FactCategory.RESPONSE_COMMITMENT:
         return (
-            "Observed response commitment: the captured contact page publishes response "
-            "expectations for new inquiries."
+            "Observed response commitment: the captured contact page states how inbound "
+            f'inquiries are answered or returned ("{value}").'
+        )
+    if category == FactCategory.SERVICE_AREA_CONTEXT:
+        return (
+            "Observed service-area context: the captured public pages list a service area "
+            f'("{value}").'
         )
     return (
-        "Observed service-area context: the captured public pages list a service area "
-        f'("{value}").'
+        "Observed service availability: the captured public pages advertise service "
+        f'availability ("{value}"). This is an availability claim, not a statement of '
+        "inbound response or acknowledgement behaviour."
     )
 
 SECTION_DEFINITIONS = (
@@ -162,7 +169,9 @@ class DeterministicAuditComposer:
                     evidence_ids=(item.id,),
                     observation_ids=observation_ids,
                     fact_class=fact.fact_class,
-                    supporting_excerpt=item.bounded_excerpt[:280],
+                    # the exact minimized substring the selector bound (a verbatim
+                    # run of the cited fragment), not a blind prefix.
+                    supporting_excerpt=fact.phrase,
                 )
             )
 
