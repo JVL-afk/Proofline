@@ -1,0 +1,1653 @@
+{
+ "account_id": "785072247535",
+ "authority": {
+  "approved_by_reference_to_execution_ready_package_sha256": "e41fb3d360bab3273c5f1b32f6b4494e7acb5aaa08c5f5da5b71358f75bc615b",
+  "decision_event": "AUTHORIZE_SLOTS07_24_PHASE1_M1_V2_PERSONALIZATION_V2_EXECUTION",
+  "deployed_image_link9": "sha256:2d688edd2f9ba261fcdf588eac8e57a6d3ecb3fd8ccf5b0e66f53b9894582f63",
+  "legacy_bounded_repair_mechanism_used": false,
+  "m1_protocol": "phase1-m1@2-bounded-site-crawl",
+  "m2_m5_policies": "company_fact_selector@2 / company_statement@2 / rules@3 / heuristic_bands@2 / audit.commercial_hvac.deterministic@3 / demo.commercial_hvac.lead_response@2 / outreach.v4 / outreach.projection@3 / definition commercial_hvac.inbound_lead_response_qualification@1",
+  "minimizer": "phase1-minimizer@2",
+  "release_applicator_binding": "0daec18af2362506449c2f70bae0bafd9133ec60d2f14979effb2750916d170a",
+  "repairs_used": 0,
+  "reviewed_gate_proposal_sha256": "41cf105feb2ab1b21038803583867d56ea28e0a3dc99f46e5df91f7f66998251"
+ },
+ "batch_wide": {
+  "a09_approved": [
+   7,
+   8,
+   10,
+   11,
+   12,
+   14,
+   16,
+   18,
+   19,
+   20,
+   21,
+   22
+  ],
+  "a09_approved_count": 12,
+  "a09_rejected": [
+   9,
+   13,
+   15,
+   17,
+   23,
+   24
+  ],
+  "a09_rejected_count": 6,
+  "actually_researched_count": 12,
+  "batch_resource_totals_ACTUAL": {
+   "evidence_rows": 1364,
+   "pages_attempted": 196,
+   "pages_succeeded_useful": 184,
+   "paid_or_source_cost_usd": "0",
+   "raw_bytes_stored": 31457106,
+   "raw_bytes_stored_mb": 31.46
+  },
+  "batch_resource_totals_CONSERVATIVE_reported_to_materialiser": {
+   "m1_duration_seconds": 3600,
+   "total_bytes": 216000000,
+   "total_http_requests": 576,
+   "useful_page_fetches": 300
+  },
+  "ceiling_enforcement": "the operator-local materialiser (authority_materialization_v3._clamped_release_ceilings) was fed, before every approved slot, a conservative upper-bound batch_consumed of (completed approved M1 slots) x per-slot maxima 25/48/18000000/300. That value is always >= actual consumption, so a slot was authorised only when BOTH its per-slot envelope headroom AND remaining batch headroom permitted it, with no cross-slot borrowing. Conservative total after 12 slots = 300/576/216000000/3600, comfortably under the hard ceilings; ACTUAL total (196/184/31457106) is far lower. No slot exceeded its per-slot successful-capture ceiling of 25 useful page fetches.",
+  "comparison_with_slots_02_06": {
+   "observations": "07-24 has a markedly higher A-09 rejection rate (6/18 vs 1/5) driven by www->apex redirect hosts and acronym business names, and a higher M2-insufficient rate, consistent with a broader, less hand-curated slice of the frozen 100-company frame. The M2-reaching slots behaved identically to Slots 02-04: full deterministic M2->M5 to CONTACT_PHASE_NOT_AUTHORIZED with genuine evidence-derived personalization and the same three unresolved required-disclosure placeholders keeping every package non-send-ready.",
+   "slots_02_06": "4 A-09 approved / 1 rejected (Slot 06 exact-host 301); 4 researched; 3 CONTACT_PHASE_NOT_AUTHORIZED, 1 M2_INSUFFICIENT_EVIDENCE; 0 M1 failures; 0 quarantines",
+   "slots_07_24": "12 A-09 approved / 6 rejected; 12 researched; 5 CONTACT_PHASE_NOT_AUTHORIZED, 5 M2_INSUFFICIENT_EVIDENCE, 2 M1_RESEARCH_FAILED; 5 minimization quarantine events across 4 slots (1 all-page -> M1 failure)"
+  },
+  "contact_phase_not_authorized_slots": [
+   7,
+   18,
+   19,
+   20,
+   21
+  ],
+  "evidence_category_distribution_batch_wide": {
+   "public_about": 4,
+   "public_faq": 24,
+   "public_inbound_path": 161,
+   "public_other": 319,
+   "public_service_area": 114,
+   "public_service_description": 742
+  },
+  "hard_batch_ceilings": {
+   "batch_cost_ceiling_usd": "0",
+   "batch_max_discovery_fetches": 108,
+   "batch_max_m1_duration_seconds": 5400,
+   "batch_max_total_bytes": 324000000,
+   "batch_max_total_http_requests": 864,
+   "batch_max_useful_page_fetches": 450
+  },
+  "internal_opportunity_priority_band_distribution": {
+   "HIGH": [
+    7,
+    18,
+    19,
+    20,
+    21
+   ],
+   "LOW": [],
+   "note": "every slot that assembled a scored opportunity landed in the HIGH internal review band; NONE of these bands appear in any external artifact (verified: _SCORE_LEAK regex matched nothing in EXTERNAL M5 text or M3 rendered text for any slot; no 'high'/'low'/'priority'/'band' word in any EXTERNAL M5 artifact)"
+  },
+  "m1_failure_count": 2,
+  "m1_failure_slots": [
+   11,
+   12
+  ],
+  "m1_success_count": 10,
+  "m2_insufficient_count": 5,
+  "m2_insufficient_slots": [
+   8,
+   10,
+   14,
+   16,
+   22
+  ],
+  "m2_reached_count": 10,
+  "m2_sufficient_count": 5,
+  "m3_m4_m5_reached_count": 5,
+  "m3_m4_m5_reached_slots": [
+   7,
+   18,
+   19,
+   20,
+   21
+  ],
+  "recurring_a09_rejection_reasons": {
+   "acronym_identity_not_corroborable_by_distinctive_root_tokens": [
+    9,
+    23
+   ],
+   "exact_host_redirects_off_itself_to_apex_or_other_domain": [
+    15,
+    17,
+    24
+   ],
+   "exact_host_serves_no_first_party_root_http_200": [
+    13
+   ]
+  },
+  "recurring_m1_failure_reasons": {
+   "minimization_quarantine_all_captured_pages": [
+    11
+   ],
+   "note": "phase1-minimizer@2 is a hard control; where the single captured page could not preserve its required evidence marker while removing contact data it was quarantined (REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED). This is a valid owner-pre-accepted truthful outcome, identical to the pre-batch Slot 01 v1 homepage quarantine precedent, and NOT a repair trigger.",
+   "root_and_discovered_page_fetch_failure_zero_pages": [
+    12
+   ]
+  },
+  "recurring_m2_insufficient_reasons": {
+   "did_not_clear_the_unchanged_M2_threshold_despite_moderate_evidence": [
+    8
+   ],
+   "note": "same determinant the Slots 02-06 report identified for Slot 05: the unchanged deterministic offline M2 model scores the proportion and concentration of public conversion-pathway (public_inbound_path) evidence, not raw volume; no threshold reduction, no fabricated evidence, no repair, no redraw was performed for any slot.",
+   "small_overall_crawl_thin_evidence": [
+    10,
+    22
+   ],
+   "weak_or_absent_public_conversion_pathway_evidence": [
+    10,
+    14,
+    16
+   ]
+  }
+ },
+ "execution_note": {
+  "operator_interruption": "During Slot 18 the operator AWS SSO token expired mid-run; the controlled-egress helper died before its cleanup, leaving the controlled-egress service at desiredCount=1 and a Slot 18 approval envelope staged-but-never-activated (kill switch never left TRIPPED for that attempt, no research release was authorized, no activator task ran). Recovery: scaled controlled-egress back to 0, restored the stale approval sentinel, verified full dormancy, then re-materialized and ran Slot 18 fresh. This was an operator credential timeout, NOT a platform implementation/control defect; the batch resumed in order with no research performed during the interruption.",
+  "order": "strict ascending 07 -> 24; each approved slot: materialize v3 (operator-local) -> single-use research release -> M1 v2 bounded first-party crawl -> deterministic offline M2 -> M3 -> M4 -> M5 -> terminal at or before CONTACT_PHASE_NOT_AUTHORIZED -> seal -> consume authority -> restore dormancy -> next slot"
+ },
+ "final_stop_and_dormancy": {
+  "active_task_definitions": [
+   "m67-phase1-research-worker:38",
+   "m67-phase1-sampled-slot-activator:20"
+  ],
+  "continued_beyond_slot_24": false,
+  "controlled_egress_lease": "{\"state\":\"NOT_AUTHORIZED\"}",
+  "ecs_services": {
+   "m67-phase1-controlled-egress": "0/0/0",
+   "m67-phase1-intelligence-worker": "0/0/0",
+   "m67-phase1-research-worker": "0/0/0"
+  },
+  "kill_switch": "TRIPPED",
+  "research_release": "slot 22 (Ramsey) CONSUMED:M2_INSUFFICIENT_EVIDENCE, revoked 2026-08-31T19:08:16Z (last consumed terminal in the chain)",
+  "running_or_pending_tasks": 0,
+  "sampled_slot_execution_approval": "{\"state\":\"NOT_AUTHORIZED\"}",
+  "stopped_after_slot_24": true,
+  "transient_read_only_diagnostic_task_definitions": "registered + deregistered for the consolidated read (SELECT only); INACTIVE; services never referenced them"
+ },
+ "mandatory_human_review": "REQUIRED before any further Phase 1 progression. No Phase 1 work continues past Slot 24.",
+ "record_type": "M67_SLOTS07_24_PHASE1_M1_V2_PERSONALIZATION_V2_CONSOLIDATED_EXECUTION_REPORT",
+ "recorded_at_utc": "2026-08-31T19:21:17Z",
+ "region": "us-east-2",
+ "schema_version": "1.0.0",
+ "section_1_a09_outcome_per_frozen_host": [
+  {
+   "a09_decision_sha256": "cb5d7b06eca3b99f1fa796bb78b227a0f1d71cd6bfba49c6a11a572319a6bd96",
+   "a09_reason": null,
+   "a09_result": "APPROVED",
+   "business_identity": "Polar Pros",
+   "exact_hostname": "polarprosac.com",
+   "slot": 7
+  },
+  {
+   "a09_decision_sha256": "1a14247e8ebec9242964c225adf6c9afded654c449fd17527fa9aceb2f670977",
+   "a09_reason": null,
+   "a09_result": "APPROVED",
+   "business_identity": "Villas Plumbing & Air Conditioning",
+   "exact_hostname": "www.villasplumbing.com",
+   "slot": 8
+  },
+  {
+   "a09_decision_sha256": null,
+   "a09_reason": "business identity not corroborated on the root page (acronym-only name; no distinctive token >= 3 chars after the unchanged exclusion list)",
+   "a09_result": "NOT_APPROVED",
+   "business_identity": "C&R Services",
+   "exact_hostname": "crhvacpro.com",
+   "slot": 9
+  },
+  {
+   "a09_decision_sha256": "6ff924f8c511a62a9809f16c9adb7a65816d38b71b79914c5fa40907fa0f7d8c",
+   "a09_reason": null,
+   "a09_result": "APPROVED",
+   "business_identity": "Vicon Equipment, Inc",
+   "exact_hostname": "viconequip.com",
+   "slot": 10
+  },
+  {
+   "a09_decision_sha256": "b531b66ce531991d54e6520c1ccd47aec58e40ac84a958a0fa9d867afa763d4f",
+   "a09_reason": null,
+   "a09_result": "APPROVED",
+   "business_identity": "Sinclair Heating, Cooling, Plumbing",
+   "exact_hostname": "www.callsinclair.com",
+   "slot": 11
+  },
+  {
+   "a09_decision_sha256": "b259c02eeddc7f6ec5fe3ad92c1472495f4be947b29c9efdadfab7034b1caf63",
+   "a09_reason": null,
+   "a09_result": "APPROVED",
+   "business_identity": "Village Plumbing & Air",
+   "exact_hostname": "villageplumbing.com",
+   "slot": 12
+  },
+  {
+   "a09_decision_sha256": null,
+   "a09_reason": "exact host does not serve a first-party root HTTP 200 (observed HTTP 522, origin connection timed out)",
+   "a09_result": "NOT_APPROVED",
+   "business_identity": "NTX Plumbing & Air",
+   "exact_hostname": "www.ntxplumbing.com",
+   "slot": 13
+  },
+  {
+   "a09_decision_sha256": "eda715055d109da34a06236babb2b4872845473da0b85e42bdac279fc6c94976",
+   "a09_reason": null,
+   "a09_result": "APPROVED",
+   "business_identity": "City Supply Group",
+   "exact_hostname": "citysupplygroup.com",
+   "slot": 14
+  },
+  {
+   "a09_decision_sha256": null,
+   "a09_reason": "root HTTP 301 redirects off the exact host to https://hbmechanical.com/ (robots also 301)",
+   "a09_result": "NOT_APPROVED",
+   "business_identity": "HB Mechanical Services",
+   "exact_hostname": "www.hbmechanical.com",
+   "slot": 15
+  },
+  {
+   "a09_decision_sha256": "2f2a69a8fed58cdc2413113e1fd278562dc733195b27148ed69cfce6bb7a5c4b",
+   "a09_reason": null,
+   "a09_result": "APPROVED",
+   "business_identity": "Merit Services",
+   "exact_hostname": "meritsvc.com",
+   "slot": 16
+  },
+  {
+   "a09_decision_sha256": null,
+   "a09_reason": "root HTTP 302 redirects off the exact host to http://hermeticcompressorsofhouston.com",
+   "a09_result": "NOT_APPROVED",
+   "business_identity": "Hermetic Compressors of Houston",
+   "exact_hostname": "hch-inc.com",
+   "slot": 17
+  },
+  {
+   "a09_decision_sha256": "07e286bc1f9c9a8291664bf73a74397fe0c9bb3a9b086af661de43b4181be6eb",
+   "a09_reason": null,
+   "a09_result": "APPROVED",
+   "business_identity": "Elite Air Conditioning & Plumbing",
+   "exact_hostname": "eliteaustinac.com",
+   "slot": 18
+  },
+  {
+   "a09_decision_sha256": "cf066e42461f0eebed808397dcfb32df932f7f82050e49147dd2107fe9292a4a",
+   "a09_reason": null,
+   "a09_result": "APPROVED",
+   "business_identity": "A-Plus Air Conditioning & Home Solutions",
+   "exact_hostname": "www.aplusac.com",
+   "slot": 19
+  },
+  {
+   "a09_decision_sha256": "0b8e2330652f2a95cf24bdb2c13bc651be25a2e4fa087eda7ef2f1f6a3ae6ebd",
+   "a09_reason": null,
+   "a09_result": "APPROVED",
+   "business_identity": "E+M Emergency Air Conditioning",
+   "exact_hostname": "www.emergencyac.org",
+   "slot": 20
+  },
+  {
+   "a09_decision_sha256": "70aff90639dd802055cbeef6fafa44edc3d753214028e109793c1ef06754938f",
+   "a09_reason": null,
+   "a09_result": "APPROVED",
+   "business_identity": "Comfort-Air Engineering & Primo Plumbing",
+   "exact_hostname": "www.comfort-air.com",
+   "slot": 21
+  },
+  {
+   "a09_decision_sha256": "2e8b8d72951570427a836133fd9d0357f3da96d66ce222d01283445e1b20fa08",
+   "a09_reason": null,
+   "a09_result": "APPROVED",
+   "business_identity": "Ramsey",
+   "exact_hostname": "www.ramseyandco.com",
+   "slot": 22
+  },
+  {
+   "a09_decision_sha256": null,
+   "a09_reason": "business identity not corroborated on the root page (acronym-only name; no distinctive token >= 3 chars after the unchanged exclusion list)",
+   "a09_result": "NOT_APPROVED",
+   "business_identity": "C&S Air",
+   "exact_hostname": "www.candsair.com",
+   "slot": 23
+  },
+  {
+   "a09_decision_sha256": null,
+   "a09_reason": "root HTTP 301 redirects off the exact host to https://bluenorthernac.com/ (robots also 301)",
+   "a09_result": "NOT_APPROVED",
+   "business_identity": "Blue Northern Air Conditioning, Inc.",
+   "exact_hostname": "www.bluenorthernac.com",
+   "slot": 24
+  }
+ ],
+ "section_2_to_11_per_slot": [
+  {
+   "a09_decision_sha256": "cb5d7b06eca3b99f1fa796bb78b227a0f1d71cd6bfba49c6a11a572319a6bd96",
+   "a09_result": "APPROVED",
+   "accepted_stage_count": 6,
+   "activator_exit_code": 0,
+   "business_identity": "Polar Pros",
+   "coordinator_run_id": "dd9dae25-4e62-5596-bcd1-5aa17d2e3f55",
+   "exact_hostname": "polarprosac.com",
+   "exact_terminal_stage": "CONTACT_PHASE_NOT_AUTHORIZED",
+   "execution_status": "EXECUTED",
+   "m1": {
+    "bytes_stored": 5139371,
+    "coverage_record_sha256": "fd833e55dd13fb20c7379c492fda20168fe451097324a7a48934067a5d7ce7ae",
+    "crawl_protocol_version": "phase1-m1@2-bounded-site-crawl",
+    "evidence_rows": 322,
+    "fact_class_histogram": {
+     "public_faq": 7,
+     "public_inbound_path": 37,
+     "public_other": 74,
+     "public_service_area": 33,
+     "public_service_description": 171
+    },
+    "last_error_code": "fetch_failed",
+    "page_purpose_histogram": {
+     "about": 1,
+     "commercial_hvac": 3,
+     "contact_mechanism": 1,
+     "cooling_ac": 5,
+     "faq": 1,
+     "heating": 4,
+     "installation": 1,
+     "service_area_location": 4,
+     "services": 2,
+     "unclassified": 1
+    },
+    "pages_attempted": 23,
+    "pages_succeeded": 22,
+    "research_run_id": "4886efd6-8fd2-5471-906c-39643c001bfa",
+    "status": "partial"
+   },
+   "m2": {
+    "analysis_run_id": "1465c8aa-fc97-43b6-95b6-ab2a4a81cf0c",
+    "analysis_status": "succeeded",
+    "company_facts_selected": [
+     {
+      "category": "commercial_context",
+      "fact_class": "public_service_description",
+      "page_purpose": "commercial_hvac",
+      "phrase": "Commercial AC Repair",
+      "selector_version": "commercial_hvac.company_fact_selector@2"
+     },
+     {
+      "category": "intake_surface",
+      "fact_class": "public_inbound_path",
+      "page_purpose": "contact_mechanism",
+      "phrase": "Contact us today!",
+      "selector_version": "commercial_hvac.company_fact_selector@2"
+     },
+     {
+      "category": "service_area_context",
+      "fact_class": "public_service_area",
+      "page_purpose": "contact_mechanism",
+      "phrase": "Our Service Area",
+      "selector_version": "commercial_hvac.company_fact_selector@2"
+     },
+     {
+      "category": "service_availability",
+      "fact_class": "public_service_description",
+      "page_purpose": "faq",
+      "phrase": "Do you offer 24/7 emergency HVAC services?",
+      "selector_version": "commercial_hvac.company_fact_selector@2"
+     }
+    ],
+    "economics": {
+     "annualized_value": null,
+     "currency": "USD",
+     "formula_version": "commercial_hvac.lead_response.potential_incremental_revenue@1",
+     "monthly_value": null,
+     "result_label": "insufficient data \u2014 required business inputs are unknown",
+     "status": "insufficient_data"
+    },
+    "hypothesis_id": "082bd500-9efe-45a2-831f-a80265e6e7d3",
+    "hypothesis_logical_id": "0eaef2cf-deb2-4361-8b19-a78fd827d625",
+    "hypothesis_status": "ready_for_review",
+    "internal_review_priority_band": "HIGH",
+    "review_rank_hint_INTERNAL_ONLY": {
+     "distinct_fact_classes": 3,
+     "evidence_fact_count": 4,
+     "partial_crawl": true,
+     "priority_band": "HIGH"
+    },
+    "statement_excerpt": "Polar Pros publicly presents a public request path (\"Contact us today!\"), describes commercial HVAC work (\"Commercial AC Repair\"), lists a public service area (\"Our Service Area\"), and references round-the-clock or emergency service availability on its public pages. Given those observed public intake surfaces, a structured acknowledgement and qualification workflow could be evaluated. Current resp"
+   },
+   "m3": {
+    "audit_revision_id": "a7d1433c-447e-4c81-948b-57f3f7cf5259",
+    "crawl_coverage_finding": "Crawl coverage: 22 of 23 pages captured (partial); absence of a fact may reflect incomplete capture.",
+    "finding_count": 6,
+    "finding_kinds": [
+     "crawl_coverage",
+     "observed_commercial_context",
+     "observed_intake_surface",
+     "observed_service_area",
+     "observed_service_availability",
+     "what_remains_unknown"
+    ],
+    "finding_supporting_excerpts": [
+     {
+      "kind": "observed_intake_surface",
+      "supporting_excerpt": "Contact us today!"
+     },
+     {
+      "kind": "observed_commercial_context",
+      "supporting_excerpt": "Commercial AC Repair"
+     },
+     {
+      "kind": "observed_service_area",
+      "supporting_excerpt": "Our Service Area"
+     },
+     {
+      "kind": "observed_service_availability",
+      "supporting_excerpt": "Do you offer 24/7 emergency HVAC services?"
+     }
+    ],
+    "rendered_text_internal_score_leak": false,
+    "revision_hash": "a42c9a8e7a2fde9e5741eb73b68363dfe6cc8be239612c314bdab8a932624299",
+    "state": "approved"
+   },
+   "m4": {
+    "demo_id": "005104cd-8835-4c86-b2b5-433752d9da7a",
+    "demo_revision_id": "2f13f6fd-0dfa-4a5a-8a1a-6f825d2587e1",
+    "state": "approved"
+   },
+   "m5": {
+    "external_artifact_count": 5,
+    "external_text_high_low_priority_band_words": [],
+    "external_text_internal_score_leak": false,
+    "first_contact_email_excerpt": "Hello {{functional_role_or_team}},\n\nyour website has a public request path \u2014 \"Contact us today!\".\n\nyour site describes commercial HVAC work \u2014 \"Commercial AC Repair\".\n\na step that acknowledges and sorts new service requests could be evaluated.\n\nThis is not a claim about how your team works today \u2014 we have no visibility into that.\n\nWe prepared a short deterministic simulation based only on approved public information.\n\nIt is a simulation\u2014not a system deployed, connected, official, or operated by the business.\n\nI noticed your site offers \"Contact us today!\". I'm curious \u2014 roughly how many commerc",
+    "outreach_revision_id": "b1037584-049e-4c4f-8d4d-9c63f070edc3",
+    "package_id": "4033b595-bba4-4588-a800-601dae5f7ad3",
+    "personalization_qc": {
+     "company_specific_segment_count": 2,
+     "distinct_fact_classes": 2,
+     "passes_gate": true
+    },
+    "projection_modes": [
+     "conditional_inference",
+     "conditional_recommendation",
+     "evidence_derived_fact"
+    ],
+    "qc_finding_codes": [],
+    "state": "content_approved",
+    "unresolved_required_disclosure_slots": [
+     "approved_opt_out_instruction_slot",
+     "required_postal_disclosure_slot",
+     "verified_sender_slot"
+    ]
+   },
+   "minimization": {
+    "durable_minimized_snapshots": 22,
+    "minimizer_version": "phase1-minimizer@2",
+    "quarantine_count": 0,
+    "quarantine_reasons": [],
+    "removed_email": 44,
+    "removed_phone": 5285,
+    "removed_structured_contact_blocks": 122
+   },
+   "release_id": "cfcaa70f-66bf-5f82-a4be-5efbbcb9ba34",
+   "slot": 7
+  },
+  {
+   "a09_decision_sha256": "1a14247e8ebec9242964c225adf6c9afded654c449fd17527fa9aceb2f670977",
+   "a09_result": "APPROVED",
+   "accepted_stage_count": 2,
+   "activator_exit_code": 0,
+   "business_identity": "Villas Plumbing & Air Conditioning",
+   "coordinator_run_id": "9241cd22-c439-5a28-8405-329f795b9ca9",
+   "exact_hostname": "www.villasplumbing.com",
+   "exact_terminal_stage": "M2_INSUFFICIENT_EVIDENCE",
+   "execution_status": "EXECUTED",
+   "m1": {
+    "bytes_stored": 2101632,
+    "coverage_record_sha256": "e4a52cce5b220e6e7a5490a65ba207385bc472281b710fc7a86a70b0d6242c0a",
+    "crawl_protocol_version": "phase1-m1@2-bounded-site-crawl",
+    "evidence_rows": 86,
+    "fact_class_histogram": {
+     "public_inbound_path": 19,
+     "public_other": 35,
+     "public_service_area": 2,
+     "public_service_description": 30
+    },
+    "last_error_code": null,
+    "page_purpose_histogram": {
+     "about": 1,
+     "commercial_hvac": 2,
+     "contact_mechanism": 1,
+     "cooling_ac": 3,
+     "financing": 1,
+     "heating": 2,
+     "installation": 1,
+     "repair": 2,
+     "service_area_location": 1,
+     "services": 5
+    },
+    "pages_attempted": 19,
+    "pages_succeeded": 19,
+    "research_run_id": "544876d8-0662-519d-88c1-4aa287fe8662",
+    "status": "succeeded"
+   },
+   "m2": {
+    "analysis_run_id": "14745ef9-98ab-4abf-a2fc-0d0d1f1845b3",
+    "analysis_status": "insufficient_data",
+    "company_facts_selected": null,
+    "economics": null,
+    "hypothesis_id": null,
+    "hypothesis_logical_id": null,
+    "hypothesis_status": null,
+    "internal_review_priority_band": null,
+    "review_rank_hint_INTERNAL_ONLY": null,
+    "statement_excerpt": ""
+   },
+   "minimization": {
+    "durable_minimized_snapshots": 19,
+    "minimizer_version": "phase1-minimizer@2",
+    "quarantine_count": 0,
+    "quarantine_reasons": [],
+    "removed_email": 45,
+    "removed_phone": 332,
+    "removed_structured_contact_blocks": 46
+   },
+   "release_id": "e0e6cb80-de3e-5657-8bcf-08aebab71650",
+   "slot": 8
+  },
+  {
+   "a09_decision_sha256": null,
+   "a09_reason": "business identity not corroborated on the root page (acronym-only name; no distinctive token >= 3 chars after the unchanged exclusion list)",
+   "a09_result": "NOT_APPROVED",
+   "business_identity": "C&R Services",
+   "exact_hostname": "crhvacpro.com",
+   "exact_terminal_stage": "A09_NOT_APPROVED (0 accepted stages; slot absent from baked registry, activator fails closed)",
+   "execution_status": "NOT_EXECUTED_TRUTHFUL_A09_TERMINAL",
+   "no_substitution": true,
+   "slot": 9
+  },
+  {
+   "a09_decision_sha256": "6ff924f8c511a62a9809f16c9adb7a65816d38b71b79914c5fa40907fa0f7d8c",
+   "a09_result": "APPROVED",
+   "accepted_stage_count": 2,
+   "activator_exit_code": 0,
+   "business_identity": "Vicon Equipment, Inc",
+   "coordinator_run_id": "b632ebb7-ee8f-5eb2-8de8-3f4b905a3973",
+   "exact_hostname": "viconequip.com",
+   "exact_terminal_stage": "M2_INSUFFICIENT_EVIDENCE",
+   "execution_status": "EXECUTED",
+   "m1": {
+    "bytes_stored": 196104,
+    "coverage_record_sha256": "8bc8d021c45f034c0d61a0cb6aec61377cadb13282baa40fcaf8574e9e85c5e6",
+    "crawl_protocol_version": "phase1-m1@2-bounded-site-crawl",
+    "evidence_rows": 14,
+    "fact_class_histogram": {
+     "public_faq": 2,
+     "public_other": 5,
+     "public_service_description": 7
+    },
+    "last_error_code": null,
+    "page_purpose_histogram": {
+     "about": 1,
+     "commercial_hvac": 1,
+     "contact_mechanism": 1
+    },
+    "pages_attempted": 3,
+    "pages_succeeded": 3,
+    "research_run_id": "e0c42574-205b-52d9-9f5d-51127596ca2e",
+    "status": "succeeded"
+   },
+   "m2": {
+    "analysis_run_id": "bc9ec66b-dbc0-4686-9ca8-fa25046b97aa",
+    "analysis_status": "insufficient_data",
+    "company_facts_selected": null,
+    "economics": null,
+    "hypothesis_id": null,
+    "hypothesis_logical_id": null,
+    "hypothesis_status": null,
+    "internal_review_priority_band": null,
+    "review_rank_hint_INTERNAL_ONLY": null,
+    "statement_excerpt": ""
+   },
+   "minimization": {
+    "durable_minimized_snapshots": 3,
+    "minimizer_version": "phase1-minimizer@2",
+    "quarantine_count": 0,
+    "quarantine_reasons": [],
+    "removed_email": 30,
+    "removed_phone": 55,
+    "removed_structured_contact_blocks": 13
+   },
+   "release_id": "59f9bcaf-8632-50c3-851a-02ee951e5574",
+   "slot": 10
+  },
+  {
+   "a09_decision_sha256": "b531b66ce531991d54e6520c1ccd47aec58e40ac84a958a0fa9d867afa763d4f",
+   "a09_result": "APPROVED",
+   "accepted_stage_count": 1,
+   "activator_exit_code": 0,
+   "business_identity": "Sinclair Heating, Cooling, Plumbing",
+   "coordinator_run_id": "78c1a4e4-b4cd-57e7-92bc-bd1001130cd1",
+   "exact_hostname": "www.callsinclair.com",
+   "exact_terminal_stage": "M1_RESEARCH_FAILED",
+   "execution_status": "EXECUTED",
+   "m1": {
+    "bytes_stored": 193175,
+    "coverage_record_sha256": "b9fcaf021508b9468f600477466c7e2e4d7be4965415c89cc46787dad6d9ec58",
+    "crawl_protocol_version": "phase1-m1@2-bounded-site-crawl",
+    "evidence_rows": 0,
+    "fact_class_histogram": {},
+    "last_error_code": "minimization_quarantine",
+    "page_purpose_histogram": {
+     "unclassified": 1
+    },
+    "pages_attempted": 1,
+    "pages_succeeded": 0,
+    "research_run_id": "e77e465a-4d1b-5b5c-9eee-ccfd52737470",
+    "status": "failed"
+   },
+   "minimization": {
+    "durable_minimized_snapshots": 0,
+    "minimizer_version": "phase1-minimizer@2",
+    "quarantine_count": 1,
+    "quarantine_reasons": [
+     [
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:inquiry"
+     ]
+    ],
+    "removed_email": 0,
+    "removed_phone": 0,
+    "removed_structured_contact_blocks": 0
+   },
+   "release_id": "079a107b-6324-5325-927a-9256b4114225",
+   "slot": 11
+  },
+  {
+   "a09_decision_sha256": "b259c02eeddc7f6ec5fe3ad92c1472495f4be947b29c9efdadfab7034b1caf63",
+   "a09_result": "APPROVED",
+   "accepted_stage_count": 1,
+   "activator_exit_code": 0,
+   "business_identity": "Village Plumbing & Air",
+   "coordinator_run_id": "1fd078d3-8a6c-55c3-a4bb-735b430ef6fd",
+   "exact_hostname": "villageplumbing.com",
+   "exact_terminal_stage": "M1_RESEARCH_FAILED",
+   "execution_status": "EXECUTED",
+   "m1": {
+    "bytes_stored": 0,
+    "coverage_record_sha256": "682e34c5b10ee44bdc792edc932360468232ef1503913320493a587543f60f7d",
+    "crawl_protocol_version": "phase1-m1@2-bounded-site-crawl",
+    "evidence_rows": 0,
+    "fact_class_histogram": {},
+    "last_error_code": "fetch_failed",
+    "page_purpose_histogram": {
+     "unclassified": 1
+    },
+    "pages_attempted": 1,
+    "pages_succeeded": 0,
+    "research_run_id": "2312cb61-709f-5ee7-a7ce-b53d25712d10",
+    "status": "failed"
+   },
+   "minimization": {
+    "durable_minimized_snapshots": 0,
+    "minimizer_version": "phase1-minimizer@2",
+    "quarantine_count": 0,
+    "quarantine_reasons": [],
+    "removed_email": 0,
+    "removed_phone": 0,
+    "removed_structured_contact_blocks": 0
+   },
+   "release_id": "5ed6f488-2d0c-54fd-a32a-db36d78d0792",
+   "slot": 12
+  },
+  {
+   "a09_decision_sha256": null,
+   "a09_reason": "exact host does not serve a first-party root HTTP 200 (observed HTTP 522, origin connection timed out)",
+   "a09_result": "NOT_APPROVED",
+   "business_identity": "NTX Plumbing & Air",
+   "exact_hostname": "www.ntxplumbing.com",
+   "exact_terminal_stage": "A09_NOT_APPROVED (0 accepted stages; slot absent from baked registry, activator fails closed)",
+   "execution_status": "NOT_EXECUTED_TRUTHFUL_A09_TERMINAL",
+   "no_substitution": true,
+   "slot": 13
+  },
+  {
+   "a09_decision_sha256": "eda715055d109da34a06236babb2b4872845473da0b85e42bdac279fc6c94976",
+   "a09_result": "APPROVED",
+   "accepted_stage_count": 2,
+   "activator_exit_code": 0,
+   "business_identity": "City Supply Group",
+   "coordinator_run_id": "d799b30a-77ad-5ae2-a249-3fff3586e733",
+   "exact_hostname": "citysupplygroup.com",
+   "exact_terminal_stage": "M2_INSUFFICIENT_EVIDENCE",
+   "execution_status": "EXECUTED",
+   "m1": {
+    "bytes_stored": 7012312,
+    "coverage_record_sha256": "c13e9ed0827ade0f5bd64dc4ae1116ccc3f8f97c7c1a4a617edf3dd82a01be89",
+    "crawl_protocol_version": "phase1-m1@2-bounded-site-crawl",
+    "evidence_rows": 37,
+    "fact_class_histogram": {
+     "public_faq": 2,
+     "public_inbound_path": 1,
+     "public_other": 4,
+     "public_service_area": 1,
+     "public_service_description": 29
+    },
+    "last_error_code": "minimization_quarantine",
+    "page_purpose_histogram": {
+     "commercial_hvac": 4,
+     "cooling_ac": 1,
+     "faq": 1,
+     "financing": 4,
+     "heating": 4,
+     "installation": 3,
+     "repair": 3,
+     "residential_hvac": 4,
+     "unclassified": 2
+    },
+    "pages_attempted": 26,
+    "pages_succeeded": 25,
+    "research_run_id": "71e67ae4-a23e-5cf9-b9d3-9dd74995db47",
+    "status": "partial"
+   },
+   "m2": {
+    "analysis_run_id": "394a5d65-6d32-465c-a068-39b5c4dfe8cd",
+    "analysis_status": "insufficient_data",
+    "company_facts_selected": null,
+    "economics": null,
+    "hypothesis_id": null,
+    "hypothesis_logical_id": null,
+    "hypothesis_status": null,
+    "internal_review_priority_band": null,
+    "review_rank_hint_INTERNAL_ONLY": null,
+    "statement_excerpt": ""
+   },
+   "minimization": {
+    "durable_minimized_snapshots": 25,
+    "minimizer_version": "phase1-minimizer@2",
+    "quarantine_count": 1,
+    "quarantine_reasons": [
+     [
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:City Supply Group"
+     ]
+    ],
+    "removed_email": 84,
+    "removed_phone": 11407,
+    "removed_structured_contact_blocks": 288
+   },
+   "release_id": "5fe568e0-bf5f-5fa7-82e8-6ef3bb1f4b14",
+   "slot": 14
+  },
+  {
+   "a09_decision_sha256": null,
+   "a09_reason": "root HTTP 301 redirects off the exact host to https://hbmechanical.com/ (robots also 301)",
+   "a09_result": "NOT_APPROVED",
+   "business_identity": "HB Mechanical Services",
+   "exact_hostname": "www.hbmechanical.com",
+   "exact_terminal_stage": "A09_NOT_APPROVED (0 accepted stages; slot absent from baked registry, activator fails closed)",
+   "execution_status": "NOT_EXECUTED_TRUTHFUL_A09_TERMINAL",
+   "no_substitution": true,
+   "slot": 15
+  },
+  {
+   "a09_decision_sha256": "2f2a69a8fed58cdc2413113e1fd278562dc733195b27148ed69cfce6bb7a5c4b",
+   "a09_result": "APPROVED",
+   "accepted_stage_count": 2,
+   "activator_exit_code": 0,
+   "business_identity": "Merit Services",
+   "coordinator_run_id": "c2294b94-2892-5c08-a7cf-c9470274d571",
+   "exact_hostname": "meritsvc.com",
+   "exact_terminal_stage": "M2_INSUFFICIENT_EVIDENCE",
+   "execution_status": "EXECUTED",
+   "m1": {
+    "bytes_stored": 649224,
+    "coverage_record_sha256": "7fd4bf2911042c08040ccc93bf98403827b77aa8984b5fc848407a0f5558689c",
+    "crawl_protocol_version": "phase1-m1@2-bounded-site-crawl",
+    "evidence_rows": 49,
+    "fact_class_histogram": {
+     "public_inbound_path": 2,
+     "public_other": 18,
+     "public_service_area": 1,
+     "public_service_description": 28
+    },
+    "last_error_code": "minimization_quarantine",
+    "page_purpose_histogram": {
+     "about": 1,
+     "commercial_hvac": 1,
+     "contact_mechanism": 1,
+     "cooling_ac": 2,
+     "heating": 1,
+     "installation": 1,
+     "maintenance": 1,
+     "repair": 1,
+     "services": 3,
+     "unclassified": 2
+    },
+    "pages_attempted": 14,
+    "pages_succeeded": 12,
+    "research_run_id": "a906e5e3-4500-5ec5-bb18-a6d4c12ff9b5",
+    "status": "partial"
+   },
+   "m2": {
+    "analysis_run_id": "3a19a902-d51c-489c-affb-7472000f1e05",
+    "analysis_status": "insufficient_data",
+    "company_facts_selected": null,
+    "economics": null,
+    "hypothesis_id": null,
+    "hypothesis_logical_id": null,
+    "hypothesis_status": null,
+    "internal_review_priority_band": null,
+    "review_rank_hint_INTERNAL_ONLY": null,
+    "statement_excerpt": ""
+   },
+   "minimization": {
+    "durable_minimized_snapshots": 12,
+    "minimizer_version": "phase1-minimizer@2",
+    "quarantine_count": 2,
+    "quarantine_reasons": [
+     [
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:request"
+     ],
+     [
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:request",
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:form"
+     ]
+    ],
+    "removed_email": 27,
+    "removed_phone": 15,
+    "removed_structured_contact_blocks": 28
+   },
+   "release_id": "d71e9c90-95e8-5ba9-a362-8f793c63c680",
+   "slot": 16
+  },
+  {
+   "a09_decision_sha256": null,
+   "a09_reason": "root HTTP 302 redirects off the exact host to http://hermeticcompressorsofhouston.com",
+   "a09_result": "NOT_APPROVED",
+   "business_identity": "Hermetic Compressors of Houston",
+   "exact_hostname": "hch-inc.com",
+   "exact_terminal_stage": "A09_NOT_APPROVED (0 accepted stages; slot absent from baked registry, activator fails closed)",
+   "execution_status": "NOT_EXECUTED_TRUTHFUL_A09_TERMINAL",
+   "no_substitution": true,
+   "slot": 17
+  },
+  {
+   "a09_decision_sha256": "07e286bc1f9c9a8291664bf73a74397fe0c9bb3a9b086af661de43b4181be6eb",
+   "a09_result": "APPROVED",
+   "accepted_stage_count": 6,
+   "activator_exit_code": 0,
+   "business_identity": "Elite Air Conditioning & Plumbing",
+   "coordinator_run_id": "c96bfb37-41c4-5325-801b-9c121bce082a",
+   "exact_hostname": "eliteaustinac.com",
+   "exact_terminal_stage": "CONTACT_PHASE_NOT_AUTHORIZED",
+   "execution_status": "EXECUTED",
+   "m1": {
+    "bytes_stored": 5421584,
+    "coverage_record_sha256": "cd0a8f508d45f9b4fd6abacd84f04d6ef2c8748f913640f793623f00e724ee12",
+    "crawl_protocol_version": "phase1-m1@2-bounded-site-crawl",
+    "evidence_rows": 280,
+    "fact_class_histogram": {
+     "public_faq": 3,
+     "public_inbound_path": 25,
+     "public_other": 44,
+     "public_service_area": 27,
+     "public_service_description": 181
+    },
+    "last_error_code": "fetch_failed",
+    "page_purpose_histogram": {
+     "commercial_hvac": 4,
+     "contact_mechanism": 1,
+     "cooling_ac": 5,
+     "faq": 1,
+     "financing": 1,
+     "heating": 4,
+     "installation": 1,
+     "repair": 4,
+     "residential_hvac": 3,
+     "service_area_location": 1,
+     "unclassified": 3
+    },
+    "pages_attempted": 28,
+    "pages_succeeded": 25,
+    "research_run_id": "48e3fd95-9d25-5119-a480-0a2f14cc5abb",
+    "status": "partial"
+   },
+   "m2": {
+    "analysis_run_id": "4553aae0-6b0b-4320-85ef-9e61a4993f41",
+    "analysis_status": "succeeded",
+    "company_facts_selected": [
+     {
+      "category": "commercial_context",
+      "fact_class": "public_service_description",
+      "page_purpose": "commercial_hvac",
+      "phrase": "Commercial HVAC Services",
+      "selector_version": "commercial_hvac.company_fact_selector@2"
+     },
+     {
+      "category": "intake_surface",
+      "fact_class": "public_inbound_path",
+      "page_purpose": "contact_mechanism",
+      "phrase": "Need to schedule a service call?",
+      "selector_version": "commercial_hvac.company_fact_selector@2"
+     },
+     {
+      "category": "service_area_context",
+      "fact_class": "public_service_area",
+      "page_purpose": "contact_mechanism",
+      "phrase": "Just a Sample of Our Service Areas",
+      "selector_version": "commercial_hvac.company_fact_selector@2"
+     },
+     {
+      "category": "service_availability",
+      "fact_class": "public_other",
+      "page_purpose": "contact_mechanism",
+      "phrase": "*About Our 24-Hour Service",
+      "selector_version": "commercial_hvac.company_fact_selector@2"
+     }
+    ],
+    "economics": {
+     "annualized_value": null,
+     "currency": "USD",
+     "formula_version": "commercial_hvac.lead_response.potential_incremental_revenue@1",
+     "monthly_value": null,
+     "result_label": "insufficient data \u2014 required business inputs are unknown",
+     "status": "insufficient_data"
+    },
+    "hypothesis_id": "37cbde17-cd64-491d-a91c-8f233c8edc12",
+    "hypothesis_logical_id": "510f770f-6159-4c89-ad18-35fa0588e693",
+    "hypothesis_status": "ready_for_review",
+    "internal_review_priority_band": "HIGH",
+    "review_rank_hint_INTERNAL_ONLY": {
+     "distinct_fact_classes": 4,
+     "evidence_fact_count": 4,
+     "partial_crawl": true,
+     "priority_band": "HIGH"
+    },
+    "statement_excerpt": "Elite Air Conditioning & Plumbing publicly presents a public request path (\"Need to schedule a service call?\"), describes commercial HVAC work (\"Commercial HVAC Services\"), lists a public service area (\"Just a Sample of Our Service Areas\"), and references round-the-clock or emergency service availability on its public pages. Given those observed public intake surfaces, a structured acknowledgement"
+   },
+   "m3": {
+    "audit_revision_id": "4d399ded-b6ee-4c29-b5cd-2f462f5c07bb",
+    "crawl_coverage_finding": "Crawl coverage: 25 of 28 pages captured (partial); absence of a fact may reflect incomplete capture.",
+    "finding_count": 6,
+    "finding_kinds": [
+     "crawl_coverage",
+     "observed_commercial_context",
+     "observed_intake_surface",
+     "observed_service_area",
+     "observed_service_availability",
+     "what_remains_unknown"
+    ],
+    "finding_supporting_excerpts": [
+     {
+      "kind": "observed_intake_surface",
+      "supporting_excerpt": "Need to schedule a service call?"
+     },
+     {
+      "kind": "observed_commercial_context",
+      "supporting_excerpt": "Commercial HVAC Services"
+     },
+     {
+      "kind": "observed_service_area",
+      "supporting_excerpt": "Just a Sample of Our Service Areas"
+     },
+     {
+      "kind": "observed_service_availability",
+      "supporting_excerpt": "*About Our 24-Hour Service"
+     }
+    ],
+    "rendered_text_internal_score_leak": false,
+    "revision_hash": "cbe14e959f55f795365e2033f2ae387c9bc3e40b6717c62b2c6ff7268df18b30",
+    "state": "approved"
+   },
+   "m4": {
+    "demo_id": "9d19e3fa-0564-4e9d-bbf4-3c6e4880931a",
+    "demo_revision_id": "f6dc85de-43d2-4016-9f0b-e87a2fd30839",
+    "state": "approved"
+   },
+   "m5": {
+    "external_artifact_count": 5,
+    "external_text_high_low_priority_band_words": [],
+    "external_text_internal_score_leak": false,
+    "first_contact_email_excerpt": "Hello {{functional_role_or_team}},\n\nyour website has a public request path \u2014 \"Need to schedule a service call?\".\n\nyour site describes commercial HVAC work \u2014 \"Commercial HVAC Services\".\n\na step that acknowledges and sorts new service requests could be evaluated.\n\nThis is not a claim about how your team works today \u2014 we have no visibility into that.\n\nWe prepared a short deterministic simulation based only on approved public information.\n\nIt is a simulation\u2014not a system deployed, connected, official, or operated by the business.\n\nI noticed your site offers \"Need to schedule a service call?\". I'm ",
+    "outreach_revision_id": "b2b90f09-747d-4550-9cef-7da3095bbedf",
+    "package_id": "15e7a05f-0375-4084-98c2-84eb0a6f7698",
+    "personalization_qc": {
+     "company_specific_segment_count": 2,
+     "distinct_fact_classes": 2,
+     "passes_gate": true
+    },
+    "projection_modes": [
+     "conditional_inference",
+     "conditional_recommendation",
+     "evidence_derived_fact"
+    ],
+    "qc_finding_codes": [],
+    "state": "content_approved",
+    "unresolved_required_disclosure_slots": [
+     "approved_opt_out_instruction_slot",
+     "required_postal_disclosure_slot",
+     "verified_sender_slot"
+    ]
+   },
+   "minimization": {
+    "durable_minimized_snapshots": 25,
+    "minimizer_version": "phase1-minimizer@2",
+    "quarantine_count": 0,
+    "quarantine_reasons": [],
+    "removed_email": 0,
+    "removed_phone": 366,
+    "removed_structured_contact_blocks": 78
+   },
+   "release_id": "1c9264f6-4aa0-55b2-b335-464656a646b4",
+   "slot": 18
+  },
+  {
+   "a09_decision_sha256": "cf066e42461f0eebed808397dcfb32df932f7f82050e49147dd2107fe9292a4a",
+   "a09_result": "APPROVED",
+   "accepted_stage_count": 6,
+   "activator_exit_code": 0,
+   "business_identity": "A-Plus Air Conditioning & Home Solutions",
+   "coordinator_run_id": "393e1000-1449-5abb-8644-c564f6ea0bf3",
+   "exact_hostname": "www.aplusac.com",
+   "exact_terminal_stage": "CONTACT_PHASE_NOT_AUTHORIZED",
+   "execution_status": "EXECUTED",
+   "m1": {
+    "bytes_stored": 3501634,
+    "coverage_record_sha256": "338bd6ed4cbee0177e8762a379d3045fc0e84798c9a4d5a7b0d4789d1158ff1a",
+    "crawl_protocol_version": "phase1-m1@2-bounded-site-crawl",
+    "evidence_rows": 96,
+    "fact_class_histogram": {
+     "public_about": 2,
+     "public_faq": 6,
+     "public_inbound_path": 25,
+     "public_other": 14,
+     "public_service_area": 5,
+     "public_service_description": 44
+    },
+    "last_error_code": "fetch_failed",
+    "page_purpose_histogram": {
+     "about": 1,
+     "commercial_hvac": 1,
+     "contact_mechanism": 1,
+     "cooling_ac": 5,
+     "faq": 2,
+     "heating": 4,
+     "homepage": 3,
+     "installation": 1,
+     "maintenance": 1,
+     "repair": 2,
+     "request_service_scheduling": 1,
+     "residential_hvac": 1,
+     "service_area_location": 1,
+     "services": 1,
+     "unclassified": 2
+    },
+    "pages_attempted": 27,
+    "pages_succeeded": 25,
+    "research_run_id": "6762e495-d8d6-5d51-a752-ccb5fc768866",
+    "status": "partial"
+   },
+   "m2": {
+    "analysis_run_id": "57d426cf-a2ba-4b98-b02d-893671160074",
+    "analysis_status": "succeeded",
+    "company_facts_selected": [
+     {
+      "category": "commercial_context",
+      "fact_class": "public_service_description",
+      "page_purpose": "commercial_hvac",
+      "phrase": "Commercial Air Conditioning Repairs",
+      "selector_version": "commercial_hvac.company_fact_selector@2"
+     },
+     {
+      "category": "intake_surface",
+      "fact_class": "public_inbound_path",
+      "page_purpose": "request_service_scheduling",
+      "phrase": "When to Schedule AC Replacement",
+      "selector_version": "commercial_hvac.company_fact_selector@2"
+     },
+     {
+      "category": "response_commitment",
+      "fact_class": "public_inbound_path",
+      "page_purpose": "heating",
+      "phrase": "Austin homeowners choose us for flat-rate pricing, fast response times, and technicians registered with the State of Texas.",
+      "selector_version": "commercial_hvac.company_fact_selector@2"
+     },
+     {
+      "category": "service_area_context",
+      "fact_class": "public_service_area",
+      "page_purpose": "cooling_ac",
+      "phrase": "Air Conditioning Installation Services Austin, TX Heating & Cooling Heating Air Conditioning View All Heating Services View All Cooling Services Handyman",
+      "selector_version": "commercial_hvac.company_fact_selector@2"
+     }
+    ],
+    "economics": {
+     "annualized_value": null,
+     "currency": "USD",
+     "formula_version": "commercial_hvac.lead_response.potential_incremental_revenue@1",
+     "monthly_value": null,
+     "result_label": "insufficient data \u2014 required business inputs are unknown",
+     "status": "insufficient_data"
+    },
+    "hypothesis_id": "e8e78dc1-b790-4d0d-830d-7e8848d037d8",
+    "hypothesis_logical_id": "f45662e5-6e82-49b6-8abd-594a3ec75b9e",
+    "hypothesis_status": "ready_for_review",
+    "internal_review_priority_band": "HIGH",
+    "review_rank_hint_INTERNAL_ONLY": {
+     "distinct_fact_classes": 3,
+     "evidence_fact_count": 4,
+     "partial_crawl": true,
+     "priority_band": "HIGH"
+    },
+    "statement_excerpt": "A-Plus Air Conditioning & Home Solutions publicly presents a public request path (\"When to Schedule AC Replacement\"), describes commercial HVAC work (\"Commercial Air Conditioning Repairs\"), publishes on its contact page how inbound inquiries are answered and returned, and lists a public service area (\"Air Conditioning Installation Services Austin, TX Heating & Cooling Heating Air Conditioning View"
+   },
+   "m3": {
+    "audit_revision_id": "4a94ba64-1d34-41c4-b88b-a48090ef5adc",
+    "crawl_coverage_finding": "Crawl coverage: 25 of 27 pages captured (partial); absence of a fact may reflect incomplete capture.",
+    "finding_count": 6,
+    "finding_kinds": [
+     "crawl_coverage",
+     "observed_commercial_context",
+     "observed_intake_surface",
+     "observed_response_commitment",
+     "observed_service_area",
+     "what_remains_unknown"
+    ],
+    "finding_supporting_excerpts": [
+     {
+      "kind": "observed_intake_surface",
+      "supporting_excerpt": "When to Schedule AC Replacement"
+     },
+     {
+      "kind": "observed_commercial_context",
+      "supporting_excerpt": "Commercial Air Conditioning Repairs"
+     },
+     {
+      "kind": "observed_response_commitment",
+      "supporting_excerpt": "Austin homeowners choose us for flat-rate pricing, fast response times, and technicians registered with the State of Texas."
+     },
+     {
+      "kind": "observed_service_area",
+      "supporting_excerpt": "Air Conditioning Installation Services Austin, TX Heating & Cooling Heating Air Conditioning View All Heating Services View All Cooling Services Handyman"
+     }
+    ],
+    "rendered_text_internal_score_leak": false,
+    "revision_hash": "6b0e0f589a384dd3b3b7890a37b6be8c4b5de3a0818ffd2247e8f4068b72e329",
+    "state": "approved"
+   },
+   "m4": {
+    "demo_id": "ef1ee5bf-86b8-4f1a-80da-00f0a8de7fc4",
+    "demo_revision_id": "a5cafa52-0ab8-4456-a29f-705c0a18018a",
+    "state": "approved"
+   },
+   "m5": {
+    "external_artifact_count": 5,
+    "external_text_high_low_priority_band_words": [],
+    "external_text_internal_score_leak": false,
+    "first_contact_email_excerpt": "Hello {{functional_role_or_team}},\n\nyour website has a public request path \u2014 \"When to Schedule AC Replacement\".\n\nyour site describes commercial HVAC work \u2014 \"Commercial Air Conditioning Repairs\".\n\na step that acknowledges and sorts new service requests could be evaluated.\n\nThis is not a claim about how your team works today \u2014 we have no visibility into that.\n\nWe prepared a short deterministic simulation based only on approved public information.\n\nIt is a simulation\u2014not a system deployed, connected, official, or operated by the business.\n\nI noticed your site offers \"When to Schedule AC Replaceme",
+    "outreach_revision_id": "064a94a2-2477-4c31-a2b6-169d51f7cf39",
+    "package_id": "7c2099ac-1a64-4cbe-8a0e-f56d8fa4ab0e",
+    "personalization_qc": {
+     "company_specific_segment_count": 2,
+     "distinct_fact_classes": 2,
+     "passes_gate": true
+    },
+    "projection_modes": [
+     "conditional_inference",
+     "conditional_recommendation",
+     "evidence_derived_fact"
+    ],
+    "qc_finding_codes": [],
+    "state": "content_approved",
+    "unresolved_required_disclosure_slots": [
+     "approved_opt_out_instruction_slot",
+     "required_postal_disclosure_slot",
+     "verified_sender_slot"
+    ]
+   },
+   "minimization": {
+    "durable_minimized_snapshots": 25,
+    "minimizer_version": "phase1-minimizer@2",
+    "quarantine_count": 1,
+    "quarantine_reasons": [
+     [
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:texas",
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:commercial",
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:hvac",
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:business",
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:businesses",
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:company",
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:service",
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:request",
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:heating",
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:cooling"
+     ]
+    ],
+    "removed_email": 0,
+    "removed_phone": 429,
+    "removed_structured_contact_blocks": 202
+   },
+   "release_id": "812b1fb8-d96b-50b5-9b09-a82535bdc787",
+   "slot": 19
+  },
+  {
+   "a09_decision_sha256": "0b8e2330652f2a95cf24bdb2c13bc651be25a2e4fa087eda7ef2f1f6a3ae6ebd",
+   "a09_result": "APPROVED",
+   "accepted_stage_count": 6,
+   "activator_exit_code": 0,
+   "business_identity": "E+M Emergency Air Conditioning",
+   "coordinator_run_id": "309e83f9-e4ae-5126-9c9b-3c27e683c95e",
+   "exact_hostname": "www.emergencyac.org",
+   "exact_terminal_stage": "CONTACT_PHASE_NOT_AUTHORIZED",
+   "execution_status": "EXECUTED",
+   "m1": {
+    "bytes_stored": 2194020,
+    "coverage_record_sha256": "3d429c88795745dc8bb1a89ff39b034c75f65f58fef07eba47814936ba155906",
+    "crawl_protocol_version": "phase1-m1@2-bounded-site-crawl",
+    "evidence_rows": 266,
+    "fact_class_histogram": {
+     "public_faq": 4,
+     "public_inbound_path": 29,
+     "public_other": 48,
+     "public_service_area": 36,
+     "public_service_description": 149
+    },
+    "last_error_code": null,
+    "page_purpose_histogram": {
+     "commercial_hvac": 2,
+     "contact_mechanism": 1,
+     "cooling_ac": 4,
+     "emergency_service": 1,
+     "faq": 2,
+     "financing": 1,
+     "heating": 4,
+     "maintenance": 1,
+     "request_service_scheduling": 4,
+     "service_area_location": 4,
+     "services": 1
+    },
+    "pages_attempted": 25,
+    "pages_succeeded": 25,
+    "research_run_id": "26dc9085-ece2-59d3-8752-d11aa4579c69",
+    "status": "succeeded"
+   },
+   "m2": {
+    "analysis_run_id": "c1fb476d-c98b-47d3-a7ef-a8658cea6cc0",
+    "analysis_status": "succeeded",
+    "company_facts_selected": [
+     {
+      "category": "commercial_context",
+      "fact_class": "public_service_description",
+      "page_purpose": "commercial_hvac",
+      "phrase": "Commercial AC",
+      "selector_version": "commercial_hvac.company_fact_selector@2"
+     },
+     {
+      "category": "intake_surface",
+      "fact_class": "public_inbound_path",
+      "page_purpose": "request_service_scheduling",
+      "phrase": "Request Service",
+      "selector_version": "commercial_hvac.company_fact_selector@2"
+     },
+     {
+      "category": "service_area_context",
+      "fact_class": "public_service_area",
+      "page_purpose": "request_service_scheduling",
+      "phrase": "Service Areas",
+      "selector_version": "commercial_hvac.company_fact_selector@2"
+     }
+    ],
+    "economics": {
+     "annualized_value": null,
+     "currency": "USD",
+     "formula_version": "commercial_hvac.lead_response.potential_incremental_revenue@1",
+     "monthly_value": null,
+     "result_label": "insufficient data \u2014 required business inputs are unknown",
+     "status": "insufficient_data"
+    },
+    "hypothesis_id": "1189d795-c3c2-4487-a985-c4e4728408e8",
+    "hypothesis_logical_id": "173a67d5-2e55-4e42-967a-8da89c934f33",
+    "hypothesis_status": "ready_for_review",
+    "internal_review_priority_band": "HIGH",
+    "review_rank_hint_INTERNAL_ONLY": {
+     "distinct_fact_classes": 3,
+     "evidence_fact_count": 3,
+     "partial_crawl": false,
+     "priority_band": "HIGH"
+    },
+    "statement_excerpt": "E+M Emergency Air Conditioning publicly presents a public request path (\"Request Service\"), describes commercial HVAC work (\"Commercial AC\"), and lists a public service area (\"Service Areas\"). Given those observed public intake surfaces, a structured acknowledgement and qualification workflow could be evaluated. Current response performance, internal routing, lead volume, conversion, feasibility, "
+   },
+   "m3": {
+    "audit_revision_id": "a61a7de7-bddc-416c-b8d9-1eb631530194",
+    "crawl_coverage_finding": "Crawl coverage: 25 of 25 pages captured (complete).",
+    "finding_count": 5,
+    "finding_kinds": [
+     "crawl_coverage",
+     "observed_commercial_context",
+     "observed_intake_surface",
+     "observed_service_area",
+     "what_remains_unknown"
+    ],
+    "finding_supporting_excerpts": [
+     {
+      "kind": "observed_intake_surface",
+      "supporting_excerpt": "Request Service"
+     },
+     {
+      "kind": "observed_commercial_context",
+      "supporting_excerpt": "Commercial AC"
+     },
+     {
+      "kind": "observed_service_area",
+      "supporting_excerpt": "Service Areas"
+     }
+    ],
+    "rendered_text_internal_score_leak": false,
+    "revision_hash": "eac6c9abfe9b3325db085ae2250e8b2a0f2d3bf9080002833341fcdf3fd0e999",
+    "state": "approved"
+   },
+   "m4": {
+    "demo_id": "df5b6459-8ff6-4a07-af83-2f9bbbaf266d",
+    "demo_revision_id": "7656f55f-72bb-4868-bbec-eb289e1c2d55",
+    "state": "approved"
+   },
+   "m5": {
+    "external_artifact_count": 5,
+    "external_text_high_low_priority_band_words": [],
+    "external_text_internal_score_leak": false,
+    "first_contact_email_excerpt": "Hello {{functional_role_or_team}},\n\nyour website has a public request path \u2014 \"Request Service\".\n\nyour site describes commercial HVAC work \u2014 \"Commercial AC\".\n\na step that acknowledges and sorts new service requests could be evaluated.\n\nThis is not a claim about how your team works today \u2014 we have no visibility into that.\n\nWe prepared a short deterministic simulation based only on approved public information.\n\nIt is a simulation\u2014not a system deployed, connected, official, or operated by the business.\n\nI noticed your site offers \"Request Service\". I'm curious \u2014 roughly how many commercial inquiri",
+    "outreach_revision_id": "3ff65881-a9c0-46f5-a3d9-7506a4e69ab8",
+    "package_id": "49f98a93-36b0-49a5-a275-0f73c399c98a",
+    "personalization_qc": {
+     "company_specific_segment_count": 1,
+     "distinct_fact_classes": 1,
+     "passes_gate": true
+    },
+    "projection_modes": [
+     "conditional_inference",
+     "conditional_recommendation",
+     "evidence_derived_fact"
+    ],
+    "qc_finding_codes": [],
+    "state": "content_approved",
+    "unresolved_required_disclosure_slots": [
+     "approved_opt_out_instruction_slot",
+     "required_postal_disclosure_slot",
+     "verified_sender_slot"
+    ]
+   },
+   "minimization": {
+    "durable_minimized_snapshots": 25,
+    "minimizer_version": "phase1-minimizer@2",
+    "quarantine_count": 0,
+    "quarantine_reasons": [],
+    "removed_email": 25,
+    "removed_phone": 2031,
+    "removed_structured_contact_blocks": 62
+   },
+   "release_id": "c99dedf6-3d93-5bf0-a799-2fd8db09e7f7",
+   "slot": 20
+  },
+  {
+   "a09_decision_sha256": "70aff90639dd802055cbeef6fafa44edc3d753214028e109793c1ef06754938f",
+   "a09_result": "APPROVED",
+   "accepted_stage_count": 6,
+   "activator_exit_code": 0,
+   "business_identity": "Comfort-Air Engineering & Primo Plumbing",
+   "coordinator_run_id": "5b95d963-027b-5c6d-9745-17b01d33e802",
+   "exact_hostname": "www.comfort-air.com",
+   "exact_terminal_stage": "CONTACT_PHASE_NOT_AUTHORIZED",
+   "execution_status": "EXECUTED",
+   "m1": {
+    "bytes_stored": 4594413,
+    "coverage_record_sha256": "2750b904e3d51ab9d43475d123c819d6ab164acee231884a0c3bf79d09908c3c",
+    "crawl_protocol_version": "phase1-m1@2-bounded-site-crawl",
+    "evidence_rows": 205,
+    "fact_class_histogram": {
+     "public_about": 2,
+     "public_inbound_path": 21,
+     "public_other": 77,
+     "public_service_area": 9,
+     "public_service_description": 96
+    },
+    "last_error_code": null,
+    "page_purpose_histogram": {
+     "about": 2,
+     "commercial_hvac": 4,
+     "contact_mechanism": 1,
+     "cooling_ac": 1,
+     "financing": 1,
+     "installation": 1,
+     "maintenance": 4,
+     "repair": 1,
+     "residential_hvac": 4,
+     "service_area_location": 4,
+     "services": 2
+    },
+    "pages_attempted": 25,
+    "pages_succeeded": 25,
+    "research_run_id": "426c8a6c-1b3d-56ed-bda9-9f098284aaa8",
+    "status": "succeeded"
+   },
+   "m2": {
+    "analysis_run_id": "e0cbe4fe-e850-454c-95fd-7e0ca5fdad15",
+    "analysis_status": "succeeded",
+    "company_facts_selected": [
+     {
+      "category": "commercial_context",
+      "fact_class": "public_service_description",
+      "page_purpose": "commercial_hvac",
+      "phrase": "Specialized Commercial Expertise",
+      "selector_version": "commercial_hvac.company_fact_selector@2"
+     },
+     {
+      "category": "intake_surface",
+      "fact_class": "public_inbound_path",
+      "page_purpose": "contact_mechanism",
+      "phrase": "Contact Us",
+      "selector_version": "commercial_hvac.company_fact_selector@2"
+     },
+     {
+      "category": "service_area_context",
+      "fact_class": "public_service_area",
+      "page_purpose": "commercial_hvac",
+      "phrase": "Details can vary between sites and projects, but in general, the HVAC installation process includes: Calculate the heating and cooling demands of the property",
+      "selector_version": "commercial_hvac.company_fact_selector@2"
+     }
+    ],
+    "economics": {
+     "annualized_value": null,
+     "currency": "USD",
+     "formula_version": "commercial_hvac.lead_response.potential_incremental_revenue@1",
+     "monthly_value": null,
+     "result_label": "insufficient data \u2014 required business inputs are unknown",
+     "status": "insufficient_data"
+    },
+    "hypothesis_id": "e7e88f2c-ccbf-438f-a802-a0eea5119850",
+    "hypothesis_logical_id": "e67defc1-77f7-48ce-ac40-8a35eaf371ee",
+    "hypothesis_status": "ready_for_review",
+    "internal_review_priority_band": "HIGH",
+    "review_rank_hint_INTERNAL_ONLY": {
+     "distinct_fact_classes": 3,
+     "evidence_fact_count": 3,
+     "partial_crawl": false,
+     "priority_band": "HIGH"
+    },
+    "statement_excerpt": "Comfort-Air Engineering & Primo Plumbing publicly presents a public request path (\"Contact Us\"), describes commercial HVAC work (\"Specialized Commercial Expertise\"), and lists a public service area (\"Details can vary between sites and projects, but in general, the HVAC installation process includes: Calculate the heating and cooling demands of the property\"). Given those observed public intake sur"
+   },
+   "m3": {
+    "audit_revision_id": "712ef424-638b-451b-af70-ed3658061b8d",
+    "crawl_coverage_finding": "Crawl coverage: 25 of 25 pages captured (complete).",
+    "finding_count": 5,
+    "finding_kinds": [
+     "crawl_coverage",
+     "observed_commercial_context",
+     "observed_intake_surface",
+     "observed_service_area",
+     "what_remains_unknown"
+    ],
+    "finding_supporting_excerpts": [
+     {
+      "kind": "observed_intake_surface",
+      "supporting_excerpt": "Contact Us"
+     },
+     {
+      "kind": "observed_commercial_context",
+      "supporting_excerpt": "Specialized Commercial Expertise"
+     },
+     {
+      "kind": "observed_service_area",
+      "supporting_excerpt": "Details can vary between sites and projects, but in general, the HVAC installation process includes: Calculate the heating and cooling demands of the property"
+     }
+    ],
+    "rendered_text_internal_score_leak": false,
+    "revision_hash": "383446681c6a54949581ecd689d7ff41f675bbd8601272f6a88637582d17d173",
+    "state": "approved"
+   },
+   "m4": {
+    "demo_id": "c5dd91f5-0d16-4808-bfb2-5c488a1cfe7a",
+    "demo_revision_id": "8517c648-0650-4d3e-9770-0aed94b9b728",
+    "state": "approved"
+   },
+   "m5": {
+    "external_artifact_count": 5,
+    "external_text_high_low_priority_band_words": [],
+    "external_text_internal_score_leak": false,
+    "first_contact_email_excerpt": "Hello {{functional_role_or_team}},\n\nyour website has a public request path \u2014 \"Contact Us\".\n\nyour site describes commercial HVAC work \u2014 \"Specialized Commercial Expertise\".\n\na step that acknowledges and sorts new service requests could be evaluated.\n\nThis is not a claim about how your team works today \u2014 we have no visibility into that.\n\nWe prepared a short deterministic simulation based only on approved public information.\n\nIt is a simulation\u2014not a system deployed, connected, official, or operated by the business.\n\nI noticed your site offers \"Contact Us\". I'm curious \u2014 roughly how many commercia",
+    "outreach_revision_id": "7f179b2f-3cfb-4168-aa9b-be7c92f54535",
+    "package_id": "82ad8cad-349c-4833-94c7-ca023f477da9",
+    "personalization_qc": {
+     "company_specific_segment_count": 1,
+     "distinct_fact_classes": 1,
+     "passes_gate": true
+    },
+    "projection_modes": [
+     "conditional_inference",
+     "conditional_recommendation",
+     "evidence_derived_fact"
+    ],
+    "qc_finding_codes": [],
+    "state": "content_approved",
+    "unresolved_required_disclosure_slots": [
+     "approved_opt_out_instruction_slot",
+     "required_postal_disclosure_slot",
+     "verified_sender_slot"
+    ]
+   },
+   "minimization": {
+    "durable_minimized_snapshots": 25,
+    "minimizer_version": "phase1-minimizer@2",
+    "quarantine_count": 0,
+    "quarantine_reasons": [],
+    "removed_email": 0,
+    "removed_phone": 219,
+    "removed_structured_contact_blocks": 97
+   },
+   "release_id": "daa15517-dd55-5cac-8179-c0716ec1f02e",
+   "slot": 21
+  },
+  {
+   "a09_decision_sha256": "2e8b8d72951570427a836133fd9d0357f3da96d66ce222d01283445e1b20fa08",
+   "a09_result": "APPROVED",
+   "accepted_stage_count": 2,
+   "activator_exit_code": 0,
+   "business_identity": "Ramsey",
+   "coordinator_run_id": "65c374e1-2b3f-5f0c-8c4f-9a8d17da0f85",
+   "exact_hostname": "www.ramseyandco.com",
+   "exact_terminal_stage": "M2_INSUFFICIENT_EVIDENCE",
+   "execution_status": "EXECUTED",
+   "m1": {
+    "bytes_stored": 453637,
+    "coverage_record_sha256": "324980754c5364e882cea759818febafc06db43e9d96f1ce2c84d16b2b01f3dd",
+    "crawl_protocol_version": "phase1-m1@2-bounded-site-crawl",
+    "evidence_rows": 9,
+    "fact_class_histogram": {
+     "public_inbound_path": 2,
+     "public_service_description": 7
+    },
+    "last_error_code": "minimization_quarantine",
+    "page_purpose_histogram": {
+     "about": 1,
+     "commercial_hvac": 1,
+     "unclassified": 2
+    },
+    "pages_attempted": 4,
+    "pages_succeeded": 3,
+    "research_run_id": "a506f2a9-da10-5a98-a0bf-40e1e1ed989a",
+    "status": "partial"
+   },
+   "m2": {
+    "analysis_run_id": "49b952ad-fc7d-4bd4-b1b7-5efe1affda59",
+    "analysis_status": "insufficient_data",
+    "company_facts_selected": null,
+    "economics": null,
+    "hypothesis_id": null,
+    "hypothesis_logical_id": null,
+    "hypothesis_status": null,
+    "internal_review_priority_band": null,
+    "review_rank_hint_INTERNAL_ONLY": null,
+    "statement_excerpt": ""
+   },
+   "minimization": {
+    "durable_minimized_snapshots": 3,
+    "minimizer_version": "phase1-minimizer@2",
+    "quarantine_count": 1,
+    "quarantine_reasons": [
+     [
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:Ramsey",
+      "REQUIRED_EVIDENCE_NOT_SAFELY_PRESERVED:company"
+     ]
+    ],
+    "removed_email": 30,
+    "removed_phone": 746,
+    "removed_structured_contact_blocks": 0
+   },
+   "release_id": "1ab04944-f9d3-5237-af2a-3705acf18940",
+   "slot": 22
+  },
+  {
+   "a09_decision_sha256": null,
+   "a09_reason": "business identity not corroborated on the root page (acronym-only name; no distinctive token >= 3 chars after the unchanged exclusion list)",
+   "a09_result": "NOT_APPROVED",
+   "business_identity": "C&S Air",
+   "exact_hostname": "www.candsair.com",
+   "exact_terminal_stage": "A09_NOT_APPROVED (0 accepted stages; slot absent from baked registry, activator fails closed)",
+   "execution_status": "NOT_EXECUTED_TRUTHFUL_A09_TERMINAL",
+   "no_substitution": true,
+   "slot": 23
+  },
+  {
+   "a09_decision_sha256": null,
+   "a09_reason": "root HTTP 301 redirects off the exact host to https://bluenorthernac.com/ (robots also 301)",
+   "a09_result": "NOT_APPROVED",
+   "business_identity": "Blue Northern Air Conditioning, Inc.",
+   "exact_hostname": "www.bluenorthernac.com",
+   "exact_terminal_stage": "A09_NOT_APPROVED (0 accepted stages; slot absent from baked registry, activator fails closed)",
+   "execution_status": "NOT_EXECUTED_TRUTHFUL_A09_TERMINAL",
+   "no_substitution": true,
+   "slot": 24
+  }
+ ],
+ "state": "SLOTS_07_24_EXECUTED_DORMANT_STOPPED_AWAITING_MANDATORY_HUMAN_REVIEW",
+ "truth_and_safety_invariants_verified": {
+  "company_name_substitution_alone_cannot_satisfy_personalization_qc": "all 5 M5 packages pass the personalization gate on genuine EVIDENCE_DERIVED_FACT projections citing verbatim public phrases (company_specific_segment_count 1-2, qc_findings empty); the 7 slots that failed M1/M2 produced NO M5 package at all",
+  "economics_remained_insufficient_data_for_every_scored_slot": true,
+  "exact_approved_hostnames_only_no_substitution": true,
+  "fact_inference_estimate_recommendation_unknown_separation_preserved": true,
+  "frozen_slot_identities_and_order_preserved": true,
+  "internal_high_low_ranking_never_external": "verified per slot: _SCORE_LEAK matched nothing in any EXTERNAL M5 artifact or in M3 rendered text; no high/low/priority/band word in any EXTERNAL M5 artifact; ReviewRankHint (priority_band HIGH) is stored internal-only",
+  "m2_qualification_threshold_unchanged": true,
+  "no_ai_m66_browser_contact_person_benchmark_outreach_delivery_new_host_new_image_terraform_or_schema_change": true,
+  "opportunity_definition_unchanged": "commercial_hvac.inbound_lead_response_qualification@1",
+  "phase1_minimizer_at_2_unchanged": true,
+  "public_absence_not_internal_absence": "every M2 statement and M3 finding is scoped to what the captured public pages actually support; no unsupported internal facts inferred",
+  "service_availability_never_became_response_commitment": "Slots 07 & 18 bare 24/7 / 24-hour service FAQ content -> observed_service_availability (with the 'this is an availability signal, not a statement of inbound response' frame); Slot 19 published 'fast response times' language -> observed_response_commitment; no bare-availability content was upgraded",
+  "thin_evidence_stayed_thin": "Slots 08/10/14/16/22 -> M2_INSUFFICIENT_EVIDENCE, zero CompanyFacts, no M3/M4/M5; not padded",
+  "unresolved_required_disclosure_placeholders_remain_non_send_ready": "every M5 package carries unresolved_slot_kinds {verified_sender_slot, required_postal_disclosure_slot, approved_opt_out_instruction_slot} and the first-contact email still contains the {{functional_role_or_team}} placeholder -> DRAFT_INCOMPLETE lineage, non-send-ready"
+ }
+}
