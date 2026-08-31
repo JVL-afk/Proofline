@@ -52,11 +52,20 @@ def seed_research_evidence(
     clock: FakeClock,
     fragments: list[str],
     key: str,
+    *,
+    business_name: str | None = None,
+    pages_attempted: int = 0,
+    pages_succeeded: int = 0,
+    run_status: str = "pending",
+    fact_classes: list[str] | None = None,
 ) -> tuple[dict[str, object], dict[str, object]]:
     business_response = client.post(
         "/api/v1/businesses",
         headers=headers,
-        json={"name": f"Fixture {key}", "public_url": "https://example.com/"},
+        json={
+            "name": business_name or f"Fixture {key}",
+            "public_url": "https://example.com/",
+        },
     )
     assert business_response.status_code == 201
     business = business_response.json()
@@ -152,7 +161,11 @@ def seed_research_evidence(
             extractor_name="m2-fixture",
             extractor_version="1",
             created_at=clock.now(),
-            fact_class=classify_public_fact(fragment),
+            fact_class=(
+                fact_classes[index]
+                if fact_classes is not None
+                else classify_public_fact(fragment)
+            ),
         )
         for index, fragment in enumerate(fragments)
     ]
@@ -160,6 +173,15 @@ def seed_research_evidence(
         page,
         DurablePageBundle(snapshot=snapshot, material=material, evidence=tuple(evidence)),
     )
+    if run_status != "pending" or pages_attempted or pages_succeeded:
+        repository.complete_run(
+            run_id,
+            run_status if run_status != "pending" else "succeeded",
+            pages_attempted or 1,
+            pages_succeeded or 1,
+            len(content),
+            clock.now(),
+        )
     return business, run
 
 

@@ -58,6 +58,17 @@ _CATEGORY_ORDER: tuple[FactCategory, ...] = (
     FactCategory.SERVICE_AREA_CONTEXT,
 )
 
+
+def company_fact_sort_key(fact: CompanyFact) -> tuple[int, str]:
+    """Deterministic canonical ordering for a set of selected CompanyFacts,
+    independent of identifier assignment or persistence order."""
+
+    try:
+        rank = _CATEGORY_ORDER.index(fact.category)
+    except ValueError:
+        rank = len(_CATEGORY_ORDER)
+    return (rank, fact.phrase)
+
 _PAGE_PURPOSE_PRIORITY: tuple[str, ...] = (
     "request_service_scheduling",
     "estimate_quote",

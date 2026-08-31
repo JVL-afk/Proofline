@@ -183,7 +183,9 @@ def _derived_cta(
     CTA when no company fact anchors it."""
 
     specific = [
-        _clause(fact) for fact in company_facts if is_reader_specific(fact.category, fact.phrase)
+        _clause(fact)
+        for fact in _ordered_company_facts(company_facts)
+        if is_reader_specific(fact.category, fact.phrase)
     ]
     heads = [_CTA_QUESTION_HEAD[c] for c in safe_components if c in _CTA_QUESTION_HEAD]
     if not specific or not heads:

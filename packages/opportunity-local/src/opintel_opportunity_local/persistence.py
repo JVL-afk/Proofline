@@ -36,6 +36,7 @@ from opintel_opportunity.domain import (
     ScoreSnapshot,
     ValueState,
 )
+from opintel_opportunity.personalization import company_fact_sort_key
 from sqlalchemy import (
     Boolean,
     DateTime,
@@ -748,11 +749,16 @@ class SqlAlchemyOpportunityRepository:
                 )
             hypothesis = self._hypothesis(hypothesis_row)
             company_facts = tuple(
-                self._company_fact(row)
-                for row in session.scalars(
-                    select(CompanyFactRow)
-                    .where(CompanyFactRow.hypothesis_id == str(hypothesis.logical_id))
-                    .order_by(CompanyFactRow.created_at, CompanyFactRow.id)
+                sorted(
+                    (
+                        self._company_fact(row)
+                        for row in session.scalars(
+                            select(CompanyFactRow).where(
+                                CompanyFactRow.hypothesis_id == str(hypothesis.logical_id)
+                            )
+                        )
+                    ),
+                    key=company_fact_sort_key,
                 )
             )
             gaps = tuple(
