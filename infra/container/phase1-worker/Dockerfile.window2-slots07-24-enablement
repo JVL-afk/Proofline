@@ -1,0 +1,39 @@
+# M6.7 Phase 1 Slots 07-24 mechanical-enablement successor (chain link 9).
+#
+# Thin successor to the deployed EVIDENCE_PRESERVING_PERSONALIZATION_V2 image
+# (chain link 8, registry digest
+# sha256:f346f48e1f18ec053ac38bdbd351e133b2ba074beea46d99062fbeaaf9c90bce).
+#
+# Carries exactly the minimum bounded mechanical work authorised by the owner
+# directive "AUTHORIZE BOUNDED SLOTS07_24 MECHANICAL ENABLEMENT / LINK 9"
+# (reviewed batch package sha256
+# 41cf105feb2ab1b21038803583867d56ea28e0a3dc99f46e5df91f7f66998251):
+#
+#   * release_application.py - _FROZEN_SLOT_SCOPE extended from the frozen
+#     Phase 1 registry rows 1..6 to the exact frozen registry rows 1..24 and no
+#     further; SampledSlotExecutionApproval.exact_scope() still requires exact
+#     (business_identity, exact_hostname) matching and the @4 v2 approval schema
+#     for every slot > 1. No other behaviour change.
+#   * phase1-a09-decision-registry.json - the 5 existing APPROVED rows (Slots
+#     01-05) plus the 12 Slots 07-24 exact-host A-09 decisions that satisfied the
+#     unchanged bounded A-09 criteria (Slots 09, 13, 15, 17, 23, 24 are absent -
+#     they returned a truthful NOT_APPROVED result and the activator fails closed
+#     for them).
+#
+# authority_materialization_v3[_main].py are NOT baked in: the batch materialiser
+# is an operator-local tool, run exactly the way the v1/v2 materialisers are,
+# never in-cluster.
+#
+# No M1, minimizer, M2 threshold, opportunity-definition, economics, M3/M4/M5
+# semantic, contact-gate, AI, browser, network-policy, privacy, provenance,
+# entry point, dependency, or delivery change. production_runtime.py and the
+# stage-coordinator files are untouched by this link.
+FROM localhost/m67-phase1-worker:git-b064bb0-personalization-v2
+
+ARG SOURCE_COMMIT
+LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}" \
+      org.opencontainers.image.title="M6.7 Phase 1 Slots 07-24 mechanical enablement" \
+      org.opencontainers.image.base.digest="sha256:f346f48e1f18ec053ac38bdbd351e133b2ba074beea46d99062fbeaaf9c90bce"
+
+COPY workers/research/src/opintel_research_worker/release_application.py /app/research-worker/opintel_research_worker/release_application.py
+COPY infra/container/phase1-worker/phase1-a09-decision-registry.json     /app/config/phase1-a09-decision-registry.json

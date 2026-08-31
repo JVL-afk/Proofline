@@ -191,11 +191,31 @@ def test_v4_approval_accepts_slot02_webb_air() -> None:
     assert approval.crawl_protocol_version == "phase1-m1@2-bounded-site-crawl"
 
 
-def test_v4_approval_rejects_slot07_and_hostname_mismatch() -> None:
+def test_v4_approval_scope_is_the_frozen_registry_through_slot_24() -> None:
+    # Link 9 (AUTHORIZE_SLOTS07_24_...): the frozen scope is registry rows 1..24.
+    slot07 = SampledSlotExecutionApproval.model_validate(
+        {**_APPROVAL_BASE, "slot_number": 7, "business_identity": "Polar Pros",
+         "exact_hostname": "polarprosac.com", "allowed_source_scope": ("polarprosac.com",)}
+    )
+    assert slot07.slot_number == 7
+    slot24 = SampledSlotExecutionApproval.model_validate(
+        {**_APPROVAL_BASE, "slot_number": 24,
+         "business_identity": "Blue Northern Air Conditioning, Inc.",
+         "exact_hostname": "www.bluenorthernac.com",
+         "allowed_source_scope": ("www.bluenorthernac.com",)}
+    )
+    assert slot24.slot_number == 24
+    # Slot 25 is outside the frozen registry and fails closed.
     with pytest.raises(ValueError, match="outside the frozen Phase 1 batch scope"):
         SampledSlotExecutionApproval.model_validate(
-            {**_APPROVAL_BASE, "slot_number": 7, "business_identity": "Polar Pros",
+            {**_APPROVAL_BASE, "slot_number": 25, "business_identity": "Polar Pros",
              "exact_hostname": "polarprosac.com", "allowed_source_scope": ("polarprosac.com",)}
+        )
+    # Wrong hostname for an in-scope slot is rejected.
+    with pytest.raises(ValueError, match="not the frozen slot row"):
+        SampledSlotExecutionApproval.model_validate(
+            {**_APPROVAL_BASE, "slot_number": 7, "business_identity": "Polar Pros",
+             "exact_hostname": "evil.example", "allowed_source_scope": ("evil.example",)}
         )
     with pytest.raises(ValueError, match="not the frozen slot row"):
         SampledSlotExecutionApproval.model_validate(

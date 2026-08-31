@@ -26,9 +26,13 @@ APPROVAL_SCHEMA_V4 = "m67.phase1.sampled-slot-execution-approval@4"
 APPROVAL_STATE = "OWNER_APPROVED"
 
 # The exact frozen Phase 1 slot rows for which a sampled-slot execution approval
-# may be materialised. Slot 01 is preserved verbatim; Slots 02-06 are the
-# owner-named batch (AUTHORIZE_SLOTS02_06_PHASE1_M1_V2_EXECUTION, package sha256
-# d28e42594c943debf0144b3f5ecce57589760881e579ebbf52f6984d8150677a). Any slot
+# may be materialised. Slot 01 is preserved verbatim (PHASE1_M1_V1_HOMEPAGE);
+# Slots 02-06 were the owner-named batch AUTHORIZE_SLOTS02_06_PHASE1_M1_V2_EXECUTION
+# (package sha256 d28e42594c943debf0144b3f5ecce57589760881e579ebbf52f6984d8150677a);
+# Slots 07-24 are the owner-named batch AUTHORIZE_SLOTS07_24_PHASE1_M1_V2_
+# PERSONALIZATION_V2_EXECUTION (package sha256
+# 41cf105feb2ab1b21038803583867d56ea28e0a3dc99f46e5df91f7f66998251). The scope is
+# the exact frozen Phase 1 registry through Slot 24 and no further. Any slot
 # outside this set fails closed. Values are byte-identical to
 # infra/container/phase1-worker/phase1-frozen-slot-registry.json
 # (registry_sha256 aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2).
@@ -39,6 +43,24 @@ _FROZEN_SLOT_SCOPE: dict[int, tuple[str, str]] = {
     4: ("All Elements Heating & Air", "allelementshvac.com"),
     5: ("Fintastic Cooling & Heating", "www.callfintastic.com"),
     6: ("Calvin's Climate", "www.calvinsclimate.com"),
+    7: ("Polar Pros", "polarprosac.com"),
+    8: ("Villas Plumbing & Air Conditioning", "www.villasplumbing.com"),
+    9: ("C&R Services", "crhvacpro.com"),
+    10: ("Vicon Equipment, Inc", "viconequip.com"),
+    11: ("Sinclair Heating, Cooling, Plumbing", "www.callsinclair.com"),
+    12: ("Village Plumbing & Air", "villageplumbing.com"),
+    13: ("NTX Plumbing & Air", "www.ntxplumbing.com"),
+    14: ("City Supply Group", "citysupplygroup.com"),
+    15: ("HB Mechanical Services", "www.hbmechanical.com"),
+    16: ("Merit Services", "meritsvc.com"),
+    17: ("Hermetic Compressors of Houston", "hch-inc.com"),
+    18: ("Elite Air Conditioning & Plumbing", "eliteaustinac.com"),
+    19: ("A-Plus Air Conditioning & Home Solutions", "www.aplusac.com"),
+    20: ("E+M Emergency Air Conditioning", "www.emergencyac.org"),
+    21: ("Comfort-Air Engineering & Primo Plumbing", "www.comfort-air.com"),
+    22: ("Ramsey", "www.ramseyandco.com"),
+    23: ("C&S Air", "www.candsair.com"),
+    24: ("Blue Northern Air Conditioning, Inc.", "www.bluenorthernac.com"),
 }
 V2_CRAWL_PROTOCOL = "phase1-m1@2-bounded-site-crawl"
 RELEASE_APPLICATOR_REVISION = "m67.phase1.release-applicator@1"
@@ -146,14 +168,14 @@ class SampledSlotExecutionApproval(BaseModel):
     def exact_scope(self) -> SampledSlotExecutionApproval:
         frozen = _FROZEN_SLOT_SCOPE.get(self.slot_number)
         if frozen is None:
-            raise ValueError("slot number is outside the frozen Phase 1 batch scope (1..6)")
+            raise ValueError("slot number is outside the frozen Phase 1 batch scope (1..24)")
         if (self.business_identity, self.exact_hostname) != frozen:
             raise ValueError("approval business identity / hostname is not the frozen slot row")
         is_v2 = self.schema_version == "m67.phase1.sampled-slot-execution-approval@4"
         if is_v2 and self.slot_number == 1:
             raise ValueError("Slot 01 is frozen PHASE1_M1_V1_HOMEPAGE; no v2 approval")
         if not is_v2 and self.slot_number != 1:
-            raise ValueError("Slots 02-06 require the @4 v2 approval schema")
+            raise ValueError("Slots 02-24 require the @4 v2 approval schema")
         if self.allowed_source_scope != (self.exact_hostname,):
             raise ValueError("approval source scope must contain only the exact hostname")
         if self.expires_at <= self.starts_at:
@@ -363,7 +385,7 @@ class BoundedSampledSlotReleaseApplicator:
 
         A consumed terminal is a valid predecessor for a *different* authorised
         release: either a different owner statement (v1 repair chains) or, within
-        the Slots 02-06 batch, a different frozen slot's own consumed terminal.
+        a frozen multi-slot batch, a different frozen slot's own consumed terminal.
         """
 
         if current.revoked_at is None:
