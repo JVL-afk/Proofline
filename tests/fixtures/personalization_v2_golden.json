@@ -1,7 +1,7 @@
 {
   "allelements": {
     "m2_priority_band": "LOW",
-    "m2_statement": "All Elements Heating & Air publicly presents a public request path (\"Commercial HVAC - All Elements Heating & Air LLC Get Free Quote Air Conditioning Heating HVAC Service Agreements Commercial Services Commercial HVAC More\"), describes commercial HVAC work (\"Contact - All Elements Heating & Air LLC Get Free Quote Air Conditioning Heating HVAC Service Agreements Commercial Services Commercial HVAC More Commercial\"), and advertises around-the-clock or emergency service availability. Given those observed public intake surfaces, a structured acknowledgement and qualification workflow could be evaluated. Current response performance, internal routing, lead volume, conversion, feasibility, and economic impact remain unknown pending business verification.",
+    "m2_statement": "All Elements Heating & Air publicly presents a public request path (\"Commercial HVAC - All Elements Heating & Air LLC Get Free Quote Air Conditioning Heating HVAC Service Agreements Commercial Services Commercial HVAC More\"), describes commercial HVAC work (\"Contact - All Elements Heating & Air LLC Get Free Quote Air Conditioning Heating HVAC Service Agreements Commercial Services Commercial HVAC More Commercial\"), and references round-the-clock or emergency service availability on its public pages. Given those observed public intake surfaces, a structured acknowledgement and qualification workflow could be evaluated. Current response performance, internal routing, lead volume, conversion, feasibility, and economic impact remain unknown pending business verification.",
     "m3_finding_kinds": [
       "crawl_coverage",
       "observed_commercial_context",
@@ -62,7 +62,7 @@
   },
   "webbair": {
     "m2_priority_band": "HIGH",
-    "m2_statement": "Webb Air publicly presents a public request path (\"Request Estimate Schedule Service Air Conditioning Air Conditioning Service Air Conditioning Maintenance Air Conditioning Installation Ductless HVAC Heating\"), describes commercial HVAC work (\"What Defines Light Commercial HVAC\"), publishes on its contact page how inbound inquiries are answered and returned, lists a public service area (\"Service Areas\"), and advertises around-the-clock or emergency service availability. Given those observed public intake surfaces, a structured acknowledgement and qualification workflow could be evaluated. Current response performance, internal routing, lead volume, conversion, feasibility, and economic impact remain unknown pending business verification.",
+    "m2_statement": "Webb Air publicly presents a public request path (\"Request Estimate Schedule Service Air Conditioning Air Conditioning Service Air Conditioning Maintenance Air Conditioning Installation Ductless HVAC Heating\"), describes commercial HVAC work (\"What Defines Light Commercial HVAC\"), publishes on its contact page how inbound inquiries are answered and returned, lists a public service area (\"Service Areas\"), and references round-the-clock or emergency service availability on its public pages. Given those observed public intake surfaces, a structured acknowledgement and qualification workflow could be evaluated. Current response performance, internal routing, lead volume, conversion, feasibility, and economic impact remain unknown pending business verification.",
     "m3_finding_kinds": [
       "crawl_coverage",
       "observed_commercial_context",

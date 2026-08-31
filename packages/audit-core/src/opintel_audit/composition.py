@@ -76,9 +76,9 @@ def _finding_frame(category: FactCategory, phrase: str) -> str:
             f'("{value}").'
         )
     return (
-        "Observed service availability: the captured public pages advertise service "
-        f'availability ("{value}"). This is an availability claim, not a statement of '
-        "inbound response or acknowledgement behaviour."
+        "Observed service availability: the captured public pages reference round-the-clock "
+        f'or emergency service availability ("{value}"). This is an availability signal, not '
+        "a statement of inbound response or acknowledgement behaviour."
     )
 
 SECTION_DEFINITIONS = (

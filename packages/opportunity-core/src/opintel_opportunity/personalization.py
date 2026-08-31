@@ -358,7 +358,7 @@ def statement_clause(category: FactCategory, phrase: str) -> str:
         )
     if category == FactCategory.SERVICE_AREA_CONTEXT:
         return f'lists a public service area ("{value}")'
-    return "advertises around-the-clock or emergency service availability"
+    return "references round-the-clock or emergency service availability on its public pages"
 
 
 def build_statement(business_name: str, facts: tuple[CompanyFact, ...]) -> str:
@@ -414,7 +414,7 @@ def reader_fact_sentence(business_name: str, category: FactCategory, phrase: str
             return f'your site describes commercial HVAC work — "{value}".'
         return f'your site lists a public service area — "{value}".'
     if category == FactCategory.SERVICE_AVAILABILITY:
-        return "your site also advertises around-the-clock or emergency service availability."
+        return "your site also references round-the-clock or emergency service availability."
     return "your contact page describes how inbound inquiries are answered and returned."
 
 
