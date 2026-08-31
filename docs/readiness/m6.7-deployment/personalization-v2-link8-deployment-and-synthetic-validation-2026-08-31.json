@@ -1,0 +1,206 @@
+{
+  "document": "M6.7 Phase 1 EVIDENCE_PRESERVING_PERSONALIZATION_V2 - chain link 8 deployment + synthetic validation evidence",
+  "date": "2026-08-31",
+  "owner_authorization": "OWNER DECISION: ACCEPT REVIEW A + B. PROCEED WITH LINK 8 DEPLOYMENT VALIDATION.",
+  "source_commit": "b064bb0",
+  "scope_guardrails": {
+    "did_not_rerun_slots_02_04": true,
+    "did_not_start_slots_07_24": true,
+    "did_not_mutate_historical_slot_02_06_artifacts": true,
+    "no_activation_of": ["AI/M6.6", "browser", "contact resolution", "outreach delivery", "benchmarks"],
+    "rds_mutations_during_validation": 0
+  },
+
+  "successor_image_link_8": {
+    "dockerfile": "infra/container/phase1-worker/Dockerfile.window2-personalization-v2",
+    "base_image_link_7_digest": "sha256:34e5974f068c6d9633e87aa6d212e687814878a903bcdb7a53adbc7cec241291",
+    "local_build_config_digest": "sha256:7e0c36e44ef22d0b88175d85170d21f6e0e1c5801729f324bd7d38a9d3f1a948",
+    "local_storage_manifest_digest": "sha256:abc3ff7d57d7bbffb217e3113e4338b0671311f333b209cf38170063f27e93e2",
+    "registry_digest": "sha256:f346f48e1f18ec053ac38bdbd351e133b2ba074beea46d99062fbeaaf9c90bce",
+    "registry_repo": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker",
+    "registry_tag": "git-b064bb0-personalization-v2",
+    "manifest_media_type": "application/vnd.oci.image.manifest.v1+json",
+    "manifest_object_type": "SINGLE_PLATFORM_IMAGE_MANIFEST (no index)",
+    "layers": 22,
+    "layer_delta_vs_base": "base 21 + 1 COPY layer; child[:base] == base",
+    "changed_source_files_baked": 19,
+    "byte_unchanged_vs_link_7": [
+      "workers/intelligence/src/opintel_intelligence_worker/production_runtime.py",
+      "workers/intelligence/src/opintel_intelligence_worker/orchestration.py",
+      "workers/intelligence/src/opintel_intelligence_worker/coordinator_persistence.py",
+      "workers/intelligence/src/opintel_intelligence_worker/execution.py"
+    ],
+    "not_baked_in": "scripts/sampled_slot_bundle.py (CI/tfvars canonical calculator; runtime in-image source recomputation remains deferred)"
+  },
+
+  "image_identity_proofs": {
+    "local_verifier": {
+      "script": "scripts/verify_m67_local_image_identity.py",
+      "classification": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN",
+      "archive_manifest_digest": "sha256:f346f48e1f18ec053ac38bdbd351e133b2ba074beea46d99062fbeaaf9c90bce",
+      "storage_manifest_digest": "sha256:abc3ff7d57d7bbffb217e3113e4338b0671311f333b209cf38170063f27e93e2",
+      "config_digest": "sha256:7e0c36e44ef22d0b88175d85170d21f6e0e1c5801729f324bd7d38a9d3f1a948"
+    },
+    "registry_verifier": {
+      "script": "scripts/verify_m67_registry_image_identity.py",
+      "classification": "REPRESENTATION_EQUIVALENT_PROVEN",
+      "reproduced_registry_manifest_byte_equal_to_registry": true,
+      "platform": "linux/amd64"
+    }
+  },
+
+  "ecr_scan": {
+    "status": "COMPLETE",
+    "finding_severity_counts": {},
+    "critical": 0,
+    "high": 0,
+    "blocking": 0
+  },
+
+  "canonical_bundle_attestations": {
+    "algorithm": "m67.sampled-slot-bundle@1",
+    "canonical_serialization": "utf8( concat_for_each_member_in_frozen_manifest_order( relpath + 0x00 + member_sha256_hex + 0x0a ) )",
+    "stage_coordinator": {
+      "manifest": "infra/terraform/phase1/bundle-manifests/stage_coordinator.manifest",
+      "member_count": 3,
+      "members": [
+        {"path": "workers/intelligence/src/opintel_intelligence_worker/coordinator_persistence.py", "sha256": "b06e8d8d122b0db7e5e0888290fe75bd544b091a6e6ca22f23fd2aff4f38914a"},
+        {"path": "workers/intelligence/src/opintel_intelligence_worker/execution.py", "sha256": "b603b2291d3a08b2b5dccce42bd3a263aacad09df73d6e46d4a3f39653c10999"},
+        {"path": "workers/intelligence/src/opintel_intelligence_worker/orchestration.py", "sha256": "5a6d752046fa5f5a2e513933c38c46155996de70cd477cfd89afb14629255237"}
+      ],
+      "bundle_sha256": "908e6753adca3d862eeebcd02dd6994e71ea020bc73db6be4fc671f818e56892",
+      "note": "value changed from the pre-v2 static placeholder fe0f34c9... only because this is the first canonical computation; the three bound files are byte-identical to link 7."
+    },
+    "m2_m5_runtime": {
+      "manifest": "infra/terraform/phase1/bundle-manifests/m2_m5_runtime.manifest",
+      "member_count": 28,
+      "bundle_sha256": "bc5390bfbe6024bbe44fd712cd7eca6cf260f26c87bf3df6db1b1513b18b790b",
+      "previous_placeholder": "40e6511a00738980a7604a7d60c1c3419b396e049748f06ec0dae8116a5ebed3"
+    },
+    "in_image_member_sha256_equal_to_calculator": true,
+    "runtime_recomputation_deferral": "Production verifies build-time envelope/env equality: the deployed task definitions carry OPINTEL_STAGE_COORDINATOR_SHA256 / OPINTEL_M2_M5_RUNTIME_SHA256 environment bindings equal to the canonical calculator digests, and CI asserts terraform.tfvars == canonical calculator (test_m67_sampled_slot_bundle_attestation.py::test_tfvars_binding_equals_canonical_calculator). Production proves string/envelope equality to build-time canonical digests; it does NOT recompute the bundle digests from in-image source at runtime, and no evidence here claims a runtime source-derived attestation."
+  },
+
+  "terraform_tfvars_updates": {
+    "file": "infra/terraform/phase1/terraform.tfvars (operator-local, gitignored)",
+    "changed": {
+      "worker_image_uri": "...@sha256:f346f48e1f18ec053ac38bdbd351e133b2ba074beea46d99062fbeaaf9c90bce",
+      "controlled_egress_image_uri": "...@sha256:f346f48e1f18ec053ac38bdbd351e133b2ba074beea46d99062fbeaaf9c90bce",
+      "research_runtime_revision": "sha256:f346f48e1f18ec053ac38bdbd351e133b2ba074beea46d99062fbeaaf9c90bce",
+      "sampled_slot_stage_coordinator_sha256": "908e6753adca3d862eeebcd02dd6994e71ea020bc73db6be4fc671f818e56892 (set in review B)",
+      "sampled_slot_m2_m5_runtime_sha256": "bc5390bfbe6024bbe44fd712cd7eca6cf260f26c87bf3df6db1b1513b18b790b (set in review B)"
+    },
+    "unchanged": [
+      "sampled_slot_release_applicator_sha256 = 45b35f32bf60a87b75443db868a43d2a71a676cc2aba2a53b30a72eea29772db",
+      "sampled_slot_activation_adapter_sha256 = 42d206de3620fd32f2569f32fb45f97cc7939c89567cbe25b8236e8bd58cbae2",
+      "sampled_slot_activation_entry_point_sha256 = 12eaf66bf6dc491c4376d1d42ee6bd794a38636d8c9ce93e4b13b1c6db0b6bf5",
+      "sampled_slot_m1_runtime_sha256 = 884b1f271b21f9d0ff4e73557be0ec8c01fda30969fa256f1e555afb4d7f2a99",
+      "worker_desired_count = 0",
+      "intelligence_worker_desired_count = 0"
+    ]
+  },
+
+  "terraform_plan_ADR_0075": {
+    "profile_plan": "m67-phase1-workload-plan",
+    "backend": "backend.apply.hcl (state via m67-phase1-terraform-state-apply)",
+    "summary": "4 to add, 3 to change, 4 to destroy",
+    "semantic_review": "MECHANICAL DEPENDENCY ONLY of the three authorized inputs; no unexpected semantic change",
+    "task_definitions_replaced": {
+      "aws_ecs_task_definition.worker": "-> m67-phase1-research-worker:31",
+      "aws_ecs_task_definition.intelligence": "-> m67-phase1-intelligence-worker:20",
+      "aws_ecs_task_definition.egress": "-> m67-phase1-controlled-egress (bumped)",
+      "aws_ecs_task_definition.sampled_slot_activator": "-> m67-phase1-sampled-slot-activator:19"
+    },
+    "container_definition_changes": [
+      "image -> sha256:f346f48e... (all four)",
+      "env OPINTEL_RESEARCH_RUNTIME_REVISION: sha256:34e5974f... -> sha256:f346f48e... (mechanically derived from research_runtime_revision)",
+      "sampled_slot_activator only: env OPINTEL_M2_M5_RUNTIME_SHA256: 40e6511a... -> bc5390bf... (authorized)",
+      "sampled_slot_activator only: env OPINTEL_STAGE_COORDINATOR_SHA256: fe0f34c9... -> 908e6753... (authorized)"
+    ],
+    "unchanged_bindings_confirmed_absent_from_plan": [
+      "OPINTEL_M1_RUNTIME_SHA256 (884b1f27...)",
+      "OPINTEL_RELEASE_APPLICATOR_SHA256 (45b35f32...)",
+      "OPINTEL_ACTIVATION_ADAPTER_SHA256 (42d206de...)",
+      "OPINTEL_ACTIVATION_ENTRY_POINT_SHA256 (12eaf66b...)"
+    ],
+    "cosmetic_provider_normalization_only": ["mountPoints=[]", "portMappings=[]", "systemControls=[]", "volumesFrom=[]", "tags {} -> null", "enable_fault_injection known-after-apply"],
+    "no_changes_to": ["IAM", "KMS", "network", "database", "storage", "observability", "kill-switch parameter", "approval parameter", "service desired_count (stays 0/0)"]
+  },
+
+  "terraform_apply": {
+    "profile_apply": "m67-phase1-workload-apply",
+    "result": "Apply complete! Resources: 4 added, 3 changed, 4 destroyed.",
+    "outputs": {
+      "worker_image_digest": "785072247535.dkr.ecr.us-east-2.amazonaws.com/m67-phase1-worker@sha256:f346f48e1f18ec053ac38bdbd351e133b2ba074beea46d99062fbeaaf9c90bce",
+      "ecs_task_definition_arn": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-research-worker:31",
+      "intelligence_task_definition_arn": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-intelligence-worker:20",
+      "sampled_slot_activator_task_definition_arn": "arn:aws:ecs:us-east-2:785072247535:task-definition/m67-phase1-sampled-slot-activator:19",
+      "worker_desired_count": 0,
+      "intelligence_worker_desired_count": 0
+    }
+  },
+
+  "postgresql_additive_migration": {
+    "executed_on": "deployed link-8 image (transient m67-phase1-research-worker revision, entryPoint override, deregistered in finally)",
+    "advisory_locks": [670002, 670003],
+    "pre_migration": {
+      "opportunity_company_facts_table": false,
+      "target_columns_present": {
+        "opportunity_analysis_runs.run_stats_json": false,
+        "opportunity_hypothesis_revisions.company_fact_ids_json": false,
+        "opportunity_score_snapshots.review_rank_hint_json": false,
+        "audit_revisions.findings_json": false
+      }
+    },
+    "post_pass1": {"opportunity_company_facts_table": true, "all_target_columns_present": true},
+    "post_pass2_strict_noop": true,
+    "historical_rows_unchanged": {
+      "research_runs": 18, "research_pages": 80, "research_evidence": 588,
+      "opportunity_analysis_runs": 5, "opportunity_hypothesis_revisions": 3,
+      "opportunity_score_snapshots": 3, "audit_revisions": 3
+    },
+    "verdict": {"converged": true, "idempotent_second_pass_noop": true, "historical_rows_unchanged": true}
+  },
+
+  "synthetic_end_to_end_validation": {
+    "method": "Read-only SELECT of the immutable sealed Slot 02-04 M1 evidence rows from RDS as deterministic input; rebuilt an ephemeral in-container shared-cache in-memory sqlite; drove the exact deployed production M2->M5 stage runtime (CanonicalSampledSlotStageRuntime, byte-unchanged) against it. Zero RDS writes; no SSM / authority / egress / contact / delivery.",
+    "fixtures": {
+      "Webb Air": {"run_status": "succeeded", "pages_attempted": 24, "pages_succeeded": 24, "evidence_rows": 161},
+      "BNCAIR": {"run_status": "succeeded", "pages_attempted": 3, "pages_succeeded": 3, "evidence_rows": 20},
+      "All Elements Heating & Air": {"run_status": "partial", "pages_attempted": 20, "pages_succeeded": 13, "evidence_rows": 115}
+    },
+    "properties": {
+      "P1_webb_explicit_inbound_response_becomes_RESPONSE_COMMITMENT": "PASS (company_fact response_commitment = \"Phones are answered 24 hours/monitored.\"; M2 statement contains \"how inbound inquiries are answered\"; M3 observed_response_commitment finding)",
+      "P2_bare_24x7_emergency_is_SERVICE_AVAILABILITY_never_response_commitment": "PASS (7 owner _bucket cases; All Elements yields observed_service_availability and NOT observed_response_commitment / observed_service_area)",
+      "P3_company_specific_facts_survive_M2_to_M5": "PASS (Webb 2 / BNCAIR 1 company-specific M5 segments)",
+      "P4_M3_evidence_linked_findings_and_crawl_coverage": "PASS (Webb 6 finding kinds + coverage; All Elements coverage = \"13 of 20 pages captured (partial); absence of a fact may reflect incomplete capture.\")",
+      "P5_M4_evidence_derived_options_only_when_supported_else_truthful_fallback": "PASS (All Elements service_location = [north_texas, central_texas, gulf_coast, other, unknown] synthetic fallback - no public_service_area evidence, no manufactured company option)",
+      "P6_M5_genuine_evidence_derived_personalization": "PASS (>=1 EVIDENCE_DERIVED_FACT projection per company)",
+      "P7_company_name_substitution_alone_cannot_satisfy_gate": "PASS (all-public_other negative: M2 statement == LEGACY_SAFE_STATEMENT; M5 hard QC failure no_company_specific_evidence, review cannot override)",
+      "P8_unresolved_required_placeholders_produce_DRAFT_INCOMPLETE": "PASS (pre-review composed M5 revision state = draft_incomplete for all three; unresolved_slot_kinds = {verified_sender_slot, required_postal_disclosure_slot, approved_opt_out_instruction_slot}; the coordinator's own APPROVE_CONTENT then advances to content_approved retaining the unresolved set)",
+      "P9_no_HIGH_LOW_internal_ranking_leaks_externally": "PASS (_SCORE_LEAK matched nothing in any EXTERNAL artifact)",
+      "P10_economics_remain_INSUFFICIENT_DATA_UNKNOWN": "PASS (all three: economic_run.status = insufficient_data, monthly_potential_incremental_revenue = null)",
+      "P11_M2_thresholds_opportunity_definition_M1_minimizer_contact_gate_provenance_safety_unchanged": "PASS (selector@2 / statement@2 / rules@3 / heuristic_bands@2 / audit deterministic@3 / outreach v4 / projection@3 / definition commercial_hvac.inbound_lead_response_qualification@1; minimizer phase1-minimizer@2; no external send path)"
+    },
+    "verdict": {"failed_properties": [], "passed": true}
+  },
+
+  "dormancy_restored": {
+    "kill_switch_parameter": "TRIPPED",
+    "sampled_slot_execution_approval": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "controlled_egress_lease": "{\"state\": \"NOT_AUTHORIZED\"}",
+    "research_release_record_state": "not_authorized (expires_at 2026-08-30, slots 01-05 consumed)",
+    "ecs_services_desired_running": {"m67-phase1-research-worker": "0/0", "m67-phase1-intelligence-worker": "0/0", "m67-phase1-controlled-egress": "0/0"},
+    "running_or_pending_tasks": 0,
+    "active_research_worker_task_definitions": ["m67-phase1-research-worker:31"],
+    "transient_diagnostic_revisions_deregistered": ["32", "33", "34", "35", "36", "37"]
+  },
+
+  "terraform_no_changes_final": {
+    "profile": "m67-phase1-workload-plan",
+    "detailed_exitcode": 0,
+    "message": "No changes. Your infrastructure matches the configuration."
+  },
+
+  "aws_cost_authorization": "within the USD 250 ADR-0075 ceiling; only short Fargate diagnostic tasks + ECR storage + one apply."
+}

@@ -1,0 +1,70 @@
+{
+  "document": "PROPOSED owner authorization gate - AUTHORIZE_SLOTS07_24_PHASE1_M1_V2_PERSONALIZATION_V2_EXECUTION",
+  "status": "PROPOSAL ONLY - NOT EXECUTED. Awaiting explicit owner approval. No slot 07-24 work has started.",
+  "date": "2026-08-31",
+  "authorization_token": "AUTHORIZE_SLOTS07_24_PHASE1_M1_V2_PERSONALIZATION_V2_EXECUTION",
+
+  "preconditions_met": {
+    "link_8_deployed": "registry digest sha256:f346f48e1f18ec053ac38bdbd351e133b2ba074beea46d99062fbeaaf9c90bce; both identity verifiers PROVEN; ECR scan 0/0/0",
+    "canonical_bundle_bindings_live": {
+      "sampled_slot_stage_coordinator_sha256": "908e6753adca3d862eeebcd02dd6994e71ea020bc73db6be4fc671f818e56892",
+      "sampled_slot_m2_m5_runtime_sha256": "bc5390bfbe6024bbe44fd712cd7eca6cf260f26c87bf3df6db1b1513b18b790b"
+    },
+    "postgresql_personalization_v2_schema": "additive migration applied on the deployed image; second pass strict no-op; historical rows unchanged",
+    "synthetic_validation": "11/11 owner properties PASS on the deployed image",
+    "terraform_state": "NO_CHANGES",
+    "dormancy": "kill switch TRIPPED; execution approval NOT_AUTHORIZED; egress lease NOT_AUTHORIZED; services 0/0/0"
+  },
+
+  "scope": {
+    "slots": "07 through 24 inclusive of the frozen registry (registry_sha256 aaacf237fad2acf91db5a4741cdbc4401dd2a6b757b91bf9a039f7d7b3a454f2)",
+    "slot_roster": [
+      {"slot": 7, "business": "Polar Pros", "host": "polarprosac.com"},
+      {"slot": 8, "business": "Villas Plumbing & Air Conditioning", "host": "www.villasplumbing.com"},
+      {"slot": 9, "business": "C&R Services", "host": "crhvacpro.com"},
+      {"slot": 10, "business": "Vicon Equipment, Inc", "host": "viconequip.com"},
+      {"slot": 11, "business": "Sinclair Heating, Cooling, Plumbing", "host": "www.callsinclair.com"},
+      {"slot": 12, "business": "Village Plumbing & Air", "host": "villageplumbing.com"},
+      {"slot": 13, "business": "NTX Plumbing & Air", "host": "www.ntxplumbing.com"},
+      {"slot": 14, "business": "City Supply Group", "host": "citysupplygroup.com"},
+      {"slot": 15, "business": "HB Mechanical Services", "host": "www.hbmechanical.com"},
+      {"slot": 16, "business": "Merit Services", "host": "meritsvc.com"},
+      {"slot": 17, "business": "Hermetic Compressors of Houston", "host": "hch-inc.com"},
+      {"slot": 18, "business": "Elite Air Conditioning & Plumbing", "host": "eliteaustinac.com"},
+      {"slot": 19, "business": "A-Plus Air Conditioning & Home Solutions", "host": "www.aplusac.com"},
+      {"slot": 20, "business": "E+M Emergency Air Conditioning", "host": "www.emergencyac.org"},
+      {"slot": 21, "business": "Comfort-Air Engineering & Primo Plumbing", "host": "www.comfort-air.com"},
+      {"slot": 22, "business": "Ramsey", "host": "www.ramseyandco.com"},
+      {"slot": 23, "business": "C&S Air", "host": "www.candsair.com"},
+      {"slot": 24, "business": "Blue Northern Air Conditioning, Inc.", "host": "www.bluenorthernac.com"}
+    ],
+    "pipeline_per_slot": "bounded first-party public M1 (phase1-m1@2-bounded-site-crawl) -> deterministic offline M2 (economics) -> M3 (evidence-linked audit) -> M4 (deterministic demo) -> M5 (shadow outreach package) -> terminal CONTACT_PHASE_NOT_AUTHORIZED",
+    "composition_versions": "company_fact_selector@2, company_statement@2, rules@3, audit.commercial_hvac.deterministic@3, demo.commercial_hvac.lead_response@2, outreach v4 / projection@3 (as deployed in link 8)"
+  },
+
+  "invariants_the_batch_preserves": {
+    "frozen_slot_order": "slots executed strictly in ascending slot_number; no reordering, no parallelism across slots",
+    "per_slot_A09": "each slot requires its own A-09 decision recorded in phase1-a09-decision-registry.json with state APPROVED_FOR_BOUNDED_FIRST_PARTY_PUBLIC_RESEARCH BEFORE that slot runs; slots 07-24 currently have NO A-09 decision (registry holds only slots 1-5). A slot whose A-09 is NOT_APPROVED terminates truthfully (A-09 NOT_APPROVED) and the batch proceeds to the next slot.",
+    "no_redraw_no_replacement": "no slot substitution, no roster edit, no re-run of an already-terminal slot; a slot that reaches any truthful terminal (CONTACT_PHASE_NOT_AUTHORIZED, M2_INSUFFICIENT_EVIDENCE, M1_RESEARCH_FAILED, A-09 NOT_APPROVED, exact-host mismatch) is done",
+    "truthful_terminal_progression": "each slot advances only through accepted current-runtime predecessors; the coordinator rejects skip / replay / cross-business inputs; the terminal is always CONTACT_PHASE_NOT_AUTHORIZED or an earlier truthful stop",
+    "dormancy_between_slots": "after each slot terminates: research-release returns to not_authorized, controlled-egress lease NOT_AUTHORIZED, kill switch re-armed/observed, services remain 0 desired; the next slot's release is a fresh single-use grant",
+    "final_human_review_after_slot_24": "no Phase 1 continuation, no M6.6/AI, no contact resolution, no outreach delivery, no benchmarks until the owner reviews the full Slots 07-24 batch output",
+    "cost_ceiling": "remains within the ADR-0075 USD 250 authorization"
+  },
+
+  "explicitly_out_of_scope_of_this_gate": [
+    "AI / M6.6 activation",
+    "browser fallback",
+    "contact resolution / person data",
+    "outreach delivery / sending",
+    "benchmark or economic-figure population",
+    "any change to M1 versions, the minimizer (phase1-minimizer@2), M2 qualification thresholds, the opportunity definition (commercial_hvac.inbound_lead_response_qualification@1), the contact-phase gate, provenance, or minimization/external-use controls",
+    "any new container image or Terraform change"
+  ],
+
+  "what_owner_approval_authorizes": "Execution of slots 07..24 in one batch under the frozen order and per-slot A-09 rule above, using the deployed link-8 image and the Personalization V2 M2-M5 composition versions, each slot ending at its truthful terminal with dormancy restored between slots, followed by a single consolidated batch report and a mandatory owner review before any further Phase 1 progression.",
+
+  "what_owner_approval_does_NOT_authorize": "Starting any slot before its A-09 decision is recorded APPROVED; deviating from ascending slot order; re-running or replacing any slot; activating any capability listed as out of scope; continuing past slot 24 without owner review.",
+
+  "operator_note": "This proposal is inert. On owner approval, the A-09 decisions for the intended slots must be added to phase1-a09-decision-registry.json (regenerating registry_sha256 and re-baking / re-binding as required) and a per-slot single-use research-release grant issued at execution time; nothing here pre-issues any grant."
+}
