@@ -15,5 +15,17 @@ contains none of that provider integration.
   machinery (`RawResponseVault`, POLICY_PENDING), and an immutable
   `comm.human_review@1` domain.
 
-No real provider adapter, no network, no delivery, no send path. USD 0. A live
-provider (M6.8-3) requires separate owner authorization.
+- **M6.8-3** — synthetic live-provider certification (owner-authorized
+  2026-09-01). `comm.anthropic_provider_adapter@1` (stdlib `urllib`, model pinned
+  `claude-sonnet-5`, sampling params unset, `max_tokens=2000`, 30s timeout, 0
+  retries, fail-closed), `comm.provider_envelope_projection@1` (the allow-list
+  seam — lineage / ids / hashes / internal ranks / person data never cross;
+  quoted public text is fenced as inert data), `comm.prompt_template.first_contact@2`,
+  and `comm.provider_certification@1` (pre-call bounds enforcement, deterministic
+  zero-tolerance safety scoring, `CERTIFIED_SAFE` / `NOT_CERTIFIED` kept separate
+  from advisory `COMMUNICATION_QUALITY`, a 12-member certification key, 4 drift
+  classes). Frozen 10-scenario synthetic corpus in `tests/m68_3_synthetic_corpus.py`.
+
+The real provider call still has NOT been made — the offline machinery is
+committed; the 27 bounded `claude-sonnet-5` calls wait on the owner's
+execution-environment decision. No delivery, no send path. USD 0 so far.

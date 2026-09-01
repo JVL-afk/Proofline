@@ -5,10 +5,39 @@ package is the deterministic authority (the semantic envelope), the deterministi
 gate (the fail-closed output validator + CTA parser), and - from M6.8-2 - the
 stubbed generation lifecycle: a deterministic provider stub, an append-only
 hash-chained audit store, a deterministic candidate ranker, raw-response
-retention machinery, and an immutable human-review domain. No provider
-integration, no network, no send path.
+retention machinery, and an immutable human-review domain.
+
+From M6.8-3: a real ``comm.anthropic_provider_adapter@1``, the allow-listed
+provider-facing envelope projection, and the deterministic
+``comm.provider_certification@1`` run. The adapter can reach the network when a
+harness calls it, but nothing here delivers, sends, or resolves a contact.
 """
 
+from opintel_communication.anthropic_adapter import (
+    ANTHROPIC_ADAPTER_VERSION,
+    ANTHROPIC_API_ENDPOINT,
+    AnthropicProviderAdapter,
+    GenerationConfig,
+    ProviderError,
+    ProviderModelIdentityError,
+    ProviderRefused,
+    ProviderUnavailable,
+)
+from opintel_communication.certification import (
+    DEFAULT_CALL_BOUNDS,
+    PROVIDER_CERTIFICATION_VERSION,
+    SAFETY_CRITICAL_FINDING_CODES,
+    CertificationCallBounds,
+    CertificationKey,
+    CertificationReport,
+    CertificationRunner,
+    CertificationSafetyOutcome,
+    CommunicationQuality,
+    CorpusManifest,
+    DriftClass,
+    PriceTable,
+    SyntheticEnvelopeSpec,
+)
 from opintel_communication.cta_parser import ParsedCta, cta_semantic_consistency, parse_cta
 from opintel_communication.domain import (
     CANDIDATE_RANKER_VERSION,
@@ -52,10 +81,20 @@ from opintel_communication.envelope import (
     compute_envelope_sha256,
     strength_for_fact,
 )
+from opintel_communication.envelope_projection import (
+    PROVIDER_PROJECTION_VERSION,
+    WITHHELD_FROM_PROVIDER,
+    projection_sha256,
+    provider_facing_projection,
+)
 from opintel_communication.hashing import canonical_json, chain_hash, sha256_hex, sha256_text
 from opintel_communication.normalize import normalize_candidate
 from opintel_communication.orchestration import GenerationOrchestrator
-from opintel_communication.prompt import build_prompt_bundle
+from opintel_communication.prompt import (
+    PROMPT_TEMPLATE_ID_CERT,
+    build_certification_prompt_bundle,
+    build_prompt_bundle,
+)
 from opintel_communication.ranker import CandidateRanker
 from opintel_communication.retention import (
     RawResponseVault,
@@ -81,26 +120,44 @@ from opintel_communication.stub_provider import (
 from opintel_communication.validator import OutputValidator
 
 __all__ = [
+    "ANTHROPIC_ADAPTER_VERSION",
+    "ANTHROPIC_API_ENDPOINT",
     "CANDIDATE_RANKER_VERSION",
     "CLAIM_MANIFEST_SCHEMA_VERSION",
     "CTA_PARSER_VERSION",
+    "DEFAULT_CALL_BOUNDS",
     "GENERATION_ORCHESTRATOR_VERSION",
     "GENERATION_STORE_VERSION",
     "HUMAN_REVIEW_SCHEMA_VERSION",
     "OUTPUT_VALIDATOR_VERSION",
+    "PROMPT_TEMPLATE_ID_CERT",
+    "PROVIDER_CERTIFICATION_VERSION",
+    "PROVIDER_PROJECTION_VERSION",
     "RETENTION_PROPOSAL",
+    "SAFETY_CRITICAL_FINDING_CODES",
     "SEMANTIC_ENVELOPE_SCHEMA_VERSION",
     "STUB_PROVIDER_ADAPTER_VERSION",
+    "WITHHELD_FROM_PROVIDER",
+    "AnthropicProviderAdapter",
     "CandidateAuditRow",
     "CandidateRanker",
+    "CertificationCallBounds",
+    "CertificationKey",
+    "CertificationReport",
+    "CertificationRunner",
+    "CertificationSafetyOutcome",
     "ClaimEvidenceLink",
     "ClaimManifest",
     "ClaimManifestEntry",
     "ClaimType",
     "CommunicationOutcome",
+    "CommunicationQuality",
+    "CorpusManifest",
+    "DriftClass",
     "FactStrength",
     "GeneratedArtifact",
     "GenerationCandidate",
+    "GenerationConfig",
     "GenerationOrchestrator",
     "GenerationRecord",
     "GenerationResult",
@@ -113,7 +170,12 @@ __all__ = [
     "NormalizedCandidate",
     "OutputValidator",
     "ParsedCta",
+    "PriceTable",
     "ProviderDriftDescriptor",
+    "ProviderError",
+    "ProviderModelIdentityError",
+    "ProviderRefused",
+    "ProviderUnavailable",
     "RankComponent",
     "RankScore",
     "RankedCandidate",
@@ -123,10 +185,12 @@ __all__ = [
     "SemanticEnvelope",
     "StubProfile",
     "StubProviderAdapter",
+    "SyntheticEnvelopeSpec",
     "ValidationResult",
     "ValidatorFinding",
     "accept_not_distinctive",
     "assemble_envelope",
+    "build_certification_prompt_bundle",
     "build_prompt_bundle",
     "canonical_json",
     "chain_hash",
@@ -140,6 +204,8 @@ __all__ = [
     "open_review",
     "parse_cta",
     "parse_provider_response",
+    "projection_sha256",
+    "provider_facing_projection",
     "reject_all",
     "reject_candidate",
     "select_candidate",

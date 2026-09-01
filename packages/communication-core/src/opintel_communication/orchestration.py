@@ -21,6 +21,7 @@ All three are valid, non-send terminals.
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import replace
 
 from opintel_communication.domain import (
@@ -44,7 +45,7 @@ from opintel_communication.domain import (
 )
 from opintel_communication.hashing import sha256_text
 from opintel_communication.normalize import normalize_candidate
-from opintel_communication.prompt import build_prompt_bundle
+from opintel_communication.prompt import PromptBundle, build_prompt_bundle
 from opintel_communication.ranker import CandidateRanker
 from opintel_communication.retention import new_retention
 from opintel_communication.store import InMemoryGenerationStore, compute_record_hash
@@ -107,46 +108,69 @@ class GenerationOrchestrator:
         now_epoch_seconds: int,
         requested_candidate_count: int | None = None,
         record_id: str,
+        prompt_builder: Callable[[SemanticEnvelope], PromptBundle] = build_prompt_bundle,
+        provider_context: tuple[tuple[str, str], ...] = (),
+        cost_fn: Callable[[int, int], str] | None = None,
+        capture_provider_errors: bool = False,
     ) -> GenerationRecord:
+        """M6.8-2 defaults are unchanged. M6.8-3 certification passes
+        ``prompt_builder=build_certification_prompt_bundle``, a real
+        ``provider_context`` (provider / model / config identity to replace the
+        pending placeholders), and a real ``cost_usd`` derived from provider
+        token metadata."""
+
         gr = envelope.generation_request
         requested = requested_candidate_count or gr.candidate_count
         if not (1 <= requested <= HARD_MAX_CANDIDATE_COUNT):
             raise ValueError(f"requested_candidate_count must be 1..{HARD_MAX_CANDIDATE_COUNT}")
 
         diagnostics: list[tuple[str, str]] = []
-        bundle = build_prompt_bundle(envelope)
+        bundle = prompt_builder(envelope)
+        ctx = dict(provider_context)
 
         distinctive = envelope.has_distinctive_fact()
         raw: str | None = None
         input_tokens = output_tokens = 0
-        provider_cert_key = getattr(adapter, "certification_key", "n/a")
         adapter_identity = (
             f"{type(adapter).__name__}@{getattr(adapter, 'adapter_version', 'unknown')}"
         )
 
         candidates: tuple[GenerationCandidate, ...] = ()
+        gen_status: GenerationStatus | None = None
+        provider_failed = False
         if not distinctive:
             terminal = CommunicationOutcome.COMMUNICATION_NOT_DISTINCTIVE_ENOUGH
-            gen_status: GenerationStatus | None = (
-                GenerationStatus.COMMUNICATION_NOT_DISTINCTIVE_ENOUGH
-            )
+            gen_status = GenerationStatus.COMMUNICATION_NOT_DISTINCTIVE_ENOUGH
             reason = "envelope contains no fact distinctive enough for a non-generic opening"
             diagnostics.append(
                 ("distinctiveness", "has_distinctive_fact=False; provider not called")
             )
         else:
-            raw, meta = adapter.generate(bundle.bundle_text)  # type: ignore[attr-defined]
-            input_tokens, output_tokens = meta.input_tokens, meta.output_tokens
-            result = parse_provider_response(raw)
-            candidates = result.candidates
-            if len(candidates) > requested:
-                diagnostics.append(
-                    ("candidate_cap", f"provider returned {len(candidates)}; capped to {requested}")
-                )
-                candidates = candidates[:requested]
-            terminal = CommunicationOutcome.AI_COMMUNICATION_REJECTED
-            gen_status = result.status
-            reason = None
+            try:
+                raw, meta = adapter.generate(bundle.bundle_text)  # type: ignore[attr-defined]
+                input_tokens, output_tokens = meta.input_tokens, meta.output_tokens
+                result = parse_provider_response(raw or "")
+                candidates = result.candidates
+                if len(candidates) > requested:
+                    diagnostics.append(
+                        (
+                            "candidate_cap",
+                            f"provider returned {len(candidates)}; capped to {requested}",
+                        )
+                    )
+                    candidates = candidates[:requested]
+                terminal = CommunicationOutcome.AI_COMMUNICATION_REJECTED
+                gen_status = result.status
+                reason = None
+            except Exception as exc:  # fail-closed provider boundary
+                if not capture_provider_errors:
+                    raise
+                provider_failed = True
+                raw = None
+                terminal = CommunicationOutcome(getattr(exc, "outcome", "GENERATION_REFUSED"))
+                gen_status = GenerationStatus.REFUSED
+                reason = f"provider call failed fail-closed: {type(exc).__name__}: {exc}"
+                diagnostics.append(("provider_error", reason))
 
         # -- validate every returned candidate --------------------------------
         audit_rows: list[CandidateAuditRow] = []
@@ -165,7 +189,7 @@ class GenerationOrchestrator:
                 passing.append((cand, validation))
 
         ranked_ids: tuple[str, ...] = ()
-        if distinctive:
+        if distinctive and not provider_failed:
             if passing:
                 ranked = self._ranker.rank(envelope, tuple(passing))  # type: ignore[arg-type]
                 by_id = {r.candidate_id: r for r in ranked}
@@ -188,6 +212,9 @@ class GenerationOrchestrator:
                 diagnostics.append(("validation", f"{len(candidates)} candidates, 0 passed"))
 
         passing_ids = tuple(sorted(c.candidate_id for c, _ in passing))
+        # Read the certification key AFTER the call so it reflects the observed
+        # serving-model identity, not the pre-call 'unobserved' placeholder.
+        provider_cert_key = getattr(adapter, "certification_key", "n/a")
 
         # -- assemble the append-only record --------------------------------
         skeleton = GenerationRecord(
@@ -200,9 +227,9 @@ class GenerationOrchestrator:
             source_lineage_bundle_sha256=envelope.source_lineage.m2_m5_bundle_sha256,
             provider_adapter_identity=adapter_identity,
             provider_certification_key=provider_cert_key,
-            model_placeholder="<model:pending-m6.8-3>",
-            provider_placeholder="<provider:pending-m6.8-3>",
-            config_placeholder="<config:pending-m6.8-3>",
+            model_placeholder=ctx.get("model", "<model:pending-m6.8-3>"),
+            provider_placeholder=ctx.get("provider", "<provider:pending-m6.8-3>"),
+            config_placeholder=ctx.get("config", "<config:pending-m6.8-3>"),
             prompt_template_id=bundle.template_id,
             prompt_template_sha256=bundle.template_sha256,
             prompt_bundle_sha256=bundle.bundle_sha256,
@@ -224,7 +251,7 @@ class GenerationOrchestrator:
             reason=reason,
             input_tokens=input_tokens,
             output_tokens=output_tokens,
-            cost_usd=_ZERO_COST,
+            cost_usd=(cost_fn(input_tokens, output_tokens) if cost_fn is not None else _ZERO_COST),
             human_review_state=HumanReviewState.PENDING,
             human_review_id=None,
             created_at_epoch_seconds=now_epoch_seconds,
