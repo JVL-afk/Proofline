@@ -617,6 +617,12 @@ def _personalization(item: dict[str, Any] | None) -> PersonalizationAssessment |
         item["distinct_fact_classes"],
         tuple(UUID(value) for value in item["rendered_evidence_ids"]),
         item["passes_gate"],
+        # outreach.projection@4: available-but-not-rendered fact accounting.
+        # ``.get`` keeps pre-@4 rows loadable (they predate these fields).
+        item.get("available_fact_projection_count", 0),
+        item.get("rendered_fact_projection_count", 0),
+        tuple(item.get("omitted_fact_categories", ())),
+        item.get("omission_policy_version", ""),
     )
 
 

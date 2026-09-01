@@ -15,7 +15,10 @@
 #      fact_projection_dropped). PersonalizationAssessment records available vs
 #      rendered fact-projection counts and the policy-driven first-contact
 #      omissions. demo.commercial_hvac.lead_response@2 -> @3;
-#      outreach.projection@3 -> @4; outreach.qc@2 -> @3.
+#      outreach.projection@3 -> @4; outreach.qc@2 -> @3. outreach-local
+#      persistence deserialises the new PersonalizationAssessment accounting
+#      fields so they survive a revision reload (found by Link 10 deployed
+#      synthetic validation; within Fix A scope).
 #   B. SERVICE_AREA selector precision (company_fact_selector@2 -> @3):
 #      _valid_service_area_phrase rejects nav/menu concatenations,
 #      installation-process boilerplate, and generic long mixed-content that does
@@ -30,10 +33,10 @@
 #      the state-convergent, idempotent V2 personalization migration).
 #
 # Exactly the changed subset of the canonical m67.sampled-slot-bundle@1
-# "m2_m5_runtime" members is copied; the other 20 members are byte-unchanged and
-# carried forward from link 8. New bundle binding:
+# "m2_m5_runtime" members is copied; the other 19 members are byte-unchanged and
+# carried forward from link 8/9. New bundle binding:
 #   sampled_slot_m2_m5_runtime_sha256 =
-#     5c4fad6ae618ac9135d602ed2100abd9ca3113884e3f9bd994ad186c0f2a384f
+#     a6540437f096ac7b6d0e026fd75ebdffbd5a92a1b77f59e730fb3ee24b3554e7
 #
 # No M1, phase1-minimizer@2, opportunity definition
 # (commercial_hvac.inbound_lead_response_qualification@1), M2 qualification
@@ -60,3 +63,4 @@ COPY packages/demo-core/src/opintel_demo/composition.py                     /app
 COPY packages/demo-local/src/opintel_demo_local/persistence.py              /app/demo-local/opintel_demo_local/persistence.py
 COPY packages/outreach-core/src/opintel_outreach/domain.py                  /app/outreach-core/opintel_outreach/domain.py
 COPY packages/outreach-core/src/opintel_outreach/composition.py             /app/outreach-core/opintel_outreach/composition.py
+COPY packages/outreach-local/src/opintel_outreach_local/persistence.py      /app/outreach-local/opintel_outreach_local/persistence.py

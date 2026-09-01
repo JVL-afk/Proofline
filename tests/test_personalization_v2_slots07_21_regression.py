@@ -195,6 +195,53 @@ def test_selector_is_deterministic() -> None:
         assert a == b
 
 
+def test_personalization_assessment_survives_persistence_round_trip() -> None:
+    """projection@4: the available/rendered/omitted fact accounting must round-trip
+    through the outreach-local deserializer, not silently drop to defaults."""
+    from uuid import uuid4
+
+    from opintel_outreach.domain import PersonalizationAssessment
+    from opintel_outreach_local.persistence import _personalization
+
+    ev = uuid4()
+    original = PersonalizationAssessment(
+        company_specific_segment_count=2,
+        distinct_fact_classes=2,
+        rendered_evidence_ids=(ev,),
+        passes_gate=True,
+        available_fact_projection_count=4,
+        rendered_fact_projection_count=2,
+        omitted_fact_categories=("response_commitment", "service_area_context"),
+        omission_policy_version="outreach.projection@4",
+    )
+    payload = {
+        "company_specific_segment_count": 2,
+        "distinct_fact_classes": 2,
+        "rendered_evidence_ids": [str(ev)],
+        "passes_gate": True,
+        "available_fact_projection_count": 4,
+        "rendered_fact_projection_count": 2,
+        "omitted_fact_categories": ["response_commitment", "service_area_context"],
+        "omission_policy_version": "outreach.projection@4",
+    }
+    assert _personalization(payload) == original
+    # pre-@4 rows (missing the new keys) still load, defaulting the accounting
+    legacy = {
+        k: payload[k]
+        for k in (
+            "company_specific_segment_count",
+            "distinct_fact_classes",
+            "rendered_evidence_ids",
+            "passes_gate",
+        )
+    }
+    loaded = _personalization(legacy)
+    assert loaded is not None
+    assert loaded.available_fact_projection_count == 0
+    assert loaded.omitted_fact_categories == ()
+    assert loaded.omission_policy_version == ""
+
+
 # --- full-pipeline regression (M2 -> M5 on frozen evidence) -------------------
 
 
