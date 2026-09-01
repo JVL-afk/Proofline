@@ -1,0 +1,62 @@
+# M6.7 Phase 1 M2-M5 deterministic-engine correctness successor (chain link 10).
+#
+# Thin successor to the deployed Slots 07-24 mechanical-enablement image
+# (chain link 9, registry digest
+# sha256:2d688edd2f9ba261fcdf588eac8e57a6d3ecb3fd8ccf5b0e66f53b9894582f63).
+#
+# Carries exactly the three deterministic M2-M5 correctness corrections accepted
+# by the owner in commit f924654 ("OWNER REVIEW - DETERMINISTIC CORRECTNESS
+# FIXES ACCEPTED"):
+#
+#   A. Complete downstream CompanyFact propagation. Every selected M2 CompanyFact
+#      class now reaches M4 as a recorded DemoSpecification.semantic_fact_inputs
+#      entry (retention + non_option_reason; hard QC company_fact_input_dropped)
+#      and M5 as an EVIDENCE_DERIVED_FACT projection (hard QC
+#      fact_projection_dropped). PersonalizationAssessment records available vs
+#      rendered fact-projection counts and the policy-driven first-contact
+#      omissions. demo.commercial_hvac.lead_response@2 -> @3;
+#      outreach.projection@3 -> @4; outreach.qc@2 -> @3.
+#   B. SERVICE_AREA selector precision (company_fact_selector@2 -> @3):
+#      _valid_service_area_phrase rejects nav/menu concatenations,
+#      installation-process boilerplate, and generic long mixed-content that does
+#      not state a territory; the selector falls through to the next real
+#      candidate (no invented geography).
+#   C. Deterministic phrase sanitation (phrase_sanitation@1): a leading
+#      bullet/asterisk, a trailing navigation tail, and a mid-clause truncation
+#      are removed and leading capitalisation is normalised BEFORE the phrase is
+#      rendered downstream; the exact verbatim minimized substring is retained on
+#      CompanyFact.verbatim_phrase (+ additive
+#      opportunity_company_facts.verbatim_phrase TEXT DEFAULT '' column applied by
+#      the state-convergent, idempotent V2 personalization migration).
+#
+# Exactly the changed subset of the canonical m67.sampled-slot-bundle@1
+# "m2_m5_runtime" members is copied; the other 20 members are byte-unchanged and
+# carried forward from link 8. New bundle binding:
+#   sampled_slot_m2_m5_runtime_sha256 =
+#     5c4fad6ae618ac9135d602ed2100abd9ca3113884e3f9bd994ad186c0f2a384f
+#
+# No M1, phase1-minimizer@2, opportunity definition
+# (commercial_hvac.inbound_lead_response_qualification@1), M2 qualification
+# threshold (rules@3 / heuristic_bands@2), economics
+# (potential_incremental_revenue@1), FACT/INFERENCE/ESTIMATE/RECOMMENDATION/
+# UNKNOWN truth taxonomy, M3 composition policy
+# (audit.commercial_hvac.deterministic@3), A-09, contact-phase gate, delivery,
+# AI/M6.6, browser, network-policy, entry-point, or dependency change.
+# workers/intelligence/production_runtime.py and the stage-coordinator files are
+# byte-unchanged by this link. scripts/sampled_slot_bundle.py is a CI/tfvars
+# calculator and is NOT baked in.
+FROM localhost/m67-phase1-worker:git-f06a011-slots07-24-enablement
+
+ARG SOURCE_COMMIT
+LABEL org.opencontainers.image.revision="${SOURCE_COMMIT}" \
+      org.opencontainers.image.title="M6.7 Phase 1 M2-M5 deterministic-engine correctness" \
+      org.opencontainers.image.base.digest="sha256:2d688edd2f9ba261fcdf588eac8e57a6d3ecb3fd8ccf5b0e66f53b9894582f63"
+
+COPY packages/opportunity-core/src/opintel_opportunity/domain.py            /app/opportunity-core/opintel_opportunity/domain.py
+COPY packages/opportunity-core/src/opintel_opportunity/personalization.py   /app/opportunity-core/opintel_opportunity/personalization.py
+COPY packages/opportunity-local/src/opintel_opportunity_local/persistence.py /app/opportunity-local/opintel_opportunity_local/persistence.py
+COPY packages/demo-core/src/opintel_demo/domain.py                          /app/demo-core/opintel_demo/domain.py
+COPY packages/demo-core/src/opintel_demo/composition.py                     /app/demo-core/opintel_demo/composition.py
+COPY packages/demo-local/src/opintel_demo_local/persistence.py              /app/demo-local/opintel_demo_local/persistence.py
+COPY packages/outreach-core/src/opintel_outreach/domain.py                  /app/outreach-core/opintel_outreach/domain.py
+COPY packages/outreach-core/src/opintel_outreach/composition.py             /app/outreach-core/opintel_outreach/composition.py
