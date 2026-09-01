@@ -10,6 +10,7 @@ members = [
     "opintel-audit-core",
     "opintel-audit-local",
     "opintel-browser-worker",
+    "opintel-communication-core",
     "opintel-contact-core",
     "opintel-contact-local",
     "opintel-demo-core",
@@ -448,6 +449,29 @@ dependencies = [
 requires-dist = [
     { name = "opintel-research-core", editable = "packages/research-core" },
     { name = "playwright", specifier = ">=1.62,<1.63" },
+]
+
+[[package]]
+name = "opintel-communication-core"
+version = "0.1.0"
+source = { editable = "packages/communication-core" }
+dependencies = [
+    { name = "opintel-audit-core" },
+    { name = "opintel-demo-core" },
+    { name = "opintel-m0-core" },
+    { name = "opintel-opportunity-core" },
+    { name = "opintel-outreach-core" },
+    { name = "pydantic" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "opintel-audit-core", editable = "packages/audit-core" },
+    { name = "opintel-demo-core", editable = "packages/demo-core" },
+    { name = "opintel-m0-core", editable = "packages/m0-core" },
+    { name = "opintel-opportunity-core", editable = "packages/opportunity-core" },
+    { name = "opintel-outreach-core", editable = "packages/outreach-core" },
+    { name = "pydantic", specifier = ">=2.12,<3" },
 ]
 
 [[package]]

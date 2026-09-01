@@ -31,6 +31,7 @@ members = [
   "packages/demo-local",
   "packages/outreach-core",
   "packages/outreach-local",
+  "packages/communication-core",
   "packages/contact-core",
   "packages/contact-local",
   "packages/activation-core",

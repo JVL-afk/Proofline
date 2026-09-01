@@ -97,6 +97,7 @@ ADRs capture decisions that constrain implementation or are expensive to reverse
 | [ADR-0074](0074-m67c-live-research-gates.md) | Accepted | Synthetic live-research gates without live authority |
 | [ADR-0075](0075-terraform-phase1-provisioning-and-state.md) | Accepted | Terraform Phase 1 provisioning with protected S3/KMS remote state and separate plan/apply approval |
 | [ADR-0076](0076-phase1-controlled-research-egress.md) | Accepted | Isolated exact-host research gateway with no direct worker internet egress |
+| [ADR-0077](0077-evidence-bound-communication-transformer.md) | Proposed | Structured semantic envelope in, prose + re-verified claim manifest out, deterministic fail-closed validation |
 
 ## Proposed ADRs
 
