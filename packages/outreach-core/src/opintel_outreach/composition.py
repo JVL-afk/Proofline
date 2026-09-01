@@ -126,19 +126,57 @@ def _assess_personalization(
                     if evidence_id in fact_class_by_evidence:
                         fact_classes.add(fact_class_by_evidence[evidence_id])
                     break
+    external_fact_projections = [
+        item
+        for item in projections
+        if item.mode
+        in {ProjectionMode.EVIDENCE_DERIVED_FACT, ProjectionMode.DIRECT_FACT_RESTATEMENT}
+        and item.disposition == ProjectionDisposition.EXTERNAL_ALLOWED
+    ]
+    rendered_projection_ids = {
+        segment.projection_id
+        for artifact in artifacts
+        if artifact.kind == ArtifactKind.FIRST_CONTACT_EMAIL
+        for segment in artifact.segments
+        if segment.kind == SegmentKind.BOUND_CLAIM and segment.projection_id is not None
+    }
+    claim_predicate = {claim.id: claim.predicate for claim in source.audit.revision.claims}
+    omitted_categories: list[str] = []
+    for projection in external_fact_projections:
+        if projection.id in rendered_projection_ids:
+            continue
+        predicate = claim_predicate.get(projection.source_claim_id, "")
+        category = predicate.split("finding.", 1)[1] if "finding." in predicate else predicate
+        if category and category not in omitted_categories:
+            omitted_categories.append(category)
+    rendered_fact_count = sum(
+        1 for item in external_fact_projections if item.id in rendered_projection_ids
+    )
     return PersonalizationAssessment(
         company_specific_segment_count=len(specific_evidence),
         distinct_fact_classes=len(fact_classes),
         rendered_evidence_ids=tuple(specific_evidence),
         passes_gate=len(specific_evidence) >= 1,
+        available_fact_projection_count=len(external_fact_projections),
+        rendered_fact_projection_count=rendered_fact_count,
+        omitted_fact_categories=tuple(omitted_categories),
+        omission_policy_version=PROJECTION_POLICY_VERSION if omitted_categories else "",
     )
+
 
 OUTREACH_SCHEMA_VERSION = "outreach.schema@1"
 TEMPLATE_VERSION = "commercial_hvac.lead_response.outreach.v4"
-PROJECTION_POLICY_VERSION = "outreach.projection@3"
+# projection@4 (2026-09-01): every eligible selected M2 CompanyFact class now
+# produces an M5 projection, so the strongest fact reaches the semantic input
+# set even when the fixed first-contact frame renders only the first two. A
+# projection that resolves to an M3 finding claim but is missing is a hard QC
+# failure (``fact_projection_dropped``); an unrendered-but-projected fact is
+# recorded on the personalization assessment as a policy-driven omission.
+PROJECTION_POLICY_VERSION = "outreach.projection@4"
 TARGET_ROLE_POLICY_VERSION = "outreach.roles.commercial_hvac@1"
 CTA_POLICY_VERSION = "outreach.permission_cta@2"
-QC_POLICY_VERSION = "outreach.qc@2"
+QC_POLICY_VERSION = "outreach.qc@3"
+_FIRST_CONTACT_FACT_RENDER_LIMIT = 2
 APPROVED_DEFINITION = "commercial_hvac.inbound_lead_response_qualification@1"
 CTA = (
     "Would it be useful to compare the simulation with your actual process and decide whether "
@@ -175,9 +213,7 @@ _CTA_QUESTION_HEAD = {
 }
 
 
-def _derived_cta(
-    company_facts: tuple[CompanyFact, ...], safe_components: tuple[str, ...]
-) -> str:
+def _derived_cta(company_facts: tuple[CompanyFact, ...], safe_components: tuple[str, ...]) -> str:
     """Deterministic plain-English discovery CTA anchored on the already-safe
     demand-volume / response-performance questions. Falls back to the generic
     CTA when no company fact anchors it."""
@@ -238,6 +274,8 @@ def _subject(business_name: str, company_facts: tuple[CompanyFact, ...]) -> str:
         if len(candidate) <= 60:
             return candidate
     return _GENERIC_SUBJECT
+
+
 FOLLOW_UP_PRECONDITION = (
     "A human must verify outside M5 that a lawful first contact was actually sent through an "
     "approved future process."
@@ -497,7 +535,10 @@ class DeterministicOutreachComposer:
         projections: list[OutreachClaimProjection] = []
         company_facts = _ordered_company_facts(source.opportunity.company_facts)
         if company_facts:
-            for fact in company_facts[:2]:
+            # projection@4: project EVERY eligible fact so the strongest one
+            # survives into the semantic input set; the fixed first-contact frame
+            # still renders only the first two (see _artifacts).
+            for fact in company_facts:
                 claim = next(
                     (
                         item
@@ -679,13 +720,18 @@ class DeterministicOutreachComposer:
         risks: tuple[OutreachRisk, ...],
         economic: InternalEconomicContext,
     ) -> tuple[OutreachArtifact, ...]:
-        facts = [
+        all_fact_projections = [
             item
             for item in projections
             if item.mode
             in {ProjectionMode.EVIDENCE_DERIVED_FACT, ProjectionMode.DIRECT_FACT_RESTATEMENT}
             and item.disposition == ProjectionDisposition.EXTERNAL_ALLOWED
         ]
+        # The fixed first-contact frame renders at most the first two projected
+        # facts (projection order = _ordered_company_facts order). Any further
+        # projected fact stays available downstream but is not placed in the
+        # first-contact body.
+        facts = all_fact_projections[:_FIRST_CONTACT_FACT_RENDER_LIMIT]
         recommendation = next(
             (
                 item
@@ -926,6 +972,36 @@ class OutreachQualityPolicy:
         claims = {item.id: item for item in source.audit.revision.claims}
         evidence_ids = set(manifest.evidence_ids)
         projection_ids = {item.id for item in projections}
+
+        # projection@4: every selected M2 CompanyFact that carries an M3 finding
+        # claim must reach M5 as a projection. A missing one is silent
+        # truncation, not a policy choice.
+        projected_claim_ids = {item.source_claim_id for item in projections}
+        for fact in source.opportunity.company_facts:
+            finding_claim = next(
+                (
+                    item
+                    for item in source.audit.revision.claims
+                    if item.claim_type == ClaimType.FACT
+                    and item.predicate == f"finding.{fact.category.value}"
+                    and fact.evidence_id in item.evidence_ids
+                ),
+                None,
+            )
+            if finding_claim is not None and finding_claim.id not in projected_claim_ids:
+                fail(
+                    "fact_projection_dropped",
+                    "A selected M2 CompanyFact with an M3 finding claim has no M5 "
+                    "projection; the strongest eligible fact must not be silently lost.",
+                )
+        if personalization is not None and (
+            personalization.omitted_fact_categories and not personalization.omission_policy_version
+        ):
+            fail(
+                "unrecorded_fact_omission",
+                "A projected fact was omitted from the first contact without a "
+                "recorded omission policy version.",
+            )
         if (
             role.role not in ROLE_PRIORITY
             or role.person_identified

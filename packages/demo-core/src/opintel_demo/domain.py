@@ -176,6 +176,26 @@ class ServiceAreaOption:
 
 
 @dataclass(frozen=True, slots=True)
+class SemanticFactInput:
+    """demo.commercial_hvac.lead_response@3: the full record of every M2
+    CompanyFact class that reached M4 as semantic input, whether or not the demo
+    renders it as a synthetic option. ``retention`` and ``non_option_reason``
+    make a downstream omission an explicit, policy-driven decision rather than an
+    accidental truncation.
+    """
+
+    category: str
+    phrase: str
+    verbatim_phrase: str
+    evidence_id: UUID
+    fact_class: str
+    page_purpose: str
+    rendered_as_demo_option: bool
+    retention: str
+    non_option_reason: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
 class QualificationQuestion:
     id: str
     prompt: str
@@ -269,6 +289,8 @@ class DemoSpecification:
     service_categories: tuple[ServiceCategoryOption, ...] = ()
     service_area_context: tuple[ServiceAreaOption, ...] = ()
     personalization_provenance: tuple[tuple[str, UUID], ...] = ()
+    # demo.commercial_hvac.lead_response@3: full M2 -> M4 fact carry-through.
+    semantic_fact_inputs: tuple[SemanticFactInput, ...] = ()
 
 
 @dataclass(frozen=True, slots=True)

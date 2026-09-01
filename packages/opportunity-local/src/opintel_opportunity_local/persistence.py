@@ -152,6 +152,10 @@ _V2_PERSONALIZATION_COLUMNS: tuple[tuple[str, str, str, str], ...] = (
     ("opportunity_analysis_runs", "run_stats_json", "TEXT", "NULL"),
     ("opportunity_hypothesis_revisions", "company_fact_ids_json", "TEXT", "NULL"),
     ("opportunity_score_snapshots", "review_rank_hint_json", "TEXT", "NULL"),
+    # selector@3: the exact verbatim minimized substring, kept alongside the
+    # sanitised ``phrase`` for provenance. Backfilled empty; the row mapper falls
+    # back to ``phrase`` for pre-selector@3 rows.
+    ("opportunity_company_facts", "verbatim_phrase", "TEXT", "''"),
 )
 
 
@@ -270,6 +274,8 @@ class CompanyFactRow(Base):
     content_sha256: Mapped[str] = mapped_column(String(64))
     selector_version: Mapped[str] = mapped_column(String(120))
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True))
+    # selector@3: exact verbatim minimized substring (pre-sanitation).
+    verbatim_phrase: Mapped[str] = mapped_column(Text, default="")
 
 
 class GapRow(Base):
@@ -488,7 +494,7 @@ class SqlAlchemyOpportunityRepository:
                             & (AnalysisRow.lease_expires_at.is_not(None))
                             & (AnalysisRow.lease_expires_at <= now)
                         ),
-                    )
+                    ),
                 )
                 .order_by(AnalysisRow.created_at)
                 .limit(1)
@@ -716,9 +722,7 @@ class SqlAlchemyOpportunityRepository:
     def _load_bundle(self, run: OpportunityAnalysisRun) -> OpportunityBundle:
         with self._sessions() as session:
             analysis_row = session.get(AnalysisRow, str(run.id))
-            run_stats = (
-                _run_stats_from_json(analysis_row.run_stats_json) if analysis_row else None
-            )
+            run_stats = _run_stats_from_json(analysis_row.run_stats_json) if analysis_row else None
             observations = tuple(
                 self._observation(row)
                 for row in session.scalars(
@@ -989,6 +993,7 @@ class SqlAlchemyOpportunityRepository:
             content_sha256=value.content_sha256,
             selector_version=value.selector_version,
             created_at=value.created_at,
+            verbatim_phrase=value.verbatim_phrase or value.phrase,
         )
 
     @staticmethod
@@ -1005,6 +1010,7 @@ class SqlAlchemyOpportunityRepository:
             row.content_sha256,
             row.selector_version,
             _aware(row.created_at),
+            verbatim_phrase=(row.verbatim_phrase or row.phrase),
         )
 
     @staticmethod

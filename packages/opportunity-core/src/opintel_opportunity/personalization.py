@@ -30,8 +30,19 @@ from opintel_opportunity.domain import (
     ReviewRankHint,
 )
 
-SELECTOR_VERSION = "commercial_hvac.company_fact_selector@2"
+SELECTOR_VERSION = "commercial_hvac.company_fact_selector@3"
 STATEMENT_FRAME_VERSION = "commercial_hvac.company_statement@2"
+# selector@3 (2026-09-01 deterministic-engine correctness fixes):
+#   * SERVICE_AREA precision -- nav/menu concatenations, installation-process
+#     boilerplate, and generic long mixed-content prose no longer qualify as a
+#     public service-area statement (fixes A-Plus nav dump / Comfort-Air
+#     installation-process sentence). No replacement geography is invented.
+#   * deterministic phrase sanitation -- a leading bullet/asterisk, a trailing
+#     navigation tail, and a mid-clause truncation are removed and sentence
+#     capitalisation is normalised BEFORE the phrase is rendered downstream; the
+#     exact verbatim minimized substring is retained separately on the
+#     CompanyFact for provenance. Character-level only; meaning is never changed.
+SANITATION_VERSION = "commercial_hvac.phrase_sanitation@1"
 
 # Fixed hypothetical scaffold. Retains every existing UNKNOWN and the "could"
 # conditional. Must keep the substrings "response performance", "internal
@@ -69,6 +80,7 @@ def company_fact_sort_key(fact: CompanyFact) -> tuple[int, str]:
     except ValueError:
         rank = len(_CATEGORY_ORDER)
     return (rank, fact.phrase)
+
 
 _PAGE_PURPOSE_PRIORITY: tuple[str, ...] = (
     "request_service_scheduling",
@@ -166,8 +178,13 @@ _RESPONSE_FACT_CLASSES = frozenset(
     {"public_inbound_path", "public_faq", "public_about", "public_other"}
 )
 _AVAILABILITY_FACT_CLASSES = frozenset(
-    {"public_inbound_path", "public_faq", "public_about", "public_other",
-     "public_service_description"}
+    {
+        "public_inbound_path",
+        "public_faq",
+        "public_about",
+        "public_other",
+        "public_service_description",
+    }
 )
 _INTAKE_KEYWORDS: tuple[str, ...] = (
     "request service",
@@ -250,6 +267,144 @@ def _extract_phrase(fragment: str, keywords: tuple[str, ...]) -> str | None:
     return phrase
 
 
+# --------------------------------------------------------------------------
+# selector@3: deterministic phrase sanitation. Character-level only. The result
+# must remain a faithful, meaning-preserving reduction of the verbatim run; the
+# verbatim run itself is kept on the CompanyFact for provenance.
+# --------------------------------------------------------------------------
+
+# Leading/trailing junk char classes. Non-ASCII bullets and en/em dashes are
+# built from code points to stay unambiguous under lint (repo convention).
+_BULLETS = "".join(chr(c) for c in (0x2022, 0x00B7, 0x25AA, 0x25E6, 0x2023, 0x2043))
+_DASHES = chr(0x2013) + chr(0x2014)
+_LEADING_JUNK = re.compile("^[\\s*" + _BULLETS + _DASHES + ">|/\\\\.,;:\\-]+")
+_TRAILING_JUNK = re.compile("[\\s*" + _BULLETS + _DASHES + "|/\\\\\\-]+$")
+# A trailing navigation tail: a run that starts at an obvious menu verb and
+# continues to the end. Removed so a quoted phrase does not drag site chrome.
+_NAV_TAIL = re.compile(
+    r"\s+(?:View All|Learn More|Read More|See All|Show More|See More|Explore All|"
+    r"Browse All|Get Started|Get A Free|Get Free|Skip To|Back To Top)\b.*$",
+    re.I,
+)
+_DANGLING_TAIL_WORDS = frozenset(
+    {"and", "or", "the", "a", "an", "for", "to", "of", "with", "in", "on", "at", "by", "&"}
+)
+
+
+def _sanitize_phrase(verbatim: str) -> str:
+    """Deterministically clean a verbatim minimized substring for downstream
+    rendering. Strips a leading bullet/asterisk, removes a trailing navigation
+    tail, trims a mid-clause truncation (dangling connector/comma), and
+    normalises leading capitalisation. Never paraphrases or strengthens."""
+
+    text = _normalize(verbatim)
+    text = _LEADING_JUNK.sub("", text)
+    text = _NAV_TAIL.sub("", text).strip()
+    text = _TRAILING_JUNK.sub("", text).strip()
+    # trim a mid-clause truncation: drop a trailing dangling connector or a
+    # trailing bare comma so the phrase does not end mid-thought.
+    words = text.split()
+    while words and (words[-1].lower().strip(",") in _DANGLING_TAIL_WORDS or words[-1] in {","}):
+        words.pop()
+    text = " ".join(words).rstrip(" ,;:")
+    # normalise sentence capitalisation: capitalise the first alphabetic char
+    # only (leaves acronyms, mid-phrase casing, and digit-led phrases untouched).
+    for index, char in enumerate(text):
+        if char.isalpha():
+            if char.islower():
+                text = text[:index] + char.upper() + text[index + 1 :]
+            break
+    return _normalize(text)
+
+
+# --------------------------------------------------------------------------
+# selector@3: SERVICE_AREA precision. A public_service_area-classed fragment only
+# yields a SERVICE_AREA_CONTEXT fact when the extracted phrase actually states a
+# service territory -- a service-area heading, or a short list of place names.
+# Nav/menu concatenations, installation-process boilerplate, and generic long
+# mixed-content prose are rejected. No replacement geography is invented.
+# --------------------------------------------------------------------------
+
+_SERVICE_AREA_HEADS: tuple[str, ...] = (
+    "service area",
+    "service areas",
+    "areas we serve",
+    "area we serve",
+    "areas served",
+    "cities we serve",
+    "communities we serve",
+    "counties we serve",
+    "towns we serve",
+    "neighborhoods we serve",
+    "proudly serving",
+    "proudly serve",
+    "now serving",
+    "serving the",
+    "serving all of",
+    "where we work",
+)
+_SERVICE_AREA_REJECT_CUES: tuple[str, ...] = (
+    "installation process",
+    "process includes",
+    "can vary between",
+    "in general,",
+    "calculate the heating",
+    "sites and projects",
+    "new construction",
+    "tempting to leave",
+    "view all",
+    "learn more",
+    "read more",
+    "get a free quote",
+    "get free quote",
+    "financing option",
+    "customer satisfaction",
+    "five-star review",
+    "satisfaction guarantee",
+)
+_TITLECASE_TOKEN = re.compile(r"^[A-Z][A-Za-z&./'-]*$")
+_PLACE_LIST = re.compile(
+    r"^[A-Z][A-Za-z.'\- ]+"
+    r"(?:,\s*(?:TX|Texas|[A-Z]{2}|[A-Z][A-Za-z.'\- ]+))?"
+    r"(?:\s*(?:,|/|&|and)\s*[A-Z][A-Za-z.'\- ]+"
+    r"(?:,\s*(?:TX|Texas|[A-Z]{2}))?)*$"
+)
+
+
+def _looks_like_nav_menu(phrase: str) -> bool:
+    """A run of stacked title-case service/menu labels with no connecting prose."""
+
+    words = phrase.split()
+    if len(words) < 6:
+        return False
+    titlecase = sum(1 for w in words if _TITLECASE_TOKEN.match(w))
+    if titlecase / len(words) < 0.65:
+        return False
+    lowered = phrase.lower()
+    # a repeated significant token is the tell-tale of a duplicated nav block
+    significant = [w.lower() for w in words if len(w) > 3 and _TITLECASE_TOKEN.match(w)]
+    repeated = len(significant) != len(set(significant))
+    stacked_services = lowered.count("services") >= 2 or lowered.count("heating") >= 2
+    return repeated or stacked_services
+
+
+def _valid_service_area_phrase(phrase: str) -> bool:
+    """Whether ``phrase`` genuinely states a public service territory."""
+
+    if len(phrase) < _MIN_PHRASE_CHARS:
+        return False
+    low = phrase.lower()
+    if any(cue in low for cue in _SERVICE_AREA_REJECT_CUES):
+        return False
+    if _looks_like_nav_menu(phrase):
+        return False
+    if any(head in low for head in _SERVICE_AREA_HEADS):
+        # a service-area heading -- still reject if it has been swallowed into a
+        # long mixed-content run rather than standing as the actual statement.
+        return len(phrase.split()) <= 12
+    return bool(_PLACE_LIST.match(phrase) and phrase.count(",") <= 10 and len(phrase.split()) <= 24)
+
+
 def _bucket(item: EvidenceReference) -> FactCategory | None:
     low = _normalize(item.fragment).lower()
     # RESPONSE_COMMITMENT is the most specific, highest-value signal: a page that
@@ -296,9 +451,15 @@ def select_company_facts(
     identifiers: IdentifierFactory,
     now: datetime,
 ) -> tuple[CompanyFact, ...]:
-    """Deterministic ``company_fact_selector@2``. At most one fact per category,
-    fixed category order, cap 4. A category with no qualifying evidence is
-    simply absent -- public absence is never rendered as a claim."""
+    """Deterministic ``company_fact_selector@3``. At most one fact per category,
+    fixed category order, cap 5. A category with no qualifying evidence is simply
+    absent -- public absence is never rendered as a claim.
+
+    Each selected phrase is the deterministically sanitised form of the exact
+    verbatim minimized substring the extractor bound; both are kept on the
+    ``CompanyFact``. SERVICE_AREA candidates whose phrase does not actually state
+    a public territory are skipped in favour of the next candidate (no
+    replacement geography is invented)."""
 
     buckets: dict[FactCategory, list[EvidenceReference]] = {c: [] for c in _CATEGORY_ORDER}
     for item in evidence:
@@ -313,8 +474,15 @@ def select_company_facts(
             key=_rank_key,
         )
         for candidate in candidates:
-            phrase = _extract_phrase(candidate.fragment, _CATEGORY_KEYWORDS[category])
-            if phrase is None:
+            verbatim = _extract_phrase(candidate.fragment, _CATEGORY_KEYWORDS[category])
+            if verbatim is None:
+                continue
+            phrase = _sanitize_phrase(verbatim)
+            if len(phrase) < _MIN_PHRASE_CHARS:
+                continue
+            if category == FactCategory.SERVICE_AREA_CONTEXT and not _valid_service_area_phrase(
+                phrase
+            ):
                 continue
             facts.append(
                 CompanyFact(
@@ -329,6 +497,7 @@ def select_company_facts(
                     content_sha256=candidate.content_sha256,
                     selector_version=SELECTOR_VERSION,
                     created_at=now,
+                    verbatim_phrase=verbatim,
                 )
             )
             used_evidence_ids.add(candidate.id)
@@ -339,6 +508,7 @@ def select_company_facts(
 # --------------------------------------------------------------------------
 # Semantic-frame renderers. Fixed frames; supported facts only.
 # --------------------------------------------------------------------------
+
 
 def _clean_phrase(phrase: str) -> str:
     text = phrase.strip().rstrip(".;:,")
@@ -352,10 +522,7 @@ def statement_clause(category: FactCategory, phrase: str) -> str:
     if category == FactCategory.COMMERCIAL_CONTEXT:
         return f'describes commercial HVAC work ("{value}")'
     if category == FactCategory.RESPONSE_COMMITMENT:
-        return (
-            "publishes on its contact page how inbound inquiries are answered and "
-            "returned"
-        )
+        return "publishes on its contact page how inbound inquiries are answered and returned"
     if category == FactCategory.SERVICE_AREA_CONTEXT:
         return f'lists a public service area ("{value}")'
     return "references round-the-clock or emergency service availability on its public pages"

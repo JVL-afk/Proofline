@@ -32,6 +32,7 @@ from opintel_demo.domain import (
     QualificationQuestion,
     RecordingCue,
     RuntimeTerminal,
+    SemanticFactInput,
     ServiceAreaOption,
     ServiceCategoryOption,
     SyntheticPersona,
@@ -40,7 +41,31 @@ from opintel_demo.domain import (
 from opintel_demo.policy import SAFETY_HANDOFF_MESSAGE
 
 DEMO_SCHEMA_VERSION = "demo.schema@1"
-COMPOSITION_POLICY_VERSION = "demo.commercial_hvac.lead_response@2"
+COMPOSITION_POLICY_VERSION = "demo.commercial_hvac.lead_response@3"
+# @3 (2026-09-01): every selected M2 CompanyFact class now reaches M4 as a
+# recorded semantic input (``DemoSpecification.semantic_fact_inputs``). Facts the
+# demo does not surface as a synthetic option carry an explicit, policy-driven
+# ``non_option_reason``; a dropped fact is a hard QC failure.
+_NON_OPTION_REASON: dict[str, str] = {
+    "response_commitment": (
+        "demo.commercial_hvac.lead_response@3: a published response-commitment is "
+        "retained in the semantic input set and remains available to M5, but is "
+        "not offered as a synthetic dropdown option -- a viewer must not be able "
+        "to 'select' the business's own published response promise inside the "
+        "simulation."
+    ),
+    "service_availability": (
+        "demo.commercial_hvac.lead_response@3: a bare service-availability signal "
+        "is retained as semantic input but is not a synthetic service-need or "
+        "service-location option; it is an availability statement, not an intake "
+        "or territory choice."
+    ),
+}
+_OPTION_RETENTION: dict[str, str] = {
+    "commercial_context": "DEMO_SERVICE_NEED_OPTION",
+    "intake_surface": "DEMO_SERVICE_NEED_OPTION",
+    "service_area_context": "DEMO_SERVICE_LOCATION_OPTION",
+}
 COMPONENT_REGISTRY_VERSION = "demo.components@1"
 STATE_MACHINE_VERSION = "demo.lead_response.machine@1"
 QUESTION_SET_VERSION = "demo.commercial_hvac.questions@2"
@@ -54,6 +79,8 @@ def _option_label(phrase: str, limit: int = 48) -> str:
     if len(text) > limit:
         text = text[:limit].rsplit(" ", 1)[0].strip()
     return text
+
+
 SYNTHETIC_DATASET_VERSION = "demo.synthetic_personas@1"
 RUNTIME_VERSION = "demo.runtime@1"
 SECURITY_PROFILE_VERSION = "demo.security.local_separate_origin@1"
@@ -336,28 +363,56 @@ class DeterministicDemoComposer:
         service_categories: list[ServiceCategoryOption] = []
         service_area_context: list[ServiceAreaOption] = []
         provenance: list[tuple[str, UUID]] = []
+        semantic_fact_inputs: list[SemanticFactInput] = []
         seen_labels: set[str] = set()
         for fact in company_facts:
             if fact.evidence_id not in evidence_id_set:
                 continue
-            label = _option_label(fact.phrase)
-            if not label or label.lower() in seen_labels:
-                continue
+            category = fact.category.value
+            rendered_option = False
             if fact.category in (
                 FactCategory.COMMERCIAL_CONTEXT,
                 FactCategory.INTAKE_SURFACE,
+                FactCategory.SERVICE_AREA_CONTEXT,
             ):
-                service_categories.append(
-                    ServiceCategoryOption(label, fact.evidence_id, fact.fact_class)
+                label = _option_label(fact.phrase)
+                if label and label.lower() not in seen_labels:
+                    if fact.category == FactCategory.SERVICE_AREA_CONTEXT:
+                        service_area_context.append(
+                            ServiceAreaOption(label, fact.evidence_id, fact.fact_class)
+                        )
+                    else:
+                        service_categories.append(
+                            ServiceCategoryOption(label, fact.evidence_id, fact.fact_class)
+                        )
+                    seen_labels.add(label.lower())
+                    provenance.append((label, fact.evidence_id))
+                    rendered_option = True
+            semantic_fact_inputs.append(
+                SemanticFactInput(
+                    category=category,
+                    phrase=fact.phrase,
+                    verbatim_phrase=fact.verbatim_phrase or fact.phrase,
+                    evidence_id=fact.evidence_id,
+                    fact_class=fact.fact_class,
+                    page_purpose=fact.page_purpose,
+                    rendered_as_demo_option=rendered_option,
+                    retention=(
+                        _OPTION_RETENTION[category]
+                        if rendered_option
+                        else "SEMANTIC_INPUT_RETAINED"
+                    ),
+                    non_option_reason=(
+                        None
+                        if rendered_option
+                        else _NON_OPTION_REASON.get(
+                            category,
+                            "demo.commercial_hvac.lead_response@3: retained as semantic "
+                            "input; not rendered as a synthetic option.",
+                        )
+                    ),
                 )
-                seen_labels.add(label.lower())
-                provenance.append((label, fact.evidence_id))
-            elif fact.category == FactCategory.SERVICE_AREA_CONTEXT:
-                service_area_context.append(
-                    ServiceAreaOption(label, fact.evidence_id, fact.fact_class)
-                )
-                seen_labels.add(label.lower())
-                provenance.append((label, fact.evidence_id))
+            )
         if service_categories:
             need_values: tuple[str, ...] = (
                 *(item.label for item in service_categories),
@@ -539,6 +594,7 @@ class DeterministicDemoComposer:
             tuple(service_categories),
             tuple(service_area_context),
             tuple(provenance),
+            tuple(semantic_fact_inputs),
         )
 
     @staticmethod
@@ -680,6 +736,34 @@ class DemoQualityPolicy:
                 fail(
                     "unsupported_option_personalization",
                     "A company-derived demo option lacks allowed evidence lineage.",
+                )
+
+        # demo.commercial_hvac.lead_response@3: every selected M2 CompanyFact
+        # class must reach M4 as a recorded semantic input; a downstream omission
+        # from the synthetic options must be an explicit, reasoned decision.
+        eligible_fact_evidence = {
+            fact.evidence_id
+            for fact in source.opportunity.company_facts
+            if fact.evidence_id in manifest_evidence
+        }
+        semantic_input_evidence = {item.evidence_id for item in specification.semantic_fact_inputs}
+        if eligible_fact_evidence - semantic_input_evidence:
+            fail(
+                "company_fact_input_dropped",
+                "A selected M2 CompanyFact did not reach M4 as a semantic input; "
+                "the strongest eligible fact must not be silently lost.",
+            )
+        for sfi in specification.semantic_fact_inputs:
+            if sfi.evidence_id not in manifest_evidence:
+                fail(
+                    "semantic_input_outside_manifest",
+                    "A semantic fact input lacks manifest evidence lineage.",
+                )
+            if not sfi.rendered_as_demo_option and not (sfi.non_option_reason or "").strip():
+                fail(
+                    "semantic_input_missing_reason",
+                    "A fact omitted from the synthetic options lacks an explicit "
+                    "policy-driven reason.",
                 )
         provenance_labels = {label for label, _ in specification.personalization_provenance}
         _SYNTHETIC_OPTION_BASE = {

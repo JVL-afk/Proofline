@@ -35,6 +35,7 @@ from opintel_demo.domain import (
     RecordingCue,
     RuntimeSession,
     RuntimeTerminal,
+    SemanticFactInput,
     ServiceAreaOption,
     ServiceCategoryOption,
     SessionIssuance,
@@ -223,7 +224,7 @@ class SqlAlchemyDemoRepository:
                         DemoOperationRow.status.in_(("pending", "retry_scheduled")),
                         (DemoOperationRow.status == "running")
                         & (DemoOperationRow.lease_expires_at <= now),
-                    )
+                    ),
                 )
                 .order_by(DemoOperationRow.updated_at)
                 .limit(1)
@@ -805,8 +806,20 @@ def _specification(item: dict[str, Any]) -> DemoSpecification:
             ServiceAreaOption(v["label"], UUID(v["evidence_id"]), v["fact_class"])
             for v in item.get("service_area_context", [])
         ),
+        tuple((pair[0], UUID(pair[1])) for pair in item.get("personalization_provenance", [])),
         tuple(
-            (pair[0], UUID(pair[1])) for pair in item.get("personalization_provenance", [])
+            SemanticFactInput(
+                v["category"],
+                v["phrase"],
+                v.get("verbatim_phrase", v["phrase"]),
+                UUID(v["evidence_id"]),
+                v["fact_class"],
+                v["page_purpose"],
+                v["rendered_as_demo_option"],
+                v["retention"],
+                v.get("non_option_reason"),
+            )
+            for v in item.get("semantic_fact_inputs", [])
         ),
     )
 

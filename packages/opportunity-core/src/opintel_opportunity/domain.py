@@ -119,9 +119,16 @@ class EvidenceReference:
 class CompanyFact:
     """One materially company-specific public FACT, selected deterministically.
 
-    ``phrase`` is a whitespace-normalized verbatim substring of the source
-    minimized evidence fragment. It carries provenance; reader-facing prose is
-    rendered separately through fixed semantic frames.
+    ``phrase`` is the deterministically *sanitised* form used for every
+    downstream render (leading bullet/asterisk stripped, trailing navigation
+    tail removed, mid-clause truncation trimmed, sentence capitalisation
+    normalised). ``verbatim_phrase`` is the exact whitespace-normalized verbatim
+    substring of the source minimized evidence fragment, kept unchanged for
+    provenance. Sanitation is character-level only: it never paraphrases or
+    strengthens meaning, and ``verbatim_phrase`` + ``evidence_id`` +
+    ``content_sha256`` keep the sanitised phrase traceable to the minimized
+    evidence. Reader-facing prose is rendered separately through fixed semantic
+    frames.
     """
 
     id: UUID
@@ -135,6 +142,11 @@ class CompanyFact:
     content_sha256: str
     selector_version: str
     created_at: datetime
+    verbatim_phrase: str = ""
+
+    def __post_init__(self) -> None:
+        if not self.verbatim_phrase:
+            object.__setattr__(self, "verbatim_phrase", self.phrase)
 
 
 @dataclass(frozen=True, slots=True)

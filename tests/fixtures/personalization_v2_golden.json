@@ -1,7 +1,7 @@
 {
   "allelements": {
     "m2_priority_band": "LOW",
-    "m2_statement": "All Elements Heating & Air publicly presents a public request path (\"Commercial HVAC - All Elements Heating & Air LLC Get Free Quote Air Conditioning Heating HVAC Service Agreements Commercial Services Commercial HVAC More\"), describes commercial HVAC work (\"Contact - All Elements Heating & Air LLC Get Free Quote Air Conditioning Heating HVAC Service Agreements Commercial Services Commercial HVAC More Commercial\"), and references round-the-clock or emergency service availability on its public pages. Given those observed public intake surfaces, a structured acknowledgement and qualification workflow could be evaluated. Current response performance, internal routing, lead volume, conversion, feasibility, and economic impact remain unknown pending business verification.",
+    "m2_statement": "All Elements Heating & Air publicly presents a public request path (\"Commercial HVAC - All Elements Heating & Air LLC\"), describes commercial HVAC work (\"Contact - All Elements Heating & Air LLC\"), and references round-the-clock or emergency service availability on its public pages. Given those observed public intake surfaces, a structured acknowledgement and qualification workflow could be evaluated. Current response performance, internal routing, lead volume, conversion, feasibility, and economic impact remain unknown pending business verification.",
     "m3_finding_kinds": [
       "crawl_coverage",
       "observed_commercial_context",
@@ -17,8 +17,8 @@
       "unknown"
     ],
     "m4_service_need": [
-      "Commercial HVAC - All Elements Heating & Air",
-      "Contact - All Elements Heating & Air LLC Get",
+      "Commercial HVAC - All Elements Heating & Air LLC",
+      "Contact - All Elements Heating & Air LLC",
       "other",
       "unknown"
     ],

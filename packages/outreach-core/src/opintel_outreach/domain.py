@@ -232,12 +232,23 @@ class InternalEconomicContext:
 
 @dataclass(frozen=True, slots=True)
 class PersonalizationAssessment:
-    """EVIDENCE_PRESERVING_PERSONALIZATION_V2 personalization-gate result."""
+    """EVIDENCE_PRESERVING_PERSONALIZATION_V2 personalization-gate result.
+
+    ``available_fact_projection_count`` / ``rendered_fact_projection_count`` /
+    ``omitted_fact_categories`` (outreach.projection@4) record that a selected M2
+    CompanyFact class reached M5 as a projection even when the first-contact
+    email does not render it -- a downstream omission is an explicit, recorded
+    decision, never accidental truncation.
+    """
 
     company_specific_segment_count: int
     distinct_fact_classes: int
     rendered_evidence_ids: tuple[UUID, ...]
     passes_gate: bool
+    available_fact_projection_count: int = 0
+    rendered_fact_projection_count: int = 0
+    omitted_fact_categories: tuple[str, ...] = ()
+    omission_policy_version: str = ""
 
 
 @dataclass(frozen=True, slots=True)
