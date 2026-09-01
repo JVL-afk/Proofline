@@ -21,6 +21,12 @@ CLAIM_MANIFEST_SCHEMA_VERSION = "comm.claim_manifest@1"
 GENERATION_CONTRACT_VERSION = "comm.generation_contract@1"
 OUTPUT_VALIDATOR_VERSION = "comm.output_validator@1"
 CTA_PARSER_VERSION = "comm.cta_parser@1"
+# M6.8-2 additions
+CANDIDATE_RANKER_VERSION = "comm.candidate_ranker@1"
+GENERATION_STORE_VERSION = "comm.generation_store@1"
+GENERATION_ORCHESTRATOR_VERSION = "comm.generation_orchestrator@1"
+HUMAN_REVIEW_SCHEMA_VERSION = "comm.human_review@1"
+STUB_PROVIDER_ADAPTER_VERSION = "comm.stub_provider_adapter@1"
 
 
 class FactStrength(StrEnum):
@@ -514,3 +520,231 @@ class GenerationAttemptOutcome:
     generation_status: GenerationStatus | None = None
     reason: str | None = None
     diagnostics: tuple[tuple[str, str], ...] = field(default_factory=tuple)
+
+
+# ==========================================================================
+# M6.8-2 - stubbed generation lifecycle, audit store, candidate ranker
+# ==========================================================================
+
+
+@dataclass(frozen=True, slots=True)
+class NormalizedCandidate:
+    """The deterministic normalization of one candidate's subject + body.
+
+    Subject and body are one unit for validation and versioning (owner
+    refinement, 2026-09-01): a safe body with an unsupported subject is one
+    failed candidate, not a partially-usable one.
+    """
+
+    candidate_id: str
+    normalized_subject: str
+    normalized_body: str
+    body_word_count: int
+    content_sha256: str
+
+
+@dataclass(frozen=True, slots=True)
+class RankComponent:
+    """One bounded feature the ranker considered. ``normalized`` is in [0, 1]
+    where higher is always better; ``contribution = normalized * weight``.
+    ``penalty`` marks a feature whose raw value counts against the candidate
+    (the normalization already inverts it)."""
+
+    name: str
+    raw_value: str
+    normalized: float
+    weight: float
+    contribution: float
+    penalty: bool = False
+
+
+@dataclass(frozen=True, slots=True)
+class RankScore:
+    candidate_id: str
+    components: tuple[RankComponent, ...]
+    total: float
+    ranker_version: str = CANDIDATE_RANKER_VERSION
+
+
+@dataclass(frozen=True, slots=True)
+class RankedCandidate:
+    """A PASS-validation candidate placed in deterministic rank order. The
+    ranker never sees a FAILED candidate and never changes send eligibility."""
+
+    rank: int
+    candidate_id: str
+    score: RankScore
+
+
+class HumanReviewState(StrEnum):
+    PENDING = "PENDING"
+    CANDIDATE_SELECTED = "CANDIDATE_SELECTED"
+    CANDIDATE_REJECTED = "CANDIDATE_REJECTED"
+    ALL_REJECTED = "ALL_REJECTED"
+    ACCEPTED_NOT_DISTINCTIVE = "ACCEPTED_NOT_DISTINCTIVE"
+
+
+class HumanReviewAction(StrEnum):
+    SELECT_CANDIDATE = "SELECT_CANDIDATE"
+    REJECT_CANDIDATE = "REJECT_CANDIDATE"
+    REJECT_ALL = "REJECT_ALL"
+    ACCEPT_NOT_DISTINCTIVE = "ACCEPT_NOT_DISTINCTIVE"
+
+
+# States from which no further transition is allowed.
+TERMINAL_REVIEW_STATES: frozenset[HumanReviewState] = frozenset(
+    {
+        HumanReviewState.CANDIDATE_SELECTED,
+        HumanReviewState.ALL_REJECTED,
+        HumanReviewState.ACCEPTED_NOT_DISTINCTIVE,
+    }
+)
+
+
+@dataclass(frozen=True, slots=True)
+class HumanReviewEvent:
+    action: HumanReviewAction
+    candidate_id: str | None
+    at_epoch_seconds: int
+    reviewer_ref: str
+    note: str = ""
+
+
+@dataclass(frozen=True, slots=True)
+class HumanReview:
+    """Immutable, exact-version-bound review of one generation record.
+
+    It carries no rendered content of its own and cannot select a candidate
+    that is not in ``selectable_candidate_ids`` (which the store populates only
+    from PASS-validation ranked candidates). It never creates facts and never
+    overrides a validator finding.
+    """
+
+    review_id: str
+    envelope_sha256: str
+    generation_record_hash: str
+    selectable_candidate_ids: tuple[str, ...]
+    terminal_outcome: CommunicationOutcome
+    state: HumanReviewState
+    history: tuple[HumanReviewEvent, ...] = ()
+    selected_candidate_id: str | None = None
+    schema_version: str = HUMAN_REVIEW_SCHEMA_VERSION
+
+
+@dataclass(frozen=True, slots=True)
+class RawResponseRetention:
+    """Per-record retention metadata for the raw provider response only. The
+    duration is a proposed technical maximum; ``policy_status`` stays
+    POLICY_PENDING until privacy/legal confirms it."""
+
+    stored_at_epoch_seconds: int
+    max_retention_days: int
+    expires_at_epoch_seconds: int
+    policy_status: str = "POLICY_PENDING"
+    erased_at_epoch_seconds: int | None = None
+    erase_method: str | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class ClaimEvidenceLink:
+    claim_id: str
+    claim_type: ClaimType
+    rendered_span: str
+    licensed_source_ids: tuple[str, ...]
+    resolved_source_kinds: tuple[str, ...]
+    asserted_strength: FactStrength | None
+
+
+@dataclass(frozen=True, slots=True)
+class CandidateAuditRow:
+    """Everything the audit store keeps about one candidate, immutably. Survives
+    raw-response erasure - none of this depends on the raw text."""
+
+    candidate_id: str
+    normalized: NormalizedCandidate
+    claim_manifest: ClaimManifest
+    validation: ValidationResult
+    claim_evidence_map: tuple[ClaimEvidenceLink, ...]
+    rank: int | None = None
+    rank_score: RankScore | None = None
+
+
+@dataclass(frozen=True, slots=True)
+class GenerationRecord:
+    """One append-only, hash-chained audit record for a single generation
+    attempt. Never mutated once written; a later attempt appends a new record."""
+
+    record_id: str
+    sequence: int
+    previous_record_hash: str
+    record_hash: str
+
+    envelope_sha256: str
+    envelope_schema_version: str
+    source_lineage_bundle_sha256: str
+
+    provider_adapter_identity: str
+    provider_certification_key: str
+    model_placeholder: str
+    provider_placeholder: str
+    config_placeholder: str
+    prompt_template_id: str
+    prompt_template_sha256: str
+    prompt_bundle_sha256: str
+
+    raw_provider_response_sha256: str | None
+    raw_provider_response_ref: str | None
+    raw_response_retention: RawResponseRetention | None
+
+    requested_candidate_count: int
+    returned_candidate_count: int
+    candidates: tuple[CandidateAuditRow, ...]
+    passing_candidate_ids: tuple[str, ...]
+    ranked_candidate_ids: tuple[str, ...]
+
+    validator_version: str
+    cta_parser_version: str
+    ranker_version: str
+    orchestrator_version: str
+    store_version: str
+
+    terminal_outcome: CommunicationOutcome
+    generation_status: GenerationStatus | None
+    reason: str | None
+
+    input_tokens: int
+    output_tokens: int
+    cost_usd: str
+
+    human_review_state: HumanReviewState
+    human_review_id: str | None
+
+    created_at_epoch_seconds: int
+    diagnostics: tuple[tuple[str, str], ...] = ()
+
+    def selectable_candidate_ids(self) -> tuple[str, ...]:
+        """Only PASS-validation ranked candidates are selectable in review."""
+
+        return self.ranked_candidate_ids
+
+
+@dataclass(frozen=True, slots=True)
+class ProviderDriftDescriptor:
+    """How a *live* provider's output would be checked for drift at
+    certification time (M6.8-3). Recorded now so replay and future
+    live-certification use the same fields. The stub adapter has a fixed
+    ``response_fingerprint_sha256`` by construction."""
+
+    certification_key: str
+    prompt_bundle_sha256: str
+    response_fingerprint_sha256: str
+    normalized_candidate_shas: tuple[str, ...]
+    validator_finding_signature: str
+    ranking_signature: str
+    note: str = (
+        "Replay compares these across identical (envelope, adapter corpus, "
+        "validator/ranker versions) runs and requires exact equality. Live "
+        "provider certification (M6.8-3) compares response_fingerprint_sha256 "
+        "and normalized_candidate_shas across repeated real calls and allows "
+        "only bounded, documented drift."
+    )
