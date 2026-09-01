@@ -1,0 +1,205 @@
+{
+  "record_type": "M67_LINK10_M2M5_DETERMINISTIC_CORRECTNESS_DEPLOYMENT_EVIDENCE",
+  "schema_version": "1.0.0",
+  "recorded_at_utc": "2026-09-01",
+  "aws_account_id": "785072247535",
+  "region": "us-east-2",
+  "owner_authorization": "OWNER REVIEW - DETERMINISTIC CORRECTNESS FIXES ACCEPTED (commit f924654) + OWNER CORRECTION / CONFIRMATION (bind eee7f07c...); narrow Link 10 deployment-validation sequence.",
+
+  "accepted_source": {
+    "owner_accepted_commit": "f924654",
+    "as_built_commit": "86736af",
+    "within_scope_follow_on": "86736af completes Fix A within scope - outreach-local/_personalization now deserialises the four projection@4 PersonalizationAssessment accounting fields (available_fact_projection_count / rendered_fact_projection_count / omitted_fact_categories / omission_policy_version) so they survive a revision reload; discovered by the Link 10 deployed synthetic validation. No new behaviour, no new policy version, same file category already changed in link 8.",
+    "intervening_commit": "3f0d5c2 (Link 10 Dockerfile)"
+  },
+
+  "stale_reporting_value_note": {
+    "value": "5c4fad6ae618ac9135d602ed2100abd9ca3113884e3f9bd994ad186c0f2a384f",
+    "status": "NEVER an accepted or deployed binding",
+    "explanation": "Reported in the previous session from a transient pre-final-ruff-format / CRLF-contaminated working tree that was never committed. No committed source hashes to it. Superseded by the owner as a stale reporting value; explicitly must not be bound.",
+    "does_not_appear_anywhere": "verified absent from the Link 10 image, the tfvars, the Terraform plan, and every deployed task definition"
+  },
+
+  "canonical_m2_m5_bundle": {
+    "name": "m2_m5_runtime",
+    "algorithm": "m67.sampled-slot-bundle@1",
+    "canonical_serialization": "utf8( concat_for_each_member_in_frozen_manifest_order( relpath + \"\\x00\" + member_sha256_hex + \"\\x0a\" ) )",
+    "manifest_relpath": "infra/terraform/phase1/bundle-manifests/m2_m5_runtime.manifest",
+    "member_count": 28,
+    "digest_progression": {
+      "pre_link10_deployed": "bc5390bfbe6024bbe44fd712cd7eca6cf260f26c87bf3df6db1b1513b18b790b",
+      "accepted_commit_f924654": "eee7f07c01a379db9fa04cb57d6a81610230cab18b6d764f02a0b85e921fda18",
+      "as_built_commit_86736af": "a6540437f096ac7b6d0e026fd75ebdffbd5a92a1b77f59e730fb3ee24b3554e7"
+    },
+    "bound_binding": "a6540437f096ac7b6d0e026fd75ebdffbd5a92a1b77f59e730fb3ee24b3554e7",
+    "recomputes_deterministically_from_86736af": true,
+    "canonical_attestation_test": "tests/test_m67_sampled_slot_bundle_attestation.py::test_tfvars_binding_equals_canonical_calculator[m2_m5_runtime-sampled_slot_m2_m5_runtime_sha256] GREEN (not weakened, skipped, changed, or special-cased)",
+    "members": [
+      { "path": "packages/audit-core/src/opintel_audit/application.py", "sha256": "5c529bb623a9e5cc1ab6542379adf89993ca4af1f250c8f1635423fdd773287e" },
+      { "path": "packages/audit-core/src/opintel_audit/composition.py", "sha256": "29fcf1268e8f3e0d54d76193783ab137f5127751a4e47cb194641c02b30cae21" },
+      { "path": "packages/audit-core/src/opintel_audit/domain.py", "sha256": "db33fe87f418a0dcdc9fc638eb515d3fbd58c82b36ac748645704188ea537b21" },
+      { "path": "packages/audit-core/src/opintel_audit/workflow.py", "sha256": "7088df815cbad302aac0226de23dc0df4377c275b29d5e2669081bb35aaa2f50" },
+      { "path": "packages/audit-local/src/opintel_audit_local/adapters.py", "sha256": "2abb0f009f0300fc95600023a94b28f27f193bfe985a2043e34bc1b725031a08" },
+      { "path": "packages/audit-local/src/opintel_audit_local/persistence.py", "sha256": "d823ce61f8adc361a21408fd0510240044a10cf52cd1c4a598eb82ac52952cf1" },
+      { "path": "packages/demo-core/src/opintel_demo/application.py", "sha256": "61f2b0b5be141c736b893c1e59196d41326dd08a3c5c132e3cfef6201f209c4f" },
+      { "path": "packages/demo-core/src/opintel_demo/composition.py", "sha256": "290ef4283639d4ba97d84adf846d28331ae36b1badfe0d648092f5ebeb10c024", "changed_by_link10": true },
+      { "path": "packages/demo-core/src/opintel_demo/domain.py", "sha256": "e0bb43f70c3f557550f4f3929a0471ed3bda0ecb8076bf114db3ebc3714304aa", "changed_by_link10": true },
+      { "path": "packages/demo-core/src/opintel_demo/policy.py", "sha256": "76c8b24c45a8cf7d606a4a7357f5098ebc2c1f0ecc72150393d922521fad340f" },
+      { "path": "packages/demo-core/src/opintel_demo/workflow.py", "sha256": "d9dd8fd1d814cc901b34ddf8c5899ad449f301f4fa46a191f43ae4a7e9b725f6" },
+      { "path": "packages/demo-local/src/opintel_demo_local/adapters.py", "sha256": "7eebac45a0fe4b1bb0f29df0dc20593fbd12f8a99f7ff2d3238f965c3049c229" },
+      { "path": "packages/demo-local/src/opintel_demo_local/persistence.py", "sha256": "8bb8e1f1b5780b62e6d1c7260529536c962c2f3d721880f1850ad59acb941bad", "changed_by_link10": true },
+      { "path": "packages/opportunity-core/src/opintel_opportunity/application.py", "sha256": "8e02b2107368065d445779d4e2233ed20e6792951ed75f2ab231e5af33b6a75d" },
+      { "path": "packages/opportunity-core/src/opintel_opportunity/domain.py", "sha256": "2ca2518257a2ab699cc70638dfe40762ae08d30e8e9c4ed66cdac382c6406cd2", "changed_by_link10": true },
+      { "path": "packages/opportunity-core/src/opintel_opportunity/economics.py", "sha256": "73910d70c2615112a4c4f44ae53c44c510ada3a26da2de6a715f2cc7d5bb71bb" },
+      { "path": "packages/opportunity-core/src/opintel_opportunity/personalization.py", "sha256": "faba6477ddce24e102e40eb3471641d438b1e25decea3af5535a839a16ddb69c", "changed_by_link10": true },
+      { "path": "packages/opportunity-core/src/opintel_opportunity/rules.py", "sha256": "1cd3f5001eba1fb849e3ffc2c084049736ce2973715a6a5868892114f62c5291" },
+      { "path": "packages/opportunity-core/src/opintel_opportunity/workflow.py", "sha256": "c941dd7ea511d86645a9bb741d08384bda277df83cabb3cff44fe7890a92d803" },
+      { "path": "packages/opportunity-local/src/opintel_opportunity_local/adapters.py", "sha256": "a52192ae4cbd99519977c42ea7e803f656c4d2fd8e66008114193390cb0e193c" },
+      { "path": "packages/opportunity-local/src/opintel_opportunity_local/persistence.py", "sha256": "39b8556f8a50ad422b091cfbcd216d07e81ec75e4445d52d76583844654f1a1f", "changed_by_link10": true },
+      { "path": "packages/outreach-core/src/opintel_outreach/application.py", "sha256": "5b3c799112af0d45a9855e88dd83cac63bb11496598bd1ab4bc74f7127cc275e" },
+      { "path": "packages/outreach-core/src/opintel_outreach/composition.py", "sha256": "13df9d78b34b151292b739b2f97ec852425fb08ffb1c9fb8a00dab6ee95e71f7", "changed_by_link10": true },
+      { "path": "packages/outreach-core/src/opintel_outreach/domain.py", "sha256": "f62b22e6012b33a1caee5f938ca530c5f3cfd8cdd5bd34d389f3e07988a7b39a", "changed_by_link10": true },
+      { "path": "packages/outreach-core/src/opintel_outreach/workflow.py", "sha256": "dbe2feedfbb5403fbf1fcafd2bb06bb45edb4f61d9886a9a80b15b1db51124be" },
+      { "path": "packages/outreach-local/src/opintel_outreach_local/adapters.py", "sha256": "0f9374fc7299c66a6a8bb6c6f6c23aabdd17bf926252f496fbf0f697c6a4f1c3" },
+      { "path": "packages/outreach-local/src/opintel_outreach_local/persistence.py", "sha256": "2f29a768ee344354e55485f952ca44d55ff4b5b656ae5724e72617f0c0e37902", "changed_by_link10": true },
+      { "path": "workers/intelligence/src/opintel_intelligence_worker/production_runtime.py", "sha256": "6cf3158b5b574dadab36d01f8252da8e7885dc68b262a19c9a95b6c3c552cefd", "changed_by_link10": false, "note": "byte-unchanged bundle member carried forward from link 8/9; in-image sha256 confirmed identical" }
+    ]
+  },
+
+  "link10_image": {
+    "chain_link": 10,
+    "base_link9_registry_digest": "sha256:2d688edd2f9ba261fcdf588eac8e57a6d3ecb3fd8ccf5b0e66f53b9894582f63",
+    "dockerfile": "infra/container/phase1-worker/Dockerfile.window2-m2m5-correctness-fixes",
+    "local_tag": "localhost/m67-phase1-worker:git-86736af-m2m5-correctness",
+    "config_digest": "sha256:5763d90b0c22aa374241f149799f978e462c5ba1541111095d76efc594654e51",
+    "registry_digest": "sha256:25450867ef8e44ef2339a376e007a8c808fd14cedb39dc2a202f079957b6f039",
+    "media_type": "application/vnd.oci.image.manifest.v1+json",
+    "copy_count": 9,
+    "layers": { "total": 24, "base": 23, "child_extends_base": true, "added": 1 },
+    "in_image_file_equivalence": "all 9 COPY'd files byte-identical to accepted HEAD 86736af (LF-normalised sha256 match)",
+    "representation_equivalence": {
+      "local_verifier": "LOCAL_REPRESENTATION_EQUIVALENT_PROVEN",
+      "registry_verifier": "REPRESENTATION_EQUIVALENT_PROVEN",
+      "archive_bytes_equals_registry_bytes": true,
+      "reproduced_bytes_equals_registry_bytes": true
+    },
+    "ecr_scan": { "status": "COMPLETE", "critical": 0, "high": 0, "blocking": 0, "finding_severity_counts": {} }
+  },
+
+  "superseded_link10_v1_image": {
+    "note": "Link 10 v1 (config sha256:2760d8515cba..., registry sha256:ad7df9f66bed..., commit 3f0d5c2, bundle eee7f07c...) was built, published (scan 0/0/0), and briefly applied before the deployed synthetic validation surfaced the outreach-local persistence gap. Superseded by v2 (86736af / 25450867 / a6540437). Both images remain in ECR; only v2 is deployed.",
+    "v1_registry_digest": "sha256:ad7df9f66bed3965e697d9ffbea55ac0779b2de4ceec9c3f79b8deef2154f0cf"
+  },
+
+  "terraform_adr_0075": {
+    "plan_shape": "4 to add, 3 to change, 4 to destroy",
+    "semantic_review": "diff limited to the authorized Link 10 consequences: aws_ecs_task_definition {worker, intelligence, sampled_slot_activator, egress} delete+create (immutable), aws_ecs_service {worker, intelligence, egress} update (retarget revision). No other resource type changes.",
+    "changed": {
+      "container_image": "sha256:2d688edd... -> sha256:25450867ef8e44ef2339a376e007a8c808fd14cedb39dc2a202f079957b6f039 (all 4 task-defs)",
+      "OPINTEL_RESEARCH_RUNTIME_REVISION": "sha256:2d688edd... -> sha256:25450867...",
+      "OPINTEL_M2_M5_RUNTIME_SHA256": "bc5390bfbe6024bbe44fd712cd7eca6cf260f26c87bf3df6db1b1513b18b790b -> a6540437f096ac7b6d0e026fd75ebdffbd5a92a1b77f59e730fb3ee24b3554e7 (sampled_slot_activator only)"
+    },
+    "unchanged_bindings": {
+      "sampled_slot_release_applicator_sha256": "0daec18af2362506449c2f70bae0bafd9133ec60d2f14979effb2750916d170a",
+      "sampled_slot_activation_adapter_sha256": "42d206de3620fd32f2569f32fb45f97cc7939c89567cbe25b8236e8bd58cbae2",
+      "sampled_slot_activation_entry_point_sha256": "12eaf66bf6dc491c4376d1d42ee6bd794a38636d8c9ce93e4b13b1c6db0b6bf5",
+      "sampled_slot_stage_coordinator_sha256": "908e6753adca3d862eeebcd02dd6994e71ea020bc73db6be4fc671f818e56892",
+      "sampled_slot_m1_runtime_sha256": "884b1f271b21f9d0ff4e73557be0ec8c01fda30969fa256f1e555afb4d7f2a99"
+    },
+    "apply": "Apply complete! Resources: 4 added, 3 changed, 4 destroyed.",
+    "post_apply_task_definitions": {
+      "m67-phase1-research-worker": 53,
+      "m67-phase1-intelligence-worker": 23,
+      "m67-phase1-sampled-slot-activator": 22,
+      "m67-phase1-controlled-egress": 22
+    },
+    "post_apply_plan": "No changes. Your infrastructure matches the configuration. (detailed-exitcode 0)"
+  },
+
+  "postgresql_migration": {
+    "column": "opportunity_company_facts.verbatim_phrase TEXT DEFAULT ''",
+    "mechanism": "state-convergent, idempotent V2 personalization migration (_V2_PERSONALIZATION_COLUMNS) run on the deployed Link 10 image via a transient read-only-shaped research-worker task-def revision",
+    "convergence": {
+      "pre": "opportunity_company_facts.verbatim_phrase absent",
+      "post_pass1": "present",
+      "post_pass2": "present (strict no-op)",
+      "all_target_columns_present": true,
+      "idempotent_second_pass_noop": true,
+      "historical_rows_unchanged": true
+    },
+    "historical_row_counts_all_passes_identical": {
+      "research_runs": 30, "research_pages": 276, "research_evidence": 1952,
+      "opportunity_analysis_runs": 15, "opportunity_hypothesis_revisions": 8,
+      "opportunity_score_snapshots": 8, "audit_revisions": 8
+    },
+    "destructive_migration_or_historical_rewrite": "none"
+  },
+
+  "deployed_synthetic_validation": {
+    "image": "sha256:25450867ef8e44ef2339a376e007a8c808fd14cedb39dc2a202f079957b6f039",
+    "method": "read-only sealed Slot 07/18/19/20/21 M1 evidence -> ephemeral in-container sqlite -> deployed CanonicalSampledSlotStageRuntime._m2.._m5; zero RDS mutation; no authority / SSM / egress / contact / delivery; outbound network limited to the RDS endpoint",
+    "verdict": "passed: true, failed_properties: []",
+    "fact_propagation": {
+      "aplus_response_commitment_selected_at_m2": true,
+      "aplus_response_commitment_in_m4_semantic_fact_inputs": "present, rendered_as_demo_option=false, retention=SEMANTIC_INPUT_RETAINED, non_option_reason present",
+      "aplus_response_commitment_in_m5_as_evidence_derived_fact_projection": "finding.response_commitment projection present",
+      "aplus_available_vs_rendered": "available_fact_projection_count=4, rendered_fact_projection_count=2, omitted_fact_categories=[response_commitment, service_area_context], omission_policy_version=outreach.projection@4 (survives revision reload)",
+      "every_eligible_m2_companyfact_accounted_downstream": "all 5 companies: {M2 fact evidence_ids} == {M4 semantic_fact_input evidence_ids}",
+      "unaccounted_fact_is_hard_qc_failure": "DemoQualityPolicy emits company_fact_input_dropped when a selected fact is removed from semantic_fact_inputs; semantic_input_missing_reason when a non-rendered input lacks a reason",
+      "healthy_pipeline_no_drop_qc": "no fact_projection_dropped / company_fact_input_dropped for any of the 5 companies"
+    },
+    "service_area": {
+      "aplus_nav_menu_dump_rejected": true,
+      "comfortair_installation_boilerplate_rejected": true,
+      "genuine_candidates_still_pass": "Polar Pros 'Our Service Area', Elite 'Just a Sample of Our Service Areas', E+M 'Service Areas'; A-Plus and Comfort-Air fell through to a genuine 'Service Area' heading from a real service_area_location page",
+      "no_replacement_geography_invented": "every selected service_area fact traces to a real evidence content_sha256; a rejected candidate yields the next real candidate or absence"
+    },
+    "phrase_sanitation": {
+      "elite_leading_asterisk_removed": "phrase 'About Our 24-Hour Service'",
+      "verbatim_retained_separately": "'*About Our 24-Hour Service'",
+      "evidence_id_content_hash_provenance_intact": "content_sha256 270b6dfc1b7a83003f7a7937be6f9e7b68e5baa7cc4608545417e44d9b287bd9 (64 hex, deterministic)",
+      "asterisk_never_reaches_external_artifact_or_m3_finding": true,
+      "semantic_tokens_untouched": "'24/7', bare digits, and '?' preserved by _sanitize_phrase"
+    },
+    "historical_safeguards": {
+      "m1_unchanged": true,
+      "phase1_minimizer_at_2_unchanged": true,
+      "opportunity_definition_unchanged": "commercial_hvac.inbound_lead_response_qualification@1",
+      "m2_threshold_unchanged": "rules@3 / heuristic_bands@2 - all 5 M2-reaching companies still qualify",
+      "economics_unchanged": "insufficient_data / no real figure for all 5",
+      "a09_unchanged": "frozen slot scope 1..24; baked decision registry 17 APPROVED rows",
+      "contact_delivery_gates_unchanged": "every M5 draft_incomplete with 3 unresolved disclosure slots; no external send path",
+      "no_ai_browser_network_new_host": "only the RDS endpoint resolved during the whole validation"
+    }
+  },
+
+  "full_regression": {
+    "result": "852 passed, 3 skipped (PostgreSQL-only), 0 failed",
+    "canonical_tfvars_binding_test": "GREEN with a6540437...",
+    "ruff": "packages + new test clean",
+    "mypy": "clean (187 src files)",
+    "compileall": "clean"
+  },
+
+  "final_dormancy": {
+    "kill_switch": "TRIPPED",
+    "sampled_slot_execution_approval": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "controlled_egress_lease": "{\"state\":\"NOT_AUTHORIZED\"}",
+    "research_release": "unchanged - slot 22 (Ramsey) CONSUMED:M2_INSUFFICIENT_EVIDENCE from the 2026-08-31 batch",
+    "ecs_services": { "m67-phase1-research-worker": "0/0/0", "m67-phase1-intelligence-worker": "0/0/0", "m67-phase1-controlled-egress": "0/0/0" },
+    "running_or_pending_tasks": 0,
+    "active_research_worker_task_definition": "m67-phase1-research-worker:53 only (all transient read-only diagnostic revisions :49-:55 deregistered / INACTIVE)",
+    "terraform": "NO_CHANGES (detailed-exitcode 0)"
+  },
+
+  "constraints_honoured": [
+    "No AI / M6.6",
+    "No Claude communication-transformer implementation",
+    "No outreach rewrite",
+    "No contact resolution",
+    "No delivery or send",
+    "No historical Slot 02-24 rerun or mutation (candidate/regression renderings from sealed evidence are validation outputs only)",
+    "Only the additive opportunity_company_facts.verbatim_phrase column; no destructive migration; no historical rewrite",
+    "Canonical bundle calculator and its attestation test not weakened, skipped, changed, or special-cased"
+  ]
+}
