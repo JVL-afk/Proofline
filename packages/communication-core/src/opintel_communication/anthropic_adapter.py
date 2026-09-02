@@ -62,9 +62,19 @@ Transport = Callable[[dict[str, object]], "tuple[int, dict[str, object]]"]
 
 
 class ProviderError(RuntimeError):
-    """Base class for a fail-closed provider outcome."""
+    """Base class for a fail-closed provider outcome.
+
+    Carries any provider usage/identity metadata that was present on the
+    response even though no usable text candidate was produced. A non-PASS
+    provider outcome and its (possibly nonzero) provider cost are separate
+    concerns: usage here is recorded and costed even when parsing failed.
+    """
 
     outcome: str = "GENERATION_REFUSED"
+    input_tokens: int = 0
+    output_tokens: int = 0
+    request_id: str = ""
+    served_model: str = ""
 
 
 class ProviderUnavailable(ProviderError):
@@ -97,6 +107,9 @@ class GenerationConfig:
     stop_sequences: tuple[str, ...] = ()
     anthropic_version: str = ANTHROPIC_VERSION_HEADER
     system_prompt_sha256: str = ""
+    # "" = the parameter is not sent (provider default: adaptive thinking).
+    # "disabled" = the request carries thinking={"type":"disabled"}.
+    thinking: str = ""
 
     def with_system_hash(self) -> GenerationConfig:
         return replace(self, system_prompt_sha256=sha256_text(CERT_SYSTEM_PROMPT))
@@ -114,6 +127,10 @@ class GenerationConfig:
             "anthropic_version": self.anthropic_version,
             "system_prompt_sha256": self.system_prompt_sha256 or sha256_text(CERT_SYSTEM_PROMPT),
         }
+        # Included only when set, so a config that sends nothing keeps the exact
+        # hash it had before this field existed (Attempt 1 stays reproducible).
+        if self.thinking:
+            payload["thinking"] = self.thinking
         return sha256_text(json.dumps(payload, sort_keys=True, separators=(",", ":")))
 
 
@@ -194,6 +211,25 @@ class AnthropicProviderAdapter:
         except (urllib.error.URLError, TimeoutError) as exc:
             raise ProviderUnavailable(f"anthropic transport error: {type(exc).__name__}") from exc
 
+    @staticmethod
+    def _usage(data: dict[str, object]) -> tuple[int, int]:
+        raw_usage = data.get("usage")
+        usage: dict[str, object] = raw_usage if isinstance(raw_usage, dict) else {}
+        return (
+            int(str(usage.get("input_tokens", 0))),
+            int(str(usage.get("output_tokens", 0))),
+        )
+
+    def _refused(self, exc: ProviderError, data: dict[str, object]) -> ProviderError:
+        """Attach any usage/identity the provider did return, so a non-PASS
+        outcome is still costed from real metadata rather than as $0."""
+        in_tok, out_tok = self._usage(data)
+        exc.input_tokens = in_tok
+        exc.output_tokens = out_tok
+        exc.request_id = str(data.get("id", ""))
+        exc.served_model = str(data.get("model", ""))
+        return exc
+
     def generate(self, prompt_bundle: str) -> tuple[str, ProviderMetadata]:
         body: dict[str, object] = {
             "model": self._config.model,
@@ -201,17 +237,22 @@ class AnthropicProviderAdapter:
             "system": CERT_SYSTEM_PROMPT,
             "messages": [{"role": "user", "content": prompt_bundle}],
         }
+        if self._config.thinking == "disabled":
+            body["thinking"] = {"type": "disabled"}
         status, data = self._call(body)
 
         if status == 429 or status >= 500:
-            raise ProviderUnavailable(f"anthropic HTTP {status}")
+            raise self._refused(ProviderUnavailable(f"anthropic HTTP {status}"), data)
         if status != 200:
-            raise ProviderRefused(f"anthropic HTTP {status}")
+            raise self._refused(ProviderRefused(f"anthropic HTTP {status}"), data)
 
         served_model = str(data.get("model", ""))
         if not served_model.startswith(PINNED_MODEL):
-            raise ProviderModelIdentityError(
-                f"served model '{served_model}' does not match pinned '{PINNED_MODEL}'"
+            raise self._refused(
+                ProviderModelIdentityError(
+                    f"served model '{served_model}' does not match pinned '{PINNED_MODEL}'"
+                ),
+                data,
             )
         self._observed_model = served_model
 
@@ -228,9 +269,12 @@ class AnthropicProviderAdapter:
         if not text.strip():
             # e.g. extended thinking consumed the whole max_tokens budget and no
             # text block was emitted (stop_reason=max_tokens, content=[thinking]).
-            raise ProviderRefused(
-                f"anthropic returned no text content "
-                f"(stop_reason={data.get('stop_reason')!r}, block_types={block_types})"
+            raise self._refused(
+                ProviderRefused(
+                    f"anthropic returned no text content "
+                    f"(stop_reason={data.get('stop_reason')!r}, block_types={block_types})"
+                ),
+                data,
             )
 
         raw_usage = data.get("usage")

@@ -167,10 +167,23 @@ class GenerationOrchestrator:
                     raise
                 provider_failed = True
                 raw = None
+                # A non-PASS provider outcome can still carry real API usage
+                # (thinking-only, malformed candidate, 4xx with a body). Cost is
+                # a separate field from outcome: bill the usage that came back.
+                input_tokens = int(getattr(exc, "input_tokens", 0) or 0)
+                output_tokens = int(getattr(exc, "output_tokens", 0) or 0)
                 terminal = CommunicationOutcome(getattr(exc, "outcome", "GENERATION_REFUSED"))
                 gen_status = GenerationStatus.REFUSED
                 reason = f"provider call failed fail-closed: {type(exc).__name__}: {exc}"
                 diagnostics.append(("provider_error", reason))
+                if input_tokens or output_tokens:
+                    diagnostics.append(
+                        (
+                            "provider_usage_on_refusal",
+                            f"input_tokens={input_tokens} output_tokens={output_tokens} "
+                            f"request_id={getattr(exc, 'request_id', '')!r}",
+                        )
+                    )
 
         # -- validate every returned candidate --------------------------------
         audit_rows: list[CandidateAuditRow] = []

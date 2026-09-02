@@ -408,6 +408,65 @@ def test_report_accounts_for_avoided_calls() -> None:
     assert any("deterministically avoided" in n for n in report.notes)
 
 
+def test_thinking_disabled_is_sent_and_changes_the_config_hash() -> None:
+    from opintel_communication.anthropic_adapter import GenerationConfig
+
+    default_hash = GenerationConfig().config_hash()
+    disabled = GenerationConfig(thinking="disabled")
+    assert disabled.config_hash() != default_hash  # Attempt 2 => new key
+
+    seen: dict[str, object] = {}
+
+    def _t(body: dict[str, object]) -> tuple[int, dict]:
+        seen.update(body)
+        return _ok_payload(serialize_candidates((APLUS_EXCELLENT,)))
+
+    AnthropicProviderAdapter("sk-ant-fake", config=disabled, transport=_t).generate("p")
+    assert seen["thinking"] == {"type": "disabled"}
+
+    # default config still sends nothing
+    seen.clear()
+    AnthropicProviderAdapter("sk-ant-fake", transport=_t).generate("p")
+    assert "thinking" not in seen
+
+
+def test_refusal_carries_provider_usage_and_is_costed() -> None:
+    from opintel_communication.anthropic_adapter import ProviderRefused
+
+    def _thinking_only(body: dict[str, object]) -> tuple[int, dict]:
+        return 200, {
+            "id": "msg_x",
+            "model": PINNED_MODEL,
+            "content": [{"type": "thinking", "thinking": "..."}],
+            "stop_reason": "max_tokens",
+            "usage": {"input_tokens": 5900, "output_tokens": 2000},
+        }
+
+    adapter = AnthropicProviderAdapter("sk-ant-fake", transport=_thinking_only)
+    try:
+        adapter.generate("p")
+    except ProviderRefused as exc:
+        assert exc.input_tokens == 5900
+        assert exc.output_tokens == 2000
+        assert exc.request_id == "msg_x"
+    else:  # pragma: no cover
+        raise AssertionError("expected ProviderRefused")
+
+    # through the runner: cost must be nonzero even though 0 candidates parsed
+    report = _runner(
+        _thinking_only, price=PriceTable(input_usd_per_mtok="2.00", output_usd_per_mtok="10.00")
+    ).run(
+        _mini_corpus(),
+        repeats=1,
+        not_distinctive_scenario_id=NOT_DISTINCTIVE_SCENARIO_ID,
+        now_epoch_seconds=_NOW,
+    )
+    assert report.safety_outcome == CertificationSafetyOutcome.NOT_CERTIFIED
+    assert report.aggregate_input_tokens == 5900
+    assert report.aggregate_output_tokens == 2000
+    assert report.aggregate_cost_usd != "0.000000"
+
+
 def test_price_table_pending_is_flagged_in_notes() -> None:
     report = _runner(_clean_transport).run(
         _mini_corpus(),
