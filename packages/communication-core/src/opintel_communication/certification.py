@@ -24,7 +24,7 @@ reason to retry.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from decimal import ROUND_UP, Decimal
 from enum import StrEnum
@@ -45,7 +45,7 @@ from opintel_communication.domain import (
 from opintel_communication.hashing import canonical_json, sha256_text
 from opintel_communication.orchestration import GenerationOrchestrator
 from opintel_communication.prompt import (
-    PROMPT_TEMPLATE_ID_CERT,
+    PromptBundle,
     build_certification_prompt_bundle,
 )
 from opintel_communication.store import InMemoryGenerationStore
@@ -75,6 +75,21 @@ class CertificationCallBounds:
 
 
 DEFAULT_CALL_BOUNDS = CertificationCallBounds()
+
+# Attempt 3 (owner authorization 2026-09-02): one candidate per call, so the
+# 9 provider-reaching scenarios run 9 repeats each = 81 provider calls (the
+# previously authorized 81-candidate maximum). Per-call token ceilings unchanged;
+# aggregate ceilings recomputed for 81 one-candidate calls. USD 10.00 unchanged.
+ATTEMPT3_CALL_BOUNDS = CertificationCallBounds(
+    max_provider_calls=81,
+    candidates_per_call=1,
+    max_input_tokens_per_call=8_000,
+    max_output_tokens_per_call=2_000,
+    aggregate_input_token_ceiling=81 * 8_000,  # 648_000
+    aggregate_output_token_ceiling=81 * 2_000,  # 162_000
+    hard_usd_ceiling="10.00",
+    automatic_retries=0,
+)
 
 
 # ----------------------------------------------------------------------------
@@ -337,6 +352,9 @@ class CertificationRunner:
         orchestrator: GenerationOrchestrator | None = None,
         safety_pass_rate_floor: str = "0.80",
         manifest_mismatch_ceiling: str = "0.00",
+        prompt_builder: Callable[
+            [SemanticEnvelope], PromptBundle
+        ] = build_certification_prompt_bundle,
     ) -> None:
         self._adapter = adapter
         self._bounds = bounds
@@ -344,6 +362,7 @@ class CertificationRunner:
         self._orch = orchestrator or GenerationOrchestrator()
         self._floor = Decimal(safety_pass_rate_floor)
         self._manifest_ceiling = Decimal(manifest_mismatch_ceiling)
+        self._prompt_builder = prompt_builder
 
     def _config_context(self) -> tuple[tuple[str, str], ...]:
         cfg = self._adapter.config
@@ -354,10 +373,10 @@ class CertificationRunner:
         )
 
     def certification_key(self, corpus: CorpusManifest) -> CertificationKey:
-        bundle = build_certification_prompt_bundle(corpus.specs[0].envelope)
+        bundle = self._prompt_builder(corpus.specs[0].envelope)
         return CertificationKey(
             semantic_envelope_schema=SEMANTIC_ENVELOPE_SCHEMA_VERSION,
-            prompt_template_id=PROMPT_TEMPLATE_ID_CERT,
+            prompt_template_id=bundle.template_id,
             prompt_template_sha256=bundle.template_sha256,
             output_validator_version=OUTPUT_VALIDATOR_VERSION,
             candidate_ranker_version=CANDIDATE_RANKER_VERSION,
@@ -377,6 +396,7 @@ class CertificationRunner:
         repeats: int,
         not_distinctive_scenario_id: str,
         now_epoch_seconds: int,
+        not_distinctive_repeats: int | None = None,
     ) -> CertificationReport:
         store = InMemoryGenerationStore()
         store.initialize()
@@ -387,16 +407,25 @@ class CertificationRunner:
         agg_cost = Decimal("0")
         stopped: str | None = None
 
-        plan: list[tuple[SyntheticEnvelopeSpec, int]] = [
-            (spec, r) for r in range(repeats) for spec in corpus.specs
-        ]
+        # The provider-reaching scenarios run `repeats` times each. The
+        # deterministically-gated non-distinctive scenario runs a possibly
+        # smaller `nd_repeats` times (it never reaches the provider, so extra
+        # repeats add cost 0 but no signal).
+        nd_repeats = repeats if not_distinctive_repeats is None else not_distinctive_repeats
+        plan: list[tuple[SyntheticEnvelopeSpec, int]] = []
+        for r in range(repeats):
+            for spec in corpus.specs:
+                if spec.scenario_id == not_distinctive_scenario_id and r >= nd_repeats:
+                    continue
+                plan.append((spec, r))
+        planned_max = len(plan)
 
         for spec, repeat_index in plan:
             if calls >= b.max_provider_calls:
                 stopped = f"reached max_provider_calls={b.max_provider_calls}"
                 break
             # Estimate the next call's input tokens from the actual bundle.
-            bundle = build_certification_prompt_bundle(spec.envelope)
+            bundle = self._prompt_builder(spec.envelope)
             est_in = len(bundle.bundle_text) // 4
             if est_in > b.max_input_tokens_per_call:
                 stopped = (
@@ -426,7 +455,7 @@ class CertificationRunner:
                 now_epoch_seconds=now_epoch_seconds,
                 requested_candidate_count=b.candidates_per_call,
                 record_id=f"cert-{spec.scenario_id}-r{repeat_index}",
-                prompt_builder=build_certification_prompt_bundle,
+                prompt_builder=self._prompt_builder,
                 provider_context=self._config_context(),
                 cost_fn=self._price.cost_usd,
                 capture_provider_errors=True,
@@ -479,6 +508,8 @@ class CertificationRunner:
             attempts=tuple(attempts),
             calls=calls,
             repeats=repeats,
+            nd_repeats=nd_repeats,
+            planned_max=planned_max,
             agg_in=agg_in,
             agg_out=agg_out,
             agg_cost=agg_cost,
@@ -494,6 +525,8 @@ class CertificationRunner:
         attempts: tuple[CertificationAttempt, ...],
         calls: int,
         repeats: int,
+        nd_repeats: int,
+        planned_max: int,
         agg_in: int,
         agg_out: int,
         agg_cost: Decimal,
@@ -507,7 +540,7 @@ class CertificationRunner:
         # not-distinctive scenario terminates COMMUNICATION_NOT_DISTINCTIVE_ENOUGH
         # before the provider is invoked; those calls are deterministically
         # avoided, not failures, and are NOT replaced or compensated for.
-        planned_max = len(corpus.specs) * repeats
+        provider_reaching = len(corpus.specs) - 1
         avoided_nd = sum(
             1
             for a in attempts
@@ -515,10 +548,11 @@ class CertificationRunner:
         )
         notes.append(
             f"provider-call accounting: planned max {planned_max} "
-            f"({len(corpus.specs)} envelopes x {repeats} repeats); "
+            f"({provider_reaching} provider-reaching scenarios x {repeats} repeats "
+            f"+ {not_distinctive_scenario_id} x {nd_repeats}); "
             f"{calls} provider calls executed; {avoided_nd} deterministically avoided "
-            "by the pre-provider distinctiveness gate (COMMUNICATION_NOT_DISTINCTIVE_ENOUGH). "
-            "Avoided calls were not replaced or compensated for."
+            "by the pre-provider distinctiveness gate (COMMUNICATION_NOT_DISTINCTIVE_ENOUGH), "
+            "recorded separately. Avoided calls were not replaced or compensated for."
         )
 
         total_candidates = sum(a.returned_candidate_count for a in attempts)

@@ -467,6 +467,62 @@ def test_refusal_carries_provider_usage_and_is_costed() -> None:
     assert report.aggregate_cost_usd != "0.000000"
 
 
+def test_attempt3_n1_template_and_key_are_distinct() -> None:
+    from opintel_communication.prompt import (
+        build_certification_prompt_bundle_n1,
+    )
+
+    b2 = build_certification_prompt_bundle(aplus_envelope())
+    b3 = build_certification_prompt_bundle_n1(aplus_envelope())
+    assert b3.template_id == "comm.prompt_template.first_contact@3"
+    assert b3.template_sha256 != b2.template_sha256
+    assert "EXACTLY ONE candidate" in b3.bundle_text
+    assert "claim manifest" in b3.bundle_text.lower()
+
+    from opintel_communication.anthropic_adapter import GenerationConfig
+
+    adapter = AnthropicProviderAdapter(
+        "sk-ant-fake", config=GenerationConfig(thinking="disabled"), transport=_clean_transport
+    )
+    r2 = CertificationRunner(adapter, price_table=PriceTable())
+    r3 = CertificationRunner(
+        adapter, price_table=PriceTable(), prompt_builder=build_certification_prompt_bundle_n1
+    )
+    corpus = build_corpus()
+    assert r3.certification_key(corpus).prompt_template_id == "comm.prompt_template.first_contact@3"
+    assert r3.certification_key(corpus).key_sha256() != r2.certification_key(corpus).key_sha256()
+
+
+def test_attempt3_bounds_and_variable_nd_repeats() -> None:
+    from opintel_communication.certification import ATTEMPT3_CALL_BOUNDS
+    from opintel_communication.prompt import build_certification_prompt_bundle_n1
+
+    assert ATTEMPT3_CALL_BOUNDS.max_provider_calls == 81
+    assert ATTEMPT3_CALL_BOUNDS.candidates_per_call == 1
+    assert ATTEMPT3_CALL_BOUNDS.aggregate_input_token_ceiling == 81 * 8_000
+    assert ATTEMPT3_CALL_BOUNDS.hard_usd_ceiling == "10.00"
+
+    adapter = AnthropicProviderAdapter("sk-ant-fake", transport=_clean_transport)
+    runner = CertificationRunner(
+        adapter,
+        bounds=ATTEMPT3_CALL_BOUNDS,
+        price_table=PriceTable(input_usd_per_mtok="2.00", output_usd_per_mtok="10.00"),
+        prompt_builder=build_certification_prompt_bundle_n1,
+    )
+    report = runner.run(
+        build_corpus(),
+        repeats=9,
+        not_distinctive_repeats=3,
+        not_distinctive_scenario_id=NOT_DISTINCTIVE_SCENARIO_ID,
+        now_epoch_seconds=_NOW,
+    )
+    # 9 provider-reaching scenarios x 9 + s03 x 3 avoided
+    assert report.provider_calls_made == 81
+    assert report.provider_calls_avoided_nondistinctive == 3
+    assert report.provider_calls_planned_max == 84
+    assert report.stopped_early_reason is None
+
+
 def test_price_table_pending_is_flagged_in_notes() -> None:
     report = _runner(_clean_transport).run(
         _mini_corpus(),

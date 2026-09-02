@@ -1,26 +1,25 @@
 """M6.8-3 synthetic live-provider certification - local execution harness.
 
-Owner-authorized (2026-09-01; execution decisions 2026-09-02; Attempt 2 -
-extended/adaptive thinking disabled, token ceiling unchanged - authorized
-2026-09-02 after Attempt 1 returned NOT_CERTIFIED on a thinking-only config
-blocker). Runs EXACTLY the bounded certification described in
-``docs/readiness/communication-layer/m6.8-3-execution-plan-2026-09-01.md``:
-10 frozen synthetic envelopes x 3 repeats. Scenario ``s03_generic_weak_evidence``
-terminates COMMUNICATION_NOT_DISTINCTIVE_ENOUGH before the provider is invoked
-(accepted deterministic pre-provider gate), so the expected real execution is
-9 provider-reaching envelopes x 3 repeats = 27 ``claude-sonnet-5`` calls, N=3
-candidates/call, 81 max candidates. 30 remains the absolute provider-call
-ceiling, not the required count. USD 10.00 hard aggregate ceiling, 0 retries.
+Owner-authorized 2026-09-01. **Attempt 3** (authorized 2026-09-02, Option 1)
+after Attempts 1 and 2 both returned NOT_CERTIFIED on configuration blockers
+(thinking-only output; then N=3-candidate JSON not fitting 2000 tokens):
+thinking disabled AND one candidate per call. The 9 provider-reaching scenarios
+run 9 repeats each = 81 ``claude-sonnet-5`` calls (the previously authorized
+81-candidate maximum). ``s03_generic_weak_evidence`` stays deterministically
+gated before the provider and runs 3 times, recorded separately. N=1,
+max_output_tokens=2000 unchanged, full claim-manifest contract unchanged,
+validator / corpus / thresholds unchanged. New prompt template ``@3`` => new
+certification key. USD 10.00 hard aggregate ceiling, 0 retries.
 
 This is Option A (local execution). It does NOT touch AWS. It reads the Anthropic
 key from ``apikeys.txt`` (the line prefixed ``ANTHROPIC:``), holds it only in the
-adapter, and never prints/logs/commits it. It runs a preflight, then writes one
-immutable JSON report + a markdown summary under
-``docs/readiness/communication-layer/`` and exits. No contact resolution, no
-delivery, no send.
+adapter, and never prints/logs/commits it. It runs a preflight (including one
+compatibility probe, counted separately), then writes one immutable JSON report +
+a markdown summary under ``docs/readiness/communication-layer/`` and exits. No
+contact resolution, no delivery, no send.
 
     python scripts/run_m68_3_certification.py            # dry run: plan + preflight, no calls
-    python scripts/run_m68_3_certification.py --execute   # makes the 27 real calls
+    python scripts/run_m68_3_certification.py --execute   # makes the 81 real calls (+ 1 probe)
 """
 
 from __future__ import annotations
@@ -46,22 +45,31 @@ from opintel_communication.anthropic_adapter import (  # noqa: E402
     GenerationConfig,
 )
 from opintel_communication.certification import (  # noqa: E402
+    ATTEMPT3_CALL_BOUNDS,
     CONFIRMED_SONNET5_PRICE_TABLE,
-    DEFAULT_CALL_BOUNDS,
     CertificationRunner,
 )
 from opintel_communication.envelope_projection import (  # noqa: E402
     WITHHELD_FROM_PROVIDER,
     provider_facing_projection,
 )
+from opintel_communication.prompt import build_certification_prompt_bundle_n1  # noqa: E402
+from opintel_communication.stub_provider import parse_provider_response  # noqa: E402
 
 _OUT_DIR = ROOT / "docs" / "readiness" / "communication-layer"
 
-# Attempt 2 (owner authorization 2026-09-02): extended/adaptive thinking disabled,
-# max_output_tokens unchanged at 2000. This is a new certification configuration
-# with a new certification key; it does not retry or overwrite Attempt 1.
-_ATTEMPT2_CONFIG = GenerationConfig(thinking="disabled")
-_ATTEMPT_LABEL = "attempt2-thinking-disabled"
+# Attempt 3 (owner authorization 2026-09-02, Option 1): thinking disabled AND
+# one candidate per call, so the 9 provider-reaching scenarios run 9 repeats
+# each = 81 provider calls (the previously authorized 81-candidate maximum).
+# max_output_tokens unchanged at 2000; full claim-manifest contract unchanged;
+# validator / corpus / safety thresholds unchanged. New prompt template @3 =>
+# new certification key.
+_ATTEMPT3_CONFIG = GenerationConfig(thinking="disabled")
+_ATTEMPT3_BOUNDS = ATTEMPT3_CALL_BOUNDS
+_PROMPT_BUILDER = build_certification_prompt_bundle_n1
+_REPEATS = 9
+_ND_REPEATS = 3
+_ATTEMPT_LABEL = "attempt3-thinking-disabled-n1"
 
 
 def _apikeys_path() -> Path:
@@ -124,41 +132,44 @@ def _read_anthropic_key() -> str:
 
 
 def _plan_summary() -> str:
-    b = DEFAULT_CALL_BOUNDS
+    b = _ATTEMPT3_BOUNDS
     corpus = build_corpus()
     distinctive = [s for s in corpus.specs if s.envelope.has_distinctive_fact()]
+    reaching = len(distinctive) * _REPEATS
     lines = [
         f"M6.8-3 synthetic certification - PLAN ({_ATTEMPT_LABEL})",
-        f"  config            : thinking={_ATTEMPT2_CONFIG.thinking or 'provider-default'} "
-        f"max_output_tokens={_ATTEMPT2_CONFIG.max_output_tokens} "
-        f"config_hash={_ATTEMPT2_CONFIG.config_hash()[:16]}...",
+        f"  config            : thinking={_ATTEMPT3_CONFIG.thinking or 'provider-default'} "
+        f"N={b.candidates_per_call} max_output_tokens={_ATTEMPT3_CONFIG.max_output_tokens} "
+        f"config_hash={_ATTEMPT3_CONFIG.config_hash()[:16]}...",
+        f"  prompt template   : {_PROMPT_BUILDER(distinctive[0].envelope).template_id}",
         f"  corpus            : {corpus.corpus_version} ({len(corpus.specs)} envelopes)",
         f"  corpus manifest   : {corpus.manifest_sha256()}",
-        f"  provider calls    : {len(distinctive)} distinctive x 3 repeats = "
-        f"{len(distinctive) * 3} expected  (ceiling {b.max_provider_calls}, not a target)",
-        f"  avoided by gate   : {len(corpus.specs) - len(distinctive)} envelope(s) x 3 = "
-        f"{(len(corpus.specs) - len(distinctive)) * 3} deterministically avoided",
-        f"  candidates / call : {b.candidates_per_call}   (max {len(distinctive) * 3 * 3})",
+        f"  provider calls    : {len(distinctive)} provider-reaching x {_REPEATS} repeats x 1 "
+        f"candidate = {reaching}  (ceiling {b.max_provider_calls})",
+        f"  avoided by gate   : {NOT_DISTINCTIVE_SCENARIO_ID} x {_ND_REPEATS} = {_ND_REPEATS} "
+        "provider-avoided, recorded separately",
+        f"  max candidates    : {reaching}",
         f"  token ceilings    : {b.max_input_tokens_per_call}/call in, "
+        f"{b.max_output_tokens_per_call}/call out, "
         f"{b.aggregate_input_token_ceiling} agg in, {b.aggregate_output_token_ceiling} agg out",
         f"  USD ceiling       : {b.hard_usd_ceiling}   retries: {b.automatic_retries}",
         f"  price table       : {CONFIRMED_SONNET5_PRICE_TABLE.version} "
         f"(confirmed={CONFIRMED_SONNET5_PRICE_TABLE.confirmed})",
         f"  provider / model  : anthropic / {PINNED_MODEL} / {ANTHROPIC_ADAPTER_VERSION}",
         f"  endpoint          : {ANTHROPIC_API_ENDPOINT} (only authorized destination)",
-        f"  not-distinctive   : {NOT_DISTINCTIVE_SCENARIO_ID} (provider not called)",
     ]
     for s in corpus.specs:
         lines.append(f"    {s.scenario_id:<38} {s.envelope_sha256}")
     return "\n".join(lines)
 
 
-def _preflight(*, require_key: bool) -> list[str]:
+def _preflight(*, require_key: bool) -> tuple[list[str], dict[str, object]]:
     """Deterministic checks that must all pass before the first API call
     (owner authorization 2026-09-02, section 9). Raises SystemExit on any
-    failure - fail closed."""
+    failure - fail closed. Returns (checks, probe_stats)."""
 
     checks: list[str] = []
+    probe_stats: dict[str, object] = {"probe_calls": 0}
     corpus = build_corpus()
 
     # 1. corpus manifest hash
@@ -218,80 +229,129 @@ def _preflight(*, require_key: bool) -> list[str]:
     else:
         checks.append("API credential check skipped (dry run)")
 
-    # 6. adapter / model / config matches the certification key (Attempt 2 config)
-    adapter = AnthropicProviderAdapter("sk-ant-preflight-not-a-real-key", config=_ATTEMPT2_CONFIG)
-    runner = CertificationRunner(adapter, price_table=CONFIRMED_SONNET5_PRICE_TABLE)
+    # 6. adapter / model / config matches the Attempt 3 certification key
+    adapter = AnthropicProviderAdapter("sk-ant-preflight-not-a-real-key", config=_ATTEMPT3_CONFIG)
+    runner = CertificationRunner(
+        adapter,
+        bounds=_ATTEMPT3_BOUNDS,
+        price_table=CONFIRMED_SONNET5_PRICE_TABLE,
+        prompt_builder=_PROMPT_BUILDER,
+    )
     key_obj = runner.certification_key(corpus)
     if not (
         key_obj.provider == "anthropic"
         and key_obj.model == PINNED_MODEL
         and key_obj.provider_adapter_version == ANTHROPIC_ADAPTER_VERSION
         and key_obj.corpus_manifest_sha256 == _EXPECTED_MANIFEST_SHA
+        and key_obj.prompt_template_id == "comm.prompt_template.first_contact@3"
+        and key_obj.output_validator_version == "comm.output_validator@1"
         and len(key_obj.generation_config_hash) == 64
     ):
         raise SystemExit("PREFLIGHT FAIL: certification key does not bind the expected tuple")
-    if key_obj.generation_config_hash == GenerationConfig().config_hash():
-        raise SystemExit(
-            "PREFLIGHT FAIL: Attempt 2 config hash equals the Attempt 1 (thinking-default) "
-            "hash - thinking is not actually disabled"
-        )
     checks.append(
-        f"certification key binds anthropic/{PINNED_MODEL}/{ANTHROPIC_ADAPTER_VERSION}; "
-        f"NEW config_hash {key_obj.generation_config_hash[:16]}... (!= Attempt 1); "
+        f"certification key binds anthropic/{PINNED_MODEL}/{ANTHROPIC_ADAPTER_VERSION}/"
+        f"{key_obj.prompt_template_id}; validator {key_obj.output_validator_version} unchanged; "
         f"key_sha {key_obj.key_sha256()}"
     )
 
-    # 7. counters begin at zero - the runner starts every accumulator at 0/0/0
-    checks.append("call / token / USD counters begin at zero (runner initializes 0/0/0)")
+    # 7. N=1 one-candidate response schema + revised bounds
+    if _ATTEMPT3_BOUNDS.candidates_per_call != 1:
+        raise SystemExit("PREFLIGHT FAIL: Attempt 3 bounds do not request exactly 1 candidate")
+    tmpl = _PROMPT_BUILDER(corpus.specs[0].envelope).bundle_text
+    if "EXACTLY ONE candidate" not in tmpl or "claim manifest" not in tmpl.lower():
+        raise SystemExit(
+            "PREFLIGHT FAIL: @3 template must request exactly one candidate with a full manifest"
+        )
+    checks.append(
+        f"one-candidate response schema: N={_ATTEMPT3_BOUNDS.candidates_per_call}, "
+        f"@3 template requests exactly one candidate + full claim manifest; bounds "
+        f"{_ATTEMPT3_BOUNDS.max_provider_calls} calls / "
+        f"{_ATTEMPT3_BOUNDS.aggregate_input_token_ceiling} agg-in / "
+        f"{_ATTEMPT3_BOUNDS.aggregate_output_token_ceiling} agg-out; counters start 0/0/0"
+    )
 
-    # 8. provider compatibility probe: one tiny real call with the EXACT Attempt 2
-    #    config, to satisfy the owner stop-condition (thinking-disabled rejected /
-    #    served-model mismatch / other incompatibility -> STOP) before spending the
-    #    27-call budget. Not part of the certification's 27; ~USD 0.01.
+    # 8. provider compatibility probe (owner authorization: permitted, must be
+    #    counted + reported separately). One real call with the EXACT Attempt 3
+    #    config + @3 bundle: thinking-disabled accepted? served model still
+    #    claude-sonnet-5? does a full one-candidate JSON complete under 2000 out?
     if require_key:
-        probe = AnthropicProviderAdapter(_read_anthropic_key(), config=_ATTEMPT2_CONFIG)
+        probe = AnthropicProviderAdapter(_read_anthropic_key(), config=_ATTEMPT3_CONFIG)
+        probe_bundle = _PROMPT_BUILDER(corpus.specs[0].envelope)
         try:
-            text, meta = probe.generate("Reply with exactly: PROBE_OK")
+            text, meta = probe.generate(probe_bundle.bundle_text)
         except Exception as exc:  # any incompatibility is a hard stop
             raise SystemExit(
-                f"PREFLIGHT FAIL: Attempt 2 provider compatibility probe failed "
+                f"PREFLIGHT FAIL: Attempt 3 compatibility probe failed "
                 f"({type(exc).__name__}: {exc}). STOP for owner review - do not "
-                "change model / thinking mode / token ceiling independently."
+                "change model / thinking mode / token ceiling / manifest independently."
             ) from exc
+        probe_stats = {
+            "probe_calls": 1,
+            "probe_input_tokens": meta.input_tokens,
+            "probe_output_tokens": meta.output_tokens,
+            "probe_cost_usd": CONFIRMED_SONNET5_PRICE_TABLE.cost_usd(
+                meta.input_tokens, meta.output_tokens
+            ),
+            "probe_served_model": meta.model_version,
+        }
         if meta.model_version and not meta.model_version.startswith(PINNED_MODEL):
             raise SystemExit(
                 f"PREFLIGHT FAIL: probe served model '{meta.model_version}' != '{PINNED_MODEL}'"
             )
+        parsed = parse_provider_response(text)
+        if len(parsed.candidates) < 1:
+            raise SystemExit(
+                "PREFLIGHT FAIL: one-candidate JSON did not complete/parse under 2000 output "
+                f"tokens (out_tokens={meta.output_tokens}, status={parsed.status}). "
+                "STOP for owner review - N=1 still cannot complete a candidate."
+            )
         checks.append(
-            f"provider compatibility probe OK: thinking-disabled accepted, served model "
-            f"'{meta.model_version}', text returned ({len(text)} chars), "
-            f"usage in/out {meta.input_tokens}/{meta.output_tokens} (~1 extra call, not in the 27)"
+            f"compatibility probe OK: thinking-disabled accepted, served model "
+            f"'{meta.model_version}', ONE candidate parsed under 2000 out "
+            f"(usage in/out {meta.input_tokens}/{meta.output_tokens}, "
+            f"cost USD {probe_stats['probe_cost_usd']}). Counted separately; NOT one of the 81."
         )
     else:
         checks.append("provider compatibility probe skipped (dry run)")
 
-    return checks
+    return checks, probe_stats
 
 
-def _markdown_report(report: object, checks: list[str], stamp: str) -> str:
+def _markdown_report(
+    report: object, checks: list[str], stamp: str, probe_stats: dict[str, object]
+) -> str:
     r = report
     lines: list[str] = []
     a = lines.append
     a(f"# M6.8-3 synthetic live-provider certification report - {_ATTEMPT_LABEL} - {stamp}")
     a("")
-    a("Immutable. Owner-authorized 2026-09-01; Attempt 2 authorized 2026-09-02. ")
+    a("Immutable. Owner-authorized 2026-09-01; Attempt 3 authorized 2026-09-02 (Option 1). ")
     a("Option A local execution. No AWS surface. No contact resolution, no delivery, no send.")
     a("")
-    a("**Attempt 2** tests a different generation configuration (adaptive/extended thinking ")
-    a("**disabled**, `max_output_tokens=2000` unchanged) under a NEW certification key. It ")
-    a("does not retry or overwrite **Attempt 1** (thinking-default / 2k -> ")
-    a("`NOT_CERTIFIED` PROVIDER_CONFIGURATION_BLOCKER, report ")
-    a("`m6.8-3-certification-report-2026-09-02T054614Z.*`). Do not aggregate the two attempts' ")
-    a("pass rates or safety findings.")
+    a(
+        "**Attempt 3** = thinking **disabled**, **N=1 candidate per call**, "
+        "`max_output_tokens=2000` unchanged, full claim-manifest contract unchanged, validator / "
+        "corpus / safety thresholds unchanged. New prompt template `@3` => new certification key. "
+        "It is an independent configuration, NOT a retry of Attempt 1 (adaptive thinking / 2k / N3 "
+        "-> NOT_CERTIFIED_CONFIGURATION) or Attempt 2 (thinking disabled / 2k / N3 -> "
+        "NOT_CERTIFIED_CONFIGURATION). Do NOT aggregate metrics across attempts."
+    )
     a("")
     a("## Preflight")
     for c in checks:
         a(f"- [x] {c}")
+    a("")
+    a("## Compatibility probe (counted separately from the 81 certification calls)")
+    if probe_stats.get("probe_calls"):
+        a(f"- probe calls: {probe_stats['probe_calls']}")
+        a(f"- probe served model: `{probe_stats.get('probe_served_model')}`")
+        a(
+            f"- probe usage in/out: {probe_stats.get('probe_input_tokens')}/"
+            f"{probe_stats.get('probe_output_tokens')}  "
+            f"cost USD {probe_stats.get('probe_cost_usd')}"
+        )
+    else:
+        a("- probe calls: 0")
     a("")
     a("## Provider / model / config")
     key = r.certification_key  # type: ignore[attr-defined]
@@ -438,12 +498,12 @@ def _retention_state(rec: object) -> str:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--execute", action="store_true", help="make the 27 real provider calls")
+    ap.add_argument("--execute", action="store_true", help="make the 81 real provider calls")
     args = ap.parse_args()
 
     print(_plan_summary())
     print("\n-- preflight --")
-    checks = _preflight(require_key=args.execute)
+    checks, probe_stats = _preflight(require_key=args.execute)
     for c in checks:
         print(f"  [x] {c}")
 
@@ -453,26 +513,33 @@ def main() -> int:
 
     key = _read_anthropic_key()
     corpus = build_corpus()
-    adapter = AnthropicProviderAdapter(key, config=_ATTEMPT2_CONFIG)
-    runner = CertificationRunner(adapter, price_table=CONFIRMED_SONNET5_PRICE_TABLE)
+    adapter = AnthropicProviderAdapter(key, config=_ATTEMPT3_CONFIG)
+    runner = CertificationRunner(
+        adapter,
+        bounds=_ATTEMPT3_BOUNDS,
+        price_table=CONFIRMED_SONNET5_PRICE_TABLE,
+        prompt_builder=_PROMPT_BUILDER,
+    )
 
     print(
-        "\nexecuting up to 27 real claude-sonnet-5 calls "
-        f"({_ATTEMPT_LABEL}; s03 gated before provider) ..."
+        f"\nexecuting up to {_ATTEMPT3_BOUNDS.max_provider_calls} real claude-sonnet-5 calls "
+        f"({_ATTEMPT_LABEL}; {NOT_DISTINCTIVE_SCENARIO_ID} x{_ND_REPEATS} gated) ..."
     )
     report = runner.run(
         corpus,
-        repeats=3,
+        repeats=_REPEATS,
+        not_distinctive_repeats=_ND_REPEATS,
         not_distinctive_scenario_id=NOT_DISTINCTIVE_SCENARIO_ID,
         now_epoch_seconds=int(time.time()),
     )
 
     stamp = time.strftime("%Y-%m-%dT%H%M%SZ", time.gmtime())
     payload = dataclasses.asdict(report)
+    payload["compatibility_probe"] = probe_stats
     json_path = _OUT_DIR / f"m6.8-3-certification-report-{_ATTEMPT_LABEL}-{stamp}.json"
     md_path = _OUT_DIR / f"m6.8-3-certification-report-{_ATTEMPT_LABEL}-{stamp}.md"
     json_path.write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
-    md_path.write_text(_markdown_report(report, checks, stamp), encoding="utf-8")
+    md_path.write_text(_markdown_report(report, checks, stamp, probe_stats), encoding="utf-8")
 
     print(f"\nsafety_outcome        : {report.safety_outcome.value}")
     print(f"communication_quality : {report.communication_quality.value}")
