@@ -24,12 +24,18 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import replace
 
+from opintel_communication.compactor import (
+    COMPACTOR_VERSION,
+    compact_candidate,
+    laundered_safety_codes,
+)
 from opintel_communication.domain import (
     CTA_PARSER_VERSION,
     GENERATION_ORCHESTRATOR_VERSION,
     GENERATION_STORE_VERSION,
     HARD_MAX_CANDIDATE_COUNT,
     OUTPUT_VALIDATOR_VERSION,
+    ZERO_TOLERANCE_SAFETY_CODES,
     CandidateAuditRow,
     ClaimEvidenceLink,
     CommunicationOutcome,
@@ -42,10 +48,14 @@ from opintel_communication.domain import (
     M3FindingRef,
     Recommendation,
     SemanticEnvelope,
+    ValidationResult,
+    ValidatorFinding,
+    ValidatorSeverity,
 )
 from opintel_communication.hashing import sha256_text
 from opintel_communication.normalize import normalize_candidate
 from opintel_communication.prompt import PromptBundle, build_prompt_bundle
+from opintel_communication.quality import assess_quality
 from opintel_communication.ranker import CandidateRanker
 from opintel_communication.retention import new_retention
 from opintel_communication.store import InMemoryGenerationStore, compute_record_hash
@@ -95,9 +105,15 @@ class GenerationOrchestrator:
         self,
         validator: OutputValidator | None = None,
         ranker: CandidateRanker | None = None,
+        *,
+        compactor_enabled: bool = False,
+        assess_candidate_quality: bool = False,
     ) -> None:
         self._validator = validator or OutputValidator()
         self._ranker = ranker or CandidateRanker()
+        # (Haiku track D2/G) both default OFF so existing runs are byte-identical.
+        self._compactor_enabled = compactor_enabled
+        self._assess_quality = assess_candidate_quality
 
     def run(
         self,
@@ -195,17 +211,67 @@ class GenerationOrchestrator:
         audit_rows: list[CandidateAuditRow] = []
         passing: list[tuple[GenerationCandidate, object]] = []
         for cand in candidates:
-            validation = self._validator.validate(envelope, cand)
+            v_orig = self._validator.validate(envelope, cand)
+            eff = cand
+            validation = v_orig
+            compaction = None
+            original_validation = None
+            original_normalized = None
+            laundered: tuple[str, ...] = ()
+
+            if self._compactor_enabled:
+                compacted, comp_audit = compact_candidate(cand, envelope)
+                compaction = comp_audit
+                if comp_audit.any_change:
+                    v_comp = self._validator.validate(envelope, compacted)
+                    lc = laundered_safety_codes(
+                        {f.code for f in v_orig.findings},
+                        {f.code for f in v_comp.findings},
+                        ZERO_TOLERANCE_SAFETY_CODES,
+                    )
+                    laundered = tuple(sorted(lc))
+                    # (D2) compaction must never launder unsafe prose: re-attach
+                    # any zero-tolerance safety finding that only disappeared
+                    # because compaction removed its sentence.
+                    extra = tuple(
+                        ValidatorFinding(
+                            code=c,
+                            message=(
+                                "present in the raw provider output; the sentence carrying it "
+                                "was removed by comm.candidate_compactor@1 - still "
+                                "certification-invalidating"
+                            ),
+                            severity=ValidatorSeverity.HARD_FAILURE,
+                        )
+                        for c in laundered
+                    )
+                    validation = ValidationResult(
+                        candidate_id=v_comp.candidate_id,
+                        passed=v_comp.passed and not laundered,
+                        findings=v_comp.findings + extra,
+                        validator_version=v_comp.validator_version,
+                        cta_parser_version=v_comp.cta_parser_version,
+                    )
+                    eff = compacted
+                    original_validation = v_orig
+                    original_normalized = normalize_candidate(cand)
+
+            quality = assess_quality(eff, envelope) if self._assess_quality else None
             row = CandidateAuditRow(
                 candidate_id=cand.candidate_id,
-                normalized=normalize_candidate(cand),
-                claim_manifest=cand.claim_manifest,
+                normalized=normalize_candidate(eff),
+                claim_manifest=eff.claim_manifest,
                 validation=validation,
-                claim_evidence_map=_claim_evidence_map(envelope, cand),
+                claim_evidence_map=_claim_evidence_map(envelope, eff),
+                compaction=compaction,
+                original_normalized=original_normalized,
+                original_validation=original_validation,
+                laundered_safety_codes=laundered,
+                quality=quality,
             )
             audit_rows.append(row)
             if validation.passed:
-                passing.append((cand, validation))
+                passing.append((eff, validation))
 
         ranked_ids: tuple[str, ...] = ()
         if distinctive and not provider_failed:
@@ -264,6 +330,7 @@ class GenerationOrchestrator:
             cta_parser_version=getattr(self._validator, "cta_parser_version", CTA_PARSER_VERSION),
             ranker_version=self._ranker.version,
             orchestrator_version=self.orchestrator_version,
+            compactor_version=(COMPACTOR_VERSION if self._compactor_enabled else ""),
             store_version=GENERATION_STORE_VERSION,
             terminal_outcome=terminal,
             generation_status=gen_status,

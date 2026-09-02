@@ -22,11 +22,49 @@ from opintel_communication.hashing import GENESIS_HASH, chain_hash
 from opintel_communication.retention import RawResponseVault
 
 
+def _candidate_compaction_body(c: object) -> dict[str, object]:
+    """(Haiku track D2) compaction audit fields for one candidate. Only merged
+    into the hashed body when the compactor is enabled for the run - a run with
+    the compactor off keeps the exact record hash it had before this feature."""
+    comp = getattr(c, "compaction", None)
+    return {
+        "compaction_applied": bool(getattr(comp, "applied", False)),
+        "compaction_reached_target": getattr(comp, "reached_target", None),
+        "compaction_words_before": getattr(comp, "words_before", None),
+        "compaction_words_after": getattr(comp, "words_after", None),
+        "compaction_removed_sentence_ids": sorted(
+            r.sentence_id for r in getattr(comp, "removed_sentences", ())
+        ),
+        "compaction_manifest_entries_removed": sorted(
+            getattr(comp, "manifest_entries_removed", ())
+        ),
+        "compaction_compacted_body_sha256": getattr(comp, "compacted_body_sha256", None),
+        "original_content_sha256": (
+            c.original_normalized.content_sha256  # type: ignore[attr-defined]
+            if getattr(c, "original_normalized", None)
+            else None
+        ),
+        "original_passed": (
+            c.original_validation.passed  # type: ignore[attr-defined]
+            if getattr(c, "original_validation", None)
+            else None
+        ),
+        "original_finding_codes": (
+            list(c.original_validation.finding_codes)  # type: ignore[attr-defined]
+            if getattr(c, "original_validation", None)
+            else None
+        ),
+        "laundered_safety_codes": list(getattr(c, "laundered_safety_codes", ())),
+        "quality_classification": getattr(getattr(c, "quality", None), "classification", None),
+    }
+
+
 def _record_body(record: GenerationRecord) -> dict[str, object]:
     """The fields that the chain hash covers. Excludes ``record_hash`` itself
     and the mutable-by-design ``human_review_*`` pointers (review transitions
     append their own immutable events elsewhere and must not rewrite history)."""
 
+    _compactor_on = bool(record.compactor_version)
     return {
         "record_id": record.record_id,
         "sequence": record.sequence,
@@ -65,6 +103,7 @@ def _record_body(record: GenerationRecord) -> dict[str, object]:
                     for link in c.claim_evidence_map
                 ],
                 "rank": c.rank,
+                **(_candidate_compaction_body(c) if _compactor_on else {}),
                 "rank_total": (c.rank_score.total if c.rank_score else None),
                 "rank_components": (
                     [
@@ -89,6 +128,7 @@ def _record_body(record: GenerationRecord) -> dict[str, object]:
         "cta_parser_version": record.cta_parser_version,
         "ranker_version": record.ranker_version,
         "orchestrator_version": record.orchestrator_version,
+        **({"compactor_version": record.compactor_version} if _compactor_on else {}),
         "store_version": record.store_version,
         "terminal_outcome": str(record.terminal_outcome),
         "generation_status": (str(record.generation_status) if record.generation_status else None),

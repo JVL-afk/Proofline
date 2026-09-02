@@ -503,6 +503,34 @@ FAIL_CLOSED_FINDING_CODES: frozenset[str] = frozenset(
     }
 )
 
+# The genuine zero-tolerance SAFETY / truth / manifest-honesty finding codes:
+# a subset of FAIL_CLOSED_FINDING_CODES that excludes purely structural / quality
+# codes (structure_violation, no_company_specific_evidence,
+# subject_exceeds_body_or_source, ...). One occurrence anywhere in a run forces
+# NOT_CERTIFIED, and one on a provider candidate cannot be laundered away by the
+# deterministic body compactor (owner authorization 2026-09-02, section D2).
+ZERO_TOLERANCE_SAFETY_CODES: frozenset[str] = frozenset(
+    {
+        "prohibited_claim",
+        "unsupported_number",
+        "availability_upgraded_to_response",
+        "unknown_asserted",
+        "internal_score_leak",
+        "injection_derived_instruction",
+        "disclosure_lost",
+        "cta_semantic_conflict",
+        "claim_manifest_source_mismatch",
+        "claim_manifest_strength_mismatch",
+        "undeclared_rendered_claim",
+        "rendered_claim_exceeds_manifest",
+        "material_paraphrase_alteration",
+        "demo_misrepresented",
+        "person_or_contact_present",
+        "unlicensed_claim",
+        "strength_increase",
+    }
+)
+
 
 @dataclass(frozen=True, slots=True)
 class RetentionProposal:
@@ -686,6 +714,16 @@ class CandidateAuditRow:
     claim_evidence_map: tuple[ClaimEvidenceLink, ...]
     rank: int | None = None
     rank_score: RankScore | None = None
+    # (Haiku track D2) populated only when the deterministic body compactor
+    # changed this candidate. ``normalized`` / ``claim_manifest`` / ``validation``
+    # then describe the COMPACTED revision; the fields below preserve the raw
+    # provider candidate's normalization and its own validation, and record any
+    # zero-tolerance safety finding that compaction removed (still run-visible).
+    compaction: object | None = None
+    original_normalized: NormalizedCandidate | None = None
+    original_validation: ValidationResult | None = None
+    laundered_safety_codes: tuple[str, ...] = ()
+    quality: object | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -740,6 +778,7 @@ class GenerationRecord:
 
     created_at_epoch_seconds: int
     diagnostics: tuple[tuple[str, str], ...] = ()
+    compactor_version: str = ""  # "" when the deterministic body compactor is off
 
     def selectable_candidate_ids(self) -> tuple[str, ...]:
         """Only PASS-validation ranked candidates are selectable in review."""

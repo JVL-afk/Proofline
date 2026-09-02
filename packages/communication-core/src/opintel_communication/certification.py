@@ -405,6 +405,14 @@ class CertificationReport:
 
     notes: tuple[str, ...] = field(default_factory=tuple)
 
+    # (Haiku track D2/G) populated only when the compactor / quality assessor
+    # were enabled for the run.
+    compactor_version: str = ""
+    candidates_compacted: int = 0
+    candidates_over_cap_after_compaction: int = 0
+    laundered_safety_candidates: int = 0
+    candidate_quality_distribution: tuple[tuple[str, int], ...] = ()
+
 
 # ----------------------------------------------------------------------------
 # Signatures
@@ -450,13 +458,18 @@ class CertificationRunner:
             [SemanticEnvelope], PromptBundle
         ] = build_certification_prompt_bundle,
         validator_contract: str = "v1",
+        compactor_enabled: bool = False,
+        assess_candidate_quality: bool = False,
     ) -> None:
         self._adapter = adapter
         self._bounds = bounds
         self._price = price_table
         self._contract = validator_contract
+        self._compactor_enabled = compactor_enabled
         self._orch = orchestrator or GenerationOrchestrator(
-            validator=OutputValidator(contract=validator_contract)
+            validator=OutputValidator(contract=validator_contract),
+            compactor_enabled=compactor_enabled,
+            assess_candidate_quality=assess_candidate_quality,
         )
         self._floor = Decimal(safety_pass_rate_floor)
         self._manifest_ceiling = Decimal(manifest_mismatch_ceiling)
@@ -813,6 +826,31 @@ class CertificationRunner:
         # Quality - advisory only
         quality, quality_note = _assess_quality(attempts, not_distinctive_scenario_id)
 
+        # (Haiku track D2/G) compaction + per-candidate quality aggregation.
+        compactor_version = ""
+        n_compacted = n_over_cap = n_laundered = 0
+        qdist: dict[str, int] = {}
+        for a in attempts:
+            compactor_version = a.record.compactor_version or compactor_version
+            for row in a.record.candidates:
+                comp = row.compaction
+                if comp is not None and getattr(comp, "applied", False):
+                    n_compacted += 1
+                    if not getattr(comp, "reached_target", True):
+                        n_over_cap += 1
+                if row.laundered_safety_codes:
+                    n_laundered += 1
+                q = getattr(row.quality, "classification", None)
+                if q:
+                    qdist[q] = qdist.get(q, 0) + 1
+        if compactor_version:
+            notes.append(
+                f"compactor {compactor_version}: {n_compacted} candidate(s) compacted, "
+                f"{n_over_cap} still over the 130-word cap after safe whole-sentence removal, "
+                f"{n_laundered} carried a zero-tolerance finding that compaction removed "
+                "(re-injected, still certification-invalidating)."
+            )
+
         key = self.certification_key(corpus)
         return CertificationReport(
             certification_version=PROVIDER_CERTIFICATION_VERSION,
@@ -842,6 +880,11 @@ class CertificationRunner:
             per_scenario_drift=tuple(drift_reports),
             drift_invalidations=tuple(drift_invalidations),
             notes=tuple(notes),
+            compactor_version=compactor_version,
+            candidates_compacted=n_compacted,
+            candidates_over_cap_after_compaction=n_over_cap,
+            laundered_safety_candidates=n_laundered,
+            candidate_quality_distribution=tuple(sorted(qdist.items())),
         )
 
 
