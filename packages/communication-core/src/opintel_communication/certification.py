@@ -209,6 +209,43 @@ HAIKU_CERT_BOUNDS = CertificationCallBounds(
     automatic_retries=0,
 )
 
+# Return-to-Sonnet track (owner authorization 2026-09-02 "RETURN TO SONNET 5 AND
+# COMPLETE M6.8-3"). Haiku is HAIKU_NOT_QUALIFIED; claude-sonnet-5 is the selected
+# model. All model-independent improvements (compactor @1, framing-leadin
+# correction, quality @1, output_validator @4, projection @2) are retained.
+#
+# Section 3: one cheap pre-certification sanity check - 9 provider-reaching
+# scenarios x 1 Sonnet generation, NO repeats. Expected cost a few tenths of a
+# dollar; USD 1.50 hard ceiling gives headroom without approaching a research
+# budget.
+SONNET_RETURN_SANITY_BOUNDS = CertificationCallBounds(
+    max_provider_calls=9,
+    candidates_per_call=1,
+    max_input_tokens_per_call=8_000,
+    max_output_tokens_per_call=8_000,
+    aggregate_input_token_ceiling=72_000,
+    aggregate_output_token_ceiling=72_000,
+    hard_usd_ceiling="1.50",
+    automatic_retries=0,
+)
+
+# Section 5: the full bounded Sonnet certification - 9 scenarios x 9 repeats = 81
+# calls, N=1, thinking disabled, 8000 out, 30s timeout, 0 retries, s03 gated.
+# Owner set a USD 5.00 hard ceiling for the entire attempt (lower than the
+# historical Sonnet 10.00). Comparable completed Sonnet run (Attempt 6) cost
+# USD 2.68 for 81 calls + USD 0.03 probe, so the projected cost is well under
+# 5.00; the conservative per-call budget guard is the authoritative stop.
+SONNET_RETURN_CERT_BOUNDS = CertificationCallBounds(
+    max_provider_calls=81,
+    candidates_per_call=1,
+    max_input_tokens_per_call=8_000,
+    max_output_tokens_per_call=8_000,
+    aggregate_input_token_ceiling=648_000,
+    aggregate_output_token_ceiling=648_000,
+    hard_usd_ceiling="5.00",
+    automatic_retries=0,
+)
+
 
 # ----------------------------------------------------------------------------
 # Safety categories - zero tolerance (owner authorization section 9)
