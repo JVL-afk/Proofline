@@ -22,6 +22,9 @@ from opintel_outreach.composition import (
 
 from opintel_communication.cta_parser import cta_semantic_consistency
 from opintel_communication.domain import (
+    CTA_PARSER_V2_VERSION,
+    CTA_PARSER_VERSION,
+    OUTPUT_VALIDATOR_V2_VERSION,
     OUTPUT_VALIDATOR_VERSION,
     ClaimManifestEntry,
     ClaimType,
@@ -112,6 +115,106 @@ def _content_words(text: str) -> set[str]:
 
 def _norm(text: str) -> str:
     return " ".join(text.split()).strip()
+
+
+# --------------------------------------------------------------------------
+# Attempt-6 preparation (owner authorization 2026-09-02, section 3). All of the
+# following are consulted ONLY under contract="v2". @1 behaviour is unchanged.
+# --------------------------------------------------------------------------
+
+# (3a) prohibited/demo concepts whose meaning is inverted by an explicit
+# negation - "nothing in it is connected", "not a system deployed". An
+# UNSUPPORTED positive claim (no negation) still fails.
+_V2_NEGATION_SUPPRESSIBLE: frozenset[str] = frozenset(
+    {"AVAILABILITY_TO_RESPONSE", "DEMO_DEPLOYED", "RESPONSE_PERFORMANCE_ASSERTED"}
+)
+_V2_DISCOVERY_ADVERBS: frozenset[str] = frozenset(
+    {"monthly", "weekly", "daily", "annually", "yearly", "know", "learn"}
+)
+_STRONG_NEG = re.compile(
+    r"\b(?:not|no|nothing|never|isn'?t|aren'?t|wasn'?t|weren'?t|doesn'?t|don'?t|"
+    r"didn'?t|won'?t|cannot|can'?t|without|nor|non-)\b",
+    re.IGNORECASE,
+)
+_POSITIVE_DEPLOY = re.compile(
+    r"\b(?:is|are|has|have|been|now|currently)\s+"
+    r"(?:been\s+)?(?:deployed|connected|live|running|integrated|active|in place)\b",
+    re.IGNORECASE,
+)
+
+
+def _negation_governs(clause: str, start: int) -> bool:
+    """True when the concept trigger at ``start`` sits inside an explicit
+    negation and no intervening positive-deployment assertion cancels it."""
+    window = clause[max(0, start - 55) : start]
+    if not _STRONG_NEG.search(window):
+        return False
+    return not _POSITIVE_DEPLOY.search(window)
+
+
+class _AuthorizedVocab:
+    """Content-word views of the meanings THIS exact envelope explicitly
+    licenses: its required disclosures, its canonical discovery questions, its
+    ``may_say`` demo phrases, and its structured-CTA ``asks_for`` frame. Not a
+    generic 'prompt text is safe' bypass - only this envelope's own text."""
+
+    __slots__ = ("phrases", "union")
+
+    def __init__(self, env: SemanticEnvelope) -> None:
+        phrases: list[set[str]] = []
+        for disc in env.required_disclosures:
+            if disc.canonical_text:
+                phrases.append(_content_words(disc.canonical_text))
+        for question in env.structured_cta.canonical_discovery_questions:
+            phrases.append(_content_words(question))
+        for phrase in env.mentionable_demo_facts.may_say:
+            phrases.append(_content_words(phrase))
+        phrases.append(_content_words(env.structured_cta.semantic_frame.asks_for))
+        self.phrases = [w for w in phrases if len(w) >= 4]
+        self.union: set[str] = set().union(*self.phrases) if self.phrases else set()
+
+
+def _matches_authorized(
+    clause: str, authorized: _AuthorizedVocab, *, allow_fold: bool = False
+) -> bool:
+    cw = _content_words(clause)
+    if len(cw) < 4:
+        return False
+    # (a) the clause is (near-)equivalent to one single authorized phrase.
+    for phrase in authorized.phrases:
+        if len(phrase & cw) / min(len(phrase), len(cw)) >= 0.70:
+            return True
+    # (b) discovery-question territory only: the clause folds in two authorized
+    #     phrases (e.g. both canonical discovery questions in one CTA sentence,
+    #     which @6 encourages) - >= 5 words from the authorized union and at most
+    #     two words beyond that union + safe framing + discovery adverbs. NOT
+    #     applied to demo-deployment concepts, where a genuine positive claim
+    #     shares its content words with the negated disclosure.
+    if not allow_fold:
+        return False
+    beyond = cw - authorized.union - _SAFE_FRAMING_VOCAB - _V2_DISCOVERY_ADVERBS
+    return len(cw & authorized.union) >= 5 and len(beyond) <= 2
+
+
+# (3e) disclosure negation grammar: accept explicitly-tested contractions.
+_V2_DISCLOSURE_NOT_DEPLOYED = re.compile(
+    r"\b(?:not|isn'?t|aren'?t|wasn'?t|weren'?t|doesn'?t|don'?t|never|no)\b"
+    r"[^.]{0,45}\b(?:deployed|connected|official|operated|a system|implemented|"
+    r"live|integrated|in production)\b",
+    re.IGNORECASE,
+)
+
+# (3c) attribution cues: a clause that explicitly frames a statement as the
+# business's own published words is a PUBLISHED_SELF_CLAIM, not a VERIFIED_FACT,
+# even when it contains a response verb.
+_ATTRIBUTION_CUES = re.compile(
+    r"\b(?:your\s+(?:site|page|pages|website|contact page)\s+(?:also\s+)?"
+    r"(?:state|states|say|says|publish|publishes|note|notes|list|lists|read|reads)|"
+    r"this is what you (?:publish|state|say)|that'?s (?:your own )?published claim|"
+    r"what'?s (?:publicly )?(?:published|posted|stated)|a published (?:note|statement|claim)|"
+    r"you publicly state|according to your (?:site|page)|as published on your)\b",
+    re.IGNORECASE,
+)
 
 
 # --------------------------------------------------------------------------
@@ -223,7 +326,7 @@ def _classify(clause: str) -> ClaimType:
 # --------------------------------------------------------------------------
 
 
-def _licensed_framing_vocab(env: SemanticEnvelope) -> set[str]:
+def _licensed_framing_vocab(env: SemanticEnvelope, *, v2: bool = False) -> set[str]:
     words: set[str] = set()
     ref = env.deterministic_reference_artifacts
     for piece in (
@@ -252,6 +355,18 @@ def _licensed_framing_vocab(env: SemanticEnvelope) -> set[str]:
     for fact in env.mentionable_demo_facts.may_say:
         words |= _content_words(fact)
     words |= _content_words(env.business_identity.display_name)
+    if v2:
+        # (3d) the synthetic business's own envelope-authorized display identity
+        # and hostname. No arbitrary external hostname - only this envelope's.
+        # Both the hyphenated token as it tokenises ("bayline-air-demo") and the
+        # split components ("bayline", "air", "demo").
+        host = env.business_identity.exact_public_hostname.lower()
+        words |= _content_words(host)
+        words |= _content_words(host.replace(".", " ").replace("-", " "))
+        words |= _content_words(host.rsplit(".", 1)[0])
+        words |= {"www", "http", "https"}
+        for token in env.business_identity.name_tokens:
+            words |= _content_words(token)
     return words
 
 
@@ -606,13 +721,23 @@ _UNKNOWN_SUPPRESSIBLE_CONCEPTS: frozenset[str] = frozenset(
 class OutputValidator:
     version = OUTPUT_VALIDATOR_VERSION
 
+    def __init__(self, *, contract: str = "v1") -> None:
+        if contract not in ("v1", "v2"):
+            raise ValueError(f"unknown validator contract {contract!r}")
+        self._v2 = contract == "v2"
+        self.version = OUTPUT_VALIDATOR_V2_VERSION if self._v2 else OUTPUT_VALIDATOR_VERSION
+        self.cta_parser_version = CTA_PARSER_V2_VERSION if self._v2 else CTA_PARSER_VERSION
+        self.contract = contract
+
     def validate(
         self, envelope: SemanticEnvelope, candidate: GenerationCandidate
     ) -> ValidationResult:
         findings: list[ValidatorFinding] = []
-        framing = _licensed_framing_vocab(envelope) | _SAFE_FRAMING_VOCAB
+        framing = _licensed_framing_vocab(envelope, v2=self._v2) | _SAFE_FRAMING_VOCAB
         fact_words = _fact_vocab(envelope)
         allowed_vocab = framing | fact_words
+        # Built unconditionally (cheap); only consulted when self._v2.
+        authorized = _AuthorizedVocab(envelope)
 
         email = candidate.artifact("first_contact_email")
         subject = candidate.artifact("subject")
@@ -707,14 +832,19 @@ class OutputValidator:
             )
 
         # 6. simulation disclosure meaning present -----------------
-        if (
-            not _DISCLOSURE_CUES.search(body)
-            or not re.search(r"\bsimulation\b", body, re.IGNORECASE)
-            or not re.search(
+        _not_deployed = (
+            _V2_DISCLOSURE_NOT_DEPLOYED.search(body)
+            if self._v2
+            else re.search(
                 r"\bnot\b[^.]{0,40}\b(deployed|connected|official|operated|a system)\b",
                 body,
                 re.IGNORECASE,
             )
+        )
+        if (
+            not _DISCLOSURE_CUES.search(body)
+            or not re.search(r"\bsimulation\b", body, re.IGNORECASE)
+            or not _not_deployed
         ):
             findings.append(
                 _f(
@@ -751,16 +881,35 @@ class OutputValidator:
             for c in clauses
             if _classify(c) not in (ClaimType.SALUTATION, ClaimType.SIGNATURE_SLOT)
         ]
+        _fold_ok = {"AVAILABILITY_TO_RESPONSE", "RESPONSE_PERFORMANCE_ASSERTED"}
         for clause in prose_clauses:
             preserves_unknown = bool(_PRESERVES_UNKNOWN.search(clause))
             for concept in PROHIBITED_CONCEPTS:
-                if not any(p.search(clause) for p in concept.patterns):
+                match = next(
+                    (m for p in concept.patterns if (m := p.search(clause)) is not None), None
+                )
+                if match is None:
                     continue
                 if preserves_unknown and concept.code in _UNKNOWN_SUPPRESSIBLE_CONCEPTS:
                     continue
                 if concept.licensable_by and (concept.licensable_by & licensed_source_kinds):
                     # e.g. AVAILABILITY_TO_RESPONSE licensed by a RESPONSE_COMMITMENT
                     # fact - still only as a self-claim, checked by strength below.
+                    continue
+                # (3a) the trigger sits inside an explicit negation, or (3b) the
+                # clause is (near-)equivalent to text this envelope itself
+                # licenses (its disclosure / discovery question / may_say). An
+                # unsupported POSITIVE claim still fails.
+                if (
+                    self._v2
+                    and concept.code in _V2_NEGATION_SUPPRESSIBLE
+                    and (
+                        _negation_governs(clause, match.start())
+                        or _matches_authorized(
+                            clause, authorized, allow_fold=concept.code in _fold_ok
+                        )
+                    )
+                ):
                     continue
                 code = _CONCEPT_FINDING_CODE.get(concept.code, "prohibited_claim")
                 findings.append(
@@ -774,10 +923,13 @@ class OutputValidator:
                 )
 
         # 9. CTA semantic consistency (ADR-0067) ------------------
+        _cta_contract = "v2" if self._v2 else "v1"
         for clause in clauses:
             if _classify(clause) != ClaimType.CTA:
                 continue
-            for reason in cta_semantic_consistency(clause, envelope.structured_cta):
+            for reason in cta_semantic_consistency(
+                clause, envelope.structured_cta, contract=_cta_contract
+            ):
                 findings.append(
                     _f("cta_semantic_conflict", reason, "first_contact_email", span=clause)
                 )
@@ -809,14 +961,44 @@ class OutputValidator:
 
         # 11. demo not misrepresented -------------------------
         for phrase in envelope.mentionable_demo_facts.must_not_say:
-            if _content_words(phrase) and _content_words(phrase) <= _content_words(body):
+            pw = _content_words(phrase)
+            if not pw:
+                continue
+            if not self._v2:
+                if pw <= _content_words(body):
+                    findings.append(
+                        _f(
+                            "demo_misrepresented",
+                            f"asserts a prohibited demo statement: {phrase!r}",
+                            "first_contact_email",
+                        )
+                    )
+                continue
+            # (3a) v2: the prohibited demo statement must actually be ASSERTED -
+            # its content words co-occur inside one clause that is neither an
+            # explicit negation/disclaimer nor a rendering of the envelope's own
+            # authorized may_say / disclosure text.
+            for clause in prose_clauses:
+                if not pw <= _content_words(clause):
+                    continue
+                if _matches_authorized(clause, authorized):
+                    continue
+                triggers = [
+                    m.start()
+                    for w in ("deployed", "connected", "live", "official", "operated")
+                    for m in re.finditer(rf"\b{w}\b", clause, re.IGNORECASE)
+                ]
+                if triggers and all(_negation_governs(clause, t) for t in triggers):
+                    continue
                 findings.append(
                     _f(
                         "demo_misrepresented",
                         f"asserts a prohibited demo statement: {phrase!r}",
                         "first_contact_email",
+                        span=clause,
                     )
                 )
+                break
 
         # 12. licensing every substantive clause against the envelope vocab
         substantive = [
@@ -890,7 +1072,12 @@ class OutputValidator:
         # 15. claim-manifest cross-checks (owner refinement) -------
         findings.extend(
             self._check_manifest(
-                envelope, candidate, clauses, manifest_by_span, allowed_vocab, licensed_source_kinds
+                envelope,
+                candidate,
+                clauses,
+                manifest_by_span,
+                allowed_vocab,
+                licensed_source_kinds,
             )
         )
 
@@ -909,6 +1096,11 @@ class OutputValidator:
             comp_words = _content_words(unknown.component.replace("_", " "))
             for clause in substantive:
                 low = clause.lower()
+                if self._v2 and (
+                    _matches_authorized(clause, authorized, allow_fold=True)
+                    or _PRESERVES_UNKNOWN.search(clause)
+                ):
+                    continue
                 if (
                     comp_words & _content_words(clause)
                     and any(cue in low for cue in CERTAINTY_CUES)
@@ -964,13 +1156,25 @@ class OutputValidator:
                     )
                 )
 
-        for entry in cand.claim_manifest.entries:
-            if entry.claim_type not in (
+        # (section 2) non-fact-bearing entry types may legitimately carry
+        # licensed_source_ids = []; their legality is validated by the CTA
+        # contract (rule 9), the disclosure contract (rule 6), artifact
+        # structure (rule 1) and placeholder/signature rules (rule 2), not by
+        # evidentiary source-word overlap. Under v2 the CTA type joins the set
+        # already skipped here. Factual / inferential / recommendation entries
+        # still MUST cite an evidentiary source.
+        _checked_types = (
+            (ClaimType.FACT, ClaimType.INFERENCE, ClaimType.RECOMMENDATION)
+            if self._v2
+            else (
                 ClaimType.FACT,
                 ClaimType.INFERENCE,
                 ClaimType.RECOMMENDATION,
                 ClaimType.CTA,
-            ):
+            )
+        )
+        for entry in cand.claim_manifest.entries:
+            if entry.claim_type not in _checked_types:
                 continue
             span = _norm(entry.rendered_span)
             span_words = _content_words(span)
@@ -1039,17 +1243,31 @@ class OutputValidator:
             if entry.claim_type == ClaimType.CTA:
                 continue
 
-            # 15e. rendered wording does not exceed the declared strength
-            detected = _detected_strength(span)
-            declared = entry.asserted_strength or (
+            source_ceiling = (
                 max(source_strengths, key=lambda s: _rank(s)) if source_strengths else None
             )
-            if declared is not None and not strength_at_most(detected, declared):
+            # (3c) when the manifest declaration is consistent with the cited
+            # source, trust it - do not let a lexical strength guess override a
+            # declaration that already matches its licensed source. A GENUINE
+            # strengthening ABOVE the source is still caught by 15d
+            # (claim_manifest_strength_mismatch) and the prohibited-concept scan.
+            if (
+                self._v2
+                and entry.asserted_strength is not None
+                and source_ceiling is not None
+                and entry.asserted_strength == source_ceiling
+            ):
+                continue
+
+            # 15e. rendered wording does not exceed the licensed strength
+            detected = _detected_strength(span, v2=self._v2)
+            ceiling = entry.asserted_strength or source_ceiling
+            if ceiling is not None and not strength_at_most(detected, ceiling):
                 out.append(
                     _f(
                         "rendered_claim_exceeds_manifest",
                         f"claim {entry.claim_id}: wording sounds like "
-                        f"{detected}, declared {declared}",
+                        f"{detected}, licensed ceiling {ceiling}",
                         claim_id=entry.claim_id,
                         span=span,
                     )
@@ -1079,8 +1297,8 @@ class OutputValidator:
             )
         # subject may not sound stronger than the body: its detected strength
         # must not exceed the strongest strength present in the body.
-        body_strength = _detected_strength(body)
-        subj_strength = _detected_strength(subj)
+        body_strength = _detected_strength(body, v2=self._v2)
+        subj_strength = _detected_strength(subj, v2=self._v2)
         if not strength_at_most(subj_strength, body_strength):
             out.append(
                 _f(
@@ -1122,10 +1340,14 @@ _SELF_CLAIM_STRENGTH = re.compile(
 )
 
 
-def _detected_strength(text: str) -> FactStrength:
-    if _CERTAINTY_STRENGTH.search(text):
+def _detected_strength(text: str, *, v2: bool = False) -> FactStrength:
+    # (3c) under v2, an explicitly-attributed statement ("your site states X",
+    # "a published note that…") is a PUBLISHED_SELF_CLAIM even if it contains a
+    # response verb - it is not being asserted as verified fact.
+    attributed = v2 and bool(_ATTRIBUTION_CUES.search(text))
+    if _CERTAINTY_STRENGTH.search(text) and not attributed:
         return FactStrength.VERIFIED_FACT
-    if _SELF_CLAIM_STRENGTH.search(text):
+    if _SELF_CLAIM_STRENGTH.search(text) or attributed:
         return FactStrength.PUBLISHED_SELF_CLAIM
     low = text.lower()
     if any(cue in low for cue in CONDITIONAL_CUES):

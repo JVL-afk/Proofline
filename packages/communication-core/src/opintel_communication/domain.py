@@ -21,6 +21,14 @@ CLAIM_MANIFEST_SCHEMA_VERSION = "comm.claim_manifest@1"
 GENERATION_CONTRACT_VERSION = "comm.generation_contract@1"
 OUTPUT_VALIDATOR_VERSION = "comm.output_validator@1"
 CTA_PARSER_VERSION = "comm.cta_parser@1"
+# M6.8-3 Attempt-6 preparation (owner authorization 2026-09-02): the SAME
+# validator / parser code, run under the ``contract="v2"`` flag, which enables the
+# five forensic-confirmed corrections (negation-aware demo/availability/response
+# concepts; envelope-authorized-text exemption; strength reconciliation; business
+# identity vocabulary; disclosure negation grammar) and the one CTA parser
+# addition. ``@1`` behaviour is byte-identical when the flag is off.
+OUTPUT_VALIDATOR_V2_VERSION = "comm.output_validator@2"
+CTA_PARSER_V2_VERSION = "comm.cta_parser@2"
 # M6.8-2 additions
 CANDIDATE_RANKER_VERSION = "comm.candidate_ranker@1"
 GENERATION_STORE_VERSION = "comm.generation_store@1"

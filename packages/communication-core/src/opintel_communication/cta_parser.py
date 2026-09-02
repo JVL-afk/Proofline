@@ -13,7 +13,28 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 
-from opintel_communication.domain import CTA_PARSER_VERSION, StructuredCTA
+from opintel_communication.domain import (
+    CTA_PARSER_V2_VERSION,
+    CTA_PARSER_VERSION,
+    StructuredCTA,
+)
+
+# Attempt-6 preparation (owner authorization 2026-09-02, section 4): recognise the
+# forensic-confirmed permitted construction
+#   "would it be worth / useful / helpful comparing ... with/against your
+#    actual/current/real ... process/intake/workflow?"
+# as PERMISSION_TO_COMPARE_SIMULATION_WITH_REAL_PROCESS, but only when the clause
+# stays interrogative, non-presumptive, non-purchase, and non-meeting-demand
+# (those guards are the existing branch conditions, unchanged). Consulted ONLY
+# under contract="v2".
+_COMPARE_PERMISSION_V2 = re.compile(
+    r"\b(?:would it be (?:worth|useful|helpful)|is it worth|worth)\b[^.?!]{0,45}"
+    r"\bcompar(?:e|ing)\b[^.?!]{0,45}"
+    r"\b(?:with|against|to|and)\b[^.?!]{0,30}"
+    r"\byour\b[^.?!]{0,25}\b(?:actual|current|real|existing|own)\b[^.?!]{0,20}"
+    r"\b(?:process|intake|workflow|setup|approach|way|operations?)\b",
+    re.IGNORECASE,
+)
 
 _INTERROGATIVE_STARTS = (
     "would ",
@@ -215,7 +236,7 @@ def _norm(text: str) -> str:
     return " ".join(text.split()).strip()
 
 
-def parse_cta(clause: str) -> ParsedCta:
+def parse_cta(clause: str, *, contract: str = "v1") -> ParsedCta:
     text = _norm(clause)
     low = text.lower()
 
@@ -231,6 +252,8 @@ def parse_cta(clause: str) -> ParsedCta:
     for obj, cues in _ASK_OBJECT_CUES.items():
         if any(cue in low for cue in cues):
             ask_objects.add(obj)
+    if contract == "v2" and _COMPARE_PERMISSION_V2.search(text):
+        ask_objects.add("compare_simulation")
 
     presumes_deficiency = any(p.search(text) for p in _DEFICIENCY_CUES)
 
@@ -258,6 +281,7 @@ def parse_cta(clause: str) -> ParsedCta:
         presumes_deficiency=presumes_deficiency,
         ask_objects=frozenset(ask_objects),
         intent_class=intent,
+        parser_version=(CTA_PARSER_V2_VERSION if contract == "v2" else CTA_PARSER_VERSION),
     )
 
 
@@ -271,10 +295,12 @@ _FORBIDDEN_ASK_MAP: dict[str, str] = {
 }
 
 
-def cta_semantic_consistency(rendered_cta_clause: str, structured_cta: StructuredCTA) -> list[str]:
+def cta_semantic_consistency(
+    rendered_cta_clause: str, structured_cta: StructuredCTA, *, contract: str = "v1"
+) -> list[str]:
     """Return a list of sub-reason strings; empty means consistent (ADR-0067)."""
 
-    parsed = parse_cta(rendered_cta_clause)
+    parsed = parse_cta(rendered_cta_clause, contract=contract)
     frame = structured_cta.semantic_frame
     reasons: list[str] = []
 

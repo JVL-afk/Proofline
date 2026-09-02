@@ -35,7 +35,9 @@ from opintel_communication.anthropic_adapter import (
 )
 from opintel_communication.domain import (
     CANDIDATE_RANKER_VERSION,
+    CTA_PARSER_V2_VERSION,
     CTA_PARSER_VERSION,
+    OUTPUT_VALIDATOR_V2_VERSION,
     OUTPUT_VALIDATOR_VERSION,
     SEMANTIC_ENVELOPE_SCHEMA_VERSION,
     CommunicationOutcome,
@@ -49,6 +51,7 @@ from opintel_communication.prompt import (
     build_certification_prompt_bundle,
 )
 from opintel_communication.store import InMemoryGenerationStore
+from opintel_communication.validator import OutputValidator
 
 PROVIDER_CERTIFICATION_VERSION = "comm.provider_certification@1"
 
@@ -112,6 +115,12 @@ ATTEMPT4_CALL_BOUNDS = CertificationCallBounds(
 # only change is the schema-explicit prompt template @5, which is a
 # certification-key member, so Attempt 5 gets its own key.
 ATTEMPT5_CALL_BOUNDS = ATTEMPT4_CALL_BOUNDS
+
+# Attempt 6 (owner authorization 2026-09-02): identical bounds again. The
+# certification key changes because prompt template @6, output validator @2, and
+# CTA parser @2 are all key members. max_output_tokens=8000, N=1, USD 10.00, 0
+# retries, corpus, and thresholds are all unchanged.
+ATTEMPT6_CALL_BOUNDS = ATTEMPT4_CALL_BOUNDS
 
 
 # ----------------------------------------------------------------------------
@@ -377,11 +386,15 @@ class CertificationRunner:
         prompt_builder: Callable[
             [SemanticEnvelope], PromptBundle
         ] = build_certification_prompt_bundle,
+        validator_contract: str = "v1",
     ) -> None:
         self._adapter = adapter
         self._bounds = bounds
         self._price = price_table
-        self._orch = orchestrator or GenerationOrchestrator()
+        self._contract = validator_contract
+        self._orch = orchestrator or GenerationOrchestrator(
+            validator=OutputValidator(contract=validator_contract)
+        )
         self._floor = Decimal(safety_pass_rate_floor)
         self._manifest_ceiling = Decimal(manifest_mismatch_ceiling)
         self._prompt_builder = prompt_builder
@@ -400,9 +413,13 @@ class CertificationRunner:
             semantic_envelope_schema=SEMANTIC_ENVELOPE_SCHEMA_VERSION,
             prompt_template_id=bundle.template_id,
             prompt_template_sha256=bundle.template_sha256,
-            output_validator_version=OUTPUT_VALIDATOR_VERSION,
+            output_validator_version=(
+                OUTPUT_VALIDATOR_V2_VERSION if self._contract == "v2" else OUTPUT_VALIDATOR_VERSION
+            ),
             candidate_ranker_version=CANDIDATE_RANKER_VERSION,
-            cta_parser_version=CTA_PARSER_VERSION,
+            cta_parser_version=(
+                CTA_PARSER_V2_VERSION if self._contract == "v2" else CTA_PARSER_VERSION
+            ),
             provider="anthropic",
             model=self._adapter.config.model,
             observed_model_identity=self._adapter.observed_model or "unobserved",
