@@ -36,7 +36,15 @@ CTA_PARSER_VERSION = "comm.cta_parser@1"
 # a bare evidentiary framing lead-in with no business predicate is source-free
 # (D1); "<Business Name> publishes / lists / describes X", optionally after an
 # "I noticed" framing prefix, classifies as a public-text FACT.
-OUTPUT_VALIDATOR_V2_VERSION = "comm.output_validator@4"
+# ``@5`` (return-to-Sonnet-5, owner authorization 2026-09-02 "AUTHORIZE BOUNDED
+# REDUNDANT-MANIFEST RECONCILIATION"): a source-less manifest entry escapes
+# claim_manifest_source_mismatch ONLY as a redundant wrapper - every substantive
+# unit of its span is independently and validly licensed by finer-grained
+# sibling entries at equal-or-stronger evidentiary support, and the wrapper-only
+# residual adds no fact / inference / recommendation / number / process /
+# response / economic / deployment / person claim or meaning-changing qualifier.
+# Deterministic; never trusts the provider's declared claim_type.
+OUTPUT_VALIDATOR_V2_VERSION = "comm.output_validator@5"
 CTA_PARSER_V2_VERSION = "comm.cta_parser@2"
 # M6.8-2 additions
 CANDIDATE_RANKER_VERSION = "comm.candidate_ranker@1"

@@ -6,7 +6,7 @@ is the selected communication-transformer model. All model-independent
 improvements produced during the Haiku track are retained:
 
   comm.candidate_compactor@1, framing-leadin correction, comm.communication_quality@1,
-  comm.output_validator@4, provider projection @2, original + compacted candidate
+  comm.output_validator@5, provider projection @2, original + compacted candidate
   safety validation, <=130-word body cap, <=60-char subject cap, exactly one CTA,
   zero-tolerance safety semantics.
 
@@ -107,7 +107,7 @@ _VALID_STRENGTHS = {s.value for s in FactStrength}
 # single-candidate adaptation. The adapter independently rejects any served model
 # whose family is not claude-sonnet-5, so a completed run's observed identity
 # always matches this pre-run value (a divergence would be MODEL_IDENTITY_DRIFT).
-_PRE_RUN_CONFIG_ID = "ba2758488814053d6940a9bec8aa1a4d510550f8ea3f0111ab51b218a974a7e6"
+_PRE_RUN_CONFIG_ID = "83cded100880154f94f14d7bd92bfd15b9e8e6f85de87528bf7220d7280a125b"
 _PROMPT_SHA = "28f36553ff77d6041a168443a3de66597c1042d8108763a883993d52d96144c2"
 _MANIFEST_SHA = "282cdd5a2783f793a47d71b17ddf8b62242294fc0260e73a3526fbec5537d411"
 _ENV_SHA16 = {
@@ -216,7 +216,7 @@ def _preflight(
         key.model == PINNED_MODEL
         and key.prompt_template_id == PROMPT_TEMPLATE_ID_CERT_V9
         and key.prompt_template_sha256 == _PROMPT_SHA
-        and key.output_validator_version == "comm.output_validator@4"
+        and key.output_validator_version == "comm.output_validator@5"
         and key.cta_parser_version == "comm.cta_parser@2"
         and key.corpus_manifest_sha256 == _MANIFEST_SHA
         and key.observed_model_identity == PINNED_MODEL
@@ -314,7 +314,7 @@ def _preflight(
         checks.append(
             f"compatibility probe OK: served '{meta.model_version}', stop_reason={meta.stop_reason!r}, "  # noqa: E501
             f"{probe['probe_manifest_entries']}-entry manifest, all enums valid, reached "
-            f"comm.output_validator@4 (findings {[f.code for f in vr.findings] or 'none'}); "
+            f"comm.output_validator@5 (findings {[f.code for f in vr.findings] or 'none'}); "
             f"usage {meta.input_tokens}/{meta.output_tokens}, cost USD {probe['probe_cost_usd']}. "
             "NOT one of the 9."
         )
@@ -480,7 +480,7 @@ def main() -> int:
         f"repeats={repeats}"
     )
     print(
-        f"  prompt {PROMPT_TEMPLATE_ID_CERT_V9} / output_validator@4 / cta_parser@2 / "
+        f"  prompt {PROMPT_TEMPLATE_ID_CERT_V9} / output_validator@5 / cta_parser@2 / "
         f"{PROVIDER_CERTIFICATION_VERSION} / {PROVIDER_PROJECTION_VERSION} / {COMPACTOR_VERSION} / "
         f"{QUALITY_ASSESSOR_VERSION}"
     )

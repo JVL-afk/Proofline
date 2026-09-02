@@ -367,6 +367,174 @@ def _only_in_negation(word: str, span: str) -> bool:
     return all(_STRONG_NEG.search(low[max(0, p - 42) : p]) for p in positions)
 
 
+# --------------------------------------------------------------------------
+# Bounded redundant-manifest-wrapper reconciliation (return-to-Sonnet-5, owner
+# authorization 2026-09-02 "AUTHORIZE BOUNDED REDUNDANT-MANIFEST RECONCILIATION",
+# sections 2-3). Consulted ONLY under contract="v2".
+#
+# Observed failing pattern: the provider renders a sentence like "While reviewing
+# Acme's public pages, I noticed X alongside Y." and the manifest carries granular
+# FACT entries for X and Y (each correctly source-licensed) PLUS a broader
+# source-less wrapper entry spanning the same sentence. The wrapper adds no
+# independently unsupported meaning - it is a manifest-granularity artefact.
+#
+# A source-less entry escapes ``claim_manifest_source_mismatch`` ONLY when every
+# condition below is deterministically true. The provider's declared claim_type
+# is NEVER trusted - a factual claim must not be hideable inside a wrapper the
+# provider labels DISCLOSURE / TRANSITION.
+# --------------------------------------------------------------------------
+
+
+def _wrapper_residual_framing() -> frozenset[str]:
+    # built lazily: _SAFE_FRAMING_VOCAB / _V2_FRAMING_VOCAB are defined later in
+    # the module. Non-substantive framing / attribution / transition / glue that
+    # may remain in a redundant wrapper after its sibling-covered facts are
+    # removed.
+    return frozenset(
+        _SAFE_FRAMING_VOCAB | _V2_FRAMING_VOCAB | _FRAMING_LEADIN_STOP | _V2_DISCOVERY_ADVERBS
+    )
+
+
+def _source_strength(src: object, claim_type: ClaimType) -> FactStrength | None:
+    if src is None:
+        return None
+    if isinstance(src, EnvelopeFact):
+        return src.strength
+    if isinstance(src, M3FindingRef):
+        return FactStrength.OBSERVED_PUBLIC_TEXT
+    return (
+        FactStrength.LICENSED_INFERENCE
+        if claim_type == ClaimType.INFERENCE
+        else FactStrength.LICENSED_RECOMMENDATION
+    )
+
+
+def _wrapper_covering_siblings(
+    entry: ClaimManifestEntry, cand: GenerationCandidate
+) -> list[ClaimManifestEntry]:
+    """Other manifest entries whose rendered span is a strictly finer part of
+    this entry's span (every content word inside it, shorter text)."""
+    w_words = _content_words_v2(entry.rendered_span)
+    w_len = len(_norm(entry.rendered_span))
+    out: list[ClaimManifestEntry] = []
+    for sib in cand.claim_manifest.entries:
+        if sib is entry:
+            continue
+        s_norm = _norm(sib.rendered_span)
+        s_words = _content_words_v2(s_norm)
+        if not s_words or len(s_norm) >= w_len:
+            continue
+        if s_words <= w_words:
+            out.append(sib)
+    return out
+
+
+def _redundant_wrapper_reconciled(
+    entry: ClaimManifestEntry,
+    cand: GenerationCandidate,
+    env: SemanticEnvelope,
+) -> bool:
+    span = _norm(entry.rendered_span)
+    siblings = _wrapper_covering_siblings(entry, cand)
+    if not siblings:  # (2) must overlap >= 1 sibling
+        return False
+
+    name_tokens = _content_words_v2(env.business_identity.display_name)
+    sib_words: set[str] = set()
+    residual_text = span
+    for sib in siblings:
+        sw = _content_words_v2(sib.rendered_span)
+        sib_words |= sw
+        for w in sw:
+            residual_text = re.sub(rf"\b{re.escape(w)}\b", " ", residual_text, flags=re.IGNORECASE)
+        # remove the sibling's exact rendered phrase too, so a licensed numeric /
+        # short-token string it carries ("24/7", "AC") leaves no residue.
+        residual_text = re.sub(
+            re.escape(_norm(sib.rendered_span)), " ", residual_text, flags=re.IGNORECASE
+        )
+    # a numeric string that appears verbatim in an eligible licensed fact is
+    # supported (rule 4, section 3) - strip those before the digit check.
+    for n in _licensed_numeric_strings(env):
+        residual_text = re.sub(re.escape(n), " ", residual_text)
+    residual_text = _norm(residual_text)
+
+    # (2) every substantive word of the wrapper is covered by a sibling or is
+    #     non-substantive framing / attribution / glue.
+    residual_substantive = (
+        _content_words_v2(span) - sib_words - _wrapper_residual_framing() - name_tokens
+    )
+    if residual_substantive:
+        return False
+    # (5) the wrapper-only residual introduces no number / currency / percent.
+    if re.search(r"[\d$£€%]", residual_text):
+        return False
+    # (5) the residual is not itself fact / inference / recommendation bearing.
+    #     A bare framing shell ("While reviewing <name>'s public pages, I
+    #     noticed") is not a claim even though _classify types the possessive
+    #     site phrase as FACT - _is_framing_leadin recognises it.
+    if (
+        residual_text
+        and not _is_framing_leadin(residual_text, env)
+        and _classify(residual_text, contract="v2")
+        in (ClaimType.FACT, ClaimType.INFERENCE, ClaimType.RECOMMENDATION)
+    ):
+        return False
+    # (5) the residual trips no prohibited / availability / demo / response
+    #     concept (an explicit negation still suppresses the negation-suppressible
+    #     ones, matching rule 8).
+    for concept in PROHIBITED_CONCEPTS:
+        for pat in concept.patterns:
+            m = pat.search(residual_text)
+            if m is None:
+                continue
+            if concept.code in _V2_NEGATION_SUPPRESSIBLE and _negation_governs(
+                residual_text, m.start()
+            ):
+                continue
+            return False
+    # (5) no economic / contact language in the residual.
+    if FINANCIAL_EXTERNAL.search(residual_text) or PERSONAL_CONTACT.search(residual_text):
+        return False
+
+    # (3) every covering sibling that renders fact-bearing wording must itself be
+    #     validly licensed - resolvable, non-empty sources at an evidentiary
+    #     strength - regardless of how the provider typed it. (4) sibling
+    #     licensing must be at least as strong as the wrapper claim requires, and
+    #     no sibling may over-assert vs its own source.
+    wrapper_cap = _rank(entry.asserted_strength) if entry.asserted_strength is not None else None
+    saw_factual_sibling = False
+    for sib in siblings:
+        rendered = _classify(_norm(sib.rendered_span), contract="v2")
+        factual = rendered in (
+            ClaimType.FACT,
+            ClaimType.INFERENCE,
+            ClaimType.RECOMMENDATION,
+        ) or sib.claim_type in (
+            ClaimType.FACT,
+            ClaimType.INFERENCE,
+            ClaimType.RECOMMENDATION,
+        )
+        if not factual:
+            continue
+        saw_factual_sibling = True
+        resolved = [env.source_by_id(s) for s in sib.licensed_source_ids]
+        if not sib.licensed_source_ids or any(r is None for r in resolved):
+            return False
+        strengths = [
+            s for s in (_source_strength(r, sib.claim_type) for r in resolved) if s is not None
+        ]
+        if not strengths:
+            return False
+        sib_rank = max(_rank(s) for s in strengths)
+        if sib_rank < _rank(FactStrength.OBSERVED_PUBLIC_TEXT):
+            return False
+        if wrapper_cap is not None and wrapper_cap > sib_rank:
+            return False
+        if sib.asserted_strength is not None and _rank(sib.asserted_strength) > sib_rank:
+            return False
+    return saw_factual_sibling
+
+
 # (3c) attribution cues: a clause that explicitly frames a statement as the
 # business's own published words is a PUBLISHED_SELF_CLAIM, not a VERIFIED_FACT,
 # even when it contains a response verb.
@@ -1559,17 +1727,23 @@ class OutputValidator:
                 if not declared_fact_bearing and rendered_fact_bearing:
                     # Provider under-typed a fact-bearing span (e.g. labelled it
                     # DISCLOSURE). It still requires evidence: fall through into
-                    # the evidentiary checks below and record the mis-type.
-                    out.append(
-                        _f(
-                            "provider_manifest_type_mismatch",
-                            f"claim {entry.claim_id}: declared {entry.claim_type} but "
-                            f"wording classifies as fact-bearing {rendered_type}",
-                            claim_id=entry.claim_id,
-                            span=span,
-                            severity=ValidatorSeverity.ADVISORY,
+                    # the evidentiary checks below and record the mis-type -
+                    # unless the source-less redundant-wrapper reconciliation at
+                    # 15b will account for it (avoid a duplicate advisory).
+                    if not (
+                        not entry.licensed_source_ids
+                        and _redundant_wrapper_reconciled(entry, cand, env)
+                    ):
+                        out.append(
+                            _f(
+                                "provider_manifest_type_mismatch",
+                                f"claim {entry.claim_id}: declared {entry.claim_type} but "
+                                f"wording classifies as fact-bearing {rendered_type}",
+                                claim_id=entry.claim_id,
+                                span=span,
+                                severity=ValidatorSeverity.ADVISORY,
+                            )
                         )
-                    )
                 elif entry.claim_type not in _checked_types:
                     continue
             elif entry.claim_type not in _checked_types:
@@ -1577,7 +1751,35 @@ class OutputValidator:
 
             # 15b. declared sources exist
             resolved = [env.source_by_id(sid) for sid in entry.licensed_source_ids]
-            if any(r is None for r in resolved) or not entry.licensed_source_ids:
+            if not entry.licensed_source_ids:
+                # (owner authorization 2026-09-02 "AUTHORIZE BOUNDED
+                # REDUNDANT-MANIFEST RECONCILIATION") a source-less entry is
+                # exempt ONLY as a redundant wrapper whose every substantive unit
+                # is independently and validly licensed by finer-grained sibling
+                # entries and which itself adds nothing. Deterministic; the
+                # provider's declared claim_type is not trusted.
+                if self._v2 and _redundant_wrapper_reconciled(entry, cand, env):
+                    out.append(
+                        _f(
+                            "provider_manifest_type_mismatch",
+                            f"claim {entry.claim_id}: source-less wrapper span fully "
+                            f"reconciled by sibling entries; adds no independent "
+                            f"unsupported claim",
+                            claim_id=entry.claim_id,
+                            span=span,
+                            severity=ValidatorSeverity.ADVISORY,
+                        )
+                    )
+                    continue
+                out.append(
+                    _f(
+                        "claim_manifest_source_mismatch",
+                        f"claim {entry.claim_id} cites an unknown or empty source",
+                        claim_id=entry.claim_id,
+                    )
+                )
+                continue
+            if any(r is None for r in resolved):
                 out.append(
                     _f(
                         "claim_manifest_source_mismatch",
