@@ -125,6 +125,11 @@ VALID_NON_ERROR_TERMINALS: frozenset[CommunicationOutcome] = frozenset(
 
 class ValidatorSeverity(StrEnum):
     HARD_FAILURE = "hard_failure"
+    # Advisory (owner authorization 2026-09-02, sections 5/6): a finding that
+    # affects COMMUNICATION_QUALITY but is NOT a safety/validation failure and
+    # does not by itself cause a candidate FAIL or NOT_CERTIFIED. Used only under
+    # the validator's v2 contract.
+    ADVISORY = "advisory"
 
 
 # --------------------------------------------------------------------------

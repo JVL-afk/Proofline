@@ -605,3 +605,340 @@ def test_prompt_injection_still_caught_under_v2() -> None:
     cand = _minimal(s05, inj)
     codes = _codes(s05, cand, V2)
     assert "injection_derived_instruction" in codes or "prohibited_claim" in codes
+
+
+# ===========================================================================
+# ROUND 2 (owner authorization 2026-09-02) - final deterministic corrections
+# ===========================================================================
+
+from opintel_communication.domain import ValidatorSeverity  # noqa: E402
+from opintel_communication.validator import (  # noqa: E402
+    _classify,
+    _licensed_framing_vocab,
+    _only_in_negation,
+    _stem_covered,
+)
+
+_REC_ID = "rec-structured-acknowledgement"
+
+
+def _s01_rec_body(span: str) -> str:
+    return (
+        "Hello,\n\n"
+        "I came across Northgate Commercial Mechanical's public pages, including the "
+        '"Schedule Commercial Service" request path. This is not a claim about how your '
+        "team works today - we have no visibility into that.\n\n"
+        "We prepared a short deterministic simulation. " + span + " It is a simulation - "
+        "not a system deployed, connected, official, or operated by your business.\n\n"
+        "Would it be worth comparing that simulation with your actual intake process?\n\n"
+        + _PLACEHOLDERS
+    )
+
+
+# --- section 1: the deterministic engine's own usage_rule vocabulary ---------
+
+
+def test_usage_rule_vocab_consumed_only_under_v2() -> None:
+    v2v = _licensed_framing_vocab(S01, v2=True)
+    v1v = _licensed_framing_vocab(S01, v2=False)
+    # words that only appear in the recommendation / inference usage_rule text
+    for w in ("simulated", "lacks", "conditionality"):
+        assert w in v2v, w
+        assert w not in v1v, w
+
+
+# --- section 2: Rule 15c is semantic-licensing, not literal token overlap ----
+
+
+def _rec_manifest(span: str) -> list[ClaimManifestEntry]:
+    return [
+        _e("m1", ClaimType.SALUTATION, "Hello,"),
+        _e(
+            "m2",
+            ClaimType.RECOMMENDATION,
+            span,
+            sources=(_REC_ID,),
+            strength=FactStrength.LICENSED_RECOMMENDATION,
+        ),
+        _e(
+            "m3",
+            ClaimType.DISCLOSURE,
+            "This is not a claim about how your team works today - we have no "
+            "visibility into that.",
+            sources=("f-unknown",),
+        ),
+        _e(
+            "m4",
+            ClaimType.DISCLOSURE,
+            "It is a simulation - not a system deployed, connected, official, or operated by "
+            "your business.",
+        ),
+        _e(
+            "m5",
+            ClaimType.CTA,
+            "Would it be worth comparing that simulation with your actual intake process?",
+            cta_intent="PERMISSION_TO_COMPARE_SIMULATION_WITH_REAL_PROCESS",
+        ),
+        _e("m6", ClaimType.SIGNATURE_SLOT, "{{functional_role_or_team}}"),
+    ]
+
+
+def test_faithful_paraphrase_within_usage_rule_passes_15c_v2() -> None:
+    span = (
+        "a simulated intake step that acknowledges and sorts new requests could be "
+        "compared with the real process"
+    )
+    cand = _cand(
+        "A question about your commercial intake path", _s01_rec_body(span), _rec_manifest(span)
+    )
+    assert "claim_manifest_source_mismatch" in _codes(S01, cand, V1)
+    assert "claim_manifest_source_mismatch" not in _codes(S01, cand, V2)
+
+
+def test_fluent_paraphrase_that_adds_meaning_still_fails_15c_v2() -> None:
+    span = (
+        "a simulated intake step could cut your weekly overtime payroll and double booked revenue"
+    )
+    cand = _cand(
+        "A question about your commercial intake path", _s01_rec_body(span), _rec_manifest(span)
+    )
+    assert "claim_manifest_source_mismatch" in _codes(S01, cand, V2)
+
+
+def test_stem_covered_light_morphology() -> None:
+    assert _stem_covered("confirms", {"confirm"})
+    assert _stem_covered("appointments", {"appointment"})
+    assert _stem_covered("answering", {"answer"})
+    assert not _stem_covered("revenue", {"process", "simulation", "intake"})
+
+
+def test_only_in_negation_helper() -> None:
+    assert _only_in_negation("deployed", "It is a simulation and is not deployed or connected")
+    assert not _only_in_negation("deployed", "The system is deployed, and it is not finished")
+
+
+# --- section 3: numeric strings licensed by an eligible fact ----------------
+
+
+def _s02_num_manifest() -> list[ClaimManifestEntry]:
+    return [
+        _e("m1", ClaimType.SALUTATION, "Hello,"),
+        _e(
+            "m2",
+            ClaimType.FACT,
+            'a "Request a Commercial Visit" path',
+            sources=(_ref(S02, "intake_surface"), "s02-intake"),
+            strength=FactStrength.OBSERVED_PUBLIC_TEXT,
+        ),
+        _e(
+            "m3",
+            ClaimType.DISCLOSURE,
+            "This is not a claim about how your team works today - we have no "
+            "visibility into that.",
+            sources=("f-unknown",),
+        ),
+        _e(
+            "m4",
+            ClaimType.DISCLOSURE,
+            "It is a simulation - not a system deployed, connected, official, or operated by "
+            "your business.",
+        ),
+        _e(
+            "m5",
+            ClaimType.CTA,
+            "Would it be worth comparing that simulation with your actual intake process?",
+            cta_intent="PERMISSION_TO_COMPARE_SIMULATION_WITH_REAL_PROCESS",
+        ),
+        _e("m6", ClaimType.SIGNATURE_SLOT, "{{functional_role_or_team}}"),
+    ]
+
+
+def _s02_num_body(line: str) -> str:
+    return (
+        "Hello,\n\n"
+        "I came across Bayline Air Systems' public pages, which list a \"Request a "
+        'Commercial Visit" path. This is not a claim about how your team works today - '
+        "we have no visibility into that.\n\n"
+        "We prepared a short deterministic simulation. It is a simulation - not a system "
+        "deployed, connected, official, or operated by your business. " + line + "\n\n"
+        "Would it be worth comparing that simulation with your actual intake process?\n\n"
+        + _PLACEHOLDERS
+    )
+
+
+def test_licensed_24_7_numeric_string_is_supported_v2() -> None:
+    cand = _cand(
+        "A question about commercial intake",
+        _s02_num_body("Your public pages also list 24/7 emergency availability."),
+        _s02_num_manifest(),
+    )
+    assert "unsupported_number" in _codes(S02, cand, V1)
+    assert "unsupported_number" not in _codes(S02, cand, V2)
+
+
+def test_licensed_number_does_not_license_response_upgrade_v2() -> None:
+    cand = _cand(
+        "A question about commercial intake",
+        _s02_num_body("Your team responds to every commercial inquiry 24/7 within minutes."),
+        _s02_num_manifest(),
+    )
+    assert "availability_upgraded_to_response" in _codes(S02, cand, V2)
+
+
+def test_non_numeric_financial_phrase_does_not_trigger_unsupported_number_v2() -> None:
+    cand = _cand(
+        "A question about commercial intake",
+        _s02_num_body("This could lift your monthly lead volume noticeably."),
+        _s02_num_manifest(),
+    )
+    assert "unsupported_number" in _codes(S02, cand, V1)
+    assert "unsupported_number" not in _codes(S02, cand, V2)
+
+
+def test_invented_number_still_fails_v2() -> None:
+    cand = _cand(
+        "A question about commercial intake",
+        _s02_num_body("You could recover 15 booked jobs a month with this."),
+        _s02_num_manifest(),
+    )
+    assert "unsupported_number" in _codes(S02, cand, V2)
+
+
+# --- section 4: manifest claim_type reconciliation --------------------------
+
+
+def test_provider_overtyped_disclosure_as_fact_is_advisory_v2() -> None:
+    # m6 wording ("...synthetic...") deterministically classifies DISCLOSURE;
+    # the provider mislabelled it FACT with no source.
+    man = [
+        e if e.claim_id != "m6" else _e("m6", ClaimType.FACT, e.rendered_span)
+        for e in _DEMO_MANIFEST_OK
+    ]
+    cand = _cand("A question about your commercial intake path", _DEMO_BODY_OK, man)
+    result = V2.validate(S06, cand)
+    codes = {f.code for f in result.findings}
+    assert "provider_manifest_type_mismatch" in codes
+    mm = [f for f in result.findings if f.code == "provider_manifest_type_mismatch"]
+    assert all(f.severity == ValidatorSeverity.ADVISORY for f in mm)
+    # the mis-type does not manufacture an evidentiary failure for that row
+    assert "claim_manifest_source_mismatch" not in codes
+    # v1 hard-fails the same row
+    assert "claim_manifest_source_mismatch" in _codes(S06, cand, V1)
+
+
+def test_provider_undertyped_fact_as_disclosure_still_needs_evidence_v2() -> None:
+    span = 'Your site lists a "Schedule Commercial Service" request path'
+    body = _s01_rec_body(span + ".")
+    man = [
+        _e("m1", ClaimType.SALUTATION, "Hello,"),
+        _e("m2", ClaimType.DISCLOSURE, span),  # mislabelled + empty sources
+        _e(
+            "m3",
+            ClaimType.DISCLOSURE,
+            "This is not a claim about how your team works today - we have no "
+            "visibility into that.",
+            sources=("f-unknown",),
+        ),
+        _e(
+            "m4",
+            ClaimType.DISCLOSURE,
+            "It is a simulation - not a system deployed, connected, official, or operated by "
+            "your business.",
+        ),
+        _e(
+            "m5",
+            ClaimType.CTA,
+            "Would it be worth comparing that simulation with your actual intake process?",
+            cta_intent="PERMISSION_TO_COMPARE_SIMULATION_WITH_REAL_PROCESS",
+        ),
+        _e("m6", ClaimType.SIGNATURE_SLOT, "{{functional_role_or_team}}"),
+    ]
+    cand = _cand("A question about your commercial intake path", body, man)
+    codes = _codes(S01, cand, V2)
+    assert "provider_manifest_type_mismatch" in codes
+    assert "claim_manifest_source_mismatch" in codes
+
+
+def test_simulation_prep_sentence_classifies_as_disclosure() -> None:
+    for clause in (
+        "This would be a simulation prepared from public information",
+        "It uses synthetic example inputs, not real customer data",
+    ):
+        assert _classify(clause, contract="v2") == ClaimType.DISCLOSURE
+        assert _classify(clause, contract="v1") == ClaimType.DISCLOSURE
+
+
+# --- section 5: no_company_specific_evidence is advisory -------------------
+
+
+def test_no_company_specific_evidence_is_advisory_under_v2_only() -> None:
+    body = "Your team may benefit from evaluating an inbound acknowledgement opportunity."
+    cand = _minimal(S06, body)
+    v2f = [f for f in V2.validate(S06, cand).findings if f.code == "no_company_specific_evidence"]
+    v1f = [f for f in V1.validate(S06, cand).findings if f.code == "no_company_specific_evidence"]
+    assert v2f and v2f[0].severity == ValidatorSeverity.ADVISORY
+    assert v1f and v1f[0].severity == ValidatorSeverity.HARD_FAILURE
+
+
+def test_advisory_only_findings_do_not_fail_the_candidate_v2() -> None:
+    # the canonical OK demo candidate carries only advisory findings under v2
+    cand = _cand("A question about your commercial intake path", _DEMO_BODY_OK, _DEMO_MANIFEST_OK)
+    result = V2.validate(S06, cand)
+    assert result.passed
+    assert all(f.severity == ValidatorSeverity.ADVISORY for f in result.findings)
+
+
+def test_possessive_site_clause_is_company_specific_v2() -> None:
+    clause = (
+        "Northgate Commercial Mechanical's public site lists a Schedule Commercial "
+        "Service request path"
+    )
+    assert _classify(clause, contract="v2") == ClaimType.FACT
+    assert _classify(clause, contract="v1") == ClaimType.NON_SUBSTANTIVE
+
+
+def test_generic_category_overlap_alone_is_not_company_specific_v2() -> None:
+    body = "Your business runs commercial HVAC service work across your service area."
+    cand = _minimal(S06, body)
+    assert "no_company_specific_evidence" in _codes(S06, cand, V2)
+
+
+# --- section 7: zero-tolerance invariants still hold ----------------------
+
+
+@pytest.mark.parametrize(
+    ("line", "expect"),
+    [
+        ("Our internal fit score for your business is in the high band.", "internal_score_leak"),
+        (
+            "Reach me directly at owner@example-vendor.com to get started.",
+            "person_or_contact_present",
+        ),
+    ],
+)
+def test_more_zero_tolerance_invariants_still_fail_v2(line: str, expect: str) -> None:
+    cand = _cand(
+        "A question about commercial intake",
+        "Hello,\n\n" + line + "\n\nIt is a simulation - not a system deployed, connected, "
+        "official, or operated by your business.\n\n"
+        "Would it be worth comparing that simulation with your actual intake process?\n\n"
+        + _PLACEHOLDERS,
+        [
+            _e("m1", ClaimType.SALUTATION, "Hello,"),
+            _e("m2", ClaimType.NON_SUBSTANTIVE, line),
+            _e(
+                "m3",
+                ClaimType.DISCLOSURE,
+                "It is a simulation - not a system deployed, connected, official, or operated by "
+                "your business.",
+            ),
+            _e(
+                "m4",
+                ClaimType.CTA,
+                "Would it be worth comparing that simulation with your actual intake process?",
+                cta_intent="PERMISSION_TO_COMPARE_SIMULATION_WITH_REAL_PROCESS",
+            ),
+            _e("m5", ClaimType.SIGNATURE_SLOT, "{{functional_role_or_team}}"),
+        ],
+    )
+    assert expect in _codes(S06, cand, V2)

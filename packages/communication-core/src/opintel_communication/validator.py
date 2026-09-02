@@ -35,6 +35,7 @@ from opintel_communication.domain import (
     SemanticEnvelope,
     ValidationResult,
     ValidatorFinding,
+    ValidatorSeverity,
     strength_at_most,
 )
 from opintel_communication.policy import (
@@ -204,6 +205,70 @@ _V2_DISCLOSURE_NOT_DEPLOYED = re.compile(
     re.IGNORECASE,
 )
 
+# Round 2 (owner authorization 2026-09-02). All consulted ONLY under v2.
+
+# (section 5/6) findings that affect COMMUNICATION_QUALITY but are NOT a
+# safety/validation failure - they do not by themselves fail a candidate or
+# force NOT_CERTIFIED.
+_V2_ADVISORY_CODES: frozenset[str] = frozenset(
+    {"no_company_specific_evidence", "provider_manifest_type_mismatch"}
+)
+
+# (section 5) ubiquitous category words that appear in almost every fixture's
+# fact vocabulary AND in the business display name - overlap with these alone is
+# name-only personalization, not substantive company-specific evidence.
+_GENERIC_FACT_WORDS: frozenset[str] = frozenset(
+    {
+        "commercial",
+        "hvac",
+        "service",
+        "services",
+        "business",
+        "company",
+        "work",
+        "system",
+        "systems",
+    }
+)
+
+
+def _licensed_numeric_strings(env: SemanticEnvelope) -> set[str]:
+    """Numeric tokens/strings that appear verbatim in an eligible licensed
+    fact - e.g. '24/7' from a '24/7 Emergency Service' fact."""
+    out: set[str] = set()
+    for fact in env.eligible_company_facts:
+        if fact.injection_suspected:
+            continue
+        for text in (fact.sanitized_phrase, fact.verbatim_source_phrase):
+            out |= set(re.findall(r"\d[\d/:.\-]*\d|\d", text))
+    return out
+
+
+def _stem(word: str) -> str:
+    """Crude, deterministic light morphology for source-licensing checks only."""
+    for suf in ("ies", "ied", "ing", "ers", "er", "ed", "es", "s"):
+        if word.endswith(suf) and len(word) - len(suf) >= 3:
+            base = word[: -len(suf)]
+            return base + "y" if suf in ("ies", "ied") else base
+    return word
+
+
+def _stem_covered(word: str, vocab: set[str]) -> bool:
+    s = _stem(word)
+    return s in vocab or any(_stem(v) == s for v in vocab)
+
+
+def _only_in_negation(word: str, span: str) -> bool:
+    """True when every occurrence of ``word`` in ``span`` is governed by an
+    explicit negation - it cannot be evidence that an AFFIRMATIVE claim is
+    licensed by the cited source."""
+    low = span.lower()
+    positions = [m.start() for m in re.finditer(rf"\b{re.escape(word)}\b", low)]
+    if not positions:
+        return False
+    return all(_STRONG_NEG.search(low[max(0, p - 42) : p]) for p in positions)
+
+
 # (3c) attribution cues: a clause that explicitly frames a statement as the
 # business's own published words is a PUBLISHED_SELF_CLAIM, not a VERIFIED_FACT,
 # even when it contains a response verb.
@@ -228,6 +293,14 @@ _OBSERVATION_SUBJECTS = re.compile(
     r"reference|highlight|note|feature|invite|have|give|respond|answer|reply|handle|"
     r"never|always|are|do)|"
     r"the captured public pages|the public (?:site|pages|website))\b",
+    re.IGNORECASE,
+)
+# (section 5) "<Business Name>'s public site / pages" - a legitimate observation
+# whose subject is the business's own web presence, not the pronoun "your".
+_POSSESSIVE_SITE = re.compile(
+    r"\b[a-z][\w&.'\- ]{1,45}(?:'s|\u2019s|s')\s+"
+    r"(?:public\s+|company\s+|own\s+)?"
+    r"(?:site|website|web\s?site|pages?|homepage|home\s?page|contact\s?page|online\s+presence)\b",
     re.IGNORECASE,
 )
 # Any clause that makes an assertion whose grammatical subject is the business.
@@ -294,7 +367,7 @@ def _split_clauses(text: str) -> list[str]:
     return clauses
 
 
-def _classify(clause: str) -> ClaimType:
+def _classify(clause: str, *, contract: str = "v1") -> ClaimType:
     low = clause.lower()
     if _PLACEHOLDER.fullmatch(clause.strip()):
         return ClaimType.SIGNATURE_SLOT
@@ -313,6 +386,10 @@ def _classify(clause: str) -> ClaimType:
     if _INFERENCE_CUES.search(clause):
         return ClaimType.INFERENCE
     if _OBSERVATION_SUBJECTS.search(clause) or _BUSINESS_ASSERTION.search(clause):
+        return ClaimType.FACT
+    if contract == "v2" and _POSSESSIVE_SITE.search(clause):
+        # (section 5) "<Business Name>'s public site describes X" is a public-text
+        # observation, not filler.
         return ClaimType.FACT
     if _TRANSITION_CUES.search(clause):
         return ClaimType.TRANSITION
@@ -367,6 +444,17 @@ def _licensed_framing_vocab(env: SemanticEnvelope, *, v2: bool = False) -> set[s
         words |= {"www", "http", "https"}
         for token in env.business_identity.name_tokens:
             words |= _content_words(token)
+        # (section 1) the deterministic engine's OWN usage_rule fields are
+        # authoritative about how a finding / inference / recommendation MAY be
+        # phrased. Language the rule explicitly permits ("compare a simulated
+        # intake step with the real process") is licensed. This is bounded to
+        # the envelope's own rule text - it is not a free-paraphrase bypass.
+        for finding in env.m3_findings:
+            words |= _content_words(getattr(finding, "usage_rule", "") or "")
+        for inference in env.allowed_conditional_inferences:
+            words |= _content_words(getattr(inference, "usage_rule", "") or "")
+        for rec in env.allowed_recommendations:
+            words |= _content_words(getattr(rec, "usage_rule", "") or "")
     return words
 
 
@@ -733,6 +821,7 @@ class OutputValidator:
         self, envelope: SemanticEnvelope, candidate: GenerationCandidate
     ) -> ValidationResult:
         findings: list[ValidatorFinding] = []
+        cc = "v2" if self._v2 else "v1"  # (section 5) contract for _classify
         framing = _licensed_framing_vocab(envelope, v2=self._v2) | _SAFE_FRAMING_VOCAB
         fact_words = _fact_vocab(envelope)
         allowed_vocab = framing | fact_words
@@ -759,7 +848,7 @@ class OutputValidator:
                         "first_contact_email",
                     )
                 )
-            cta_clauses = [c for c in clauses if _classify(c) == ClaimType.CTA]
+            cta_clauses = [c for c in clauses if _classify(c, contract=cc) == ClaimType.CTA]
             if len(cta_clauses) != 1:
                 findings.append(
                     _f(
@@ -811,15 +900,38 @@ class OutputValidator:
         # 4. numbers / financial values -------------------------------
         stripped = _PLACEHOLDER.sub(" ", full_external)
         stripped = _QUOTED.sub(" ", stripped)  # digits inside a quoted fact phrase are that fact's
-        if FINANCIAL_EXTERNAL.search(stripped):
-            findings.append(
-                _f("unsupported_number", "external text contains a financial value or quantity")
-            )
-        elif re.search(r"(?<!\d)\d+(?!\d)", stripped):
-            # bare digits outside placeholders and quoted fact phrases
-            findings.append(
-                _f("unsupported_number", "external text contains an unsupported number")
-            )
+        if self._v2:
+            # (section 3) a numeric string that appears verbatim in an eligible
+            # licensed fact is supported - e.g. "24/7" from a "24/7 Emergency
+            # Service" SERVICE_AVAILABILITY fact. It supports availability
+            # language only; "respond 24/7" is still caught by the
+            # AVAILABILITY_TO_RESPONSE concept scan (rule 8), unchanged.
+            licensed_nums = _licensed_numeric_strings(envelope)
+            for n in licensed_nums:
+                stripped = re.sub(re.escape(n), " ", stripped)
+            fin = FINANCIAL_EXTERNAL.search(stripped)
+            # a FINANCIAL_EXTERNAL hit is an unsupported NUMBER only when it
+            # actually carries a digit / currency / percent; bare economic
+            # vocabulary ("lead volume") is an economic-CLAIM concern handled by
+            # the QUANTIFIED_BENEFIT concept scan, not by this number rule.
+            if fin and re.search(r"[\d$£€%]", fin.group(0)):
+                findings.append(
+                    _f("unsupported_number", "external text contains a financial value or quantity")
+                )
+            elif re.search(r"(?<!\d)\d+(?!\d)", stripped):
+                findings.append(
+                    _f("unsupported_number", "external text contains an unsupported number")
+                )
+        else:
+            if FINANCIAL_EXTERNAL.search(stripped):
+                findings.append(
+                    _f("unsupported_number", "external text contains a financial value or quantity")
+                )
+            elif re.search(r"(?<!\d)\d+(?!\d)", stripped):
+                # bare digits outside placeholders and quoted fact phrases
+                findings.append(
+                    _f("unsupported_number", "external text contains an unsupported number")
+                )
 
         # 5. internal score leak -------------------------------------
         if _SCORE_LEAK.search(full_external) or re.search(
@@ -879,7 +991,7 @@ class OutputValidator:
         prose_clauses = [
             c
             for c in clauses
-            if _classify(c) not in (ClaimType.SALUTATION, ClaimType.SIGNATURE_SLOT)
+            if _classify(c, contract=cc) not in (ClaimType.SALUTATION, ClaimType.SIGNATURE_SLOT)
         ]
         _fold_ok = {"AVAILABILITY_TO_RESPONSE", "RESPONSE_PERFORMANCE_ASSERTED"}
         for clause in prose_clauses:
@@ -925,7 +1037,7 @@ class OutputValidator:
         # 9. CTA semantic consistency (ADR-0067) ------------------
         _cta_contract = "v2" if self._v2 else "v1"
         for clause in clauses:
-            if _classify(clause) != ClaimType.CTA:
+            if _classify(clause, contract=cc) != ClaimType.CTA:
                 continue
             for reason in cta_semantic_consistency(
                 clause, envelope.structured_cta, contract=_cta_contract
@@ -1004,7 +1116,8 @@ class OutputValidator:
         substantive = [
             c
             for c in clauses
-            if _classify(c) in (ClaimType.FACT, ClaimType.INFERENCE, ClaimType.RECOMMENDATION)
+            if _classify(c, contract=cc)
+            in (ClaimType.FACT, ClaimType.INFERENCE, ClaimType.RECOMMENDATION)
         ]
         company_specific_clauses = 0
         for clause in substantive:
@@ -1025,10 +1138,17 @@ class OutputValidator:
                         span=clause,
                     )
                 )
-            if words & fact_words:
+            # (section 5) under v2 a clause counts as company-specific only when
+            # it shares a NON-GENERIC fact word with the envelope; a clause whose
+            # only overlap is "commercial"/"hvac"/"service"/... is commercially
+            # generic, not personalized.
+            fact_hits = words & fact_words
+            if self._v2:
+                fact_hits = fact_hits - _GENERIC_FACT_WORDS
+            if fact_hits:
                 company_specific_clauses += 1
             # conditional preservation for inference/recommendation clauses
-            if _classify(clause) in (ClaimType.INFERENCE, ClaimType.RECOMMENDATION):
+            if _classify(clause, contract=cc) in (ClaimType.INFERENCE, ClaimType.RECOMMENDATION):
                 low = clause.lower()
                 if not any(cue in low for cue in CONDITIONAL_CUES):
                     findings.append(
@@ -1041,11 +1161,18 @@ class OutputValidator:
                     )
 
         # 13. name-only personalization ----------------------
+        # (section 5, owner decision 2026-09-02) safe-but-generic prose is a
+        # COMMUNICATION_QUALITY concern, not a safety failure: under v2 this is
+        # ADVISORY and never by itself fails a candidate or the run. Human review
+        # and M6.8-4 may still reject WEAK / NOT_DISTINCTIVE output.
         if company_specific_clauses == 0:
             findings.append(
                 _f(
                     "no_company_specific_evidence",
                     "no substantive clause is company-specific beyond the display name",
+                    severity=(
+                        ValidatorSeverity.ADVISORY if self._v2 else ValidatorSeverity.HARD_FAILURE
+                    ),
                 )
             )
 
@@ -1115,7 +1242,14 @@ class OutputValidator:
                         )
                     )
 
-        passed = not findings
+        # (sections 5/6) under v2, an ADVISORY finding records a
+        # COMMUNICATION_QUALITY concern but never by itself fails the candidate
+        # or the run. Under v1 every finding is a hard failure (byte-identical
+        # legacy behaviour). All findings are retained on the result either way.
+        if self._v2:
+            passed = not any(f.severity != ValidatorSeverity.ADVISORY for f in findings)
+        else:
+            passed = not findings
         return ValidationResult(
             candidate_id=candidate.candidate_id,
             passed=passed,
@@ -1134,11 +1268,9 @@ class OutputValidator:
         licensed_source_kinds: set[str],
     ) -> list[ValidatorFinding]:
         out: list[ValidatorFinding] = []
-        substantive = [
-            c
-            for c in clauses
-            if _classify(c) in (ClaimType.FACT, ClaimType.INFERENCE, ClaimType.RECOMMENDATION)
-        ]
+        cc = "v2" if self._v2 else "v1"
+        _FACT_BEARING = (ClaimType.FACT, ClaimType.INFERENCE, ClaimType.RECOMMENDATION)
+        substantive = [c for c in clauses if _classify(c, contract=cc) in _FACT_BEARING]
 
         # 15a. every substantive rendered clause is represented in the manifest
         for clause in substantive:
@@ -1174,10 +1306,58 @@ class OutputValidator:
             )
         )
         for entry in cand.claim_manifest.entries:
-            if entry.claim_type not in _checked_types:
-                continue
             span = _norm(entry.rendered_span)
             span_words = _content_words(span)
+
+            # (section 4) reconcile the provider's declared claim_type with the
+            # deterministic classification of the wording it actually rendered.
+            if self._v2:
+                rendered_type = _classify(span, contract=cc)
+                declared_fact_bearing = entry.claim_type in _FACT_BEARING
+                rendered_fact_bearing = rendered_type in _FACT_BEARING
+                if declared_fact_bearing and rendered_type in (
+                    ClaimType.DISCLOSURE,
+                    ClaimType.QUESTION,
+                    ClaimType.CTA,
+                    ClaimType.SALUTATION,
+                    ClaimType.SIGNATURE_SLOT,
+                ):
+                    # Provider over-typed a disclosure / question / CTA /
+                    # structural sentence as a fact. The deterministic classifier
+                    # affirmatively recognises it as non-fact-bearing, so it
+                    # needs no evidentiary licensing - the mis-type is recorded
+                    # as an advisory manifest/schema finding. (A span the
+                    # classifier is merely UNSURE about - NON_SUBSTANTIVE /
+                    # TRANSITION - is NOT waived: it still runs the checks below.)
+                    out.append(
+                        _f(
+                            "provider_manifest_type_mismatch",
+                            f"claim {entry.claim_id}: declared {entry.claim_type} but "
+                            f"wording classifies as {rendered_type}",
+                            claim_id=entry.claim_id,
+                            span=span,
+                            severity=ValidatorSeverity.ADVISORY,
+                        )
+                    )
+                    continue
+                if not declared_fact_bearing and rendered_fact_bearing:
+                    # Provider under-typed a fact-bearing span (e.g. labelled it
+                    # DISCLOSURE). It still requires evidence: fall through into
+                    # the evidentiary checks below and record the mis-type.
+                    out.append(
+                        _f(
+                            "provider_manifest_type_mismatch",
+                            f"claim {entry.claim_id}: declared {entry.claim_type} but "
+                            f"wording classifies as fact-bearing {rendered_type}",
+                            claim_id=entry.claim_id,
+                            span=span,
+                            severity=ValidatorSeverity.ADVISORY,
+                        )
+                    )
+                elif entry.claim_type not in _checked_types:
+                    continue
+            elif entry.claim_type not in _checked_types:
+                continue
 
             # 15b. declared sources exist
             resolved = [env.source_by_id(sid) for sid in entry.licensed_source_ids]
@@ -1212,10 +1392,28 @@ class OutputValidator:
                         if entry.claim_type == ClaimType.INFERENCE
                         else FactStrength.LICENSED_RECOMMENDATION
                     )
+                # (section 2) a source's usage_rule is part of what it licenses:
+                # a faithful paraphrase that stays within the usage rule is
+                # covered. Only consulted under v2.
+                if self._v2:
+                    source_words |= _content_words(getattr(src, "usage_rule", "") or "")
             # A CTA entry's meaning is checked by cta_semantic_consistency, not by
             # source-word overlap - skip 15c/15e for it.
             if entry.claim_type != ClaimType.CTA:
                 span_specific = span_words - allowed_vocab - source_words
+                if self._v2 and span_specific:
+                    # (section 2) bounded semantic licensing: light morphology
+                    # (confirm/confirms) counts as covered, and a word that
+                    # occurs in the span ONLY inside a semantic negation is not
+                    # evidence of an added claim. A fluent paraphrase that adds
+                    # >_MAX_UNLICENSED_WORDS genuinely-new content words still
+                    # fails.
+                    span_specific = {
+                        w
+                        for w in span_specific
+                        if not _stem_covered(w, source_words | allowed_vocab)
+                        and not _only_in_negation(w, span)
+                    }
                 if span_words and len(span_specific) > _MAX_UNLICENSED_WORDS:
                     out.append(
                         _f(
@@ -1386,10 +1584,13 @@ def _f(
     span: str | None = None,
     concept: str | None = None,
     claim_id: str | None = None,
+    *,
+    severity: ValidatorSeverity = ValidatorSeverity.HARD_FAILURE,
 ) -> ValidatorFinding:
     return ValidatorFinding(
         code=code,
         message=message,
+        severity=severity,
         artifact_kind=artifact_kind,
         span=span[:200] if span else None,
         concept=concept,

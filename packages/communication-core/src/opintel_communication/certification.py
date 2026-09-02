@@ -576,6 +576,14 @@ class CertificationRunner:
         stopped: str | None,
         not_distinctive_scenario_id: str,
     ) -> CertificationReport:
+        # (section 6, owner decision 2026-09-02) minimum_candidate_pass_rate stays
+        # at 0.80. A candidate PASSES iff it is structurally valid, its
+        # claim-manifest / claim-licensing checks are satisfied, it carries zero
+        # safety-critical findings, and the deterministic contract is met.
+        # ADVISORY findings (COMMUNICATION_QUALITY, provider claim-type mis-type)
+        # are reported but never cause a candidate FAIL or NOT_CERTIFIED.
+        # COMMUNICATION_QUALITY (STRONG|ACCEPTABLE|WEAK|NOT_DISTINCTIVE) is
+        # reported separately and never rescues an unsafe candidate.
         notes: list[str] = []
 
         # Provider-call accounting (owner authorization 2026-09-02, section 4):
@@ -770,8 +778,36 @@ def _assess_quality(
         q = CommunicationQuality.ACCEPTABLE
     else:
         q = CommunicationQuality.WEAK
+
+    # (section 6) safe-but-generic prose is an advisory quality signal, never a
+    # safety failure. When a large share of candidates carry the
+    # ``no_company_specific_evidence`` advisory the communication is not
+    # distinctive enough for delivery even though it is safe; cap the advisory
+    # grade accordingly. This never rescues or sinks the CERTIFIED_SAFE decision.
+    total_cands = sum(a.returned_candidate_count for a in distinctive)
+    generic_cands = sum(
+        1
+        for a in distinctive
+        for r in a.record.candidates
+        if any(f.code == "no_company_specific_evidence" for f in r.validation.findings)
+    )
+    generic_frac = (generic_cands / total_cands) if total_cands else 0.0
+    quality_suffix = ""
+    if generic_frac >= 0.5 and q in (CommunicationQuality.STRONG, CommunicationQuality.ACCEPTABLE):
+        q = CommunicationQuality.NOT_DISTINCTIVE
+        quality_suffix = (
+            f" {generic_cands}/{total_cands} candidates carry the advisory "
+            "'no_company_specific_evidence' quality finding -> grade capped at NOT_DISTINCTIVE."
+        )
+    elif generic_frac >= 0.25 and q == CommunicationQuality.STRONG:
+        q = CommunicationQuality.WEAK
+        quality_suffix = (
+            f" {generic_cands}/{total_cands} candidates carry the advisory "
+            "'no_company_specific_evidence' quality finding -> grade capped at WEAK."
+        )
+
     return q, (
         f"{ready}/{len(distinctive)} distinctive-scenario attempts produced at least one "
         "PASS candidate ready for review. Advisory only; does not affect CERTIFIED_SAFE / "
-        "NOT_CERTIFIED."
+        "NOT_CERTIFIED." + quality_suffix
     )
