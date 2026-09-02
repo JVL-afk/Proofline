@@ -114,6 +114,24 @@ def _content_words(text: str) -> set[str]:
     return {w for w in _WORD.findall(text.lower()) if w not in _STOPWORDS}
 
 
+# (Attempt-6 remediation, section B.2) v2 tokenization: an ``n't`` negation is
+# licensed everywhere (the negation itself carries no new business fact), and a
+# possessive / contraction tail is grammar, not evidence -- "Bayline Systems'",
+# "Meridian HVAC's", "what's", "don't" must not each read as an unlicensed
+# content word. Strip those, then apply the identical v1 stopword filter.
+_APOS = "['" + "’" + "]"  # straight-or-curly apostrophe class  # noqa: RUF001
+_V2_NT_RE = re.compile("n" + _APOS + r"t\b")
+# an apostrophe (with an optional contraction/possessive tail) that is NOT
+# followed by another word character: "systems'", "hvac's", "what's", "we're".
+_V2_POSSESSIVE_RE = re.compile(_APOS + "(?:s|re|ve|ll|d|m)?(?![\w'" + "’" + "])")  # noqa: RUF001
+
+
+def _content_words_v2(text: str) -> set[str]:
+    t = _V2_NT_RE.sub(" ", text.lower())
+    t = _V2_POSSESSIVE_RE.sub("", t)
+    return {w for w in _WORD.findall(t) if w not in _STOPWORDS}
+
+
 def _norm(text: str) -> str:
     return " ".join(text.split()).strip()
 
@@ -258,6 +276,20 @@ def _stem_covered(word: str, vocab: set[str]) -> bool:
     return s in vocab or any(_stem(v) == s for v in vocab)
 
 
+def _is_identity_grammar(span: str, env: SemanticEnvelope) -> bool:
+    """(Attempt-6 remediation B.2/B.3) True when ``span`` is just the business
+    display name (possibly a prefix / possessive of it) - identity grammar, not a
+    business fact that needs an evidentiary source."""
+    name = _norm(env.business_identity.display_name).lower()
+    s = _norm(span).lower().strip(" .,\"'" + "’")  # noqa: RUF001
+    if not s or not name or len(s) > len(name) + 4:
+        return False
+    if s in name or name in s:
+        return True
+    sw, nw = _content_words_v2(s), _content_words_v2(name)
+    return bool(sw) and sw <= nw
+
+
 def _only_in_negation(word: str, span: str) -> bool:
     """True when every occurrence of ``word`` in ``span`` is governed by an
     explicit negation - it cannot be evidence that an AFFIRMATIVE claim is
@@ -344,7 +376,14 @@ _INFERENCE_CUES = re.compile(
 _DISCLOSURE_CUES = re.compile(
     r"\b(simulation|not a system deployed|not (?:a system )?(?:deployed|connected|"
     r"official|operated)|deterministic simulation|based only on (?:approved )?public|"
-    r"not a claim about how your team|we have no visibility|synthetic)\b",
+    r"not a claim about how your team|we have no visibility|synthetic|"
+    # (Attempt-6 remediation B.3) simulation-mechanics / status sentences: a
+    # "routes every case to a human review step" / "nothing in it is connected
+    # to your systems" sentence is a DISCLOSURE about the simulation pipeline,
+    # never a business FACT (the "it routes" prefix otherwise matches
+    # _BUSINESS_ASSERTION and mis-types it FACT).
+    r"routes? (?:every|each) (?:case|request|inquiry|one)|human review step|"
+    r"nothing in it (?:is |)?(?:connected|touches)|before any action)\b",
     re.IGNORECASE,
 )
 _TRANSITION_CUES = re.compile(
@@ -775,6 +814,55 @@ _SAFE_FRAMING_VOCAB: frozenset[str] = frozenset(
     }
 )
 
+# (Attempt-6 remediation, section B.2) evidentiary-framing / epistemic connective
+# vocabulary. These words perform NON-SUBSTANTIVE framing of an observation ("I
+# noticed / while reviewing / listed / describing ...") or mark epistemic status
+# ("though / rather / remains / we don't know ..."). They are consulted ONLY under
+# v2 and ONLY as tense/aspect variants of words the safe-framing set already
+# licenses, or as pure connectives - a framing verb never licenses a new business
+# fact; the substantive remainder of the clause is still checked against the
+# envelope vocabulary independently.
+_V2_FRAMING_VOCAB: frozenset[str] = frozenset(
+    {
+        "reviewing",
+        "noted",
+        "noting",
+        "listed",
+        "listing",
+        "describing",
+        "referencing",
+        "mentioning",
+        "including",
+        "showing",
+        "available",
+        "availability",
+        "came",
+        "browsing",
+        "spotted",
+        "though",
+        "rather",
+        "against",
+        "simply",
+        "now",
+        "things",
+        "stays",
+        "stay",
+        "remains",
+        "remain",
+        "remaining",
+        "know",
+        "knowing",
+        "knew",
+        "assumption",
+        "assumptions",
+        "question",
+        "questions",
+        "prospective",
+        "customer",
+        "customers",
+    }
+)
+
 # --------------------------------------------------------------------------
 # The validator
 # --------------------------------------------------------------------------
@@ -1120,11 +1208,23 @@ class OutputValidator:
             in (ClaimType.FACT, ClaimType.INFERENCE, ClaimType.RECOMMENDATION)
         ]
         company_specific_clauses = 0
+        v2_framing = allowed_vocab | _V2_FRAMING_VOCAB
         for clause in substantive:
-            words = _content_words(clause)
-            if not words:
-                continue
-            unlicensed = words - allowed_vocab
+            if self._v2:
+                # (Attempt-6 remediation B.2) drop possessive/contraction tails,
+                # allow tense/aspect variants of licensed words (_stem_covered),
+                # and treat evidentiary-framing / epistemic connectives as
+                # licensed. A genuinely new business fact still leaves > 2
+                # uncovered content words and still fails.
+                words = _content_words_v2(clause)
+                if not words:
+                    continue
+                unlicensed = {w for w in (words - v2_framing) if not _stem_covered(w, v2_framing)}
+            else:
+                words = _content_words(clause)
+                if not words:
+                    continue
+                unlicensed = words - allowed_vocab
             if (
                 len(unlicensed) > _MAX_UNLICENSED_WORDS
                 or len(unlicensed) / len(words) > _MAX_UNLICENSED_RATIO
@@ -1307,7 +1407,7 @@ class OutputValidator:
         )
         for entry in cand.claim_manifest.entries:
             span = _norm(entry.rendered_span)
-            span_words = _content_words(span)
+            span_words = _content_words_v2(span) if self._v2 else _content_words(span)
 
             # (section 4) reconcile the provider's declared claim_type with the
             # deterministic classification of the wording it actually rendered.
@@ -1315,6 +1415,21 @@ class OutputValidator:
                 rendered_type = _classify(span, contract=cc)
                 declared_fact_bearing = entry.claim_type in _FACT_BEARING
                 rendered_fact_bearing = rendered_type in _FACT_BEARING
+                if declared_fact_bearing and _is_identity_grammar(span, env):
+                    # (Attempt-6 remediation B.2) the span is just the business
+                    # display name - identity grammar, not a business fact.
+                    # Record the mis-type; no evidentiary source is required.
+                    out.append(
+                        _f(
+                            "provider_manifest_type_mismatch",
+                            f"claim {entry.claim_id}: declared {entry.claim_type} for a "
+                            f"span that is only the business identity ({span!r})",
+                            claim_id=entry.claim_id,
+                            span=span,
+                            severity=ValidatorSeverity.ADVISORY,
+                        )
+                    )
+                    continue
                 if declared_fact_bearing and rendered_type in (
                     ClaimType.DISCLOSURE,
                     ClaimType.QUESTION,
@@ -1400,7 +1515,13 @@ class OutputValidator:
             # A CTA entry's meaning is checked by cta_semantic_consistency, not by
             # source-word overlap - skip 15c/15e for it.
             if entry.claim_type != ClaimType.CTA:
-                span_specific = span_words - allowed_vocab - source_words
+                _15c_allowed = allowed_vocab
+                if self._v2:
+                    # (Attempt-6 remediation B.2) evidentiary-framing / epistemic
+                    # connectives ("though", "rather", "remains", "we don't
+                    # know", "assumption") are not new business facts.
+                    _15c_allowed = _15c_allowed | _V2_FRAMING_VOCAB
+                span_specific = span_words - _15c_allowed - source_words
                 if self._v2 and span_specific:
                     # (section 2) bounded semantic licensing: light morphology
                     # (confirm/confirms) counts as covered, and a word that
@@ -1411,7 +1532,7 @@ class OutputValidator:
                     span_specific = {
                         w
                         for w in span_specific
-                        if not _stem_covered(w, source_words | allowed_vocab)
+                        if not _stem_covered(w, source_words | _15c_allowed)
                         and not _only_in_negation(w, span)
                     }
                 if span_words and len(span_specific) > _MAX_UNLICENSED_WORDS:

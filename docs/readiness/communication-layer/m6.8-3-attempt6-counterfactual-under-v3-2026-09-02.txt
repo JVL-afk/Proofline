@@ -1,0 +1,19 @@
+candidates replayed: 81
+
+RECORDED @6 (=@2)  vs  POST-REMEDIATION @3
+  code                                   rec@6 | @3-hard | @3-adv
+  claim_manifest_source_mismatch            10 |       1 |      0
+  no_company_specific_evidence              35 |       0 |     35
+  provider_manifest_type_mismatch           27 |       0 |     22
+  structure_violation                       63 |      63 |      0
+  unlicensed_claim                          10 |       0 |      0
+
+total findings recorded @6 : 145
+total @3 hard              : 64
+total @3 advisory          : 57
+
+DISPOSITION (81): {'FAIL_structure_only': 57, 'PASS': 23, 'FAIL_safety': 1}
+STRUCTURE-DISCOUNTED (structure_violation = obsolete, @7 targets fix): {'would_pass': 80, 'safety': 1}
+
+remaining @3 hard failures that are NOT structure-only:
+  s01_strong_response_commitment-r8: ['claim_manifest_source_mismatch', 'structure_violation']

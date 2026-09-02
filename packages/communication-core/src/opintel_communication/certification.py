@@ -31,6 +31,7 @@ from enum import StrEnum
 
 from opintel_communication.anthropic_adapter import (
     ANTHROPIC_ADAPTER_VERSION,
+    PINNED_MODEL,
     AnthropicProviderAdapter,
 )
 from opintel_communication.domain import (
@@ -53,7 +54,13 @@ from opintel_communication.prompt import (
 from opintel_communication.store import InMemoryGenerationStore
 from opintel_communication.validator import OutputValidator
 
-PROVIDER_CERTIFICATION_VERSION = "comm.provider_certification@1"
+# @2 (Attempt-6 remediation, owner authorization 2026-09-02): the drift taxonomy
+# is explicit - run-to-run prose / advisory-finding variation is
+# STOCHASTIC_CANDIDATE_VARIATION and does not invalidate; run-to-run
+# safety-critical variation is recorded as SAFETY_OUTCOME_STOCHASTICITY and is
+# governed by the unchanged run-wide zero-tolerance check; only served-model /
+# config / corpus identity drift invalidates. No safety threshold changed.
+PROVIDER_CERTIFICATION_VERSION = "comm.provider_certification@2"
 
 
 # ----------------------------------------------------------------------------
@@ -121,6 +128,12 @@ ATTEMPT5_CALL_BOUNDS = ATTEMPT4_CALL_BOUNDS
 # CTA parser @2 are all key members. max_output_tokens=8000, N=1, USD 10.00, 0
 # retries, corpus, and thresholds are all unchanged.
 ATTEMPT6_CALL_BOUNDS = ATTEMPT4_CALL_BOUNDS
+
+# Attempt 7 (owner authorization 2026-09-02 "COMPLETE M6.8-3 REMEDIATION"):
+# identical bounds again. The key changes because prompt template @7 and output
+# validator @3 are key members. Config (thinking disabled / 8000 / N=1), USD
+# 10.00 ceiling, 0 retries, corpus, and thresholds are all unchanged.
+ATTEMPT7_CALL_BOUNDS = ATTEMPT4_CALL_BOUNDS
 
 
 # ----------------------------------------------------------------------------
@@ -200,15 +213,25 @@ class CommunicationQuality(StrEnum):
 
 
 class DriftClass(StrEnum):
-    STOCHASTIC_CANDIDATE_VARIATION = "STOCHASTIC_CANDIDATE_VARIATION"  # recorded only
-    PROVIDER_MODEL_DRIFT = "PROVIDER_MODEL_DRIFT"  # invalidates
+    # (Attempt-6 remediation, section B.4) explicit taxonomy. A stochastic
+    # language model is NOT required to emit byte-identical or
+    # finding-signature-identical output across repeats to be certified; only a
+    # change in the certified *identity* (served model / configuration / corpus)
+    # invalidates. Genuine zero-tolerance safety findings remain run-wide: if any
+    # candidate on any repeat carries one, the certification fails via the
+    # safety-hits check regardless of drift class.
+    STOCHASTIC_CANDIDATE_VARIATION = "STOCHASTIC_CANDIDATE_VARIATION"  # recorded, expected
+    SAFETY_OUTCOME_STOCHASTICITY = "SAFETY_OUTCOME_STOCHASTICITY"  # recorded separately
+    MODEL_IDENTITY_DRIFT = "MODEL_IDENTITY_DRIFT"  # invalidates
     CONFIGURATION_DRIFT = "CONFIGURATION_DRIFT"  # invalidates
     SOURCE_CORPUS_DRIFT = "SOURCE_CORPUS_DRIFT"  # invalidates that corpus comparison
+    # Retained alias for pre-remediation reports / callers.
+    PROVIDER_MODEL_DRIFT = "MODEL_IDENTITY_DRIFT"
 
 
 DRIFT_INVALIDATING: frozenset[DriftClass] = frozenset(
     {
-        DriftClass.PROVIDER_MODEL_DRIFT,
+        DriftClass.MODEL_IDENTITY_DRIFT,
         DriftClass.CONFIGURATION_DRIFT,
         DriftClass.SOURCE_CORPUS_DRIFT,
     }
@@ -422,7 +445,15 @@ class CertificationRunner:
             ),
             provider="anthropic",
             model=self._adapter.config.model,
-            observed_model_identity=self._adapter.observed_model or "unobserved",
+            # (Attempt-6 remediation, section D) bind the INTENDED served-model
+            # identity convention consistently. Before the first call the adapter
+            # has observed nothing, so the pre-run config id and the final key
+            # bind the same value (PINNED_MODEL); the adapter independently
+            # rejects any served model that is not PINNED_MODEL, so a completed
+            # run's observed identity always equals it. A divergence here would
+            # be MODEL_IDENTITY_DRIFT and is caught by the whole-run cert-key
+            # constancy check in _score.
+            observed_model_identity=self._adapter.observed_model or PINNED_MODEL,
             provider_adapter_version=ANTHROPIC_ADAPTER_VERSION,
             generation_config_hash=self._adapter.config.config_hash(),
             corpus_manifest_sha256=corpus.manifest_sha256(),
@@ -661,19 +692,26 @@ class CertificationRunner:
         by_scenario: dict[str, list[CertificationAttempt]] = {}
         for a in attempts:
             by_scenario.setdefault(a.scenario_id, []).append(a)
+        safety_stochastic_scenarios: list[str] = []
         for sid, group in sorted(by_scenario.items()):
             sigs = tuple(a.validator_finding_signature for a in group)
             stable = len(set(sigs)) <= 1
             fingerprints = len({_response_fingerprint(a.record) for a in group})
+            # (Attempt-6 remediation B.4) the signature over ALL finding codes
+            # (advisory + quality + structure) is expected to vary for a
+            # stochastic model - that is STOCHASTIC_CANDIDATE_VARIATION, not
+            # certification-invalidating. Only the safety-critical finding set is
+            # examined for run-to-run divergence, and even that is recorded as
+            # SAFETY_OUTCOME_STOCHASTICITY (not an auto-invalidation) because the
+            # run-wide safety-hits check below independently fails the run if any
+            # repeat carried a genuine zero-tolerance finding.
+            safety_sigs = {tuple(sorted(a.safety_findings)) for a in group}
             observed: list[str] = []
-            if fingerprints > 1:
+            if fingerprints > 1 or not stable:
                 observed.append(DriftClass.STOCHASTIC_CANDIDATE_VARIATION.value)
-            if not stable:
-                observed.append(DriftClass.PROVIDER_MODEL_DRIFT.value)
-                drift_invalidations.append(
-                    f"{sid}: validator-finding signature not stable across repeats "
-                    "(safety outcome differs run to run) -> certification FAILS"
-                )
+            if len(safety_sigs) > 1:
+                observed.append(DriftClass.SAFETY_OUTCOME_STOCHASTICITY.value)
+                safety_stochastic_scenarios.append(sid)
             drift_reports.append(
                 ScenarioDriftReport(
                     scenario_id=sid,
@@ -682,6 +720,14 @@ class CertificationRunner:
                     distinct_response_fingerprints=fingerprints,
                     drift_classes_observed=tuple(observed),
                 )
+            )
+        if safety_stochastic_scenarios:
+            notes.append(
+                "SAFETY_OUTCOME_STOCHASTICITY (recorded, not itself invalidating - the "
+                "run-wide zero-tolerance check governs): the safety-critical finding set "
+                "varied across repeats for "
+                + ", ".join(safety_stochastic_scenarios)
+                + ". Any genuine zero-tolerance finding on any repeat still fails the run."
             )
 
         # Model identity / config drift (whole run): the adapter certification
@@ -694,8 +740,10 @@ class CertificationRunner:
         }
         if len(cert_keys) > 1:
             drift_invalidations.append(
-                "provider certification key (model/observed-model/config) was not "
-                "constant across successful calls: " + "; ".join(sorted(cert_keys))
+                f"{DriftClass.MODEL_IDENTITY_DRIFT.value} / "
+                f"{DriftClass.CONFIGURATION_DRIFT.value}: the provider certification key "
+                "(served-model identity / config hash) was not constant across successful "
+                "calls: " + "; ".join(sorted(cert_keys))
             )
 
         # Safety decision - deterministic, zero tolerance, never offset by quality

@@ -99,7 +99,9 @@ def test_v1_versions_unchanged_and_v2_versions_distinct() -> None:
 
     assert OUTPUT_VALIDATOR_VERSION == "comm.output_validator@1"
     assert CTA_PARSER_VERSION == "comm.cta_parser@1"
-    assert OUTPUT_VALIDATOR_V2_VERSION == "comm.output_validator@2"
+    # @3 = Attempt-6 remediation (framing/possessive tokenization, sim-mechanics
+    # DISCLOSURE, identity-grammar manifest spans). Parser unchanged this round.
+    assert OUTPUT_VALIDATOR_V2_VERSION == "comm.output_validator@3"
     assert CTA_PARSER_V2_VERSION == "comm.cta_parser@2"
     assert V1.version == OUTPUT_VALIDATOR_VERSION
     assert V2.version == OUTPUT_VALIDATOR_V2_VERSION
@@ -942,3 +944,316 @@ def test_more_zero_tolerance_invariants_still_fail_v2(line: str, expect: str) ->
         ],
     )
     assert expect in _codes(S06, cand, V2)
+
+
+# ===========================================================================
+# ROUND 3 (owner authorization 2026-09-02 "COMPLETE M6.8-3 REMEDIATION")
+# comm.output_validator@3 + comm.prompt_template.first_contact@7
+# ===========================================================================
+
+from opintel_communication.prompt import (  # noqa: E402
+    PROMPT_TEMPLATE_ID_CERT_V7,
+    build_certification_prompt_bundle_v7,
+)
+from opintel_communication.validator import (  # noqa: E402
+    _content_words_v2,
+    _is_identity_grammar,
+)
+
+
+def test_validator_version_is_at3_and_v1_still_at1() -> None:
+    from opintel_communication.domain import (
+        OUTPUT_VALIDATOR_V2_VERSION,
+        OUTPUT_VALIDATOR_VERSION,
+    )
+
+    assert OUTPUT_VALIDATOR_VERSION == "comm.output_validator@1"
+    assert OUTPUT_VALIDATOR_V2_VERSION == "comm.output_validator@3"
+    assert V2.version == "comm.output_validator@3"
+
+
+def test_prompt_v7_keeps_hard_caps_and_adds_conservative_targets() -> None:
+    bundle = build_certification_prompt_bundle_v7(S01)
+    t = bundle.bundle_text
+    assert PROMPT_TEMPLATE_ID_CERT_V7 == "comm.prompt_template.first_contact@7"
+    # frozen Attempt-7 template hash (a certification-key member)
+    assert (
+        bundle.template_sha256
+        == "149be1004645d27e2ec59d03d619d629bb73122424fcb62b5819aecfc66738f4"
+    )
+    # hard caps unchanged
+    assert "at most 60 characters" in t
+    assert "at most 130 words" in t
+    assert "exactly ONE call-to-action" in t
+    # conservative generation targets + self-check
+    assert "50 characters or fewer" in t
+    assert "90 to 115 words" in t
+    assert "Count the words in your body yourself" in t
+    assert "Prefer omitting a licensed detail over exceeding the bound" in t
+    # unchanged safety constraints carried from @6
+    assert "RESPONSE_COMMITMENT" in t
+    assert "DISCLOSURE, not a FACT" in t
+
+
+def test_validator_hard_caps_not_raised_v3() -> None:
+    # a 131-word body still fails; a 61-char subject still fails
+    long_body = " ".join(["word"] * 131)
+    cand = _minimal(S06, long_body)
+    assert "structure_violation" in _codes(S06, cand, V2)
+
+
+# --- B.2 possessive / contraction tokenization ---------------------------
+
+
+def test_v2_tokenizer_strips_possessives_and_contractions() -> None:
+    got = _content_words_v2(
+        "Bayline Air Systems' pages and Meridian HVAC's coverage; what's listed"
+    )
+    assert "systems" in got and "systems'" not in got
+    assert "hvac" in got and "hvac's" not in got
+    assert "what" not in got  # stopword after stripping "'s"
+    assert {"bayline", "air", "meridian", "coverage", "listed"} <= got
+
+
+# --- B.2 framing verbs: allowed only as non-substantive framing ---------
+
+
+def _s02_framing_cand(line: str, sources: tuple[str, ...]) -> GenerationCandidate:
+    body = (
+        "Hello,\n\n" + line + "\n\n"
+        "It is a simulation - not a system deployed, connected, official, or operated by "
+        "your business.\n\n"
+        "Would it be worth comparing that simulation with your actual intake process?\n\n"
+        + _PLACEHOLDERS
+    )
+    return _cand(
+        "A question about commercial intake",
+        body,
+        [
+            _e("m1", ClaimType.SALUTATION, "Hello,"),
+            _e(
+                "m2",
+                ClaimType.FACT,
+                line,
+                sources=sources,
+                strength=FactStrength.OBSERVED_PUBLIC_TEXT,
+            ),
+            _e(
+                "m3",
+                ClaimType.DISCLOSURE,
+                "It is a simulation - not a system deployed, connected, official, or operated by "
+                "your business.",
+            ),
+            _e(
+                "m4",
+                ClaimType.CTA,
+                "Would it be worth comparing that simulation with your actual intake process?",
+                cta_intent="PERMISSION_TO_COMPARE_SIMULATION_WITH_REAL_PROCESS",
+            ),
+            _e("m5", ClaimType.SIGNATURE_SLOT, "{{functional_role_or_team}}"),
+        ],
+    )
+
+
+def test_framing_verbs_with_licensed_remainder_are_allowed_v3() -> None:
+    line = (
+        "While reviewing Bayline Air Systems' public pages, I noticed the listed "
+        '"Request a Commercial Visit" path and your Commercial HVAC Maintenance Plans.'
+    )
+    cand = _s02_framing_cand(line, (_ref(S02, "intake_surface"), _ref(S02, "commercial_context")))
+    codes = _codes(S02, cand, V2)
+    assert "unlicensed_claim" not in codes
+    assert "claim_manifest_source_mismatch" not in codes
+
+
+def test_i_noticed_lists_licensed_availability_is_allowed_v3() -> None:
+    line = "I noticed your site lists 24/7 Emergency Service and Commercial HVAC Maintenance Plans."
+    cand = _s02_framing_cand(
+        line, (_ref(S02, "service_availability"), _ref(S02, "commercial_context"))
+    )
+    codes = _codes(S02, cand, V2)
+    assert "unlicensed_claim" not in codes
+    assert "unsupported_number" not in codes  # "24/7" is verbatim in the licensed fact
+    assert "availability_upgraded_to_response" not in codes
+
+
+def test_i_noticed_team_responds_without_evidence_still_rejected_v3() -> None:
+    line = "I noticed your team responds to every commercial inquiry 24/7 within minutes."
+    cand = _s02_framing_cand(line, (_ref(S02, "service_availability"),))
+    assert "availability_upgraded_to_response" in _codes(S02, cand, V2)
+
+
+def test_i_noticed_arbitrary_process_assertion_still_rejected_v3() -> None:
+    line = "I noticed your team tracks every job on a shared manual whiteboard spreadsheet."
+    cand = _s02_framing_cand(line, (_ref(S02, "intake_surface"),))
+    codes = _codes(S02, cand, V2)
+    assert "unlicensed_claim" in codes or "prohibited_claim" in codes
+
+
+# --- B.3 simulation-mechanics sentences are DISCLOSURE ------------------
+
+
+def test_simulation_mechanics_sentence_classifies_disclosure_v3() -> None:
+    for clause in (
+        "It routes every case to a human review step before any action, and nothing "
+        "in it is connected to your systems.",
+        "It routes every request to a human review step, and nothing in it touches "
+        "your actual systems.",
+    ):
+        assert _classify(clause, contract="v2") == ClaimType.DISCLOSURE
+
+
+def test_disclosure_typed_sim_mechanics_entry_needs_no_source_v3() -> None:
+    span = (
+        "It routes every case to a human review step before any action, and nothing "
+        "in it is connected to your systems."
+    )
+    body = (
+        "Hello,\n\n"
+        "I noticed your site lists Commercial HVAC Maintenance Plans.\n\n"
+        + span
+        + "\n\nWould it be worth comparing that simulation with your actual intake process?\n\n"
+        + _PLACEHOLDERS
+    )
+    man = [
+        _e("m1", ClaimType.SALUTATION, "Hello,"),
+        _e(
+            "m2",
+            ClaimType.FACT,
+            "I noticed your site lists Commercial HVAC Maintenance Plans.",
+            sources=(_ref(S02, "commercial_context"),),
+            strength=FactStrength.OBSERVED_PUBLIC_TEXT,
+        ),
+        _e("m3", ClaimType.DISCLOSURE, span),
+        _e(
+            "m4",
+            ClaimType.CTA,
+            "Would it be worth comparing that simulation with your actual intake process?",
+            cta_intent="PERMISSION_TO_COMPARE_SIMULATION_WITH_REAL_PROCESS",
+        ),
+        _e("m5", ClaimType.SIGNATURE_SLOT, "{{functional_role_or_team}}"),
+    ]
+    cand = _cand("A question about commercial intake", body, man)
+    assert "claim_manifest_source_mismatch" not in _codes(S02, cand, V2)
+
+
+# --- B.2/B.3 business-identity spans in the manifest -------------------
+
+
+def test_identity_grammar_helper_v3() -> None:
+    from m68_3_synthetic_corpus import build_corpus
+
+    envs = {s.scenario_id: s.envelope for s in build_corpus().specs}
+    s08 = envs["s08_cta_drift_trap"]
+    name = s08.business_identity.display_name
+    assert _is_identity_grammar(name, s08)
+    assert _is_identity_grammar(name.split()[0], s08)  # a prefix of the name
+    assert _is_identity_grammar(name + "'s", s08)
+    assert not _is_identity_grammar('an "After-Hours Commercial Requests" path', s08)
+
+
+def test_bare_business_name_typed_fact_is_advisory_not_hard_fail_v3() -> None:
+    from m68_3_synthetic_corpus import build_corpus
+
+    envs = {s.scenario_id: s.envelope for s in build_corpus().specs}
+    s08 = envs["s08_cta_drift_trap"]
+    name = s08.business_identity.display_name
+    body = (
+        "Hello,\n\n"
+        "I noticed your site lists a commercial consultation path.\n\n"
+        "It is a simulation - not a system deployed, connected, official, or operated by "
+        "your business.\n\n"
+        "Would it be worth comparing that simulation with your actual intake process?\n\n"
+        + _PLACEHOLDERS
+    )
+    man = [
+        _e("m1", ClaimType.SALUTATION, "Hello,"),
+        _e("m2", ClaimType.FACT, name, sources=()),  # provider over-typed the bare name
+        _e(
+            "m3",
+            ClaimType.DISCLOSURE,
+            "It is a simulation - not a system deployed, connected, official, or operated by "
+            "your business.",
+        ),
+        _e(
+            "m4",
+            ClaimType.CTA,
+            "Would it be worth comparing that simulation with your actual intake process?",
+            cta_intent="PERMISSION_TO_COMPARE_SIMULATION_WITH_REAL_PROCESS",
+        ),
+        _e("m5", ClaimType.SIGNATURE_SLOT, "{{functional_role_or_team}}"),
+    ]
+    cand = _cand("A question about commercial intake", body, man)
+    result = V2.validate(s08, cand)
+    codes = {f.code for f in result.findings}
+    assert "claim_manifest_source_mismatch" not in codes
+    mm = [f for f in result.findings if f.code == "provider_manifest_type_mismatch"]
+    assert mm and all(f.severity == ValidatorSeverity.ADVISORY for f in mm)
+
+
+def test_genuine_fact_span_still_needs_a_source_v3() -> None:
+    # a real business fact typed FACT with empty sources still hard-fails
+    line = 'I noticed your site lists a "Request a Commercial Visit" path.'
+    cand = _s02_framing_cand(line, ())
+    assert "claim_manifest_source_mismatch" in _codes(S02, cand, V2)
+
+
+# --- B.2 faithful inference paraphrase with epistemic connectives -----
+
+
+def test_faithful_inference_with_epistemic_connectives_passes_15c_v3() -> None:
+    span = (
+        "That kind of setup may support looking at how new service requests get "
+        "acknowledged and sorted, though we don't know your current call volume, "
+        "conversion, or process, so this stays an open question rather than an assumption."
+    )
+    body = (
+        "Hello,\n\n"
+        + span
+        + "\n\nIt is a simulation - not a system deployed, connected, official, or operated "
+        "by your business.\n\n"
+        "Would it be worth comparing that simulation with your actual intake process?\n\n"
+        + _PLACEHOLDERS
+    )
+    man = [
+        _e("m1", ClaimType.SALUTATION, "Hello,"),
+        _e(
+            "m2",
+            ClaimType.INFERENCE,
+            span,
+            sources=("inf-opportunity",),
+            strength=FactStrength.LICENSED_INFERENCE,
+        ),
+        _e(
+            "m3",
+            ClaimType.DISCLOSURE,
+            "It is a simulation - not a system deployed, connected, official, or operated by "
+            "your business.",
+        ),
+        _e(
+            "m4",
+            ClaimType.CTA,
+            "Would it be worth comparing that simulation with your actual intake process?",
+            cta_intent="PERMISSION_TO_COMPARE_SIMULATION_WITH_REAL_PROCESS",
+        ),
+        _e("m5", ClaimType.SIGNATURE_SLOT, "{{functional_role_or_team}}"),
+    ]
+    cand = _cand("A question about your commercial intake path", body, man)
+    codes = _codes(S01, cand, V2)
+    assert "unlicensed_claim" not in codes
+    assert "claim_manifest_source_mismatch" not in codes
+
+
+# --- B.4 drift taxonomy ----------------------------------------------
+
+
+def test_drift_taxonomy_is_explicit_v3() -> None:
+    from opintel_communication.certification import DRIFT_INVALIDATING, DriftClass
+
+    assert DriftClass.MODEL_IDENTITY_DRIFT in DRIFT_INVALIDATING
+    assert DriftClass.CONFIGURATION_DRIFT in DRIFT_INVALIDATING
+    assert DriftClass.SOURCE_CORPUS_DRIFT in DRIFT_INVALIDATING
+    assert DriftClass.STOCHASTIC_CANDIDATE_VARIATION not in DRIFT_INVALIDATING
+    assert DriftClass.SAFETY_OUTCOME_STOCHASTICITY not in DRIFT_INVALIDATING
+    # back-compat alias
+    assert DriftClass.PROVIDER_MODEL_DRIFT is DriftClass.MODEL_IDENTITY_DRIFT
