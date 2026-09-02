@@ -100,3 +100,59 @@ def test_sonnet_return_runner_keeps_the_hard_thresholds() -> None:
     runner = _runner()
     assert str(runner._floor) == "0.80"
     assert str(runner._manifest_ceiling) == "0.00"
+
+
+# ---------------------------------------------------------------------------
+# Parser robustness (exposed by the 9-call sanity check: claude-sonnet-5
+# sometimes emits the claim_manifest wrapped in an object or once at the top
+# level instead of a bare per-candidate list). The recovery is additive - a
+# conformant bare list is unchanged, a genuinely empty manifest stays empty
+# (the validator's undeclared_rendered_claim is the right signal there).
+# ---------------------------------------------------------------------------
+
+import json  # noqa: E402
+
+from opintel_communication.stub_provider import parse_provider_response  # noqa: E402
+
+_ENT = {
+    "claim_id": "m1",
+    "claim_type": "FACT",
+    "rendered_artifact": "first_contact_email",
+    "rendered_span": "a Book Now path",
+    "licensed_source_ids": ["x"],
+}
+_BASE = {"candidate_id": "c1", "subject": "s", "body": "body text"}
+
+
+def test_parser_bare_list_unchanged() -> None:
+    r = parse_provider_response(json.dumps({"candidates": [dict(_BASE, claim_manifest=[_ENT])]}))
+    assert len(r.candidates[0].claim_manifest.entries) == 1
+
+
+def test_parser_recovers_wrapped_and_top_level_manifest() -> None:
+    for shape in (
+        {"candidates": [dict(_BASE, claim_manifest={"entries": [_ENT]})]},
+        {"candidates": [dict(_BASE, claim_manifest={"claims": [_ENT]})]},
+        {"candidates": [_BASE], "claim_manifest": [_ENT]},
+    ):
+        r = parse_provider_response(json.dumps(shape))
+        assert len(r.candidates[0].claim_manifest.entries) == 1
+
+
+def test_parser_row_manifest_wins_over_top_level() -> None:
+    raw = json.dumps(
+        {"candidates": [dict(_BASE, claim_manifest=[_ENT, _ENT])], "claim_manifest": [_ENT]}
+    )
+    assert len(parse_provider_response(raw).candidates[0].claim_manifest.entries) == 2
+
+
+def test_parser_skips_non_dict_manifest_members_without_raising() -> None:
+    raw = json.dumps({"candidates": [dict(_BASE, claim_manifest=[_ENT, "oops", None, 42])]})
+    r = parse_provider_response(raw)
+    assert len(r.candidates[0].claim_manifest.entries) == 1
+
+
+def test_parser_genuinely_empty_manifest_stays_empty() -> None:
+    raw = json.dumps({"candidates": [dict(_BASE, claim_manifest=[])]})
+    r = parse_provider_response(raw)
+    assert len(r.candidates[0].claim_manifest.entries) == 0

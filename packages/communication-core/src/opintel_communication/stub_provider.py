@@ -83,8 +83,35 @@ def serialize_candidates(candidates: tuple[GenerationCandidate, ...]) -> str:
     return json.dumps(payload, sort_keys=True, separators=(",", ":"))
 
 
-def _candidate_from_row(row: dict[str, Any]) -> GenerationCandidate:
-    entries = tuple(_entry_from_json(e) for e in row.get("claim_manifest", []))
+def _manifest_rows(value: Any) -> list[dict[str, Any]]:
+    """Coerce a provider ``claim_manifest`` field into a list of entry dicts.
+
+    A conformant response puts a bare list under ``claim_manifest``. Real models
+    also emit it wrapped (``{"entries": [...]}`` / ``{"claims": [...]}`` /
+    ``{"manifest": [...]}``) or, rarely, at the top level of the response. Non-dict
+    members are skipped rather than raising ``AttributeError`` deep in parsing.
+    """
+
+    if isinstance(value, dict):
+        for key in ("entries", "claims", "manifest", "claim_manifest"):
+            inner = value.get(key)
+            if isinstance(inner, list):
+                value = inner
+                break
+        else:
+            return []
+    if not isinstance(value, list):
+        return []
+    return [e for e in value if isinstance(e, dict)]
+
+
+def _candidate_from_row(
+    row: dict[str, Any], *, fallback_manifest: Any = None
+) -> GenerationCandidate:
+    rows = _manifest_rows(row.get("claim_manifest"))
+    if not rows and fallback_manifest is not None:
+        rows = _manifest_rows(fallback_manifest)
+    entries = tuple(_entry_from_json(e) for e in rows)
     return GenerationCandidate(
         candidate_id=str(row["candidate_id"]),
         artifacts=(
@@ -119,6 +146,10 @@ def parse_provider_response(raw: str) -> GenerationResult:
             status=GenerationStatus.REFUSED, reason="provider 'candidates' is not a list"
         )
 
+    # A model sometimes emits the manifest once, at the top level, instead of
+    # per candidate; used only when a candidate row carries none of its own.
+    top_manifest = data.get("claim_manifest")
+
     candidates: list[GenerationCandidate] = []
     dropped = 0
     drop_reasons: list[str] = []
@@ -126,8 +157,8 @@ def parse_provider_response(raw: str) -> GenerationResult:
         try:
             if not isinstance(row, dict):
                 raise TypeError("candidate row is not an object")
-            candidates.append(_candidate_from_row(row))
-        except (ValueError, KeyError, TypeError) as exc:
+            candidates.append(_candidate_from_row(row, fallback_manifest=top_manifest))
+        except (ValueError, KeyError, TypeError, AttributeError) as exc:
             dropped += 1
             drop_reasons.append(f"{type(exc).__name__}: {exc}")
 
