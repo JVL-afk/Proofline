@@ -24,7 +24,9 @@ reason to retry.
 
 from __future__ import annotations
 
+import contextlib
 import pickle
+import time
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from decimal import ROUND_UP, Decimal
@@ -438,6 +440,34 @@ class CertificationReport:
 # ----------------------------------------------------------------------------
 
 
+def _write_checkpoint(cp: Path, payload: dict[str, object]) -> None:
+    """Best-effort resume checkpoint (return-to-Sonnet-5, operational).
+
+    Never raises: checkpointing is a resilience aid for an environment that
+    kills the run, and a failed checkpoint write must not itself abort the
+    certification. On Windows an atomic replace can transiently hit
+    ``PermissionError`` (a scanner / handle on the file), so retry a few times
+    and then fall back to a direct write.
+    """
+
+    try:
+        data = pickle.dumps(payload)
+    except Exception:  # a serialisation failure is not fatal
+        return
+    tmp = cp.with_suffix(cp.suffix + ".tmp")
+    for attempt in range(6):
+        try:
+            tmp.write_bytes(data)
+            tmp.replace(cp)
+            return
+        except OSError:
+            if attempt == 5:
+                break
+            time.sleep(0.25 * (attempt + 1))
+    with contextlib.suppress(OSError):
+        cp.write_bytes(data)
+
+
 def _validator_finding_signature(record: GenerationRecord) -> str:
     rows = sorted(
         (r.candidate_id, tuple(sorted(f.code for f in r.validation.findings)))
@@ -562,7 +592,10 @@ class CertificationRunner:
         done_keys: set[tuple[str, int]] = set()
         cp = Path(checkpoint_path) if checkpoint_path is not None else None
         if cp is not None and cp.is_file():
-            saved = pickle.loads(cp.read_bytes())
+            try:
+                saved = pickle.loads(cp.read_bytes())
+            except Exception:  # a corrupt checkpoint => fresh start
+                saved = {}
             if saved.get("cert_key") == self.certification_key(corpus).key_sha256():
                 now_epoch_seconds = int(saved["now_epoch_seconds"])
                 attempts = list(saved["attempts"])
@@ -674,21 +707,18 @@ class CertificationRunner:
                 )
             )
             if cp is not None:
-                tmp = cp.with_suffix(cp.suffix + ".tmp")
-                tmp.write_bytes(
-                    pickle.dumps(
-                        {
-                            "cert_key": self.certification_key(corpus).key_sha256(),
-                            "now_epoch_seconds": now_epoch_seconds,
-                            "attempts": attempts,
-                            "calls": calls,
-                            "agg_in": agg_in,
-                            "agg_out": agg_out,
-                            "agg_cost": str(agg_cost),
-                        }
-                    )
+                _write_checkpoint(
+                    cp,
+                    {
+                        "cert_key": self.certification_key(corpus).key_sha256(),
+                        "now_epoch_seconds": now_epoch_seconds,
+                        "attempts": attempts,
+                        "calls": calls,
+                        "agg_in": agg_in,
+                        "agg_out": agg_out,
+                        "agg_cost": str(agg_cost),
+                    },
                 )
-                tmp.replace(cp)
 
         return self._score(
             corpus=corpus,
