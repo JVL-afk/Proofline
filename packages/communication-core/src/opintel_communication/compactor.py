@@ -192,22 +192,23 @@ _FACT_STRENGTH_RANK = {
 
 
 def strongest_usable_hook_words(env: SemanticEnvelope) -> tuple[set[str], bool]:
-    """Content words of the strongest USABLE evidence hook. RESPONSE_COMMITMENT
+    """Content words of the strongest USABLE evidence hook(s). RESPONSE_COMMITMENT
     facts are excluded (the communication policy prohibits restating them), and a
-    fact whose only words are ubiquitous category labels is not a hook."""
-    best: tuple[int, set[str]] | None = None
+    fact whose only words are ubiquitous category labels is not a hook. When
+    several facts share the top strength rank, using ANY of them counts as using
+    the strongest hook, so the union of their words is returned."""
+    ranked: list[tuple[int, set[str]]] = []
     for fact in env.eligible_company_facts:
         if fact.injection_suspected or fact.category == "response_commitment":
             continue
         w = _content_words_v2(fact.sanitized_phrase)
         if not (w - _GENERIC_HOOK_WORDS):
             continue
-        r = _FACT_STRENGTH_RANK.get(fact.strength, 1)
-        if best is None or r > best[0]:
-            best = (r, w)
-    if best is None:
+        ranked.append((_FACT_STRENGTH_RANK.get(fact.strength, 1), w))
+    if not ranked:
         return set(), False
-    return best[1], True
+    top = max(r for r, _ in ranked)
+    return set().union(*(w for r, w in ranked if r == top)), True
 
 
 def _strongest_fact_words(env: SemanticEnvelope) -> set[str]:

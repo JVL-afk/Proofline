@@ -32,7 +32,11 @@ CTA_PARSER_VERSION = "comm.cta_parser@1"
 # epistemic-connective vocabulary + tense-variant coverage in rule 12;
 # simulation-mechanics sentences classify as DISCLOSURE; business-identity spans
 # in the manifest are identity grammar not evidence.
-OUTPUT_VALIDATOR_V2_VERSION = "comm.output_validator@3"
+# ``@4`` (Haiku track, owner authorization 2026-09-02 "SWITCH ... TO HAIKU 4.5"):
+# a bare evidentiary framing lead-in with no business predicate is source-free
+# (D1); "<Business Name> publishes / lists / describes X", optionally after an
+# "I noticed" framing prefix, classifies as a public-text FACT.
+OUTPUT_VALIDATOR_V2_VERSION = "comm.output_validator@4"
 CTA_PARSER_V2_VERSION = "comm.cta_parser@2"
 # M6.8-2 additions
 CANDIDATE_RANKER_VERSION = "comm.candidate_ranker@1"

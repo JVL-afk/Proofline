@@ -12,7 +12,7 @@ HAIKU 4.5". Two stages:
 Both stages: provider Anthropic, model claude-haiku-4-5-20251001, thinking
 disabled, max_output_tokens=8000, timeout 30s, 0 retries, frozen corpus
 comm.m6_8_3_synthetic_corpus@1 (manifest 282cdd5a...), s03 gated. Deterministic
-side: prompt @8, output_validator @3, cta_parser @2, provider_certification @2,
+side: prompt @8, output_validator @4, cta_parser @2, provider_certification @2,
 projection @2, comm.candidate_compactor@1, comm.communication_quality@1.
 
 Historical Sonnet attempts are immutable and are NOT compared as repeats.
@@ -76,8 +76,8 @@ _CONTRACT = "v2"
 _VALID_CLAIM_TYPES = {c.value for c in ClaimType}
 _VALID_STRENGTHS = {s.value for s in FactStrength}
 
-_FINAL_KEY = "22b12b3910f6e67da75995d3ca39d359c375b9af8f977b9162b57f01f544a753"
-_PROMPT_SHA = "f0af3d3535e6ac51c0e81abb3e2b7e74ebe1cd8ee7168e4efbb10b8ee14232d1"
+_FINAL_KEY = "672e000320da0752fadc4e259ab35c834848b991c484d07a81abda913569fea9"
+_PROMPT_SHA = "f529826219ef9b50185a9d138353e8116f34ec4c34fbf41e9d635ba20bdcb349"
 _CONFIG_HASH = "22d64f8c06367e7d2b51dfdf4dd5edd3b7563a4c324f25e8bc267d559b462ff0"
 _MANIFEST_SHA = "282cdd5a2783f793a47d71b17ddf8b62242294fc0260e73a3526fbec5537d411"
 _ENV_SHA16 = {
@@ -173,7 +173,7 @@ def _preflight(*, require_key: bool) -> tuple[list[str], dict[str, object]]:
     if not (
         key.model == HAIKU_4_5_MODEL
         and key.prompt_template_sha256 == _PROMPT_SHA
-        and key.output_validator_version == "comm.output_validator@3"
+        and key.output_validator_version == "comm.output_validator@4"
         and key.cta_parser_version == "comm.cta_parser@2"
         and key.generation_config_hash == _CONFIG_HASH
         and key.corpus_manifest_sha256 == _MANIFEST_SHA
@@ -183,7 +183,8 @@ def _preflight(*, require_key: bool) -> tuple[list[str], dict[str, object]]:
         raise SystemExit("PREFLIGHT FAIL: pass-rate floor / manifest ceiling changed")
     checks.append(
         f"certification key binds anthropic/{HAIKU_4_5_MODEL}/@8 (sha {_PROMPT_SHA[:12]}...)/"
-        f"validator@3/parser@2/cert@2/projection@2/{COMPACTOR_VERSION}/{QUALITY_ASSESSOR_VERSION}; "
+        f"{key.output_validator_version}/{key.cta_parser_version}/{PROVIDER_CERTIFICATION_VERSION}/"
+        f"{PROVIDER_PROJECTION_VERSION}/{COMPACTOR_VERSION}/{QUALITY_ASSESSOR_VERSION}; "
         f"config {_CONFIG_HASH[:12]}...; key_sha {_FINAL_KEY} == frozen; floor 0.80; "
         f"manifest ceiling 0.00"
     )
@@ -195,6 +196,7 @@ def _preflight(*, require_key: bool) -> tuple[list[str], dict[str, object]]:
         "<= 50 characters",
         "hard maximum 60",
         "exactly ONE sentence ending in '?'",
+        "'placeholder' value listed under required_disclosures",
         "USE ONLY the supplied evidence",
         "response_commitment",
         "OUTPUT SCHEMA",
@@ -249,7 +251,7 @@ def _preflight(*, require_key: bool) -> tuple[list[str], dict[str, object]]:
         checks.append(
             f"compatibility probe OK: served '{meta.model_version}', stop_reason={meta.stop_reason!r}, "  # noqa: E501
             f"{probe['probe_manifest_entries']}-entry manifest, all enums valid, reached "
-            f"comm.output_validator@3 (findings {[f.code for f in vr.findings] or 'none'}); "
+            f"comm.output_validator@4 (findings {[f.code for f in vr.findings] or 'none'}); "
             f"usage {meta.input_tokens}/{meta.output_tokens}, cost USD {probe['probe_cost_usd']}. "
             "NOT one of the 9."
         )

@@ -407,6 +407,22 @@ _BUSINESS_ASSERTION = re.compile(
     r"|(?:\bmeans (?:that )?you\b|\bso you\b|\bwhich means\b|\byou never\b|\byou always\b)",
     re.IGNORECASE,
 )
+# (Haiku track) "<Business Name> publishes / lists / describes / offers ... X" -
+# a public-text observation whose subject is the named business. A leading
+# capitalised multi-word proper name (the business) followed by an observation
+# verb. Consulted ONLY under v2.
+_NAME_TOK = "[A-Z][\\w&.'" + chr(0x2019) + "-]+"
+_BUSINESS_NAME_ASSERTION = re.compile(
+    r"^(?:(?i:(?:while\s+\w+ing\s+[\w' ,-]{0,40}?,?\s*)?(?:i|we)\s+"
+    r"(?:noticed|noted|saw|see|seen|reviewed)\s+))?"
+    + _NAME_TOK
+    + r"(?:\s+(?:&\s+)?"
+    + _NAME_TOK
+    + r"){0,4}\s+"
+    r"(?:publish(?:es)?|list(?:s)?|describ(?:es)?|offer(?:s)?|show(?:s)?|"
+    r"highlight(?:s)?|feature(?:s)?|reference(?:s)?|include(?:s)?|present(?:s)?|"
+    r"invite(?:s)?|maintain(?:s)?|advertis(?:es)?|note(?:s)?|state(?:s)?)\b"
+)
 # The primary permission CTA vs. a folded-in discovery question.
 _DISCOVERY_QUESTION = re.compile(
     r"\b(how many\b|how are (?:new )?inquir|through which channels|"
@@ -492,9 +508,11 @@ def _classify(clause: str, *, contract: str = "v1") -> ClaimType:
         return ClaimType.INFERENCE
     if _OBSERVATION_SUBJECTS.search(clause) or _BUSINESS_ASSERTION.search(clause):
         return ClaimType.FACT
-    if contract == "v2" and _POSSESSIVE_SITE.search(clause):
-        # (section 5) "<Business Name>'s public site describes X" is a public-text
-        # observation, not filler.
+    if contract == "v2" and (
+        _POSSESSIVE_SITE.search(clause) or _BUSINESS_NAME_ASSERTION.match(clause.strip())
+    ):
+        # (section 5 / Haiku track) "<Business Name>'s public site describes X" or
+        # "<Business Name> publishes X" is a public-text observation, not filler.
         return ClaimType.FACT
     if _TRANSITION_CUES.search(clause):
         return ClaimType.TRANSITION

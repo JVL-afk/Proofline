@@ -35,8 +35,9 @@ from opintel_communication.domain import (
     GeneratedArtifact,
     GenerationCandidate,
 )
+from opintel_communication.prompt import build_certification_prompt_bundle_v8
 from opintel_communication.quality import assess_quality
-from opintel_communication.validator import OutputValidator, _is_framing_leadin
+from opintel_communication.validator import OutputValidator, _classify, _is_framing_leadin
 
 V2 = OutputValidator(contract="v2")
 _ENV = {s.scenario_id: s.envelope for s in build_corpus().specs}
@@ -238,7 +239,7 @@ def _long_body(extra_transitions: int) -> str:
     fillers = " ".join(_FILLER_SENTENCES[:extra_transitions])
     return (
         "Hello {{functional_role_or_team}},\n\n"
-        'While reviewing Northgate Commercial Mechanical\'s public pages, I noticed a "Schedule '
+        "While reviewing Northgate Commercial Mechanical's public pages, I noticed a \"Schedule "
         'Commercial Service" request path and work described as "Commercial Rooftop Unit Repair". '
         + fillers
         + " This is not a claim about how your team works today - we have no visibility into that. "
@@ -450,3 +451,65 @@ def test_quality_never_rescues_unsafe_is_structural() -> None:
 
 def test_compactor_version_string() -> None:
     assert COMPACTOR_VERSION == "comm.candidate_compactor@1"
+
+
+# ---------------------------------------------------------------------------
+# Section-F autonomous repairs from the first 9-call Haiku qualification:
+#   1. @8 must instruct the model to append the required placeholder lines
+#   2. "<Business Name> publishes/lists X" (optionally after "I noticed") is a
+#      company-specific FACT, not filler
+#   3. when several facts share the top strength rank, using ANY counts as the
+#      strongest-hook
+# ---------------------------------------------------------------------------
+
+
+def test_v8_prompt_lists_required_placeholders() -> None:
+    t = build_certification_prompt_bundle_v8(S01).bundle_text
+    assert "'placeholder' value listed under required_disclosures" in t
+    assert "each on its own line" in t
+    assert "hard maximum 130" in t and "target 90-110 words" in t
+
+
+@pytest.mark.parametrize(
+    ("clause", "is_fact"),
+    [
+        ("Bayline Air Systems publishes a dedicated request path for commercial visits", True),
+        (
+            "I noticed Delmarva Commercial Cooling publishes a Commercial Service Request Form",
+            True,
+        ),
+        (
+            "While reviewing their pages, I noticed Meridian Commercial HVAC lists a coverage map",
+            True,
+        ),
+        ("I noticed your team confirms appointments the same business day", False),
+        ("We reviewed the market and it looks competitive", False),
+    ],
+)
+def test_business_name_assertion_classifies_fact(clause: str, is_fact: bool) -> None:
+    got = _classify(clause, contract="v2")
+    assert (got == ClaimType.FACT) is is_fact
+
+
+def test_named_business_observation_is_company_specific_quality() -> None:
+    body = (
+        "Hi {{functional_role_or_team}},\n\n"
+        "Bayline Air Systems publishes a dedicated request path for commercial visits alongside "
+        "Commercial HVAC Maintenance Plans. This is not a claim about how your team works "
+        "today; we have no visibility into that. It is a simulation - not a system deployed, "
+        "connected, official, or operated by your business.\n\n"
+        "Would it be worth comparing that simulation with your actual intake process?\n\n"
+        "{{verified_sender_signature}}"
+    )
+    q = assess_quality(_cand("Commercial intake note", body, []), S02)
+    assert q.uses_company_specific_evidence
+    assert q.classification != "NOT_DISTINCTIVE"
+
+
+def test_strongest_hook_is_union_of_top_rank_facts() -> None:
+    # s01 has three OBSERVED_PUBLIC_TEXT facts (response_commitment excluded);
+    # the union spans all of them, so using any one counts as the strongest hook.
+    hw, has = strongest_usable_hook_words(S01)
+    assert has
+    assert {"schedule"} <= hw  # "Schedule Commercial Service"
+    assert {"rooftop", "unit", "repair"} & hw  # "Commercial Rooftop Unit Repair"

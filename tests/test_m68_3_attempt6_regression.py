@@ -101,7 +101,7 @@ def test_v1_versions_unchanged_and_v2_versions_distinct() -> None:
     assert CTA_PARSER_VERSION == "comm.cta_parser@1"
     # @3 = Attempt-6 remediation (framing/possessive tokenization, sim-mechanics
     # DISCLOSURE, identity-grammar manifest spans). Parser unchanged this round.
-    assert OUTPUT_VALIDATOR_V2_VERSION == "comm.output_validator@3"
+    assert OUTPUT_VALIDATOR_V2_VERSION == "comm.output_validator@4"
     assert CTA_PARSER_V2_VERSION == "comm.cta_parser@2"
     assert V1.version == OUTPUT_VALIDATOR_VERSION
     assert V2.version == OUTPUT_VALIDATOR_V2_VERSION
@@ -948,7 +948,7 @@ def test_more_zero_tolerance_invariants_still_fail_v2(line: str, expect: str) ->
 
 # ===========================================================================
 # ROUND 3 (owner authorization 2026-09-02 "COMPLETE M6.8-3 REMEDIATION")
-# comm.output_validator@3 + comm.prompt_template.first_contact@7
+# comm.output_validator@4 + comm.prompt_template.first_contact@7
 # ===========================================================================
 
 from opintel_communication.prompt import (  # noqa: E402
@@ -968,8 +968,8 @@ def test_validator_version_is_at3_and_v1_still_at1() -> None:
     )
 
     assert OUTPUT_VALIDATOR_VERSION == "comm.output_validator@1"
-    assert OUTPUT_VALIDATOR_V2_VERSION == "comm.output_validator@3"
-    assert V2.version == "comm.output_validator@3"
+    assert OUTPUT_VALIDATOR_V2_VERSION == "comm.output_validator@4"
+    assert V2.version == "comm.output_validator@4"
 
 
 def test_prompt_v7_keeps_hard_caps_and_adds_conservative_targets() -> None:
