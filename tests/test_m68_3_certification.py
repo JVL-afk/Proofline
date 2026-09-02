@@ -373,6 +373,41 @@ def test_quality_is_separate_from_safety() -> None:
     assert "does not affect" in report.quality_note
 
 
+def test_confirmed_sonnet5_price_table_matches_owner_authorization() -> None:
+    from opintel_communication.certification import CONFIRMED_SONNET5_PRICE_TABLE as pt
+
+    assert pt.confirmed is True
+    assert pt.input_usd_per_mtok == "2.00"
+    assert pt.output_usd_per_mtok == "10.00"
+    # aggregate ceiling stays USD 10.00 regardless
+    assert CertificationCallBounds().hard_usd_ceiling == "10.00"
+
+
+def test_zero_tolerance_set_includes_promoted_codes() -> None:
+    from opintel_communication.certification import SAFETY_CRITICAL_FINDING_CODES
+
+    assert "unlicensed_claim" in SAFETY_CRITICAL_FINDING_CODES
+    assert "strength_increase" in SAFETY_CRITICAL_FINDING_CODES
+
+
+def test_manifest_mismatch_ceiling_default_is_zero_tolerance() -> None:
+    runner = _runner(_clean_transport)
+    assert runner._manifest_ceiling == 0
+
+
+def test_report_accounts_for_avoided_calls() -> None:
+    report = _runner(_clean_transport).run(
+        _mini_corpus(),
+        repeats=3,
+        not_distinctive_scenario_id=NOT_DISTINCTIVE_SCENARIO_ID,
+        now_epoch_seconds=_NOW,
+    )
+    assert report.provider_calls_made == 3
+    assert report.provider_calls_avoided_nondistinctive == 3
+    assert report.provider_calls_planned_max == 6
+    assert any("deterministically avoided" in n for n in report.notes)
+
+
 def test_price_table_pending_is_flagged_in_notes() -> None:
     report = _runner(_clean_transport).run(
         _mini_corpus(),

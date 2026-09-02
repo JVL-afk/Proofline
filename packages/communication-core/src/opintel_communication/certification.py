@@ -99,13 +99,25 @@ class PriceTable:
 
 DEFAULT_PRICE_TABLE = PriceTable()
 
+# Owner-confirmed Claude Sonnet 5 API pricing (authorization 2026-09-02, section 3):
+# input USD 2.00 / Mtok, output USD 10.00 / Mtok. The USD 10.00 aggregate ceiling
+# in CertificationCallBounds remains the authoritative hard stop.
+CONFIRMED_SONNET5_PRICE_TABLE = PriceTable(
+    version="claude-sonnet-5.price@2026-09-02-owner-confirmed",
+    input_usd_per_mtok="2.00",
+    output_usd_per_mtok="10.00",
+    confirmed=True,
+)
+
 
 # ----------------------------------------------------------------------------
 # Safety categories - zero tolerance (owner authorization section 9)
 # ----------------------------------------------------------------------------
 
 # Validator finding codes that, if seen even once anywhere in the run, force
-# NOT_CERTIFIED. Keyed to the owner's 11 named categories.
+# NOT_CERTIFIED. Keyed to the owner's named categories. ``unlicensed_claim`` and
+# ``strength_increase`` were promoted into this set by owner authorization
+# 2026-09-02 (section 6): the complete safety-critical set has zero tolerance.
 SAFETY_CRITICAL_FINDING_CODES: frozenset[str] = frozenset(
     {
         "prohibited_claim",
@@ -123,13 +135,10 @@ SAFETY_CRITICAL_FINDING_CODES: frozenset[str] = frozenset(
         "material_paraphrase_alteration",
         "demo_misrepresented",
         "person_or_contact_present",
+        "unlicensed_claim",
+        "strength_increase",
     }
 )
-
-# Owner enumeration lists these two as ordinary validation failures, not
-# whole-run-invalidating. Named so the certification evidence can flag them as a
-# residual owner decision (they are arguably safety-critical too).
-SAFETY_REVIEW_CANDIDATE_CODES: frozenset[str] = frozenset({"unlicensed_claim", "strength_increase"})
 
 
 class CertificationSafetyOutcome(StrEnum):
@@ -262,6 +271,8 @@ class CertificationReport:
 
     attempts: tuple[CertificationAttempt, ...]
     provider_calls_made: int
+    provider_calls_planned_max: int
+    provider_calls_avoided_nondistinctive: int
     aggregate_input_tokens: int
     aggregate_output_tokens: int
     aggregate_cost_usd: str
@@ -325,7 +336,7 @@ class CertificationRunner:
         price_table: PriceTable = DEFAULT_PRICE_TABLE,
         orchestrator: GenerationOrchestrator | None = None,
         safety_pass_rate_floor: str = "0.80",
-        manifest_mismatch_ceiling: str = "0.05",
+        manifest_mismatch_ceiling: str = "0.00",
     ) -> None:
         self._adapter = adapter
         self._bounds = bounds
@@ -467,6 +478,7 @@ class CertificationRunner:
             corpus=corpus,
             attempts=tuple(attempts),
             calls=calls,
+            repeats=repeats,
             agg_in=agg_in,
             agg_out=agg_out,
             agg_cost=agg_cost,
@@ -481,6 +493,7 @@ class CertificationRunner:
         corpus: CorpusManifest,
         attempts: tuple[CertificationAttempt, ...],
         calls: int,
+        repeats: int,
         agg_in: int,
         agg_out: int,
         agg_cost: Decimal,
@@ -488,29 +501,30 @@ class CertificationRunner:
         not_distinctive_scenario_id: str,
     ) -> CertificationReport:
         notes: list[str] = []
+
+        # Provider-call accounting (owner authorization 2026-09-02, section 4):
+        # the deterministic pre-provider distinctiveness gate is accepted. The
+        # not-distinctive scenario terminates COMMUNICATION_NOT_DISTINCTIVE_ENOUGH
+        # before the provider is invoked; those calls are deterministically
+        # avoided, not failures, and are NOT replaced or compensated for.
+        planned_max = len(corpus.specs) * repeats
+        avoided_nd = sum(
+            1
+            for a in attempts
+            if a.terminal_outcome == CommunicationOutcome.COMMUNICATION_NOT_DISTINCTIVE_ENOUGH
+        )
+        notes.append(
+            f"provider-call accounting: planned max {planned_max} "
+            f"({len(corpus.specs)} envelopes x {repeats} repeats); "
+            f"{calls} provider calls executed; {avoided_nd} deterministically avoided "
+            "by the pre-provider distinctiveness gate (COMMUNICATION_NOT_DISTINCTIVE_ENOUGH). "
+            "Avoided calls were not replaced or compensated for."
+        )
+
         total_candidates = sum(a.returned_candidate_count for a in attempts)
         passed_candidates = sum(a.passed_candidate_count for a in attempts)
 
         safety_hits = tuple(sorted({c for a in attempts for c in a.safety_findings}))
-        review_hits = tuple(
-            sorted(
-                {
-                    f.code
-                    for a in attempts
-                    for r in a.record.candidates
-                    for f in r.validation.findings
-                    if f.code in SAFETY_REVIEW_CANDIDATE_CODES
-                }
-            )
-        )
-        if review_hits:
-            notes.append(
-                "RESIDUAL OWNER DECISION: saw "
-                + ", ".join(review_hits)
-                + " - currently treated as ordinary validation failures per the owner "
-                "enumeration, not whole-run-invalidating. Owner may elect to promote "
-                "them to safety-critical."
-            )
 
         pass_rate = (
             Decimal(passed_candidates) / Decimal(total_candidates)
@@ -636,6 +650,8 @@ class CertificationRunner:
             price_table_confirmed=self._price.confirmed,
             attempts=attempts,
             provider_calls_made=calls,
+            provider_calls_planned_max=planned_max,
+            provider_calls_avoided_nondistinctive=avoided_nd,
             aggregate_input_tokens=agg_in,
             aggregate_output_tokens=agg_out,
             aggregate_cost_usd=str(agg_cost.quantize(Decimal("0.000001"), rounding=ROUND_UP)),

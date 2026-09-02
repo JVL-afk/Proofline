@@ -24,6 +24,7 @@ from opintel_communication.anthropic_adapter import (
     ProviderUnavailable,
 )
 from opintel_communication.certification import (
+    CONFIRMED_SONNET5_PRICE_TABLE,
     DEFAULT_CALL_BOUNDS,
     PROVIDER_CERTIFICATION_VERSION,
     SAFETY_CRITICAL_FINDING_CODES,
@@ -124,6 +125,7 @@ __all__ = [
     "ANTHROPIC_API_ENDPOINT",
     "CANDIDATE_RANKER_VERSION",
     "CLAIM_MANIFEST_SCHEMA_VERSION",
+    "CONFIRMED_SONNET5_PRICE_TABLE",
     "CTA_PARSER_VERSION",
     "DEFAULT_CALL_BOUNDS",
     "GENERATION_ORCHESTRATOR_VERSION",
