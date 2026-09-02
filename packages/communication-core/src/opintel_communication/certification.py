@@ -572,7 +572,9 @@ class CertificationRunner:
             ),
             candidate_ranker_version=CANDIDATE_RANKER_VERSION,
             cta_parser_version=(
-                CTA_PARSER_V2_VERSION if self._contract == "v2" else CTA_PARSER_VERSION
+                CTA_PARSER_V2_VERSION
+                if self._contract in ("v2", "v3")
+                else CTA_PARSER_VERSION
             ),
             provider="anthropic",
             model=self._adapter.config.model,
