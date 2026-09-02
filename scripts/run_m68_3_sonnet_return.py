@@ -55,6 +55,7 @@ from __future__ import annotations
 import argparse
 import dataclasses
 import json
+import os
 import re
 import sys
 import time
@@ -499,6 +500,16 @@ def main() -> int:
     corpus = build_corpus()
     adapter = AnthropicProviderAdapter(key, config=_CONFIG)
     runner = _make_runner(adapter, bounds)
+    # The execution environment kills a long detached run at ~30 min; the full
+    # 81-call certification needs longer. --certify checkpoints each completed
+    # attempt so a killed run resumes (same frozen key) instead of restarting.
+    # The sanity stage (9 calls, a few minutes) needs no checkpoint.
+    _ckpt_dir = os.environ.get("M68_CERT_CKPT_DIR", str(ROOT))
+    checkpoint = (
+        None if args.sanity else str(Path(_ckpt_dir) / f"cert_ckpt_{_PRE_RUN_CONFIG_ID[:16]}.pkl")
+    )
+    if checkpoint and Path(checkpoint).is_file():
+        print(f"resuming from checkpoint {Path(checkpoint).name}")
     print(f"\nexecuting up to {bounds.max_provider_calls} real {PINNED_MODEL} calls ...")
     report = runner.run(
         corpus,
@@ -506,6 +517,7 @@ def main() -> int:
         not_distinctive_repeats=1,
         not_distinctive_scenario_id=NOT_DISTINCTIVE_SCENARIO_ID,
         now_epoch_seconds=int(time.time()),
+        checkpoint_path=checkpoint,
     )
 
     extra: dict[str, object] = {}
@@ -538,6 +550,9 @@ def main() -> int:
         print(f"  DECISION: {seval['decision']}")
 
     path = _write_report(stage, report, checks, probe, extra)
+    if checkpoint and report.stopped_early_reason is None and Path(checkpoint).is_file():
+        # the run completed - the resume checkpoint is no longer needed
+        Path(checkpoint).unlink()
     print(f"\nsafety_outcome        : {report.safety_outcome.value}")
     print(f"communication_quality : {report.communication_quality.value}")
     print(

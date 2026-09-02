@@ -336,6 +336,80 @@ def test_runner_is_deterministic_for_identical_inputs() -> None:
     assert r1.aggregate_cost_usd == r2.aggregate_cost_usd
 
 
+def test_runner_checkpoint_resumes_without_respending(tmp_path) -> None:
+    # (return-to-Sonnet-5, operational) the environment SIGKILLs a long run.
+    # The checkpoint file holds every attempt that landed before the kill; a
+    # restart under the same frozen key resumes from there and only makes the
+    # remaining calls, producing the same result as one uninterrupted run.
+    ckpt = tmp_path / "ckpt.pkl"
+
+    full = _runner(_clean_transport).run(
+        _mini_corpus(),
+        repeats=3,
+        not_distinctive_scenario_id=NOT_DISTINCTIVE_SCENARIO_ID,
+        now_epoch_seconds=_NOW,
+    )
+
+    # segment 1: first repeat only, writing the checkpoint
+    seg1_calls = {"n": 0}
+
+    def seg1(body: dict[str, object]):
+        seg1_calls["n"] += 1
+        return _ok_payload(serialize_candidates((APLUS_EXCELLENT,)))
+
+    _runner(seg1).run(
+        _mini_corpus(),
+        repeats=1,
+        not_distinctive_scenario_id=NOT_DISTINCTIVE_SCENARIO_ID,
+        now_epoch_seconds=_NOW,
+        checkpoint_path=ckpt,
+    )
+    assert ckpt.is_file()
+    assert seg1_calls["n"] == 1
+
+    # segment 2: resume the full 3-repeat plan from the same checkpoint
+    seg2_calls = {"n": 0}
+
+    def seg2(body: dict[str, object]):
+        seg2_calls["n"] += 1
+        return _ok_payload(serialize_candidates((APLUS_EXCELLENT,)))
+
+    resumed = _runner(seg2).run(
+        _mini_corpus(),
+        repeats=3,
+        not_distinctive_scenario_id=NOT_DISTINCTIVE_SCENARIO_ID,
+        now_epoch_seconds=_NOW,
+        checkpoint_path=ckpt,
+    )
+    # only the 2 not-yet-done provider calls (repeats 1 and 2) were made
+    assert seg2_calls["n"] == full.provider_calls_made - 1
+    assert resumed.provider_calls_made == full.provider_calls_made
+    assert resumed.certification_key_sha256 == full.certification_key_sha256
+    assert resumed.safety_outcome == full.safety_outcome
+    assert resumed.aggregate_cost_usd == full.aggregate_cost_usd
+    assert [a.validator_finding_signature for a in resumed.attempts] == [
+        a.validator_finding_signature for a in full.attempts
+    ]
+
+
+def test_runner_without_checkpoint_is_unchanged(tmp_path) -> None:
+    a = _runner(_clean_transport).run(
+        _mini_corpus(),
+        repeats=2,
+        not_distinctive_scenario_id=NOT_DISTINCTIVE_SCENARIO_ID,
+        now_epoch_seconds=_NOW,
+    )
+    b = _runner(_clean_transport).run(
+        _mini_corpus(),
+        repeats=2,
+        not_distinctive_scenario_id=NOT_DISTINCTIVE_SCENARIO_ID,
+        now_epoch_seconds=_NOW,
+        checkpoint_path=None,
+    )
+    assert a.certification_key_sha256 == b.certification_key_sha256
+    assert a.aggregate_cost_usd == b.aggregate_cost_usd
+
+
 def test_certification_key_binds_the_exact_tuple() -> None:
     runner = _runner(_clean_transport)
     corpus = build_corpus()

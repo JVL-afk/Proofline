@@ -24,10 +24,12 @@ reason to retry.
 
 from __future__ import annotations
 
+import pickle
 from collections.abc import Callable, Sequence
 from dataclasses import dataclass, field
 from decimal import ROUND_UP, Decimal
 from enum import StrEnum
+from pathlib import Path
 
 from opintel_communication.anthropic_adapter import (
     ANTHROPIC_ADAPTER_VERSION,
@@ -537,7 +539,18 @@ class CertificationRunner:
         not_distinctive_scenario_id: str,
         now_epoch_seconds: int,
         not_distinctive_repeats: int | None = None,
+        checkpoint_path: str | Path | None = None,
     ) -> CertificationReport:
+        # (return-to-Sonnet-5, operational) `checkpoint_path` is an additive
+        # resilience aid ONLY - the execution environment kills a long detached
+        # run at ~30 min, before an 81-call sequential certification completes.
+        # When set, each completed CertificationAttempt is pickled after it lands
+        # and a restarted run rehydrates them and skips the (scenario, repeat)
+        # pairs already done, so a killed run resumes instead of restarting and
+        # re-spending. It changes NOTHING about scoring, thresholds, the
+        # certification key, drift, or which candidates pass - a run with
+        # checkpoint_path=None is byte-identical to before. `now_epoch_seconds` is
+        # pinned in the checkpoint so resumed records are identical.
         store = InMemoryGenerationStore()
         store.initialize()
         b = self._bounds
@@ -546,6 +559,18 @@ class CertificationRunner:
         calls = agg_in = agg_out = 0
         agg_cost = Decimal("0")
         stopped: str | None = None
+        done_keys: set[tuple[str, int]] = set()
+        cp = Path(checkpoint_path) if checkpoint_path is not None else None
+        if cp is not None and cp.is_file():
+            saved = pickle.loads(cp.read_bytes())
+            if saved.get("cert_key") == self.certification_key(corpus).key_sha256():
+                now_epoch_seconds = int(saved["now_epoch_seconds"])
+                attempts = list(saved["attempts"])
+                calls = int(saved["calls"])
+                agg_in = int(saved["agg_in"])
+                agg_out = int(saved["agg_out"])
+                agg_cost = Decimal(saved["agg_cost"])
+                done_keys = {(a.scenario_id, a.repeat_index) for a in attempts}
 
         # The provider-reaching scenarios run `repeats` times each. The
         # deterministically-gated non-distinctive scenario runs a possibly
@@ -561,6 +586,8 @@ class CertificationRunner:
         planned_max = len(plan)
 
         for spec, repeat_index in plan:
+            if (spec.scenario_id, repeat_index) in done_keys:
+                continue
             if calls >= b.max_provider_calls:
                 stopped = f"reached max_provider_calls={b.max_provider_calls}"
                 break
@@ -646,6 +673,22 @@ class CertificationRunner:
                     cost_usd=str(call_cost),
                 )
             )
+            if cp is not None:
+                tmp = cp.with_suffix(cp.suffix + ".tmp")
+                tmp.write_bytes(
+                    pickle.dumps(
+                        {
+                            "cert_key": self.certification_key(corpus).key_sha256(),
+                            "now_epoch_seconds": now_epoch_seconds,
+                            "attempts": attempts,
+                            "calls": calls,
+                            "agg_in": agg_in,
+                            "agg_out": agg_out,
+                            "agg_cost": str(agg_cost),
+                        }
+                    )
+                )
+                tmp.replace(cp)
 
         return self._score(
             corpus=corpus,
