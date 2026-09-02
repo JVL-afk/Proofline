@@ -26,12 +26,12 @@ contains none of that provider integration.
   from advisory `COMMUNICATION_QUALITY`, a 12-member certification key, 4 drift
   classes). Frozen 10-scenario synthetic corpus in `tests/m68_3_synthetic_corpus.py`.
 
-M6.8-3 has had two configuration attempts (2026-09-02, Option A local, 27
-real `claude-sonnet-5` calls each, ≈ USD 0.84 each), both **`NOT_CERTIFIED`**
-on configuration blockers — neither a safety failure. Attempt 1
-(thinking default): extended thinking eats the whole 2000-token ceiling →
-zero text. Attempt 2 (thinking disabled): on-policy text is produced but the
-N=3-candidate JSON is truncated at 2000 output tokens → 0 candidates parsed.
-`docs/readiness/communication-layer/m6.8-3-attempt2-outcome-2026-09-02.md`
-has the analysis; a response-format decision (recommend N=1/call → 81 calls)
-is now on the owner. No delivery, no send path.
+M6.8-3 has had three configuration attempts (2026-09-02), none reaching a
+safety result — all blocked by the 2000-token output ceiling vs. the
+full-claim-manifest-in-response contract. A1 (thinking default): thinking
+eats the whole budget. A2 (thinking disabled, N=3): JSON truncated. A3
+(thinking disabled, N=1): a 1-call probe proved one candidate + full
+manifest still exceeds 2000 tokens, so the 81-call run did not start.
+`docs/readiness/communication-layer/m6.8-3-attempt3-outcome-2026-09-02.md`
+has the analysis; an owner decision (recommend a two-call candidate/manifest
+structure) is pending. No delivery, no send path.
