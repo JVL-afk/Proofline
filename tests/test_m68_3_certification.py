@@ -523,6 +523,80 @@ def test_attempt3_bounds_and_variable_nd_repeats() -> None:
     assert report.stopped_early_reason is None
 
 
+def test_attempt4_8k_bounds_and_key_distinct_from_attempt3() -> None:
+    from opintel_communication.anthropic_adapter import GenerationConfig
+    from opintel_communication.certification import ATTEMPT3_CALL_BOUNDS, ATTEMPT4_CALL_BOUNDS
+    from opintel_communication.prompt import build_certification_prompt_bundle_n1
+
+    assert ATTEMPT4_CALL_BOUNDS.max_output_tokens_per_call == 8000
+    assert ATTEMPT4_CALL_BOUNDS.max_input_tokens_per_call == 8000
+    assert ATTEMPT4_CALL_BOUNDS.aggregate_input_token_ceiling == 648_000
+    assert ATTEMPT4_CALL_BOUNDS.aggregate_output_token_ceiling == 648_000
+    assert ATTEMPT4_CALL_BOUNDS.hard_usd_ceiling == "10.00"
+    assert ATTEMPT4_CALL_BOUNDS.candidates_per_call == 1
+    assert ATTEMPT4_CALL_BOUNDS.max_provider_calls == 81
+
+    c3 = GenerationConfig(thinking="disabled")
+    c4 = GenerationConfig(thinking="disabled", max_output_tokens=8000)
+    assert c4.config_hash() != c3.config_hash()
+
+    a3 = AnthropicProviderAdapter("sk-ant-fake", config=c3, transport=_clean_transport)
+    a4 = AnthropicProviderAdapter("sk-ant-fake", config=c4, transport=_clean_transport)
+    r3 = CertificationRunner(
+        a3,
+        bounds=ATTEMPT3_CALL_BOUNDS,
+        price_table=PriceTable(),
+        prompt_builder=build_certification_prompt_bundle_n1,
+    )
+    r4 = CertificationRunner(
+        a4,
+        bounds=ATTEMPT4_CALL_BOUNDS,
+        price_table=PriceTable(),
+        prompt_builder=build_certification_prompt_bundle_n1,
+    )
+    corpus = build_corpus()
+    assert r4.certification_key(corpus).key_sha256() != r3.certification_key(corpus).key_sha256()
+
+
+def test_budget_guard_is_conservative_at_per_call_ceilings() -> None:
+    # a price that makes one worst-case call (8000 in + 8000 out) exceed USD 10
+    pricey = PriceTable(input_usd_per_mtok="700", output_usd_per_mtok="700")
+    from opintel_communication.certification import ATTEMPT4_CALL_BOUNDS
+    from opintel_communication.prompt import build_certification_prompt_bundle_n1
+
+    adapter = AnthropicProviderAdapter("sk-ant-fake", transport=_clean_transport)
+    runner = CertificationRunner(
+        adapter,
+        bounds=ATTEMPT4_CALL_BOUNDS,
+        price_table=pricey,
+        prompt_builder=build_certification_prompt_bundle_n1,
+    )
+    report = runner.run(
+        build_corpus(),
+        repeats=9,
+        not_distinctive_repeats=3,
+        not_distinctive_scenario_id=NOT_DISTINCTIVE_SCENARIO_ID,
+        now_epoch_seconds=_NOW,
+    )
+    assert report.stopped_early_reason is not None
+    assert "USD ceiling" in report.stopped_early_reason
+    assert report.safety_outcome == CertificationSafetyOutcome.NOT_CERTIFIED
+
+
+def test_provider_metadata_carries_stop_reason() -> None:
+    def _t(body: dict[str, object]) -> tuple[int, dict]:
+        return 200, {
+            "id": "m",
+            "model": PINNED_MODEL,
+            "content": [{"type": "text", "text": serialize_candidates((APLUS_EXCELLENT,))}],
+            "stop_reason": "end_turn",
+            "usage": {"input_tokens": 10, "output_tokens": 20},
+        }
+
+    _, meta = AnthropicProviderAdapter("sk-ant-fake", transport=_t).generate("p")
+    assert meta.stop_reason == "end_turn"
+
+
 def test_price_table_pending_is_flagged_in_notes() -> None:
     report = _runner(_clean_transport).run(
         _mini_corpus(),

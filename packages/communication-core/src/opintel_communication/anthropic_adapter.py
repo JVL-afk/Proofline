@@ -75,6 +75,7 @@ class ProviderError(RuntimeError):
     output_tokens: int = 0
     request_id: str = ""
     served_model: str = ""
+    stop_reason: str = ""
 
 
 class ProviderUnavailable(ProviderError):
@@ -228,6 +229,7 @@ class AnthropicProviderAdapter:
         exc.output_tokens = out_tok
         exc.request_id = str(data.get("id", ""))
         exc.served_model = str(data.get("model", ""))
+        exc.stop_reason = str(data.get("stop_reason", ""))
         return exc
 
     def generate(self, prompt_bundle: str) -> tuple[str, ProviderMetadata]:
@@ -286,5 +288,6 @@ class AnthropicProviderAdapter:
             request_id=str(data.get("id", "")),
             input_tokens=int(str(usage.get("input_tokens", 0))),
             output_tokens=int(str(usage.get("output_tokens", 0))),
+            stop_reason=str(data.get("stop_reason", "")),
         )
         return _strip_code_fence(text), meta

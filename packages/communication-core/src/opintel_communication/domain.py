@@ -399,6 +399,7 @@ class ProviderMetadata:
     request_id: str
     input_tokens: int
     output_tokens: int
+    stop_reason: str = ""
 
 
 @dataclass(frozen=True, slots=True)

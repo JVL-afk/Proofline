@@ -91,6 +91,23 @@ ATTEMPT3_CALL_BOUNDS = CertificationCallBounds(
     automatic_retries=0,
 )
 
+# Attempt 4 (owner authorization 2026-09-02, Option 2): the 2000 output ceiling
+# was an operational/cost constraint, not a truth/safety/semantic invariant, and
+# Attempts 2-3 proved it prevents completion of the accepted one-response
+# candidate + full-manifest schema. Output ceiling raised to 8000 (per call and
+# aggregate). Everything else - validator, corpus, thresholds, USD 10.00 hard
+# ceiling, atomic one-envelope -> one-response protocol - is unchanged.
+ATTEMPT4_CALL_BOUNDS = CertificationCallBounds(
+    max_provider_calls=81,
+    candidates_per_call=1,
+    max_input_tokens_per_call=8_000,
+    max_output_tokens_per_call=8_000,
+    aggregate_input_token_ceiling=648_000,
+    aggregate_output_token_ceiling=648_000,
+    hard_usd_ceiling="10.00",
+    automatic_retries=0,
+)
+
 
 # ----------------------------------------------------------------------------
 # Pricing - real cost from real tokens. Rates require owner/price-table
@@ -439,12 +456,16 @@ class CertificationRunner:
             if agg_out + b.max_output_tokens_per_call > b.aggregate_output_token_ceiling:
                 stopped = "aggregate output token ceiling would be exceeded"
                 break
-            # Worst-case cost of this call at the per-call output ceiling.
-            worst_cost = Decimal(self._price.cost_usd(est_in, b.max_output_tokens_per_call))
+            # Conservative budget guard (owner authorization 2026-09-02): refuse
+            # the call if the remaining hard USD ceiling cannot cover this call at
+            # BOTH per-call token ceilings, not merely the estimated input.
+            worst_cost = Decimal(
+                self._price.cost_usd(b.max_input_tokens_per_call, b.max_output_tokens_per_call)
+            )
             if agg_cost + worst_cost > b.usd_ceiling:
                 stopped = (
-                    f"USD ceiling {b.hard_usd_ceiling} would be exceeded "
-                    f"(spent {agg_cost}, next worst-case {worst_cost})"
+                    f"USD ceiling {b.hard_usd_ceiling} could not conservatively cover the "
+                    f"next call (spent {agg_cost}, per-call worst-case {worst_cost})"
                 )
                 break
 

@@ -1,15 +1,17 @@
 """M6.8-3 synthetic live-provider certification - local execution harness.
 
-Owner-authorized 2026-09-01. **Attempt 3** (authorized 2026-09-02, Option 1)
-after Attempts 1 and 2 both returned NOT_CERTIFIED on configuration blockers
-(thinking-only output; then N=3-candidate JSON not fitting 2000 tokens):
-thinking disabled AND one candidate per call. The 9 provider-reaching scenarios
-run 9 repeats each = 81 ``claude-sonnet-5`` calls (the previously authorized
-81-candidate maximum). ``s03_generic_weak_evidence`` stays deterministically
-gated before the provider and runs 3 times, recorded separately. N=1,
-max_output_tokens=2000 unchanged, full claim-manifest contract unchanged,
-validator / corpus / thresholds unchanged. New prompt template ``@3`` => new
-certification key. USD 10.00 hard aggregate ceiling, 0 retries.
+Owner-authorized 2026-09-01. **Attempt 4** (authorized 2026-09-02, Option 2)
+after Attempts 1-3 all failed on the 2000 output-token ceiling vs. the accepted
+full-claim-manifest response schema: thinking disabled, one candidate per call,
+and ``max_output_tokens`` raised 2000 -> 8000 (per call and aggregate). The 9
+provider-reaching scenarios run 9 repeats each = 81 ``claude-sonnet-5`` calls.
+``s03_generic_weak_evidence`` stays deterministically gated and runs 3 times,
+recorded separately. The atomic protocol (one envelope -> one response -> one
+candidate + full manifest -> independent validation), the full claim-manifest
+contract, the validator, the frozen corpus, and every threshold / zero-tolerance
+finding are unchanged. New config hash (8000) => new certification key.
+USD 10.00 hard aggregate ceiling, 0 retries; the budget guard refuses a call it
+cannot conservatively cover at both per-call token ceilings.
 
 This is Option A (local execution). It does NOT touch AWS. It reads the Anthropic
 key from ``apikeys.txt`` (the line prefixed ``ANTHROPIC:``), holds it only in the
@@ -45,7 +47,7 @@ from opintel_communication.anthropic_adapter import (  # noqa: E402
     GenerationConfig,
 )
 from opintel_communication.certification import (  # noqa: E402
-    ATTEMPT3_CALL_BOUNDS,
+    ATTEMPT4_CALL_BOUNDS,
     CONFIRMED_SONNET5_PRICE_TABLE,
     CertificationRunner,
 )
@@ -55,21 +57,24 @@ from opintel_communication.envelope_projection import (  # noqa: E402
 )
 from opintel_communication.prompt import build_certification_prompt_bundle_n1  # noqa: E402
 from opintel_communication.stub_provider import parse_provider_response  # noqa: E402
+from opintel_communication.validator import OutputValidator  # noqa: E402
 
 _OUT_DIR = ROOT / "docs" / "readiness" / "communication-layer"
 
-# Attempt 3 (owner authorization 2026-09-02, Option 1): thinking disabled AND
-# one candidate per call, so the 9 provider-reaching scenarios run 9 repeats
-# each = 81 provider calls (the previously authorized 81-candidate maximum).
-# max_output_tokens unchanged at 2000; full claim-manifest contract unchanged;
-# validator / corpus / safety thresholds unchanged. New prompt template @3 =>
-# new certification key.
-_ATTEMPT3_CONFIG = GenerationConfig(thinking="disabled")
-_ATTEMPT3_BOUNDS = ATTEMPT3_CALL_BOUNDS
+# Attempt 4 (owner authorization 2026-09-02, Option 2): thinking disabled, one
+# candidate per call, and max_output_tokens raised 2000 -> 8000 (per call and
+# aggregate). Attempts 2-3 proved the 2000 ceiling - an operational/cost
+# constraint, not a truth/safety/semantic invariant - prevents completing the
+# accepted one-response candidate + full-manifest schema. The atomic protocol
+# (one envelope -> one response -> one candidate + full manifest -> independent
+# validation), the validator, the frozen corpus, and every threshold /
+# zero-tolerance finding are unchanged. New config hash (8000) => new key.
+_ATTEMPT4_CONFIG = GenerationConfig(thinking="disabled", max_output_tokens=8000)
+_ATTEMPT4_BOUNDS = ATTEMPT4_CALL_BOUNDS
 _PROMPT_BUILDER = build_certification_prompt_bundle_n1
 _REPEATS = 9
 _ND_REPEATS = 3
-_ATTEMPT_LABEL = "attempt3-thinking-disabled-n1"
+_ATTEMPT_LABEL = "attempt4-thinking-disabled-n1-8k"
 
 
 def _apikeys_path() -> Path:
@@ -132,15 +137,15 @@ def _read_anthropic_key() -> str:
 
 
 def _plan_summary() -> str:
-    b = _ATTEMPT3_BOUNDS
+    b = _ATTEMPT4_BOUNDS
     corpus = build_corpus()
     distinctive = [s for s in corpus.specs if s.envelope.has_distinctive_fact()]
     reaching = len(distinctive) * _REPEATS
     lines = [
         f"M6.8-3 synthetic certification - PLAN ({_ATTEMPT_LABEL})",
-        f"  config            : thinking={_ATTEMPT3_CONFIG.thinking or 'provider-default'} "
-        f"N={b.candidates_per_call} max_output_tokens={_ATTEMPT3_CONFIG.max_output_tokens} "
-        f"config_hash={_ATTEMPT3_CONFIG.config_hash()[:16]}...",
+        f"  config            : thinking={_ATTEMPT4_CONFIG.thinking or 'provider-default'} "
+        f"N={b.candidates_per_call} max_output_tokens={_ATTEMPT4_CONFIG.max_output_tokens} "
+        f"config_hash={_ATTEMPT4_CONFIG.config_hash()[:16]}...",
         f"  prompt template   : {_PROMPT_BUILDER(distinctive[0].envelope).template_id}",
         f"  corpus            : {corpus.corpus_version} ({len(corpus.specs)} envelopes)",
         f"  corpus manifest   : {corpus.manifest_sha256()}",
@@ -229,11 +234,11 @@ def _preflight(*, require_key: bool) -> tuple[list[str], dict[str, object]]:
     else:
         checks.append("API credential check skipped (dry run)")
 
-    # 6. adapter / model / config matches the Attempt 3 certification key
-    adapter = AnthropicProviderAdapter("sk-ant-preflight-not-a-real-key", config=_ATTEMPT3_CONFIG)
+    # 6. adapter / model / config matches the Attempt 4 certification key
+    adapter = AnthropicProviderAdapter("sk-ant-preflight-not-a-real-key", config=_ATTEMPT4_CONFIG)
     runner = CertificationRunner(
         adapter,
-        bounds=_ATTEMPT3_BOUNDS,
+        bounds=_ATTEMPT4_BOUNDS,
         price_table=CONFIRMED_SONNET5_PRICE_TABLE,
         prompt_builder=_PROMPT_BUILDER,
     )
@@ -254,36 +259,47 @@ def _preflight(*, require_key: bool) -> tuple[list[str], dict[str, object]]:
         f"key_sha {key_obj.key_sha256()}"
     )
 
-    # 7. N=1 one-candidate response schema + revised bounds
-    if _ATTEMPT3_BOUNDS.candidates_per_call != 1:
-        raise SystemExit("PREFLIGHT FAIL: Attempt 3 bounds do not request exactly 1 candidate")
+    # 7. N=1 one-candidate response schema + revised 8k bounds
+    if _ATTEMPT4_BOUNDS.candidates_per_call != 1:
+        raise SystemExit("PREFLIGHT FAIL: Attempt 4 bounds do not request exactly 1 candidate")
+    if (
+        _ATTEMPT4_BOUNDS.max_output_tokens_per_call != 8000
+        or _ATTEMPT4_CONFIG.max_output_tokens != 8000
+    ):
+        raise SystemExit("PREFLIGHT FAIL: Attempt 4 output ceiling is not 8000")
     tmpl = _PROMPT_BUILDER(corpus.specs[0].envelope).bundle_text
     if "EXACTLY ONE candidate" not in tmpl or "claim manifest" not in tmpl.lower():
         raise SystemExit(
             "PREFLIGHT FAIL: @3 template must request exactly one candidate with a full manifest"
         )
     checks.append(
-        f"one-candidate response schema: N={_ATTEMPT3_BOUNDS.candidates_per_call}, "
-        f"@3 template requests exactly one candidate + full claim manifest; bounds "
-        f"{_ATTEMPT3_BOUNDS.max_provider_calls} calls / "
-        f"{_ATTEMPT3_BOUNDS.aggregate_input_token_ceiling} agg-in / "
-        f"{_ATTEMPT3_BOUNDS.aggregate_output_token_ceiling} agg-out; counters start 0/0/0"
+        f"one-candidate response schema: N={_ATTEMPT4_BOUNDS.candidates_per_call}, "
+        f"@3 template requests exactly one candidate + full claim manifest; "
+        f"output ceiling 8000/call; bounds {_ATTEMPT4_BOUNDS.max_provider_calls} calls / "
+        f"{_ATTEMPT4_BOUNDS.aggregate_input_token_ceiling} agg-in / "
+        f"{_ATTEMPT4_BOUNDS.aggregate_output_token_ceiling} agg-out; USD "
+        f"{_ATTEMPT4_BOUNDS.hard_usd_ceiling} hard; counters start 0/0/0"
     )
 
-    # 8. provider compatibility probe (owner authorization: permitted, must be
-    #    counted + reported separately). One real call with the EXACT Attempt 3
-    #    config + @3 bundle: thinking-disabled accepted? served model still
-    #    claude-sonnet-5? does a full one-candidate JSON complete under 2000 out?
+    # 8. Attempt-4 compatibility probe (owner authorization: exactly one, counted
+    #    + disclosed separately). One real call with the EXACT Attempt 4 config
+    #    (thinking disabled, 8000 out) + @3 bundle on s01. Must prove: HTTP/provider
+    #    success; served model matches; thinking disabled; stop_reason != max_tokens;
+    #    exactly one complete payload; candidate JSON parses; full claim manifest
+    #    parses; response reaches the deterministic validator. The candidate need
+    #    NOT PASS - only the accepted protocol must complete and be evaluable.
     if require_key:
-        probe = AnthropicProviderAdapter(_read_anthropic_key(), config=_ATTEMPT3_CONFIG)
-        probe_bundle = _PROMPT_BUILDER(corpus.specs[0].envelope)
+        probe = AnthropicProviderAdapter(_read_anthropic_key(), config=_ATTEMPT4_CONFIG)
+        s01 = corpus.specs[0]
+        probe_bundle = _PROMPT_BUILDER(s01.envelope)
         try:
             text, meta = probe.generate(probe_bundle.bundle_text)
         except Exception as exc:  # any incompatibility is a hard stop
             raise SystemExit(
-                f"PREFLIGHT FAIL: Attempt 3 compatibility probe failed "
+                f"PREFLIGHT FAIL: Attempt 4 compatibility probe failed "
                 f"({type(exc).__name__}: {exc}). STOP for owner review - do not "
-                "change model / thinking mode / token ceiling / manifest independently."
+                "raise beyond 8000 / split calls / slim the manifest / change model / "
+                "modify the validator / alter the corpus independently."
             ) from exc
         probe_stats = {
             "probe_calls": 1,
@@ -293,23 +309,40 @@ def _preflight(*, require_key: bool) -> tuple[list[str], dict[str, object]]:
                 meta.input_tokens, meta.output_tokens
             ),
             "probe_served_model": meta.model_version,
+            "probe_stop_reason": meta.stop_reason,
         }
         if meta.model_version and not meta.model_version.startswith(PINNED_MODEL):
             raise SystemExit(
                 f"PREFLIGHT FAIL: probe served model '{meta.model_version}' != '{PINNED_MODEL}'"
             )
-        parsed = parse_provider_response(text)
-        if len(parsed.candidates) < 1:
+        if meta.stop_reason == "max_tokens":
             raise SystemExit(
-                "PREFLIGHT FAIL: one-candidate JSON did not complete/parse under 2000 output "
-                f"tokens (out_tokens={meta.output_tokens}, status={parsed.status}). "
-                "STOP for owner review - N=1 still cannot complete a candidate."
+                f"PREFLIGHT FAIL: probe stop_reason=max_tokens at 8000 out "
+                f"(out_tokens={meta.output_tokens}). STOP for owner review - the accepted "
+                "schema still does not complete; do not raise beyond 8000 or split calls."
             )
+        parsed = parse_provider_response(text)
+        if len(parsed.candidates) != 1:
+            raise SystemExit(
+                f"PREFLIGHT FAIL: expected exactly 1 parseable candidate, got "
+                f"{len(parsed.candidates)} (status={parsed.status}, "
+                f"out_tokens={meta.output_tokens}). STOP for owner review."
+            )
+        cand = parsed.candidates[0]
+        n_entries = len(cand.claim_manifest.entries)
+        if n_entries < 1:
+            raise SystemExit(
+                "PREFLIGHT FAIL: candidate parsed but its claim manifest is empty - the full "
+                "manifest did not complete. STOP for owner review."
+            )
+        vr = OutputValidator().validate(s01.envelope, cand)
         checks.append(
-            f"compatibility probe OK: thinking-disabled accepted, served model "
-            f"'{meta.model_version}', ONE candidate parsed under 2000 out "
-            f"(usage in/out {meta.input_tokens}/{meta.output_tokens}, "
-            f"cost USD {probe_stats['probe_cost_usd']}). Counted separately; NOT one of the 81."
+            f"compatibility probe OK: thinking-disabled, served model '{meta.model_version}', "
+            f"stop_reason={meta.stop_reason!r} (!= max_tokens); ONE candidate + "
+            f"{n_entries}-entry claim manifest parsed and reached the validator "
+            f"(validator passed={vr.passed}, {len(vr.findings)} finding(s) - PASS not required "
+            f"for compatibility); usage in/out {meta.input_tokens}/{meta.output_tokens}, "
+            f"cost USD {probe_stats['probe_cost_usd']}. Counted separately; NOT one of the 81."
         )
     else:
         checks.append("provider compatibility probe skipped (dry run)")
@@ -325,16 +358,21 @@ def _markdown_report(
     a = lines.append
     a(f"# M6.8-3 synthetic live-provider certification report - {_ATTEMPT_LABEL} - {stamp}")
     a("")
-    a("Immutable. Owner-authorized 2026-09-01; Attempt 3 authorized 2026-09-02 (Option 1). ")
+    a("Immutable. Owner-authorized 2026-09-01; Attempt 4 authorized 2026-09-02 (Option 2). ")
     a("Option A local execution. No AWS surface. No contact resolution, no delivery, no send.")
     a("")
     a(
-        "**Attempt 3** = thinking **disabled**, **N=1 candidate per call**, "
-        "`max_output_tokens=2000` unchanged, full claim-manifest contract unchanged, validator / "
-        "corpus / safety thresholds unchanged. New prompt template `@3` => new certification key. "
-        "It is an independent configuration, NOT a retry of Attempt 1 (adaptive thinking / 2k / N3 "
-        "-> NOT_CERTIFIED_CONFIGURATION) or Attempt 2 (thinking disabled / 2k / N3 -> "
-        "NOT_CERTIFIED_CONFIGURATION). Do NOT aggregate metrics across attempts."
+        "**Attempt 4** = thinking **disabled**, **N=1 candidate per call**, "
+        "`max_output_tokens` raised **2000 -> 8000** (per call and aggregate). The atomic "
+        "protocol (one envelope -> one response -> one candidate + full manifest -> independent "
+        "validation), the full claim-manifest contract, the validator, the frozen corpus, and "
+        "every threshold / zero-tolerance finding are unchanged; the 2000 ceiling was an "
+        "operational/cost constraint, not a truth/safety/semantic invariant. New config hash "
+        "(8000) => new certification key. Independent configuration, NOT a retry of Attempt 1 "
+        "(adaptive thinking / 2k / N3 -> NOT_CERTIFIED_CONFIGURATION), Attempt 2 (thinking "
+        "disabled / 2k / N3 -> NOT_CERTIFIED_CONFIGURATION), or Attempt 3 (thinking disabled / "
+        "2k / N1 -> PREFLIGHT_CONFIGURATION_BLOCKER, run never started). Do NOT aggregate "
+        "metrics across attempts."
     )
     a("")
     a("## Preflight")
@@ -513,16 +551,16 @@ def main() -> int:
 
     key = _read_anthropic_key()
     corpus = build_corpus()
-    adapter = AnthropicProviderAdapter(key, config=_ATTEMPT3_CONFIG)
+    adapter = AnthropicProviderAdapter(key, config=_ATTEMPT4_CONFIG)
     runner = CertificationRunner(
         adapter,
-        bounds=_ATTEMPT3_BOUNDS,
+        bounds=_ATTEMPT4_BOUNDS,
         price_table=CONFIRMED_SONNET5_PRICE_TABLE,
         prompt_builder=_PROMPT_BUILDER,
     )
 
     print(
-        f"\nexecuting up to {_ATTEMPT3_BOUNDS.max_provider_calls} real claude-sonnet-5 calls "
+        f"\nexecuting up to {_ATTEMPT4_BOUNDS.max_provider_calls} real claude-sonnet-5 calls "
         f"({_ATTEMPT_LABEL}; {NOT_DISTINCTIVE_SCENARIO_ID} x{_ND_REPEATS} gated) ..."
     )
     report = runner.run(
