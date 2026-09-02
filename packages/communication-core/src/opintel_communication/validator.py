@@ -25,6 +25,7 @@ from opintel_communication.domain import (
     CTA_PARSER_V2_VERSION,
     CTA_PARSER_VERSION,
     OUTPUT_VALIDATOR_V2_VERSION,
+    OUTPUT_VALIDATOR_V3_VERSION,
     OUTPUT_VALIDATOR_VERSION,
     ClaimManifestEntry,
     ClaimType,
@@ -1150,10 +1151,18 @@ class OutputValidator:
     version = OUTPUT_VALIDATOR_VERSION
 
     def __init__(self, *, contract: str = "v1") -> None:
-        if contract not in ("v1", "v2"):
+        if contract not in ("v1", "v2", "v3"):
             raise ValueError(f"unknown validator contract {contract!r}")
-        self._v2 = contract == "v2"
-        self.version = OUTPUT_VALIDATOR_V2_VERSION if self._v2 else OUTPUT_VALIDATOR_VERSION
+        # v3 reuses every v2 prose rule; it only replaces rule 15 (the
+        # provider-manifest cross-checks) with canonical claim reconciliation.
+        self._v2 = contract in ("v2", "v3")
+        self._v3 = contract == "v3"
+        if self._v3:
+            self.version = OUTPUT_VALIDATOR_V3_VERSION
+        elif self._v2:
+            self.version = OUTPUT_VALIDATOR_V2_VERSION
+        else:
+            self.version = OUTPUT_VALIDATOR_VERSION
         self.cta_parser_version = CTA_PARSER_V2_VERSION if self._v2 else CTA_PARSER_VERSION
         self.contract = contract
 
@@ -1548,17 +1557,65 @@ class OutputValidator:
                     )
                 )
 
-        # 15. claim-manifest cross-checks (owner refinement) -------
-        findings.extend(
-            self._check_manifest(
-                envelope,
-                candidate,
-                clauses,
-                manifest_by_span,
-                allowed_vocab,
-                licensed_source_kinds,
+        # 15. claim reconciliation -------------------------------
+        canonical_meta: dict[str, object] = {}
+        if self._v3:
+            # (final M6.8-3 architectural correction) the provider manifest is
+            # NON-AUTHORITATIVE. Every substantive rendered clause is
+            # independently discovered, classified, source-licensed and
+            # strength-checked from the prose + envelope. 100% substantive
+            # coverage is required; an unresolved substantive span fails closed.
+            from opintel_communication.canonical_claim_reconciler import reconcile
+
+            cmap = reconcile(
+                subject=subject.text if subject else "",
+                body=body,
+                envelope=envelope,
+                structured_cta=envelope.structured_cta,
+                required_disclosures=envelope.required_disclosures,
+                provider_manifest=candidate.claim_manifest,
             )
-        )
+            findings.extend(cmap.findings)
+            if cmap.coverage < 1.0:
+                findings.append(
+                    _f(
+                        "canonical_reconciliation_incomplete",
+                        f"substantive-prose reconciliation coverage {cmap.coverage:.3f} < 1.0 "
+                        f"({cmap.unresolved_count} unresolved span(s))",
+                        "first_contact_email",
+                    )
+                )
+            for dg in cmap.manifest_disagreements:
+                findings.append(
+                    _f(
+                        "provider_manifest_disagreement",
+                        f"{dg.kind}: {dg.detail}",
+                        span=dg.span or None,
+                        severity=ValidatorSeverity.ADVISORY,
+                    )
+                )
+            canonical_meta = {
+                "canonical_reconciliation_coverage": cmap.coverage,
+                "unresolved_substantive_claims": cmap.unresolved_count,
+                "canonical_substantive_claims": cmap.substantive_count,
+                "canonical_licensed_claims": cmap.licensed_count,
+                "canonical_rejected_claims": cmap.rejected_count,
+                "provider_manifest_disagreements": tuple(
+                    d.kind for d in cmap.manifest_disagreements
+                ),
+                "canonical_claim_map": cmap,
+            }
+        else:
+            findings.extend(
+                self._check_manifest(
+                    envelope,
+                    candidate,
+                    clauses,
+                    manifest_by_span,
+                    allowed_vocab,
+                    licensed_source_kinds,
+                )
+            )
 
         # 16. subject <= body / source strength ------------------
         if subject is not None:
@@ -1602,6 +1659,15 @@ class OutputValidator:
             passed = not any(f.severity != ValidatorSeverity.ADVISORY for f in findings)
         else:
             passed = not findings
+        if self._v3:
+            return ValidationResult(
+                candidate_id=candidate.candidate_id,
+                passed=passed,
+                findings=tuple(findings),
+                validator_version=OUTPUT_VALIDATOR_V3_VERSION,
+                cta_parser_version=self.cta_parser_version,
+                **canonical_meta,  # type: ignore[arg-type]
+            )
         return ValidationResult(
             candidate_id=candidate.candidate_id,
             passed=passed,

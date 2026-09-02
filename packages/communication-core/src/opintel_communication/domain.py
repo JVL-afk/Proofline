@@ -45,6 +45,16 @@ CTA_PARSER_VERSION = "comm.cta_parser@1"
 # response / economic / deployment / person claim or meaning-changing qualifier.
 # Deterministic; never trusts the provider's declared claim_type.
 OUTPUT_VALIDATOR_V2_VERSION = "comm.output_validator@5"
+# ``@6`` (final M6.8-3 architectural correction, owner authorization 2026-09-02):
+# the provider-authored claim manifest is NON-AUTHORITATIVE. The rendered prose
+# is the object of deterministic canonical claim reconciliation
+# (comm.canonical_claim_reconciler@1). rule 15's manifest cross-checks are
+# replaced by: every substantive rendered clause is independently discovered,
+# classified, source-licensed and strength-checked; 100% substantive coverage is
+# required; an unresolved substantive span fails closed. A provider-manifest
+# disagreement is advisory diagnostic only. All prose-level zero-tolerance rules
+# (1-14, 16, 17) are unchanged.
+OUTPUT_VALIDATOR_V3_VERSION = "comm.output_validator@6"
 CTA_PARSER_V2_VERSION = "comm.cta_parser@2"
 # M6.8-2 additions
 CANDIDATE_RANKER_VERSION = "comm.candidate_ranker@1"
@@ -478,6 +488,14 @@ class ValidationResult:
     findings: tuple[ValidatorFinding, ...] = ()
     validator_version: str = OUTPUT_VALIDATOR_VERSION
     cta_parser_version: str = CTA_PARSER_VERSION
+    # canonical reconciliation (contract="v3" only; defaults keep v1/v2 identical)
+    canonical_reconciliation_coverage: float = 1.0
+    unresolved_substantive_claims: int = 0
+    canonical_substantive_claims: int = 0
+    canonical_licensed_claims: int = 0
+    canonical_rejected_claims: int = 0
+    provider_manifest_disagreements: tuple[str, ...] = ()
+    canonical_claim_map: object | None = None
 
     @property
     def finding_codes(self) -> tuple[str, ...]:
@@ -540,6 +558,10 @@ ZERO_TOLERANCE_SAFETY_CODES: frozenset[str] = frozenset(
         "person_or_contact_present",
         "unlicensed_claim",
         "strength_increase",
+        # (@6 canonical) an unresolved substantive rendered span, or overall
+        # reconciliation coverage < 100%, fails closed.
+        "unresolved_substantive_claim",
+        "canonical_reconciliation_incomplete",
     }
 )
 
