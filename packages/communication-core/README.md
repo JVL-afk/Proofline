@@ -26,12 +26,14 @@ contains none of that provider integration.
   from advisory `COMMUNICATION_QUALITY`, a 12-member certification key, 4 drift
   classes). Frozen 10-scenario synthetic corpus in `tests/m68_3_synthetic_corpus.py`.
 
-M6.8-3 has had three configuration attempts (2026-09-02), none reaching a
-safety result — all blocked by the 2000-token output ceiling vs. the
-full-claim-manifest-in-response contract. A1 (thinking default): thinking
-eats the whole budget. A2 (thinking disabled, N=3): JSON truncated. A3
-(thinking disabled, N=1): a 1-call probe proved one candidate + full
-manifest still exceeds 2000 tokens, so the 81-call run did not start.
-`docs/readiness/communication-layer/m6.8-3-attempt3-outcome-2026-09-02.md`
-has the analysis; an owner decision (recommend a two-call candidate/manifest
-structure) is pending. No delivery, no send path.
+M6.8-3 has had four configuration attempts (2026-09-02), none reaching a
+safety result. A1–A3 died on the 2000-token output ceiling. **A4 raised it
+to 8000 and got the first complete, untruncated response** — so 8000 is
+enough — but the probe exposed a `parse_provider_response` crash on an
+out-of-enum manifest `asserted_strength` (now **fixed** — it drops the
+candidate and records it instead of raising), and that the `@2`/`@3`
+prompts never state the claim-manifest entry schema, so a real model emits
+non-conformant entries.
+`docs/readiness/communication-layer/m6.8-3-attempt4-outcome-2026-09-02.md`
+has the analysis; an owner decision (recommend a `@5` template that states
+the entry schema) is pending. No delivery, no send path.

@@ -597,6 +597,40 @@ def test_provider_metadata_carries_stop_reason() -> None:
     assert meta.stop_reason == "end_turn"
 
 
+def test_parse_provider_response_never_raises_on_nonconformant_manifest() -> None:
+    from opintel_communication.stub_provider import parse_provider_response
+
+    # a real model emitted an asserted_strength outside our FactStrength vocabulary
+    bad = json.dumps(
+        {
+            "candidates": [
+                {
+                    "candidate_id": "c1",
+                    "subject": "s",
+                    "body": "b",
+                    "claim_manifest": [
+                        {
+                            "claim_id": "m1",
+                            "claim_type": "DISCLOSURE",
+                            "rendered_artifact": "first_contact_email",
+                            "rendered_span": "...",
+                            "licensed_source_ids": [],
+                            "asserted_strength": "REQUIRED_DISCLOSURE",
+                        }
+                    ],
+                }
+            ]
+        }
+    )
+    result = parse_provider_response(bad)  # must not raise
+    assert result.status.value == "REFUSED"
+    assert result.candidates == ()
+    assert result.reason and "malformed" in result.reason
+
+    # non-list candidates also handled
+    assert parse_provider_response('{"candidates": "nope"}').status.value == "REFUSED"
+
+
 def test_price_table_pending_is_flagged_in_notes() -> None:
     report = _runner(_clean_transport).run(
         _mini_corpus(),

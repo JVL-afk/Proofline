@@ -83,9 +83,29 @@ def serialize_candidates(candidates: tuple[GenerationCandidate, ...]) -> str:
     return json.dumps(payload, sort_keys=True, separators=(",", ":"))
 
 
+def _candidate_from_row(row: dict[str, Any]) -> GenerationCandidate:
+    entries = tuple(_entry_from_json(e) for e in row.get("claim_manifest", []))
+    return GenerationCandidate(
+        candidate_id=str(row["candidate_id"]),
+        artifacts=(
+            GeneratedArtifact("subject", str(row.get("subject", ""))),
+            GeneratedArtifact("first_contact_email", str(row.get("body", ""))),
+        ),
+        claim_manifest=ClaimManifest(entries=entries),
+        lead_source_id=(str(row["lead_source_id"]) if row.get("lead_source_id") else None),
+    )
+
+
 def parse_provider_response(raw: str) -> GenerationResult:
-    """Parse a raw stub/provider response into candidates. Malformed input is a
-    non-authoritative provider fault, surfaced as an empty CANDIDATES result."""
+    """Parse a raw stub/provider response into candidates.
+
+    The provider is assumed non-authoritative and possibly non-conformant: a
+    real model may emit a claim-manifest entry whose ``claim_type`` /
+    ``asserted_strength`` is outside our vocabulary, omit a required field, or
+    return a non-list ``candidates``. None of that may raise - it is a
+    non-authoritative provider fault, surfaced as a dropped candidate and,
+    when nothing survives, a REFUSED result with a reason.
+    """
 
     try:
         data = json.loads(raw)
@@ -94,25 +114,29 @@ def parse_provider_response(raw: str) -> GenerationResult:
         return GenerationResult(
             status=GenerationStatus.REFUSED, reason="unparseable provider response"
         )
+    if not isinstance(rows, list):
+        return GenerationResult(
+            status=GenerationStatus.REFUSED, reason="provider 'candidates' is not a list"
+        )
 
     candidates: list[GenerationCandidate] = []
+    dropped = 0
+    drop_reasons: list[str] = []
     for row in rows:
-        entries = tuple(_entry_from_json(e) for e in row.get("claim_manifest", []))
-        candidates.append(
-            GenerationCandidate(
-                candidate_id=str(row["candidate_id"]),
-                artifacts=(
-                    GeneratedArtifact("subject", str(row.get("subject", ""))),
-                    GeneratedArtifact("first_contact_email", str(row.get("body", ""))),
-                ),
-                claim_manifest=ClaimManifest(entries=entries),
-                lead_source_id=(str(row["lead_source_id"]) if row.get("lead_source_id") else None),
-            )
-        )
-    return GenerationResult(
-        status=GenerationStatus.CANDIDATES if candidates else GenerationStatus.REFUSED,
-        candidates=tuple(candidates),
-    )
+        try:
+            if not isinstance(row, dict):
+                raise TypeError("candidate row is not an object")
+            candidates.append(_candidate_from_row(row))
+        except (ValueError, KeyError, TypeError) as exc:
+            dropped += 1
+            drop_reasons.append(f"{type(exc).__name__}: {exc}")
+
+    if candidates:
+        return GenerationResult(status=GenerationStatus.CANDIDATES, candidates=tuple(candidates))
+    reason = "no parseable candidate"
+    if drop_reasons:
+        reason += f" ({dropped} malformed: {'; '.join(drop_reasons[:3])})"
+    return GenerationResult(status=GenerationStatus.REFUSED, reason=reason)
 
 
 @dataclass(frozen=True, slots=True)
