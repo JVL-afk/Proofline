@@ -218,12 +218,20 @@ class AnthropicProviderAdapter:
         raw_blocks = data.get("content")
         blocks: list[object] = list(raw_blocks) if isinstance(raw_blocks, list) else []
         parts: list[str] = []
+        block_types: list[str] = []
         for b in blocks:
-            if isinstance(b, dict) and b.get("type") == "text":
-                parts.append(str(b.get("text", "")))
+            if isinstance(b, dict):
+                block_types.append(str(b.get("type", "?")))
+                if b.get("type") == "text":
+                    parts.append(str(b.get("text", "")))
         text = "".join(parts)
         if not text.strip():
-            raise ProviderRefused("anthropic returned no text content")
+            # e.g. extended thinking consumed the whole max_tokens budget and no
+            # text block was emitted (stop_reason=max_tokens, content=[thinking]).
+            raise ProviderRefused(
+                f"anthropic returned no text content "
+                f"(stop_reason={data.get('stop_reason')!r}, block_types={block_types})"
+            )
 
         raw_usage = data.get("usage")
         usage: dict[str, object] = raw_usage if isinstance(raw_usage, dict) else {}

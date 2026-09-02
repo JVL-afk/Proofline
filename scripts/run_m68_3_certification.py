@@ -53,8 +53,18 @@ from opintel_communication.envelope_projection import (  # noqa: E402
     provider_facing_projection,
 )
 
-_APIKEYS = ROOT / "apikeys.txt"
 _OUT_DIR = ROOT / "docs" / "readiness" / "communication-layer"
+
+
+def _apikeys_path() -> Path:
+    """apikeys.txt lives at the main checkout root, not inside a worktree.
+    Walk up from ROOT until it is found."""
+    for base in (ROOT, *ROOT.parents):
+        candidate = base / "apikeys.txt"
+        if candidate.is_file():
+            return candidate
+    raise SystemExit("apikeys.txt not found in ROOT or any parent directory")
+
 
 _EXPECTED_MANIFEST_SHA = "282cdd5a2783f793a47d71b17ddf8b62242294fc0260e73a3526fbec5537d411"
 _EXPECTED_ENVELOPE_SHA16 = {
@@ -91,7 +101,8 @@ _CONTACT_PATTERNS = (re.compile(r"[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}"),)
 
 
 def _read_anthropic_key() -> str:
-    for line in _APIKEYS.read_text(encoding="utf-8").splitlines():
+    # apikeys.txt may carry a stray cp1252 byte; the credential lines are ASCII.
+    for line in _apikeys_path().read_text(encoding="utf-8", errors="ignore").splitlines():
         stripped = line.strip()
         if stripped.upper().startswith("ANTHROPIC:"):
             value = stripped.split(":", 1)[1].strip()

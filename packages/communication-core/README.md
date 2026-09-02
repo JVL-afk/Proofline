@@ -26,6 +26,11 @@ contains none of that provider integration.
   from advisory `COMMUNICATION_QUALITY`, a 12-member certification key, 4 drift
   classes). Frozen 10-scenario synthetic corpus in `tests/m68_3_synthetic_corpus.py`.
 
-The real provider call still has NOT been made — the offline machinery is
-committed; the 27 bounded `claude-sonnet-5` calls wait on the owner's
-execution-environment decision. No delivery, no send path. USD 0 so far.
+M6.8-3 was executed 2026-09-02 (Option A local, 27 real `claude-sonnet-5`
+calls, ≈ USD 0.86). Deterministic result: **`NOT_CERTIFIED`** — a
+provider-configuration blocker, not a safety failure: `claude-sonnet-5`
+extended thinking consumes the whole authorized 2000-token ceiling, so every
+call returns zero text blocks and fails closed with nothing to validate.
+`docs/readiness/communication-layer/m6.8-3-certification-outcome-2026-09-02.md`
+has the analysis and the generation-config decision now on the owner. No
+delivery, no send path.
