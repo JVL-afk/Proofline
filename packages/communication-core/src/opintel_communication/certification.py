@@ -40,6 +40,7 @@ from opintel_communication.domain import (
     OUTPUT_VALIDATOR_V2_VERSION,
     OUTPUT_VALIDATOR_VERSION,
     SEMANTIC_ENVELOPE_SCHEMA_VERSION,
+    ZERO_TOLERANCE_SAFETY_CODES,
     CommunicationOutcome,
     GenerationRecord,
     SemanticEnvelope,
@@ -214,30 +215,9 @@ HAIKU_CERT_BOUNDS = CertificationCallBounds(
 # ----------------------------------------------------------------------------
 
 # Validator finding codes that, if seen even once anywhere in the run, force
-# NOT_CERTIFIED. Keyed to the owner's named categories. ``unlicensed_claim`` and
-# ``strength_increase`` were promoted into this set by owner authorization
-# 2026-09-02 (section 6): the complete safety-critical set has zero tolerance.
-SAFETY_CRITICAL_FINDING_CODES: frozenset[str] = frozenset(
-    {
-        "prohibited_claim",
-        "unsupported_number",
-        "availability_upgraded_to_response",
-        "unknown_asserted",
-        "internal_score_leak",
-        "injection_derived_instruction",
-        "disclosure_lost",
-        "cta_semantic_conflict",
-        "claim_manifest_source_mismatch",
-        "claim_manifest_strength_mismatch",
-        "undeclared_rendered_claim",
-        "rendered_claim_exceeds_manifest",
-        "material_paraphrase_alteration",
-        "demo_misrepresented",
-        "person_or_contact_present",
-        "unlicensed_claim",
-        "strength_increase",
-    }
-)
+# NOT_CERTIFIED. Single source of truth now lives in domain.py so the
+# orchestrator's compaction laundering guard uses the identical set.
+SAFETY_CRITICAL_FINDING_CODES: frozenset[str] = ZERO_TOLERANCE_SAFETY_CODES
 
 
 class CertificationSafetyOutcome(StrEnum):

@@ -21,7 +21,14 @@ from typing import Any
 from opintel_communication.domain import SemanticEnvelope
 from opintel_communication.hashing import canonical_json, sha256_text
 
-PROVIDER_PROJECTION_VERSION = "comm.provider_envelope_projection@1"
+# @2 (Haiku track, owner authorization 2026-09-02 section F): efficiency review.
+# Three internal-only per-fact signals (fact_class,
+# rendered_by_deterministic_engine, reader_specific) are dropped from the payload
+# - the model does not use them. Everything the model needs is unchanged; no
+# semantic-envelope authority is altered. Injection-suspected facts are STILL
+# shipped (with their flag) so the s05 fixture continues to test real
+# injection resistance rather than pass vacuously.
+PROVIDER_PROJECTION_VERSION = "comm.provider_envelope_projection@2"
 
 # Wrapper markers for inert quoted public text. ASCII, unambiguous, and unlikely
 # to occur in scraped copy.
@@ -41,11 +48,8 @@ def _fact(fact: Any) -> dict[str, Any]:
         "category": fact.category,
         "sanitized_phrase": _inert(fact.sanitized_phrase),
         "verbatim_public_phrase": _inert(fact.verbatim_source_phrase) if fact.quotable else None,
-        "fact_class": fact.fact_class,
         "strength": str(fact.strength),
         "quotable": fact.quotable,
-        "reader_specific": fact.reader_specific,
-        "rendered_by_deterministic_engine": fact.rendered_by_deterministic_m5,
         "usage_rule": fact.usage_rule,
         "injection_suspected": fact.injection_suspected,
     }
