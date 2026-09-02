@@ -23,20 +23,22 @@ Both stages: provider Anthropic, model claude-sonnet-5, thinking disabled,
 max_output_tokens=8000, timeout 30s, 0 retries, frozen corpus
 comm.m6_8_3_synthetic_corpus@1 (manifest 282cdd5a...), s03 deterministically
 gated. Deterministic side (identical to the accepted Haiku-track pipeline, all
-model-independent): prompt @8, output_validator @4, cta_parser @2,
+model-independent): prompt @9, output_validator @4, cta_parser @2,
 provider_certification @2, projection @2, candidate_compactor @1,
 communication_quality @1.
 
-The @8 prompt template is reused unchanged. It is already the current
-contract-faithful concise template (closed-set schema, targets + hard caps,
-verbatim-placeholder instruction, no response_commitment restatement,
-framing-leadin / simulation-status = DISCLOSURE rules). Its body-word target band
-(90-110) differs from the owner's stated Sonnet preference (90-115) by 5 words,
-which the deterministic sentence-level compactor makes immaterial - the
-authorization explicitly says not to spend iterations making Sonnet count words.
-No wording or schema adaptation is *required*, so none is made. The Sonnet track
-still gets its own certification identity: the `model` and
-`generation_config_hash` key members both change (Haiku -> Sonnet).
+The prompt is @9 = @8 + ONE added line (section 2 "minimum wording/schema
+adaptations required because the preceding prompt was optimized for Haiku"): the
+candidates array MUST contain exactly one object. Under @8, claude-sonnet-5 reads
+the plural "candidates" array as licence to offer alternatives and returns 2+
+candidates - ~2x output (~5.3k tok -> ~36s, over the 30s timeout; ~2x cost, over
+the USD 5 ceiling). Haiku respected the single-object schema. No truth, safety,
+length, disclosure, manifest, or closed-set-schema semantics change. The @8
+body-word target band (90-110) vs the owner's stated Sonnet preference (90-115)
+differs by 5 words, which the deterministic compactor makes immaterial - the
+authorization says not to spend iterations making Sonnet count words. The Sonnet
+track has its own certification identity: `prompt_template_id`+sha, `model`, and
+`generation_config_hash` key members all differ from every prior attempt.
 
 Historical Sonnet attempts 1-7 and the Haiku track remain immutable and are NOT
 compared as repeats.
@@ -86,8 +88,8 @@ from opintel_communication.envelope_projection import (  # noqa: E402
     provider_facing_projection,
 )
 from opintel_communication.prompt import (  # noqa: E402
-    PROMPT_TEMPLATE_ID_CERT_V8,
-    build_certification_prompt_bundle_v8,
+    PROMPT_TEMPLATE_ID_CERT_V9,
+    build_certification_prompt_bundle_v9,
 )
 from opintel_communication.quality import QUALITY_ASSESSOR_VERSION  # noqa: E402
 from opintel_communication.stub_provider import parse_provider_response  # noqa: E402
@@ -95,18 +97,18 @@ from opintel_communication.validator import OutputValidator  # noqa: E402
 
 _OUT = ROOT / "docs" / "readiness" / "communication-layer"
 _CONFIG = GenerationConfig(model=PINNED_MODEL, thinking="disabled", max_output_tokens=8000)
-_PROMPT_BUILDER = build_certification_prompt_bundle_v8
+_PROMPT_BUILDER = build_certification_prompt_bundle_v9
 _CONTRACT = "v2"
 _VALID_CLAIM_TYPES = {c.value for c in ClaimType}
 _VALID_STRENGTHS = {s.value for s in FactStrength}
 
-# PRE_RUN_CONFIG_ID == FINAL_CERTIFICATION_KEY for the return-to-Sonnet track.
-# Frozen from a dry run of this harness (scripts/run_m68_3_sonnet_return.py
-# --sanity, no --execute). The adapter independently rejects any served model
+# PRE_RUN_CONFIG_ID == FINAL_CERTIFICATION_KEY for the return-to-Sonnet track,
+# frozen from a dry run of this harness (--sanity, no --execute) after the @9
+# single-candidate adaptation. The adapter independently rejects any served model
 # whose family is not claude-sonnet-5, so a completed run's observed identity
 # always matches this pre-run value (a divergence would be MODEL_IDENTITY_DRIFT).
-_PRE_RUN_CONFIG_ID = "8fdd204f2408480cc6613d3e2f02bf041aaec734b5da9cdcda2570e0002e85da"
-_PROMPT_SHA = "f529826219ef9b50185a9d138353e8116f34ec4c34fbf41e9d635ba20bdcb349"
+_PRE_RUN_CONFIG_ID = "ba2758488814053d6940a9bec8aa1a4d510550f8ea3f0111ab51b218a974a7e6"
+_PROMPT_SHA = "28f36553ff77d6041a168443a3de66597c1042d8108763a883993d52d96144c2"
 _MANIFEST_SHA = "282cdd5a2783f793a47d71b17ddf8b62242294fc0260e73a3526fbec5537d411"
 _ENV_SHA16 = {
     "s01_strong_response_commitment": "5cc465051da0c2da",
@@ -212,7 +214,7 @@ def _preflight(
     key_sha = key.key_sha256()
     if not (
         key.model == PINNED_MODEL
-        and key.prompt_template_id == PROMPT_TEMPLATE_ID_CERT_V8
+        and key.prompt_template_id == PROMPT_TEMPLATE_ID_CERT_V9
         and key.prompt_template_sha256 == _PROMPT_SHA
         and key.output_validator_version == "comm.output_validator@4"
         and key.cta_parser_version == "comm.cta_parser@2"
@@ -230,7 +232,7 @@ def _preflight(
     if str(runner._floor) != "0.80" or str(runner._manifest_ceiling) != "0.00":
         raise SystemExit("PREFLIGHT FAIL: pass-rate floor / manifest ceiling changed")
     checks.append(
-        f"certification key binds anthropic/{PINNED_MODEL}/@8 (sha {_PROMPT_SHA[:12]}...)/"
+        f"certification key binds anthropic/{PINNED_MODEL}/@9 (sha {_PROMPT_SHA[:12]}...)/"
         f"{key.output_validator_version}/{key.cta_parser_version}/{PROVIDER_CERTIFICATION_VERSION}/"
         f"{PROVIDER_PROJECTION_VERSION}/{COMPACTOR_VERSION}/{QUALITY_ASSESSOR_VERSION}; "
         f"config {key.generation_config_hash[:12]}...; key_sha {key_sha}"
@@ -249,16 +251,17 @@ def _preflight(
         "USE ONLY the supplied evidence",
         "response_commitment",
         "OUTPUT SCHEMA",
+        "candidates array MUST contain EXACTLY ONE object",
     ):
         if need not in tmpl:
-            raise SystemExit(f"PREFLIGHT FAIL: @8 template missing {need!r}")
+            raise SystemExit(f"PREFLIGHT FAIL: @9 template missing {need!r}")
     for ev in (*_VALID_CLAIM_TYPES, *_VALID_STRENGTHS):
         if ev not in tmpl:
-            raise SystemExit(f"PREFLIGHT FAIL: @8 template omits enum {ev!r}")
+            raise SystemExit(f"PREFLIGHT FAIL: @9 template omits enum {ev!r}")
     proj_chars = sum(len(json.dumps(provider_facing_projection(s.envelope))) for s in corpus.specs)
     checks.append(
-        f"@8 template states targets + hard caps + closed schema; projection {PROVIDER_PROJECTION_VERSION} "  # noqa: E501
-        f"~{proj_chars // 4} tokens total across 10 scenarios"
+        f"@9 template states targets + hard caps + closed schema + single-candidate; projection "
+        f"{PROVIDER_PROJECTION_VERSION} ~{proj_chars // 4} tokens total across 10 scenarios"
     )
 
     # Projected full-run cost (owner section 5: STOP before execution if the
@@ -477,7 +480,7 @@ def main() -> int:
         f"repeats={repeats}"
     )
     print(
-        f"  prompt {PROMPT_TEMPLATE_ID_CERT_V8} / output_validator@4 / cta_parser@2 / "
+        f"  prompt {PROMPT_TEMPLATE_ID_CERT_V9} / output_validator@4 / cta_parser@2 / "
         f"{PROVIDER_CERTIFICATION_VERSION} / {PROVIDER_PROJECTION_VERSION} / {COMPACTOR_VERSION} / "
         f"{QUALITY_ASSESSOR_VERSION}"
     )

@@ -548,3 +548,37 @@ def build_certification_prompt_bundle_v8(envelope: SemanticEnvelope) -> PromptBu
         bundle_text=bundle_text,
         bundle_sha256=sha256_text(bundle_text),
     )
+
+
+# --------------------------------------------------------------------------
+# comm.prompt_template.first_contact@9 (return-to-Sonnet-5 track, owner
+# authorization 2026-09-02 "RETURN TO SONNET 5 AND COMPLETE M6.8-3", section 2:
+# "minimum wording/schema adaptations required because the preceding prompt was
+# optimized for Haiku"). @9 is @8 with ONE added constraint: exactly one object
+# in the candidates array. claude-sonnet-5 reads the plural "candidates" array as
+# licence to offer alternatives and emits 2+ candidates under @8 (~2x output ->
+# ~36s latency over the 30s timeout, ~2x cost); Haiku respected the single-object
+# schema. No truth, safety, length, disclosure, manifest, or schema semantics
+# change - only the array cardinality is pinned.
+# --------------------------------------------------------------------------
+
+PROMPT_TEMPLATE_ID_CERT_V9 = "comm.prompt_template.first_contact@9"
+
+_CERT_TEMPLATE_V9_TEXT = _CERT_TEMPLATE_V8_TEXT.replace(
+    "OUTPUT SCHEMA (exact):\n",
+    "OUTPUT SCHEMA (exact):\n"
+    "  - the candidates array MUST contain EXACTLY ONE object. Write your single "
+    "best email. Do not provide alternatives, variations, options, or a second "
+    "candidate.\n",
+)
+
+
+def build_certification_prompt_bundle_v9(envelope: SemanticEnvelope) -> PromptBundle:
+    projection_json = canonical_json(provider_facing_projection(envelope))
+    bundle_text = _CERT_TEMPLATE_V9_TEXT.replace("@@PROJECTION_JSON@@", projection_json)
+    return PromptBundle(
+        template_id=PROMPT_TEMPLATE_ID_CERT_V9,
+        template_sha256=sha256_text(_CERT_TEMPLATE_V9_TEXT),
+        bundle_text=bundle_text,
+        bundle_sha256=sha256_text(bundle_text),
+    )

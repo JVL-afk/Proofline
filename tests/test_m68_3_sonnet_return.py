@@ -22,12 +22,13 @@ from opintel_communication.certification import (
     CertificationRunner,
 )
 from opintel_communication.prompt import (
-    PROMPT_TEMPLATE_ID_CERT_V8,
+    PROMPT_TEMPLATE_ID_CERT_V9,
     build_certification_prompt_bundle_v8,
+    build_certification_prompt_bundle_v9,
 )
 
-_FROZEN_SONNET_KEY = "8fdd204f2408480cc6613d3e2f02bf041aaec734b5da9cdcda2570e0002e85da"
-_PROMPT_SHA = "f529826219ef9b50185a9d138353e8116f34ec4c34fbf41e9d635ba20bdcb349"
+_FROZEN_SONNET_KEY = "ba2758488814053d6940a9bec8aa1a4d510550f8ea3f0111ab51b218a974a7e6"
+_PROMPT_SHA = "28f36553ff77d6041a168443a3de66597c1042d8108763a883993d52d96144c2"
 
 
 def _runner() -> CertificationRunner:
@@ -37,7 +38,7 @@ def _runner() -> CertificationRunner:
         adapter,
         bounds=SONNET_RETURN_CERT_BOUNDS,
         price_table=CONFIRMED_SONNET5_PRICE_TABLE,
-        prompt_builder=build_certification_prompt_bundle_v8,
+        prompt_builder=build_certification_prompt_bundle_v9,
         validator_contract="v2",
         compactor_enabled=True,
         assess_candidate_quality=True,
@@ -60,17 +61,27 @@ def test_sonnet_price_table_is_owner_confirmed() -> None:
     assert CONFIRMED_SONNET5_PRICE_TABLE.output_usd_per_mtok == "10.00"
 
 
-def test_sonnet_return_reuses_prompt_v8_unchanged() -> None:
-    bundle = build_certification_prompt_bundle_v8(build_corpus().specs[0].envelope)
-    assert bundle.template_id == PROMPT_TEMPLATE_ID_CERT_V8
-    assert bundle.template_sha256 == _PROMPT_SHA
+def test_sonnet_return_prompt_v9_is_v8_plus_single_candidate_only() -> None:
+    env = build_corpus().specs[0].envelope
+    v8 = build_certification_prompt_bundle_v8(env)
+    v9 = build_certification_prompt_bundle_v9(env)
+    assert v9.template_id == PROMPT_TEMPLATE_ID_CERT_V9
+    assert v9.template_sha256 == _PROMPT_SHA
+    assert v9.template_sha256 != v8.template_sha256
+    # @9 is @8 with exactly one line added: the single-candidate constraint.
+    added = [ln for ln in v9.bundle_text.splitlines() if ln not in v8.bundle_text.splitlines()]
+    assert len(added) == 1
+    assert "candidates array MUST contain EXACTLY ONE object" in added[0]
+    # every other truth/safety/length/schema line is byte-identical
+    removed = [ln for ln in v8.bundle_text.splitlines() if ln not in v9.bundle_text.splitlines()]
+    assert removed == []
 
 
 def test_sonnet_return_certification_key_is_frozen_and_distinct() -> None:
     runner = _runner()
     key = runner.certification_key(build_corpus())
     assert key.model == PINNED_MODEL == "claude-sonnet-5"
-    assert key.prompt_template_id == PROMPT_TEMPLATE_ID_CERT_V8
+    assert key.prompt_template_id == PROMPT_TEMPLATE_ID_CERT_V9
     assert key.prompt_template_sha256 == _PROMPT_SHA
     assert key.output_validator_version == "comm.output_validator@4"
     assert key.cta_parser_version == "comm.cta_parser@2"
