@@ -26,14 +26,17 @@ contains none of that provider integration.
   from advisory `COMMUNICATION_QUALITY`, a 12-member certification key, 4 drift
   classes). Frozen 10-scenario synthetic corpus in `tests/m68_3_synthetic_corpus.py`.
 
-M6.8-3 has had four configuration attempts (2026-09-02), none reaching a
-safety result. A1–A3 died on the 2000-token output ceiling. **A4 raised it
-to 8000 and got the first complete, untruncated response** — so 8000 is
-enough — but the probe exposed a `parse_provider_response` crash on an
-out-of-enum manifest `asserted_strength` (now **fixed** — it drops the
-candidate and records it instead of raising), and that the `@2`/`@3`
-prompts never state the claim-manifest entry schema, so a real model emits
-non-conformant entries.
-`docs/readiness/communication-layer/m6.8-3-attempt4-outcome-2026-09-02.md`
-has the analysis; an owner decision (recommend a `@5` template that states
-the entry schema) is pending. No delivery, no send path.
+M6.8-3 took five configuration attempts (2026-09-02). A1–A3 died on the
+2000-token output ceiling; A4 proved 8000 is enough but revealed `@3`
+under-specifies the manifest entry schema (and exposed a
+`parse_provider_response` crash on an out-of-enum value, now **fixed**).
+**A5 (schema-explicit `@5` template) ran the full 81-call certification**
+and returned **`NOT_CERTIFIED`** — a genuine provider-safety failure:
+`claude-sonnet-5` under this evidence-bound configuration systematically
+leaves the semantic envelope (availability→response upgrades, unlicensed /
+unsupported claims, demo misrepresentation, CTA drift, disclosure loss,
+manifest/prose mismatch) and does so inconsistently across repeats. The
+deterministic gate caught all of it — every candidate rejected before human
+review.
+`docs/readiness/communication-layer/m6.8-3-attempt5-outcome-2026-09-02.md`
+has the full result. No delivery, no send path.
