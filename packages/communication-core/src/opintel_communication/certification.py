@@ -108,6 +108,11 @@ ATTEMPT4_CALL_BOUNDS = CertificationCallBounds(
     automatic_retries=0,
 )
 
+# Attempt 5 (owner authorization 2026-09-02): identical bounds to Attempt 4 - the
+# only change is the schema-explicit prompt template @5, which is a
+# certification-key member, so Attempt 5 gets its own key.
+ATTEMPT5_CALL_BOUNDS = ATTEMPT4_CALL_BOUNDS
+
 
 # ----------------------------------------------------------------------------
 # Pricing - real cost from real tokens. Rates require owner/price-table

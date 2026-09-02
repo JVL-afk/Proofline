@@ -631,6 +631,72 @@ def test_parse_provider_response_never_raises_on_nonconformant_manifest() -> Non
     assert parse_provider_response('{"candidates": "nope"}').status.value == "REFUSED"
 
 
+def test_attempt5_v5_template_states_the_full_manifest_entry_schema() -> None:
+    from opintel_communication.domain import ClaimType, FactStrength
+    from opintel_communication.prompt import (
+        build_certification_prompt_bundle_n1,
+        build_certification_prompt_bundle_v5,
+    )
+
+    b5 = build_certification_prompt_bundle_v5(aplus_envelope())
+    assert b5.template_id == "comm.prompt_template.first_contact@5"
+    txt = b5.bundle_text
+    assert "CLAIM MANIFEST SCHEMA" in txt
+    assert "EXACTLY ONE candidate" in txt
+    # every closed vocabulary value the validator/parser accept is stated verbatim
+    for ct in ClaimType:
+        assert ct.value in txt, ct.value
+    for fs in FactStrength:
+        assert fs.value in txt, fs.value
+    # the owner's near-miss token is NOT what we shipped
+    assert "OBSERVED_AVAILABILITY_SIGNAL" in txt
+    # entry field names present
+    for field_name in (
+        "claim_id",
+        "claim_type",
+        "asserted_strength",
+        "rendered_artifact",
+        "rendered_span",
+        "licensed_source_ids",
+        "qualifiers",
+        "cta_intent",
+    ):
+        assert field_name in txt, field_name
+    # explicit guardrails
+    assert "DISCLOSURE is a claim_type" in txt
+    assert "Do not invent enum values" in txt
+
+    # @5 key is distinct from @3
+    b3 = build_certification_prompt_bundle_n1(aplus_envelope())
+    assert b5.template_sha256 != b3.template_sha256
+
+    from opintel_communication.anthropic_adapter import GenerationConfig
+    from opintel_communication.certification import ATTEMPT5_CALL_BOUNDS
+
+    adapter = AnthropicProviderAdapter(
+        "sk-ant-fake",
+        config=GenerationConfig(thinking="disabled", max_output_tokens=8000),
+        transport=_clean_transport,
+    )
+    r5 = CertificationRunner(
+        adapter,
+        bounds=ATTEMPT5_CALL_BOUNDS,
+        price_table=PriceTable(),
+        prompt_builder=build_certification_prompt_bundle_v5,
+    )
+    r3 = CertificationRunner(
+        adapter,
+        bounds=ATTEMPT5_CALL_BOUNDS,
+        price_table=PriceTable(),
+        prompt_builder=build_certification_prompt_bundle_n1,
+    )
+    corpus = build_corpus()
+    key5 = r5.certification_key(corpus)
+    assert key5.prompt_template_id == "comm.prompt_template.first_contact@5"
+    assert key5.key_sha256() != r3.certification_key(corpus).key_sha256()
+    assert ATTEMPT5_CALL_BOUNDS.max_output_tokens_per_call == 8000
+
+
 def test_price_table_pending_is_flagged_in_notes() -> None:
     report = _runner(_clean_transport).run(
         _mini_corpus(),

@@ -1,15 +1,17 @@
 """M6.8-3 synthetic live-provider certification - local execution harness.
 
-Owner-authorized 2026-09-01. **Attempt 4** (authorized 2026-09-02, Option 2)
-after Attempts 1-3 all failed on the 2000 output-token ceiling vs. the accepted
-full-claim-manifest response schema: thinking disabled, one candidate per call,
-and ``max_output_tokens`` raised 2000 -> 8000 (per call and aggregate). The 9
-provider-reaching scenarios run 9 repeats each = 81 ``claude-sonnet-5`` calls.
-``s03_generic_weak_evidence`` stays deterministically gated and runs 3 times,
-recorded separately. The atomic protocol (one envelope -> one response -> one
-candidate + full manifest -> independent validation), the full claim-manifest
-contract, the validator, the frozen corpus, and every threshold / zero-tolerance
-finding are unchanged. New config hash (8000) => new certification key.
+Owner-authorized 2026-09-01. **Attempt 5** (authorized 2026-09-02): identical
+config to Attempt 4 (thinking disabled, N=1, ``max_output_tokens=8000``) - the
+only change is the schema-explicit prompt template ``@5``, which states the
+EXISTING claim-manifest entry schema (field list + the closed ``claim_type`` /
+``asserted_strength`` vocabularies) so a real provider emits a manifest the
+unchanged ``comm.output_validator@1`` / ``comm.claim_manifest@1`` can evaluate.
+Attempt 4 proved a complete response is possible at 8000 tokens but that ``@3``
+never told the provider the entry schema. ``@5`` is a certification-key member
+=> new key. The manifest contract, validator, fact-strength lattice, frozen
+corpus, thresholds, 8000 ceiling, and model are all unchanged. The 9
+provider-reaching scenarios run 9 repeats each = 81 ``claude-sonnet-5`` calls;
+``s03_generic_weak_evidence`` stays gated and runs 3 times, recorded separately.
 USD 10.00 hard aggregate ceiling, 0 retries; the budget guard refuses a call it
 cannot conservatively cover at both per-call token ceilings.
 
@@ -47,34 +49,38 @@ from opintel_communication.anthropic_adapter import (  # noqa: E402
     GenerationConfig,
 )
 from opintel_communication.certification import (  # noqa: E402
-    ATTEMPT4_CALL_BOUNDS,
+    ATTEMPT5_CALL_BOUNDS,
     CONFIRMED_SONNET5_PRICE_TABLE,
     CertificationRunner,
 )
+from opintel_communication.domain import ClaimType, FactStrength  # noqa: E402
 from opintel_communication.envelope_projection import (  # noqa: E402
     WITHHELD_FROM_PROVIDER,
     provider_facing_projection,
 )
-from opintel_communication.prompt import build_certification_prompt_bundle_n1  # noqa: E402
+from opintel_communication.prompt import build_certification_prompt_bundle_v5  # noqa: E402
 from opintel_communication.stub_provider import parse_provider_response  # noqa: E402
 from opintel_communication.validator import OutputValidator  # noqa: E402
 
 _OUT_DIR = ROOT / "docs" / "readiness" / "communication-layer"
 
-# Attempt 4 (owner authorization 2026-09-02, Option 2): thinking disabled, one
-# candidate per call, and max_output_tokens raised 2000 -> 8000 (per call and
-# aggregate). Attempts 2-3 proved the 2000 ceiling - an operational/cost
-# constraint, not a truth/safety/semantic invariant - prevents completing the
-# accepted one-response candidate + full-manifest schema. The atomic protocol
-# (one envelope -> one response -> one candidate + full manifest -> independent
-# validation), the validator, the frozen corpus, and every threshold /
-# zero-tolerance finding are unchanged. New config hash (8000) => new key.
-_ATTEMPT4_CONFIG = GenerationConfig(thinking="disabled", max_output_tokens=8000)
-_ATTEMPT4_BOUNDS = ATTEMPT4_CALL_BOUNDS
-_PROMPT_BUILDER = build_certification_prompt_bundle_n1
+# Attempt 5 (owner authorization 2026-09-02): identical config to Attempt 4
+# (thinking disabled, N=1, max_output_tokens=8000, ATTEMPT4/5 bounds) - the only
+# change is the schema-explicit prompt template @5, which states the existing
+# claim-manifest entry schema (fields + closed claim_type / asserted_strength
+# vocabularies) so a real provider emits a manifest the unchanged
+# comm.output_validator@1 / comm.claim_manifest@1 can evaluate. @5 is a
+# certification-key member => new key. The manifest contract, validator,
+# fact-strength lattice, frozen corpus, thresholds, 8000 ceiling, and model are
+# all unchanged.
+_ATTEMPT5_CONFIG = GenerationConfig(thinking="disabled", max_output_tokens=8000)
+_ATTEMPT5_BOUNDS = ATTEMPT5_CALL_BOUNDS
+_PROMPT_BUILDER = build_certification_prompt_bundle_v5
+_VALID_CLAIM_TYPES = {c.value for c in ClaimType}
+_VALID_STRENGTHS = {s.value for s in FactStrength}
 _REPEATS = 9
 _ND_REPEATS = 3
-_ATTEMPT_LABEL = "attempt4-thinking-disabled-n1-8k"
+_ATTEMPT_LABEL = "attempt5-schema-explicit-n1-8k"
 
 
 def _apikeys_path() -> Path:
@@ -137,15 +143,15 @@ def _read_anthropic_key() -> str:
 
 
 def _plan_summary() -> str:
-    b = _ATTEMPT4_BOUNDS
+    b = _ATTEMPT5_BOUNDS
     corpus = build_corpus()
     distinctive = [s for s in corpus.specs if s.envelope.has_distinctive_fact()]
     reaching = len(distinctive) * _REPEATS
     lines = [
         f"M6.8-3 synthetic certification - PLAN ({_ATTEMPT_LABEL})",
-        f"  config            : thinking={_ATTEMPT4_CONFIG.thinking or 'provider-default'} "
-        f"N={b.candidates_per_call} max_output_tokens={_ATTEMPT4_CONFIG.max_output_tokens} "
-        f"config_hash={_ATTEMPT4_CONFIG.config_hash()[:16]}...",
+        f"  config            : thinking={_ATTEMPT5_CONFIG.thinking or 'provider-default'} "
+        f"N={b.candidates_per_call} max_output_tokens={_ATTEMPT5_CONFIG.max_output_tokens} "
+        f"config_hash={_ATTEMPT5_CONFIG.config_hash()[:16]}...",
         f"  prompt template   : {_PROMPT_BUILDER(distinctive[0].envelope).template_id}",
         f"  corpus            : {corpus.corpus_version} ({len(corpus.specs)} envelopes)",
         f"  corpus manifest   : {corpus.manifest_sha256()}",
@@ -234,11 +240,11 @@ def _preflight(*, require_key: bool) -> tuple[list[str], dict[str, object]]:
     else:
         checks.append("API credential check skipped (dry run)")
 
-    # 6. adapter / model / config matches the Attempt 4 certification key
-    adapter = AnthropicProviderAdapter("sk-ant-preflight-not-a-real-key", config=_ATTEMPT4_CONFIG)
+    # 6. adapter / model / config matches the Attempt 5 certification key
+    adapter = AnthropicProviderAdapter("sk-ant-preflight-not-a-real-key", config=_ATTEMPT5_CONFIG)
     runner = CertificationRunner(
         adapter,
-        bounds=_ATTEMPT4_BOUNDS,
+        bounds=_ATTEMPT5_BOUNDS,
         price_table=CONFIRMED_SONNET5_PRICE_TABLE,
         prompt_builder=_PROMPT_BUILDER,
     )
@@ -248,7 +254,7 @@ def _preflight(*, require_key: bool) -> tuple[list[str], dict[str, object]]:
         and key_obj.model == PINNED_MODEL
         and key_obj.provider_adapter_version == ANTHROPIC_ADAPTER_VERSION
         and key_obj.corpus_manifest_sha256 == _EXPECTED_MANIFEST_SHA
-        and key_obj.prompt_template_id == "comm.prompt_template.first_contact@3"
+        and key_obj.prompt_template_id == "comm.prompt_template.first_contact@5"
         and key_obj.output_validator_version == "comm.output_validator@1"
         and len(key_obj.generation_config_hash) == 64
     ):
@@ -259,47 +265,53 @@ def _preflight(*, require_key: bool) -> tuple[list[str], dict[str, object]]:
         f"key_sha {key_obj.key_sha256()}"
     )
 
-    # 7. N=1 one-candidate response schema + revised 8k bounds
-    if _ATTEMPT4_BOUNDS.candidates_per_call != 1:
-        raise SystemExit("PREFLIGHT FAIL: Attempt 4 bounds do not request exactly 1 candidate")
+    # 7. N=1 one-candidate schema-explicit template (@5) + 8k bounds
+    if _ATTEMPT5_BOUNDS.candidates_per_call != 1:
+        raise SystemExit("PREFLIGHT FAIL: Attempt 5 bounds do not request exactly 1 candidate")
     if (
-        _ATTEMPT4_BOUNDS.max_output_tokens_per_call != 8000
-        or _ATTEMPT4_CONFIG.max_output_tokens != 8000
+        _ATTEMPT5_BOUNDS.max_output_tokens_per_call != 8000
+        or _ATTEMPT5_CONFIG.max_output_tokens != 8000
     ):
-        raise SystemExit("PREFLIGHT FAIL: Attempt 4 output ceiling is not 8000")
+        raise SystemExit("PREFLIGHT FAIL: Attempt 5 output ceiling is not 8000")
     tmpl = _PROMPT_BUILDER(corpus.specs[0].envelope).bundle_text
-    if "EXACTLY ONE candidate" not in tmpl or "claim manifest" not in tmpl.lower():
+    _need = ("EXACTLY ONE candidate", "CLAIM MANIFEST SCHEMA", "OBSERVED_AVAILABILITY_SIGNAL")
+    if any(s not in tmpl for s in _need):
         raise SystemExit(
-            "PREFLIGHT FAIL: @3 template must request exactly one candidate with a full manifest"
+            "PREFLIGHT FAIL: @5 template must state the explicit claim-manifest entry schema"
         )
+    for enum_val in (*_VALID_CLAIM_TYPES, *_VALID_STRENGTHS):
+        if enum_val not in tmpl:
+            raise SystemExit(f"PREFLIGHT FAIL: @5 template omits the enum value {enum_val!r}")
     checks.append(
-        f"one-candidate response schema: N={_ATTEMPT4_BOUNDS.candidates_per_call}, "
-        f"@3 template requests exactly one candidate + full claim manifest; "
-        f"output ceiling 8000/call; bounds {_ATTEMPT4_BOUNDS.max_provider_calls} calls / "
-        f"{_ATTEMPT4_BOUNDS.aggregate_input_token_ceiling} agg-in / "
-        f"{_ATTEMPT4_BOUNDS.aggregate_output_token_ceiling} agg-out; USD "
-        f"{_ATTEMPT4_BOUNDS.hard_usd_ceiling} hard; counters start 0/0/0"
+        f"one-candidate schema-explicit template: N={_ATTEMPT5_BOUNDS.candidates_per_call}, "
+        f"@5 states all {len(_VALID_CLAIM_TYPES)} claim_type + {len(_VALID_STRENGTHS)} "
+        f"asserted_strength enum values + the entry field list; output ceiling 8000/call; "
+        f"bounds {_ATTEMPT5_BOUNDS.max_provider_calls} calls / "
+        f"{_ATTEMPT5_BOUNDS.aggregate_input_token_ceiling} agg-in / "
+        f"{_ATTEMPT5_BOUNDS.aggregate_output_token_ceiling} agg-out; USD "
+        f"{_ATTEMPT5_BOUNDS.hard_usd_ceiling} hard; counters start 0/0/0"
     )
 
-    # 8. Attempt-4 compatibility probe (owner authorization: exactly one, counted
-    #    + disclosed separately). One real call with the EXACT Attempt 4 config
-    #    (thinking disabled, 8000 out) + @3 bundle on s01. Must prove: HTTP/provider
-    #    success; served model matches; thinking disabled; stop_reason != max_tokens;
-    #    exactly one complete payload; candidate JSON parses; full claim manifest
-    #    parses; response reaches the deterministic validator. The candidate need
-    #    NOT PASS - only the accepted protocol must complete and be evaluable.
+    # 8. Attempt-5 compatibility probe (owner authorization: exactly one, counted
+    #    + disclosed separately). One real call with the EXACT Attempt 5 config
+    #    (thinking disabled, 8000 out) + @5 bundle on s01. Succeeds only if:
+    #    provider response completes; stop_reason != max_tokens; candidate parses;
+    #    claim manifest parses; ALL enum values valid (no rows silently dropped);
+    #    candidate reaches comm.output_validator@1; no unhandled exception.
+    #    The candidate need NOT PASS - a validator rejection is acceptable and
+    #    informative; what matters is the response is fully evaluable.
     if require_key:
-        probe = AnthropicProviderAdapter(_read_anthropic_key(), config=_ATTEMPT4_CONFIG)
+        probe = AnthropicProviderAdapter(_read_anthropic_key(), config=_ATTEMPT5_CONFIG)
         s01 = corpus.specs[0]
         probe_bundle = _PROMPT_BUILDER(s01.envelope)
         try:
             text, meta = probe.generate(probe_bundle.bundle_text)
         except Exception as exc:  # any incompatibility is a hard stop
             raise SystemExit(
-                f"PREFLIGHT FAIL: Attempt 4 compatibility probe failed "
+                f"PREFLIGHT FAIL: Attempt 5 compatibility probe failed "
                 f"({type(exc).__name__}: {exc}). STOP for owner review - do not "
-                "raise beyond 8000 / split calls / slim the manifest / change model / "
-                "modify the validator / alter the corpus independently."
+                "change the manifest contract / reconstruct the manifest / split calls / "
+                "change validators / change models / raise token ceilings / alter the corpus."
             ) from exc
         probe_stats = {
             "probe_calls": 1,
@@ -318,30 +330,63 @@ def _preflight(*, require_key: bool) -> tuple[list[str], dict[str, object]]:
         if meta.stop_reason == "max_tokens":
             raise SystemExit(
                 f"PREFLIGHT FAIL: probe stop_reason=max_tokens at 8000 out "
-                f"(out_tokens={meta.output_tokens}). STOP for owner review - the accepted "
-                "schema still does not complete; do not raise beyond 8000 or split calls."
+                f"(out_tokens={meta.output_tokens}). STOP for owner review."
+            )
+        # raw JSON: exactly one candidate, and every manifest entry uses valid enums
+        try:
+            raw_obj = json.loads(text)
+            raw_cands = raw_obj["candidates"]
+            raw_manifest = raw_cands[0].get("claim_manifest", [])
+        except (ValueError, KeyError, TypeError, IndexError) as exc:
+            raise SystemExit(
+                f"PREFLIGHT FAIL: probe response is not a single-candidate JSON object "
+                f"({type(exc).__name__}: {exc}). STOP for owner review."
+            ) from exc
+        n_raw = len(raw_cands) if isinstance(raw_cands, list) else "?"
+        if not isinstance(raw_cands, list) or len(raw_cands) != 1:
+            raise SystemExit(
+                f"PREFLIGHT FAIL: probe returned {n_raw} candidates, expected exactly 1. "
+                "STOP for owner review."
+            )
+        bad_enums = []
+        for i, e in enumerate(raw_manifest):
+            ct = e.get("claim_type")
+            asv = e.get("asserted_strength")
+            if ct not in _VALID_CLAIM_TYPES:
+                bad_enums.append(f"[{i}].claim_type={ct!r}")
+            if asv is not None and asv not in _VALID_STRENGTHS:
+                bad_enums.append(f"[{i}].asserted_strength={asv!r}")
+        if bad_enums:
+            raise SystemExit(
+                "PREFLIGHT FAIL: probe manifest contains invalid enum value(s): "
+                + ", ".join(bad_enums[:6])
+                + ". The schema-explicit @5 template did not eliminate non-conformant "
+                "enums. STOP for owner review."
             )
         parsed = parse_provider_response(text)
         if len(parsed.candidates) != 1:
             raise SystemExit(
                 f"PREFLIGHT FAIL: expected exactly 1 parseable candidate, got "
-                f"{len(parsed.candidates)} (status={parsed.status}, "
-                f"out_tokens={meta.output_tokens}). STOP for owner review."
+                f"{len(parsed.candidates)} (status={parsed.status}). STOP for owner review."
             )
         cand = parsed.candidates[0]
         n_entries = len(cand.claim_manifest.entries)
-        if n_entries < 1:
+        if n_entries != len(raw_manifest) or n_entries < 1:
             raise SystemExit(
-                "PREFLIGHT FAIL: candidate parsed but its claim manifest is empty - the full "
-                "manifest did not complete. STOP for owner review."
+                f"PREFLIGHT FAIL: parsed {n_entries} manifest entries vs {len(raw_manifest)} "
+                "in the raw response - a row was dropped or the manifest is empty. STOP."
             )
         vr = OutputValidator().validate(s01.envelope, cand)
+        probe_stats["probe_manifest_entries"] = n_entries
+        probe_stats["probe_validator_passed"] = vr.passed
+        probe_stats["probe_validator_findings"] = [f.code for f in vr.findings]
         checks.append(
             f"compatibility probe OK: thinking-disabled, served model '{meta.model_version}', "
             f"stop_reason={meta.stop_reason!r} (!= max_tokens); ONE candidate + "
-            f"{n_entries}-entry claim manifest parsed and reached the validator "
-            f"(validator passed={vr.passed}, {len(vr.findings)} finding(s) - PASS not required "
-            f"for compatibility); usage in/out {meta.input_tokens}/{meta.output_tokens}, "
+            f"{n_entries}-entry claim manifest, ALL enum values valid, no rows dropped; "
+            f"reached comm.output_validator@1 (passed={vr.passed}, findings="
+            f"{[f.code for f in vr.findings] or 'none'} - PASS not required for compatibility); "
+            f"usage in/out {meta.input_tokens}/{meta.output_tokens}, "
             f"cost USD {probe_stats['probe_cost_usd']}. Counted separately; NOT one of the 81."
         )
     else:
@@ -358,21 +403,22 @@ def _markdown_report(
     a = lines.append
     a(f"# M6.8-3 synthetic live-provider certification report - {_ATTEMPT_LABEL} - {stamp}")
     a("")
-    a("Immutable. Owner-authorized 2026-09-01; Attempt 4 authorized 2026-09-02 (Option 2). ")
+    a("Immutable. Owner-authorized 2026-09-01; Attempt 5 authorized 2026-09-02. ")
     a("Option A local execution. No AWS surface. No contact resolution, no delivery, no send.")
     a("")
     a(
-        "**Attempt 4** = thinking **disabled**, **N=1 candidate per call**, "
-        "`max_output_tokens` raised **2000 -> 8000** (per call and aggregate). The atomic "
-        "protocol (one envelope -> one response -> one candidate + full manifest -> independent "
-        "validation), the full claim-manifest contract, the validator, the frozen corpus, and "
-        "every threshold / zero-tolerance finding are unchanged; the 2000 ceiling was an "
-        "operational/cost constraint, not a truth/safety/semantic invariant. New config hash "
-        "(8000) => new certification key. Independent configuration, NOT a retry of Attempt 1 "
-        "(adaptive thinking / 2k / N3 -> NOT_CERTIFIED_CONFIGURATION), Attempt 2 (thinking "
-        "disabled / 2k / N3 -> NOT_CERTIFIED_CONFIGURATION), or Attempt 3 (thinking disabled / "
-        "2k / N1 -> PREFLIGHT_CONFIGURATION_BLOCKER, run never started). Do NOT aggregate "
-        "metrics across attempts."
+        "**Attempt 5** = thinking **disabled**, **N=1**, `max_output_tokens=8000` (same as "
+        "Attempt 4). The ONLY change is the schema-explicit prompt template `@5`, which states "
+        "the EXISTING claim-manifest entry schema (field list + the closed `claim_type` / "
+        "`asserted_strength` vocabularies) so a real provider emits an evaluable manifest. The "
+        "manifest contract, `comm.output_validator@1`, `comm.claim_manifest@1`, the "
+        "fact-strength lattice, the frozen corpus, the thresholds, the 8000 ceiling, and the "
+        "model are all unchanged. `@5` is a certification-key member => new key. Independent "
+        "configuration; do NOT aggregate metrics with Attempt 1 (adaptive thinking / 2k / N3 -> "
+        "NOT_CERTIFIED_CONFIGURATION), Attempt 2 (thinking disabled / 2k / N3 -> "
+        "NOT_CERTIFIED_CONFIGURATION), Attempt 3 (thinking disabled / 2k / N1 -> "
+        "PREFLIGHT_CONFIGURATION_BLOCKER), or Attempt 4 (thinking disabled / 8k / N1 / @3 -> "
+        "complete response, manifest schema underspecified, run never started)."
     )
     a("")
     a("## Preflight")
@@ -551,16 +597,16 @@ def main() -> int:
 
     key = _read_anthropic_key()
     corpus = build_corpus()
-    adapter = AnthropicProviderAdapter(key, config=_ATTEMPT4_CONFIG)
+    adapter = AnthropicProviderAdapter(key, config=_ATTEMPT5_CONFIG)
     runner = CertificationRunner(
         adapter,
-        bounds=_ATTEMPT4_BOUNDS,
+        bounds=_ATTEMPT5_BOUNDS,
         price_table=CONFIRMED_SONNET5_PRICE_TABLE,
         prompt_builder=_PROMPT_BUILDER,
     )
 
     print(
-        f"\nexecuting up to {_ATTEMPT4_BOUNDS.max_provider_calls} real claude-sonnet-5 calls "
+        f"\nexecuting up to {_ATTEMPT5_BOUNDS.max_provider_calls} real claude-sonnet-5 calls "
         f"({_ATTEMPT_LABEL}; {NOT_DISTINCTIVE_SCENARIO_ID} x{_ND_REPEATS} gated) ..."
     )
     report = runner.run(

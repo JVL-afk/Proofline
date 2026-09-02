@@ -26,6 +26,7 @@ from opintel_communication.anthropic_adapter import (
 from opintel_communication.certification import (
     ATTEMPT3_CALL_BOUNDS,
     ATTEMPT4_CALL_BOUNDS,
+    ATTEMPT5_CALL_BOUNDS,
     CONFIRMED_SONNET5_PRICE_TABLE,
     DEFAULT_CALL_BOUNDS,
     PROVIDER_CERTIFICATION_VERSION,
@@ -96,8 +97,10 @@ from opintel_communication.orchestration import GenerationOrchestrator
 from opintel_communication.prompt import (
     PROMPT_TEMPLATE_ID_CERT,
     PROMPT_TEMPLATE_ID_CERT_N1,
+    PROMPT_TEMPLATE_ID_CERT_V5,
     build_certification_prompt_bundle,
     build_certification_prompt_bundle_n1,
+    build_certification_prompt_bundle_v5,
     build_prompt_bundle,
 )
 from opintel_communication.ranker import CandidateRanker
@@ -129,6 +132,7 @@ __all__ = [
     "ANTHROPIC_API_ENDPOINT",
     "ATTEMPT3_CALL_BOUNDS",
     "ATTEMPT4_CALL_BOUNDS",
+    "ATTEMPT5_CALL_BOUNDS",
     "CANDIDATE_RANKER_VERSION",
     "CLAIM_MANIFEST_SCHEMA_VERSION",
     "CONFIRMED_SONNET5_PRICE_TABLE",
@@ -140,6 +144,7 @@ __all__ = [
     "OUTPUT_VALIDATOR_VERSION",
     "PROMPT_TEMPLATE_ID_CERT",
     "PROMPT_TEMPLATE_ID_CERT_N1",
+    "PROMPT_TEMPLATE_ID_CERT_V5",
     "PROVIDER_CERTIFICATION_VERSION",
     "PROVIDER_PROJECTION_VERSION",
     "RETENTION_PROPOSAL",
@@ -201,6 +206,7 @@ __all__ = [
     "assemble_envelope",
     "build_certification_prompt_bundle",
     "build_certification_prompt_bundle_n1",
+    "build_certification_prompt_bundle_v5",
     "build_prompt_bundle",
     "canonical_json",
     "chain_hash",
