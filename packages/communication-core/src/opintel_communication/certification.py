@@ -31,7 +31,6 @@ from enum import StrEnum
 
 from opintel_communication.anthropic_adapter import (
     ANTHROPIC_ADAPTER_VERSION,
-    PINNED_MODEL,
     AnthropicProviderAdapter,
 )
 from opintel_communication.domain import (
@@ -166,6 +165,47 @@ CONFIRMED_SONNET5_PRICE_TABLE = PriceTable(
     input_usd_per_mtok="2.00",
     output_usd_per_mtok="10.00",
     confirmed=True,
+)
+
+# Claude Haiku 4.5 published API pricing (Anthropic standard rate): USD 1.00 /
+# Mtok input, USD 5.00 / Mtok output. Owner authorized the model switch "for cost
+# efficiency" (2026-09-02 "SWITCH ... TO HAIKU 4.5"); the published rate is used
+# and the USD 5.00 aggregate ceiling in the Haiku bounds is the authoritative
+# hard stop regardless of the exact rate.
+HAIKU_4_5_PRICE_TABLE = PriceTable(
+    version="claude-haiku-4-5.price@published-standard-2026-09",
+    input_usd_per_mtok="1.00",
+    output_usd_per_mtok="5.00",
+    confirmed=True,
+)
+
+# Haiku qualification pass (owner authorization 2026-09-02, section I):
+# 9 provider-reaching scenarios x 1 candidate x NO repeats = 9 paid calls. Same
+# 8000 output ceiling, 0 retries. USD 1.00 hard ceiling (9 calls of a cheap model
+# cannot approach it; the budget guard still enforces it).
+HAIKU_QUALIFICATION_BOUNDS = CertificationCallBounds(
+    max_provider_calls=9,
+    candidates_per_call=1,
+    max_input_tokens_per_call=8_000,
+    max_output_tokens_per_call=8_000,
+    aggregate_input_token_ceiling=72_000,
+    aggregate_output_token_ceiling=72_000,
+    hard_usd_ceiling="1.00",
+    automatic_retries=0,
+)
+
+# Full Haiku certification attempt (owner authorization 2026-09-02, section K):
+# 9 scenarios x 9 repeats = 81 calls, N=1, 8000 out, 0 retries. USD 5.00 hard
+# ceiling (lower than the Sonnet track's 10.00).
+HAIKU_CERT_BOUNDS = CertificationCallBounds(
+    max_provider_calls=81,
+    candidates_per_call=1,
+    max_input_tokens_per_call=8_000,
+    max_output_tokens_per_call=8_000,
+    aggregate_input_token_ceiling=648_000,
+    aggregate_output_token_ceiling=648_000,
+    hard_usd_ceiling="5.00",
+    automatic_retries=0,
 )
 
 
@@ -445,15 +485,15 @@ class CertificationRunner:
             ),
             provider="anthropic",
             model=self._adapter.config.model,
-            # (Attempt-6 remediation, section D) bind the INTENDED served-model
-            # identity convention consistently. Before the first call the adapter
-            # has observed nothing, so the pre-run config id and the final key
-            # bind the same value (PINNED_MODEL); the adapter independently
-            # rejects any served model that is not PINNED_MODEL, so a completed
-            # run's observed identity always equals it. A divergence here would
-            # be MODEL_IDENTITY_DRIFT and is caught by the whole-run cert-key
-            # constancy check in _score.
-            observed_model_identity=self._adapter.observed_model or PINNED_MODEL,
+            # (Attempt-6 remediation, section D; Haiku track, section B) bind the
+            # INTENDED served-model identity consistently. Before the first call
+            # the adapter has observed nothing, so PRE_RUN_CONFIG_ID and the
+            # FINAL_CERTIFICATION_KEY bind the same value (the configured model
+            # identifier); the adapter independently rejects any served model
+            # whose family differs, so a completed run's observed identity always
+            # matches. A divergence would be MODEL_IDENTITY_DRIFT and is caught by
+            # the whole-run cert-key constancy check in _score.
+            observed_model_identity=self._adapter.observed_model or self._adapter.config.model,
             provider_adapter_version=ANTHROPIC_ADAPTER_VERSION,
             generation_config_hash=self._adapter.config.config_hash(),
             corpus_manifest_sha256=corpus.manifest_sha256(),

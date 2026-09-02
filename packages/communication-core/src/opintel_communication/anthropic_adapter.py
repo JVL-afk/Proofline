@@ -23,6 +23,7 @@ IAM / egress is handled outside this module.
 from __future__ import annotations
 
 import json
+import re
 import urllib.error
 import urllib.request
 from collections.abc import Callable
@@ -39,9 +40,21 @@ ANTHROPIC_API_ENDPOINT = "api.anthropic.com:443"
 ANTHROPIC_VERSION_HEADER = "2023-06-01"
 
 PINNED_MODEL = "claude-sonnet-5"
+# Haiku 4.5 certification track (owner authorization 2026-09-02 "SWITCH M6.8-3
+# COMMUNICATION PROVIDER MODEL TO HAIKU 4.5"). Exact dated Anthropic identifier.
+HAIKU_4_5_MODEL = "claude-haiku-4-5-20251001"
 MAX_OUTPUT_TOKENS = 2000
 REQUEST_TIMEOUT_SECONDS = 30.0
 AUTOMATIC_RETRIES = 0
+
+_DATE_SUFFIX = re.compile(r"-\d{8}$")
+
+
+def _model_family(model: str) -> str:
+    """Model identifier with any trailing ``-YYYYMMDD`` snapshot date removed, so
+    ``claude-haiku-4-5`` and ``claude-haiku-4-5-20251001`` are the same family."""
+    return _DATE_SUFFIX.sub("", model.strip())
+
 
 # Fixed operator system prompt. Constant across the whole certification; hashed
 # into the generation config so the certification key binds exactly what was
@@ -76,6 +89,10 @@ class ProviderError(RuntimeError):
     request_id: str = ""
     served_model: str = ""
     stop_reason: str = ""
+    # Non-secret provider error classification retained for forensics (e.g.
+    # "invalid_request_error" + a truncated message). Never a credential.
+    provider_error_type: str = ""
+    provider_error_message: str = ""
 
 
 class ProviderUnavailable(ProviderError):
@@ -223,13 +240,20 @@ class AnthropicProviderAdapter:
 
     def _refused(self, exc: ProviderError, data: dict[str, object]) -> ProviderError:
         """Attach any usage/identity the provider did return, so a non-PASS
-        outcome is still costed from real metadata rather than as $0."""
+        outcome is still costed from real metadata rather than as $0. Also retain
+        the non-secret error classification for forensic attribution."""
         in_tok, out_tok = self._usage(data)
         exc.input_tokens = in_tok
         exc.output_tokens = out_tok
         exc.request_id = str(data.get("id", ""))
         exc.served_model = str(data.get("model", ""))
         exc.stop_reason = str(data.get("stop_reason", ""))
+        err = data.get("error")
+        if isinstance(err, dict):
+            exc.provider_error_type = str(err.get("type", ""))[:64]
+            # a truncated, non-secret slice of the message (credit-balance,
+            # invalid-request, etc.). Never contains the key.
+            exc.provider_error_message = str(err.get("message", ""))[:240]
         return exc
 
     def generate(self, prompt_bundle: str) -> tuple[str, ProviderMetadata]:
@@ -246,13 +270,19 @@ class AnthropicProviderAdapter:
         if status == 429 or status >= 500:
             raise self._refused(ProviderUnavailable(f"anthropic HTTP {status}"), data)
         if status != 200:
-            raise self._refused(ProviderRefused(f"anthropic HTTP {status}"), data)
+            err = data.get("error")
+            etype = str(err.get("type", "")) if isinstance(err, dict) else ""
+            raise self._refused(
+                ProviderRefused(f"anthropic HTTP {status}{f' {etype}' if etype else ''}"), data
+            )
 
         served_model = str(data.get("model", ""))
-        if not served_model.startswith(PINNED_MODEL):
+        want = _model_family(self._config.model)
+        if _model_family(served_model) != want:
             raise self._refused(
                 ProviderModelIdentityError(
-                    f"served model '{served_model}' does not match pinned '{PINNED_MODEL}'"
+                    f"served model '{served_model}' does not match configured "
+                    f"'{self._config.model}' (family '{want}')"
                 ),
                 data,
             )

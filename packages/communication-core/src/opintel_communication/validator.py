@@ -119,11 +119,11 @@ def _content_words(text: str) -> set[str]:
 # possessive / contraction tail is grammar, not evidence -- "Bayline Systems'",
 # "Meridian HVAC's", "what's", "don't" must not each read as an unlicensed
 # content word. Strip those, then apply the identical v1 stopword filter.
-_APOS = "['" + "’" + "]"  # straight-or-curly apostrophe class  # noqa: RUF001
+_APOS = "['’]"  # straight-or-curly apostrophe class  # noqa: RUF001
 _V2_NT_RE = re.compile("n" + _APOS + r"t\b")
 # an apostrophe (with an optional contraction/possessive tail) that is NOT
 # followed by another word character: "systems'", "hvac's", "what's", "we're".
-_V2_POSSESSIVE_RE = re.compile(_APOS + "(?:s|re|ve|ll|d|m)?(?![\w'" + "’" + "])")  # noqa: RUF001
+_V2_POSSESSIVE_RE = re.compile(_APOS + r"(?:s|re|ve|ll|d|m)?(?![\w'’])")  # noqa: RUF001
 
 
 def _content_words_v2(text: str) -> set[str]:
@@ -288,6 +288,72 @@ def _is_identity_grammar(span: str, env: SemanticEnvelope) -> bool:
         return True
     sw, nw = _content_words_v2(s), _content_words_v2(name)
     return bool(sw) and sw <= nw
+
+
+# (Haiku track, section D1) a bare evidentiary lead-in: a framing verb whose
+# object is the business's own public presence, with NO substantive business
+# predicate. "While reviewing Acme's public pages, I noticed" - source-free.
+# "While reviewing Acme's public pages, I noticed you respond in five minutes" -
+# the trailing predicate is substantive, so this is NOT a bare lead-in.
+_FRAMING_VERB = re.compile(
+    r"\b(?:review(?:ed|ing)?|notic(?:ed|ing|e)|noted|noting|saw|see(?:n|ing)?|"
+    r"came\s+across|come\s+across|coming\s+across|read(?:ing)?|brows(?:ed|ing)|"
+    r"look(?:ed|ing)?\s+(?:at|over|through)|glanc(?:ed|ing))\b",
+    re.IGNORECASE,
+)
+_FRAMING_LEADIN_STOP: frozenset[str] = frozenset(
+    {
+        "while",
+        "when",
+        "after",
+        "during",
+        "reviewing",
+        "reviewed",
+        "review",
+        "browsing",
+        "reading",
+        "looking",
+        "glancing",
+        "noticing",
+        "noticed",
+        "notice",
+        "noted",
+        "noting",
+        "saw",
+        "seen",
+        "seeing",
+        "came",
+        "come",
+        "coming",
+        "across",
+        "over",
+        "through",
+        "public",
+        "publicly",
+        "site",
+        "website",
+        "pages",
+        "page",
+        "web",
+        "online",
+        "presence",
+        "homepage",
+    }
+)
+
+
+def _is_framing_leadin(span: str, env: SemanticEnvelope) -> bool:
+    if not _FRAMING_VERB.search(span):
+        return False
+    name_tokens = _content_words_v2(env.business_identity.display_name)
+    residual = (
+        _content_words_v2(span)
+        - _SAFE_FRAMING_VOCAB
+        - _V2_FRAMING_VOCAB
+        - name_tokens
+        - _FRAMING_LEADIN_STOP
+    )
+    return not residual
 
 
 def _only_in_negation(word: str, span: str) -> bool:
@@ -1415,6 +1481,23 @@ class OutputValidator:
                 rendered_type = _classify(span, contract=cc)
                 declared_fact_bearing = entry.claim_type in _FACT_BEARING
                 rendered_fact_bearing = rendered_type in _FACT_BEARING
+                if _is_framing_leadin(span, env):
+                    # (Haiku track D1) a bare evidentiary lead-in with no
+                    # substantive business predicate - source-free regardless of
+                    # how the provider typed it. The sibling factual clause
+                    # carries its own manifest entry and stays source-bound.
+                    if entry.claim_type != ClaimType.TRANSITION:
+                        out.append(
+                            _f(
+                                "provider_manifest_type_mismatch",
+                                f"claim {entry.claim_id}: {entry.claim_type} lead-in fragment "
+                                f"with no substantive predicate ({span!r})",
+                                claim_id=entry.claim_id,
+                                span=span,
+                                severity=ValidatorSeverity.ADVISORY,
+                            )
+                        )
+                    continue
                 if declared_fact_bearing and _is_identity_grammar(span, env):
                     # (Attempt-6 remediation B.2) the span is just the business
                     # display name - identity grammar, not a business fact.

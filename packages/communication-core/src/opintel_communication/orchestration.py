@@ -176,6 +176,12 @@ class GenerationOrchestrator:
                 gen_status = GenerationStatus.REFUSED
                 reason = f"provider call failed fail-closed: {type(exc).__name__}: {exc}"
                 diagnostics.append(("provider_error", reason))
+                _perr_type = str(getattr(exc, "provider_error_type", "") or "")
+                _perr_msg = str(getattr(exc, "provider_error_message", "") or "")
+                if _perr_type or _perr_msg:
+                    diagnostics.append(
+                        ("provider_error_detail", f"type={_perr_type!r} message={_perr_msg!r}")
+                    )
                 if input_tokens or output_tokens:
                     diagnostics.append(
                         (
