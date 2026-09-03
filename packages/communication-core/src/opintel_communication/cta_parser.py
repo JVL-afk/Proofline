@@ -15,6 +15,7 @@ from dataclasses import dataclass
 
 from opintel_communication.domain import (
     CTA_PARSER_V2_VERSION,
+    CTA_PARSER_V3_VERSION,
     CTA_PARSER_VERSION,
     StructuredCTA,
 )
@@ -33,6 +34,29 @@ _COMPARE_PERMISSION_V2 = re.compile(
     r"\b(?:with|against|to|and)\b[^.?!]{0,30}"
     r"\byour\b[^.?!]{0,25}\b(?:actual|current|real|existing|own)\b[^.?!]{0,20}"
     r"\b(?:process|intake|workflow|setup|approach|way|operations?)\b",
+    re.IGNORECASE,
+)
+
+# M6.8-3 FINAL CLOSEOUT ITERATION (owner authorization 2026-09-02, section 3):
+# recognise the semantically-equivalent permission surface form
+#   "would / might / could it be alright / ok / acceptable / fine if I
+#    shared / sent / showed / forwarded ... <the comparison/simulation/summary>
+#    for your review / for your input / so you can review it?"
+# as PERMISSION_TO_COMPARE_SIMULATION_WITH_REAL_PROCESS - it is interrogative,
+# permission-seeking, non-presumptive, non-purchase, non-meeting-demand and
+# non-urgent. This does NOT broaden CTA authority: it only improves recognition
+# of an already-allowed intent. It must NOT match "I'll send it over.",
+# "Let's review it tomorrow.", "Can we book 30 minutes?" or "I'll show you how
+# much you're losing." (none are a permission question about sharing a review
+# artefact). Consulted ONLY under contract="v3".
+_SHARE_PERMISSION_V3 = re.compile(
+    r"\b(?:would|might|could)\s+it\s+be\s+"
+    r"(?:alright|all\s+right|ok|okay|acceptable|fine|reasonable|worthwhile|helpful|useful)\b"
+    r"[^.?!]{0,25}\bif\s+i\b[^.?!]{0,20}"
+    r"\b(?:shared?|sent|send|show(?:ed)?|forward(?:ed)?|pass(?:ed)?\s+along|"
+    r"put\s+together|walk(?:ed)?\s+you\s+through)\b[^.?!]{0,55}"
+    r"\b(?:for\s+your\s+(?:review|input|consideration)|for\s+you\s+to\s+review|"
+    r"so\s+you\s+can\s+(?:review|take\s+a\s+look|see)\b|to\s+review\b)",
     re.IGNORECASE,
 )
 
@@ -252,7 +276,11 @@ def parse_cta(clause: str, *, contract: str = "v1") -> ParsedCta:
     for obj, cues in _ASK_OBJECT_CUES.items():
         if any(cue in low for cue in cues):
             ask_objects.add(obj)
-    if contract == "v2" and _COMPARE_PERMISSION_V2.search(text):
+    if contract in ("v2", "v3") and _COMPARE_PERMISSION_V2.search(text):
+        ask_objects.add("compare_simulation")
+    if contract == "v3" and _SHARE_PERMISSION_V3.search(text):
+        # a permission question about sharing the review artefact IS the
+        # already-authorized compare/permission intent (section 3).
         ask_objects.add("compare_simulation")
 
     presumes_deficiency = any(p.search(text) for p in _DEFICIENCY_CUES)
@@ -281,7 +309,13 @@ def parse_cta(clause: str, *, contract: str = "v1") -> ParsedCta:
         presumes_deficiency=presumes_deficiency,
         ask_objects=frozenset(ask_objects),
         intent_class=intent,
-        parser_version=(CTA_PARSER_V2_VERSION if contract == "v2" else CTA_PARSER_VERSION),
+        parser_version=(
+            CTA_PARSER_V3_VERSION
+            if contract == "v3"
+            else CTA_PARSER_V2_VERSION
+            if contract == "v2"
+            else CTA_PARSER_VERSION
+        ),
     )
 
 

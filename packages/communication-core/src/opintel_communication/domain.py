@@ -54,8 +54,22 @@ OUTPUT_VALIDATOR_V2_VERSION = "comm.output_validator@5"
 # required; an unresolved substantive span fails closed. A provider-manifest
 # disagreement is advisory diagnostic only. All prose-level zero-tolerance rules
 # (1-14, 16, 17) are unchanged.
-OUTPUT_VALIDATOR_V3_VERSION = "comm.output_validator@6"
+# ``@7`` (M6.8-3 FINAL CLOSEOUT ITERATION, owner authorization 2026-09-02): the
+# three narrowly identified deterministic surface-form corrections, all v3-only
+# (v1/v2 byte-identical): (1) the bounded attribution/framing verb family is
+# extended so "labeled" / "titled" / "named" / "termed" are treated exactly like
+# the existing "listed" / "described" - a framing verb licenses NOTHING by
+# itself, the substantive object/predicate is still independently discovered and
+# licensed; (2) "either" is classified as grammatical/non-substantive glue ONLY
+# in coordinating/function-word constructions ("either way", "either option",
+# "either of those", correlative "either ... or") - it can never hide an
+# unsupported proposition; (3) the CTA parser recognises "would it be alright if
+# I shared ... for your review?" and bounded equivalents as the already
+# authorized permission CTA. Certification pass floor, zero-tolerance semantics,
+# 100% canonical coverage requirement, and every hard failure are UNCHANGED.
+OUTPUT_VALIDATOR_V3_VERSION = "comm.output_validator@7"
 CTA_PARSER_V2_VERSION = "comm.cta_parser@2"
+CTA_PARSER_V3_VERSION = "comm.cta_parser@3"
 # M6.8-2 additions
 CANDIDATE_RANKER_VERSION = "comm.candidate_ranker@1"
 GENERATION_STORE_VERSION = "comm.generation_store@1"

@@ -40,6 +40,7 @@ from opintel_communication.anthropic_adapter import (
 from opintel_communication.domain import (
     CANDIDATE_RANKER_VERSION,
     CTA_PARSER_V2_VERSION,
+    CTA_PARSER_V3_VERSION,
     CTA_PARSER_VERSION,
     OUTPUT_VALIDATOR_V2_VERSION,
     OUTPUT_VALIDATOR_V3_VERSION,
@@ -572,8 +573,10 @@ class CertificationRunner:
             ),
             candidate_ranker_version=CANDIDATE_RANKER_VERSION,
             cta_parser_version=(
-                CTA_PARSER_V2_VERSION
-                if self._contract in ("v2", "v3")
+                CTA_PARSER_V3_VERSION
+                if self._contract == "v3"
+                else CTA_PARSER_V2_VERSION
+                if self._contract == "v2"
                 else CTA_PARSER_VERSION
             ),
             provider="anthropic",
@@ -950,7 +953,11 @@ class CertificationRunner:
         )
         reconciler_ver = ""
         if v3 and canon_rows:
-            reconciler_ver = "comm.canonical_claim_reconciler@1"
+            from opintel_communication.canonical_claim_reconciler import (
+                CANONICAL_CLAIM_RECONCILER_VERSION,
+            )
+
+            reconciler_ver = CANONICAL_CLAIM_RECONCILER_VERSION
         canonical_pass = (not v3) or (min_coverage >= Decimal("1.0") and unresolved_total == 0)
         if v3 and not canonical_pass:
             notes.append(

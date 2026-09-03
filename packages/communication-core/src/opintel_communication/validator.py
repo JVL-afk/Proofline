@@ -23,6 +23,7 @@ from opintel_outreach.composition import (
 from opintel_communication.cta_parser import cta_semantic_consistency
 from opintel_communication.domain import (
     CTA_PARSER_V2_VERSION,
+    CTA_PARSER_V3_VERSION,
     CTA_PARSER_VERSION,
     OUTPUT_VALIDATOR_V2_VERSION,
     OUTPUT_VALIDATOR_V3_VERSION,
@@ -1163,7 +1164,13 @@ class OutputValidator:
             self.version = OUTPUT_VALIDATOR_V2_VERSION
         else:
             self.version = OUTPUT_VALIDATOR_VERSION
-        self.cta_parser_version = CTA_PARSER_V2_VERSION if self._v2 else CTA_PARSER_VERSION
+        self.cta_parser_version = (
+            CTA_PARSER_V3_VERSION
+            if self._v3
+            else CTA_PARSER_V2_VERSION
+            if self._v2
+            else CTA_PARSER_VERSION
+        )
         self.contract = contract
 
     def validate(
@@ -1384,7 +1391,7 @@ class OutputValidator:
                 )
 
         # 9. CTA semantic consistency (ADR-0067) ------------------
-        _cta_contract = "v2" if self._v2 else "v1"
+        _cta_contract = "v3" if self._v3 else "v2" if self._v2 else "v1"
         for clause in clauses:
             if _classify(clause, contract=cc) != ClaimType.CTA:
                 continue

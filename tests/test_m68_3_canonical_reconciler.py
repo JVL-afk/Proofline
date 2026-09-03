@@ -13,7 +13,9 @@ from opintel_communication.canonical_claim_reconciler import (
     CANONICAL_CLAIM_RECONCILER_VERSION,
     reconcile,
 )
+from opintel_communication.cta_parser import cta_semantic_consistency, parse_cta
 from opintel_communication.domain import (
+    CTA_PARSER_V3_VERSION,
     ZERO_TOLERANCE_SAFETY_CODES,
     ClaimManifest,
     ClaimManifestEntry,
@@ -108,9 +110,12 @@ _BAYLINE_OPEN = (
 
 
 def test_reconciler_and_map_versions() -> None:
-    assert CANONICAL_CLAIM_RECONCILER_VERSION == "comm.canonical_claim_reconciler@1"
-    assert CANONICAL_CLAIM_MAP_VERSION == "comm.canonical_claim_map@1"
-    assert V3.version == "comm.output_validator@6"
+    # M6.8-3 FINAL CLOSEOUT ITERATION bumped every v3-only component so the
+    # certification key is distinct from e3cfca92... (v1/v2 constants unchanged).
+    assert CANONICAL_CLAIM_RECONCILER_VERSION == "comm.canonical_claim_reconciler@2"
+    assert CANONICAL_CLAIM_MAP_VERSION == "comm.canonical_claim_map@2"
+    assert V3.version == "comm.output_validator@7"
+    assert V3.cta_parser_version == CTA_PARSER_V3_VERSION == "comm.cta_parser@3"
     assert "unresolved_substantive_claim" in ZERO_TOLERANCE_SAFETY_CODES
     assert "canonical_reconciliation_incomplete" in ZERO_TOLERANCE_SAFETY_CODES
 
@@ -297,3 +302,159 @@ def test_historical_adversarial_fixture_still_fails_under_v3(
 ) -> None:
     r = V3.validate(aplus_envelope(), _adv(sentence))
     assert not r.passed, f"{label}: v3 must still reject"
+
+
+# --------------------------------------------------------------------------
+# M6.8-3 FINAL CLOSEOUT ITERATION (owner authorization 2026-09-02) - the three
+# narrowly identified deterministic surface-form corrections, with adversarial
+# pairs proving no collateral safety weakening.
+# --------------------------------------------------------------------------
+
+_LABELED_OPEN = (
+    "While reviewing Northgate Commercial Mechanical's public pages, I noticed a request path "
+    'labeled "Schedule Commercial Service" alongside "Commercial Rooftop Unit Repair".'
+)
+
+
+def test_labeled_attribution_verb_is_framing_glue() -> None:
+    # section 1: "labeled" must behave exactly like the existing "listed" /
+    # "described" - it frames the observation and licenses nothing by itself.
+    body = f"{_LABELED_OPEN} {_DISC} A step that acknowledges and sorts new service requests could be evaluated. {_CTA}{_PH}"  # noqa: E501
+    m = _reconcile(body)
+    assert m.coverage == 1.0
+    assert m.unresolved_count == 0
+    assert "labeled" not in {w for c in m.claims for w in c.residual_words}
+    assert _v3_pass(S01, body, entries=[])
+
+
+def test_titled_and_named_attribution_verbs_generalize() -> None:
+    for verb in ("titled", "named", "termed", "captioned"):
+        body = (
+            f"While reviewing Northgate Commercial Mechanical's public pages, I noticed a request "
+            f'path {verb} "Schedule Commercial Service" next to "Commercial Rooftop Unit Repair". '
+            f"{_DISC} A step that acknowledges and sorts new service requests could be evaluated. "
+            f"{_CTA}{_PH}"
+        )
+        assert _reconcile(body).coverage == 1.0, verb
+        assert _v3_pass(S01, body, entries=[]), verb
+
+
+def test_labeled_does_not_license_unsupported_response_predicate() -> None:
+    # section 1 required-FAIL: a framing verb must not create an escape from
+    # source licensing. S02 has 24/7 availability but NO response commitment.
+    body = (
+        f"{_BAYLINE_OPEN} Your page labels your team as responding to every commercial request "
+        f"within five minutes. {_DISC} {_CTA}{_PH}"
+    )
+    assert not _v3_pass(S02, body, entries=[])
+
+
+def test_labeled_with_licensed_object_passes() -> None:
+    # section 1 required-PASS: "labels the service '24/7 Emergency Service'" with
+    # a licensed source for that actual public text -> framing + licensed fact.
+    body = (
+        'While reviewing Bayline Air Systems public pages, I noticed a page labeled "Request a '
+        'Commercial Visit" alongside "24/7 Emergency Service". '
+        f"{_DISC} A step that acknowledges and sorts new requests could be evaluated. {_CTA}{_PH}"
+    )
+    codes = _v3_hard(S02, body, entries=[])
+    assert "unresolved_substantive_claim" not in codes
+    assert "strength_increase" not in codes
+    assert _v3_pass(S02, body, entries=[])
+
+
+_EITHER_CLAUSE = (
+    "It may help explore how an inbound request could be acknowledged and sorted, though "
+    "internal performance remains unknown either way."
+)
+
+
+def test_either_way_is_grammatical_glue() -> None:
+    # section 2: the exact s10-r7 residual. "either way" is a function-word
+    # construction and carries no substantive proposition.
+    body = f"{_OPEN} {_DISC} {_EITHER_CLAUSE} {_CTA}{_PH}"
+    m = _reconcile(body)
+    assert m.coverage == 1.0
+    assert m.unresolved_count == 0
+    assert _v3_pass(S01, body, entries=[])
+
+
+def test_either_determiner_constructions_are_glue() -> None:
+    from opintel_communication.canonical_claim_reconciler import _grammatical_function_word
+
+    for span in (
+        "either option could be evaluated",
+        "either of those steps could be evaluated",
+        "acknowledged and sorted on either side",
+        "either way, internal performance remains unknown",
+        "it could be acknowledged or sorted either way",
+    ):
+        assert _grammatical_function_word("either", span), span
+    assert _grammatical_function_word("neither", "neither approach nor the other is visible")
+
+
+def test_either_does_not_launder_an_unsupported_proposition() -> None:
+    # section 2: "either ... or" must not hide the economic claim it coordinates.
+    body = (
+        f"{_OPEN} Either you are losing after-hours revenue or leads are going unanswered. "
+        f"{_DISC} {_CTA}{_PH}"
+    )
+    assert not _v3_pass(S01, body, entries=[])
+    assert _reconcile(body).rejected_count >= 1
+
+
+def test_bare_either_without_a_construction_stays_unresolved() -> None:
+    # context-gating proof: "either" outside any recognised construction is NOT
+    # globally ignored.
+    from opintel_communication.canonical_claim_reconciler import _residual_kind
+
+    assert _residual_kind("either", "the path shows meaningful signals either") == "ambiguous"
+    assert _residual_kind("either", "acknowledged and sorted either way") == "glue"
+
+
+# ---- CTA share-permission surface form (section 3) ----
+
+_SHARE_CTA = "Would it be alright if I shared that comparison for your review?"
+
+
+def test_share_permission_surface_form_recognized_under_v3() -> None:
+    p = parse_cta(_SHARE_CTA, contract="v3")
+    assert p.is_question and not p.is_imperative and not p.presumes_deficiency
+    assert p.intent_class == "PERMISSION_TO_COMPARE_SIMULATION_WITH_REAL_PROCESS"
+
+
+def test_share_permission_surface_form_is_v3_only() -> None:
+    # v2 / v1 behaviour is unchanged - it still parses as an open question.
+    assert parse_cta(_SHARE_CTA, contract="v2").intent_class == "OPEN_QUESTION_UNCLASSIFIED"
+    assert parse_cta(_SHARE_CTA, contract="v1").intent_class == "OPEN_QUESTION_UNCLASSIFIED"
+
+
+@pytest.mark.parametrize(
+    "bad",
+    [
+        "I'll send it over.",
+        "Let's review it tomorrow.",
+        "Can we book 30 minutes?",
+        "I'll show you how much you're losing.",
+        "Would it be alright if I called you Monday to book a demo?",
+    ],
+)
+def test_share_permission_does_not_broaden_cta_authority(bad: str) -> None:
+    assert parse_cta(bad, contract="v3").intent_class != (
+        "PERMISSION_TO_COMPARE_SIMULATION_WITH_REAL_PROCESS"
+    )
+
+
+def test_share_permission_cta_semantic_consistency_clean() -> None:
+    reasons = cta_semantic_consistency(_SHARE_CTA, S01.structured_cta, contract="v3")
+    assert reasons == []
+
+
+def test_share_permission_full_v3_validate_passes() -> None:
+    body = (
+        f"{_OPEN} {_DISC} A step that acknowledges and sorts new service requests could be "
+        f"evaluated. {_SHARE_CTA}{_PH}"
+    )
+    codes = _v3_hard(S01, body, entries=[])
+    assert "cta_semantic_conflict" not in codes
+    assert _v3_pass(S01, body, entries=[])

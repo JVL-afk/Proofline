@@ -1,10 +1,17 @@
-"""``comm.canonical_claim_reconciler@1`` - the deterministic canonical claim map.
+"""``comm.canonical_claim_reconciler@2`` - the deterministic canonical claim map.
 
 Owner authorization 2026-09-02 "FINAL M6.8-3 ARCHITECTURAL CORRECTION": the
 provider-authored claim manifest is no longer authoritative. This component
 independently discovers, classifies, and licenses every materially substantive
 span of the *rendered* prose against the semantic envelope. Its output
-(``comm.canonical_claim_map@1``) is what deterministic validation reasons about.
+(``comm.canonical_claim_map@2``) is what deterministic validation reasons about.
+
+``@2`` (M6.8-3 FINAL CLOSEOUT ITERATION, owner authorization 2026-09-02): the
+bounded attribution/framing verb family gained "labeled" / "titled" / "named" /
+"termed" / ... (generalised, not a per-sentence exception), and "either" /
+"neither" inside a recognised coordinating construction are grammatical glue.
+Neither change licenses a substantive object/predicate - each is still
+independently discovered, classified, source-licensed and strength-checked.
 
 The provider manifest, if supplied, is used ONLY as non-authoritative diagnostic
 hints - never to decide what claims exist, which are licensed, source authority,
@@ -60,8 +67,86 @@ from opintel_communication.validator import (
 
 _QUOTED = re.compile(r'"([^"]{2,})"')
 
-CANONICAL_CLAIM_RECONCILER_VERSION = "comm.canonical_claim_reconciler@1"
-CANONICAL_CLAIM_MAP_VERSION = "comm.canonical_claim_map@1"
+CANONICAL_CLAIM_RECONCILER_VERSION = "comm.canonical_claim_reconciler@2"
+CANONICAL_CLAIM_MAP_VERSION = "comm.canonical_claim_map@2"
+
+# M6.8-3 FINAL CLOSEOUT ITERATION (owner authorization 2026-09-02, sections 1-2).
+#
+# (1) The bounded attribution / framing verb family. A verb in this set only
+# FRAMES a public-page observation ("the site lists X", "a path labeled Y", "a
+# section titled Z") - it introduces no substantive meaning of its own and is
+# consistent with the family the reconciler already treats as glue ("listed",
+# "described", "referenced", "mentioned", "noted"). Adding "labeled" (and
+# "titled" / "named" / "termed" / ...) generalises that family; it is NOT a
+# per-sentence string exception. A framing verb licenses NOTHING by itself: the
+# object / predicate that follows ("'24/7 Emergency Service'", "responding in
+# five minutes") is still independently discovered, classified, source-licensed
+# and strength-checked below, so an unsupported claim attached to one of these
+# verbs still fails closed.
+_ATTRIBUTION_FRAMING_VOCAB: frozenset[str] = frozenset(
+    {
+        "label",
+        "labels",
+        "labeled",
+        "labelled",
+        "labeling",
+        "labelling",
+        "title",
+        "titles",
+        "titled",
+        "titling",
+        "name",
+        "names",
+        "named",
+        "naming",
+        "call",
+        "calls",
+        "called",
+        "calling",
+        "term",
+        "terms",
+        "termed",
+        "terming",
+        "dub",
+        "dubs",
+        "dubbed",
+        "caption",
+        "captions",
+        "captioned",
+        "headlined",
+        "styled",
+        "denote",
+        "denotes",
+        "denoted",
+        "designate",
+        "designates",
+        "designated",
+    }
+)
+
+# (2) "either" / "neither" are grammatical function words with no substantive
+# proposition of their own. They are treated as glue ONLY inside a recognised
+# coordinating / determiner construction (see ``_grammatical_function_word``);
+# a bare unexplained occurrence stays UNRESOLVED and fails closed (section 2:
+# "do not simply globally ignore the token without context").
+_FUNCTION_WORD_CONSTRUCTS: dict[str, re.Pattern[str]] = {
+    "either": re.compile(
+        r"\beither\s+(?:way|ways|side|end|one|option|options|of\s+(?:those|these|them|the\s+two)|"
+        r"direction|case|scenario|approach|kind|sort)\b"
+        r"|\bon\s+either\b|\bin\s+either\b|\beither\b[^.?!]{0,60}\bor\b",
+        re.IGNORECASE,
+    ),
+    "neither": re.compile(
+        r"\bneither\b[^.?!]{0,60}\bnor\b|\bneither\s+(?:way|one|of\s+(?:those|these|them))\b",
+        re.IGNORECASE,
+    ),
+}
+
+
+def _grammatical_function_word(word: str, span: str) -> bool:
+    pat = _FUNCTION_WORD_CONSTRUCTS.get(word)
+    return bool(pat and pat.search(span))
+
 
 _FACT_BEARING = (ClaimType.FACT, ClaimType.INFERENCE, ClaimType.RECOMMENDATION)
 _NON_SUBSTANTIVE_TYPES = (
@@ -621,6 +706,8 @@ def _claim_words(span: str, name_tokens: set[str]) -> set[str]:
             continue
         if w in _V2_FRAMING_VOCAB or w in _SAFE_FRAMING_VOCAB:
             continue
+        if w in _ATTRIBUTION_FRAMING_VOCAB or _grammatical_function_word(w, span):
+            continue
         if _only_in_negation(w, span):
             continue
         out.add(w)
@@ -643,6 +730,13 @@ def _residual_kind(word: str, span: str) -> str:
         return "new_claim"
     if word in _CLAIM_MATERIAL or _stem_covered(word, _CLAIM_MATERIAL):
         return "new_claim"
+    # a bounded attribution / framing verb ("labeled", "titled", "named", ...)
+    # frames the observation; the object it introduces is checked independently.
+    if word in _ATTRIBUTION_FRAMING_VOCAB:
+        return "glue"
+    # "either" / "neither" inside a recognised coordinating construction.
+    if _grammatical_function_word(word, span):
+        return "glue"
     if word in _RESIDUAL_GLUE or _covered(word, set(_RESIDUAL_GLUE)):
         return "glue"
     cap = word[:1].upper() + word[1:]
@@ -676,7 +770,9 @@ def reconcile(
     # plus epistemic connectives. Language inside this is not a new claim.
     engine_vocab = _split_hyphens(_licensed_framing_vocab(envelope, v2=True) | _SAFE_FRAMING_VOCAB)
     fact_vocab = _split_hyphens(_fact_vocab(envelope))
-    v2_framing = engine_vocab | fact_vocab | set(_V2_FRAMING_VOCAB)
+    v2_framing = (
+        engine_vocab | fact_vocab | set(_V2_FRAMING_VOCAB) | set(_ATTRIBUTION_FRAMING_VOCAB)
+    )
     name_tokens = _content_words_v2(envelope.business_identity.display_name)
     sources = _all_sources(envelope)
     licensed_numeric = _licensed_numeric_strings(envelope)

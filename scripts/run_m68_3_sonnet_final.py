@@ -1,13 +1,16 @@
 """M6.8-3 FINAL Sonnet 5 certification - canonical claim reconciliation.
 
 Owner authorization 2026-09-02 "FINAL M6.8-3 ARCHITECTURAL CORRECTION + FINAL
-SONNET CERTIFICATION". The provider-authored claim manifest is NON-AUTHORITATIVE.
-The rendered prose is the object of deterministic canonical claim reconciliation
-(comm.canonical_claim_reconciler@1); validation runs contract="v3"
-(comm.output_validator@6); the certification contract is
-comm.provider_certification@3.
+SONNET CERTIFICATION", then "FINAL M6.8-3 CLOSEOUT ITERATION" (2026-09-02). The
+provider-authored claim manifest is NON-AUTHORITATIVE. The rendered prose is the
+object of deterministic canonical claim reconciliation
+(comm.canonical_claim_reconciler@2 - "labeled"/"either" surface-form
+generalisations); validation runs contract="v3" (comm.output_validator@7,
+comm.cta_parser@3 - share-permission surface form); the certification contract
+is comm.provider_certification@3.
 
-Section 13: the provider prompt / schema / model / config are UNCHANGED from the
+Section 13 / closeout section 7: the provider prompt / schema / model / config
+are UNCHANGED from the
 return-to-Sonnet track (prompt @9, claude-sonnet-5, thinking disabled, 8000 out,
 30s, 0 retries). The architecture change is entirely downstream / deterministic
 and all 81 immutable historical candidates replay cleanly, so NO paid 9-call
@@ -60,6 +63,7 @@ from opintel_communication.certification import (  # noqa: E402
 )
 from opintel_communication.compactor import COMPACTOR_VERSION  # noqa: E402
 from opintel_communication.domain import (  # noqa: E402
+    CTA_PARSER_V3_VERSION,
     OUTPUT_VALIDATOR_V3_VERSION,
     ClaimType,
     FactStrength,
@@ -85,9 +89,11 @@ _VALID_CLAIM_TYPES = {c.value for c in ClaimType}
 _VALID_STRENGTHS = {s.value for s in FactStrength}
 
 # PRE_RUN_CONFIG_ID == FINAL_CERTIFICATION_KEY, frozen from a dry run of this
-# harness. Distinct from every prior key: output_validator_version is
-# comm.output_validator@6 (a key member).
-_PRE_RUN_CONFIG_ID = "e3cfca92e873c7e72cb3f6f14c9301ddc21995c0792a2c5b1e5d504bbba677f9"
+# harness. M6.8-3 FINAL CLOSEOUT ITERATION (owner authorization 2026-09-02):
+# distinct from e3cfca92... - two key members changed with the three v3-only
+# deterministic surface-form corrections: output_validator_version is now
+# comm.output_validator@7 and cta_parser_version is now comm.cta_parser@3.
+_PRE_RUN_CONFIG_ID = "e0b9cf3371a71ca845dd208581534ebe642ddb33f6469949b9d7c82a8447a273"
 _PROMPT_SHA = "28f36553ff77d6041a168443a3de66597c1042d8108763a883993d52d96144c2"
 _MANIFEST_SHA = "282cdd5a2783f793a47d71b17ddf8b62242294fc0260e73a3526fbec5537d411"
 _ENV_SHA16 = {
@@ -180,7 +186,7 @@ def _preflight(*, require_key: bool, enforce_key: bool) -> tuple[list[str], dict
         and key.prompt_template_id == PROMPT_TEMPLATE_ID_CERT_V9
         and key.prompt_template_sha256 == _PROMPT_SHA
         and key.output_validator_version == OUTPUT_VALIDATOR_V3_VERSION
-        and key.cta_parser_version == "comm.cta_parser@2"
+        and key.cta_parser_version == CTA_PARSER_V3_VERSION
         and key.corpus_manifest_sha256 == _MANIFEST_SHA
         and key.observed_model_identity == PINNED_MODEL
     ):
@@ -292,7 +298,7 @@ def main() -> int:
         f"max_out=8000 calls<={b.max_provider_calls} USD<={b.hard_usd_ceiling} repeats=9"
     )
     print(
-        f"  prompt {PROMPT_TEMPLATE_ID_CERT_V9} / {OUTPUT_VALIDATOR_V3_VERSION} / cta_parser@2 / "
+        f"  prompt {PROMPT_TEMPLATE_ID_CERT_V9} / {OUTPUT_VALIDATOR_V3_VERSION} / {CTA_PARSER_V3_VERSION} / "  # noqa: E501
         f"{PROVIDER_CERTIFICATION_V3_VERSION} / {PROVIDER_PROJECTION_VERSION} / {COMPACTOR_VERSION} "  # noqa: E501
         f"/ {QUALITY_ASSESSOR_VERSION} / {CANONICAL_CLAIM_RECONCILER_VERSION}"
     )
