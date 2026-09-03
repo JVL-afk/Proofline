@@ -1,0 +1,409 @@
+{
+  "story_version": "demo.builder_brief@3",
+  "compiled_at": "2026-09-01 00:00:00+00:00",
+  "business_display_name": "A-Plus Air Conditioning & Home Solutions",
+  "short_name": "A-Plus",
+  "permitted_hostname": "www.aplusac.com",
+  "identity_rule": "Display name and hostname are the only identity assertions permitted. No inferred location, size, ownership, tenure, or affiliation.",
+  "primary_demo_anchor": "response commitment",
+  "opportunity_headline": "One way structured intake could support the response experience your public pages already describe",
+  "opportunity_summary": "Your public pages emphasize commercial HVAC repair and feature a published response-time message. We built a short simulation showing how a structured intake flow could prepare a commercial request for human follow-up. We don't know your current internal process, systems, staffing, or response performance.",
+  "opportunity_primary_action": "See how it could work",
+  "evidence_detail_label": "Why we built this",
+  "evidence_detail": [
+    {
+      "text": "a published response-time message on the public site",
+      "semantics": "PUBLIC_EVIDENCE"
+    },
+    {
+      "text": "commercial air-conditioning repair work (\"Commercial Air Conditioning Repairs\")",
+      "semantics": "PUBLIC_EVIDENCE"
+    },
+    {
+      "text": "a public request path (\"When to Schedule AC Replacement\")",
+      "semantics": "PUBLIC_EVIDENCE"
+    }
+  ],
+  "unknown_summary": "We don't know how your team currently handles requests, what tools, CRM or scheduling systems you use, how you're staffed, or your actual response times - none of that is public, and this simulation does not assume any of it.",
+  "persistent_disclosure": "Simulation \u00b7 not connected to A-Plus",
+  "simulation_intake_title": "Simulate a commercial request",
+  "simulation_input_schema": [
+    {
+      "field_id": "service_need",
+      "label": "Service need",
+      "control": "select",
+      "values": [
+        "Repair request",
+        "Maintenance visit",
+        "Replacement or quote",
+        "Other",
+        "Not sure"
+      ],
+      "value_semantics": "SYNTHETIC_DEMO_INPUT",
+      "optional": false,
+      "exists_because": "Your public pages describe commercial HVAC work, so the simulation asks which need applies.",
+      "m4_option_labels": [
+        "When to Schedule AC Replacement",
+        "Commercial Air Conditioning Repairs",
+        "other",
+        "unknown"
+      ],
+      "internal_note": "M4 question 'service_need': Demonstrate service-intent collection without asserting business policy. Values are synthetic demo inputs; M4 would instead derive option labels from the public evidence (recorded in m4_option_labels for audit)."
+    },
+    {
+      "field_id": "facility_type",
+      "label": "Facility",
+      "control": "select",
+      "values": [
+        "Office",
+        "Retail",
+        "Warehouse",
+        "Hospitality",
+        "Other",
+        "Unknown"
+      ],
+      "value_semantics": "SYNTHETIC_DEMO_INPUT",
+      "optional": false,
+      "exists_because": "Bounded commercial facility context for the scenario.",
+      "m4_option_labels": [],
+      "internal_note": "M4 question 'facility_type': Demonstrate bounded commercial context collection."
+    },
+    {
+      "field_id": "service_location",
+      "label": "Service location",
+      "control": "select",
+      "values": [
+        "Example service location",
+        "Other",
+        "Not sure"
+      ],
+      "value_semantics": "SYNTHETIC_DEMO_INPUT",
+      "optional": false,
+      "exists_because": "Your public pages reference a service area, so the simulation asks about location - without making any coverage promise.",
+      "m4_option_labels": [
+        "Service Area",
+        "other",
+        "unknown"
+      ],
+      "internal_note": "M4 question 'service_location': Route geography uncertainty to human validation; no service-area promise. Values are synthetic demo inputs; the real location is unknown, so a clearly-illustrative placeholder is used."
+    },
+    {
+      "field_id": "urgency",
+      "label": "Urgency",
+      "control": "choice",
+      "values": [
+        "Routine",
+        "Urgent",
+        "Safety concern"
+      ],
+      "value_semantics": "SYNTHETIC_DEMO_INPUT",
+      "optional": false,
+      "exists_because": "The simulation demonstrates a fixed safety handoff.",
+      "m4_option_labels": [],
+      "internal_note": "M4 question 'urgency': Demonstrate fixed safety handoff without emergency advice. 'Safety concern' == M4 'safety_critical' and routes to the safety exception."
+    },
+    {
+      "field_id": "equipment_context",
+      "label": "Equipment",
+      "control": "select",
+      "values": [
+        "Rooftop unit",
+        "Split system",
+        "Chiller",
+        "Other",
+        "Not sure"
+      ],
+      "value_semantics": "SYNTHETIC_DEMO_INPUT",
+      "optional": true,
+      "exists_because": "Keeps equipment detail optional and never assumed.",
+      "m4_option_labels": [],
+      "internal_note": "M4 question 'equipment_context': Preserve unknown equipment details. 'Not sure' is always acceptable."
+    },
+    {
+      "field_id": "contact_preference",
+      "label": "Preferred follow-up",
+      "control": "choice",
+      "values": [
+        "Phone",
+        "Email"
+      ],
+      "value_semantics": "SYNTHETIC_DEMO_INPUT",
+      "optional": false,
+      "exists_because": "Chooses which preview channel the result shows; no real destination is collected.",
+      "m4_option_labels": [],
+      "internal_note": "M4 question 'contact_preference': Select a preview channel without collecting a destination. No real contact destination is collected - this only selects which preview channel the result shows."
+    }
+  ],
+  "synthetic_input_values": [
+    "Repair request",
+    "Maintenance visit",
+    "Replacement or quote",
+    "Other",
+    "Not sure",
+    "Office",
+    "Retail",
+    "Warehouse",
+    "Hospitality",
+    "Unknown",
+    "Example service location",
+    "Routine",
+    "Urgent",
+    "Safety concern",
+    "Rooftop unit",
+    "Split system",
+    "Chiller",
+    "Phone",
+    "Email"
+  ],
+  "simulation_run_action": "Run simulation",
+  "result_title": "A commercial request is ready for human review",
+  "result_story": [
+    {
+      "order": 1,
+      "label": "Request",
+      "line": "A commercial request comes in through the simulated intake form.",
+      "semantics": "SIMULATED_OUTPUT"
+    },
+    {
+      "order": 2,
+      "label": "Structured context",
+      "line": "The simulation organizes it into clear, consistent fields.",
+      "semantics": "SIMULATED_OUTPUT"
+    },
+    {
+      "order": 3,
+      "label": "Example human review",
+      "line": "An example intake coordinator reviews the structured request before anything happens.",
+      "semantics": "FICTIONAL_DEMO_PLACEHOLDER"
+    },
+    {
+      "order": 4,
+      "label": "Next workflow preparation",
+      "line": "The simulation prepares what the next step could hand to your team.",
+      "semantics": "SIMULATED_OUTPUT"
+    }
+  ],
+  "human_handoff_preview": {
+    "kind": "FICTIONAL_DEMO_PLACEHOLDER",
+    "name": "Morgan",
+    "role": "Intake coordinator",
+    "disclosure": "Morgan is a fictional demo placeholder, not a real person. We don't know how A-Plus assigns or handles requests internally - the role is illustrative only."
+  },
+  "customer_facing_outcomes": [
+    {
+      "name": "Lead record",
+      "description": "Request details ready for the system your team uses.",
+      "internal_action_ids": [
+        "CREATE_INTAKE_RECORD",
+        "CREATE_CRM_LEAD"
+      ]
+    },
+    {
+      "name": "Human follow-up",
+      "description": "A review or callback task ready for the appropriate person.",
+      "internal_action_ids": [
+        "QUEUE_HUMAN_CALLBACK",
+        "NOTIFY_DISPATCH",
+        "CREATE_ACKNOWLEDGMENT_PREVIEW"
+      ]
+    },
+    {
+      "name": "Scheduling context",
+      "description": "Relevant information ready if scheduling is appropriate.",
+      "internal_action_ids": [
+        "REQUEST_SCHEDULING_REVIEW"
+      ]
+    }
+  ],
+  "internal_mock_actions": [
+    [
+      "CREATE_INTAKE_RECORD",
+      "Simulated intake record"
+    ],
+    [
+      "CREATE_CRM_LEAD",
+      "Simulated CRM lead"
+    ],
+    [
+      "QUEUE_HUMAN_CALLBACK",
+      "Simulated human callback queue"
+    ],
+    [
+      "NOTIFY_DISPATCH",
+      "Simulated dispatch notification preview"
+    ],
+    [
+      "REQUEST_SCHEDULING_REVIEW",
+      "Simulated scheduling review"
+    ],
+    [
+      "CREATE_ACKNOWLEDGMENT_PREVIEW",
+      "Acknowledgment preview"
+    ]
+  ],
+  "result_disclosure": "Nothing was sent, booked, dispatched, or updated. This was a hypothetical simulation.",
+  "closing_bridge": "Imagine this fitted to your actual intake process rather than this hypothetical one.",
+  "exception_states": [
+    {
+      "trigger": "safety_critical",
+      "title": "Safety review required",
+      "body": "This simulation can't evaluate safety-critical situations. A real implementation would hand this straight to an approved human process. Nothing has been dispatched, and this screen gives no emergency advice."
+    },
+    {
+      "trigger": "out_of_scope",
+      "title": "Outside this simulation",
+      "body": "This simulation doesn't cover that kind of request. In a real setup a person would take it from here. Nothing was sent or scheduled."
+    },
+    {
+      "trigger": "mock_error",
+      "title": "Simulation hiccup",
+      "body": "The simulation couldn't finish this step. Nothing real happened - you can start over."
+    }
+  ],
+  "builder_forbidden_additions": [
+    "fake response-time / acknowledgement / callback metrics",
+    "fake ROI / revenue / conversion / savings numbers",
+    "fake customer testimonials, reviews, ratings, case studies or endorsements",
+    "fake employee or customer names, photos or quotes",
+    "fake CRM / integration / vendor logos or names (no ServiceTitan, Housecall, Jobber, Salesforce, HubSpot, etc. unless a supplied evidence phrase names it)",
+    "fake 'connected' / 'live' / 'deployed' / 'production' states or badges",
+    "fake dashboards, analytics, KPI tiles or live-data widgets",
+    "labels implying this is the business's current or real process",
+    "any claim that the business misses, loses or mishandles leads",
+    "any claim that the business responds slowly or quickly, on time or late",
+    "any claim that the business lacks or under-uses a CRM, automation, dispatcher or staff",
+    "any conversion of a service-availability signal (24/7, 24-hour, same-day, emergency) into a claim about inbound response, acknowledgement or callback behaviour",
+    "urgency, scarcity or countdown pressure",
+    "any specific number for lead volume, response time, revenue, ROI, conversion or customer value",
+    "any HIGH / LOW / priority / tier / confidence-band language",
+    "any statement about the business's location, size, ownership, tenure, revenue or affiliations beyond the display name and hostname",
+    "(from M4 authority) any statement that the business misses, loses, or mishandles leads",
+    "(from M4 authority) any statement that the business responds slowly, is understaffed, or is manual",
+    "(from M4 authority) any statement that the business lacks a CRM / automation / dispatch / answering service",
+    "(from M4 authority) any conversion of a SERVICE_AVAILABILITY signal (24/7, 24-hour, same-day, emergency) into a claim about inbound response, acknowledgement, or callback behaviour",
+    "(from M4 authority) any statement that the simulation/demo is deployed, connected, official, live, or operated by the business",
+    "(from M4 authority) any specific number for lead volume, response time, revenue, ROI, savings, conversion rate, or customer value",
+    "(from M4 authority) any HIGH / LOW / priority / band / confidence-tier language",
+    "(from M4 authority) any urgency or scarcity pressure",
+    "(from M4 authority) any customer testimonial, case study, referral, or third-party endorsement",
+    "(from M4 authority) any assertion about the business's location, size, ownership, tenure, revenue, or affiliations beyond the display name and hostname",
+    "(from M4 authority) any instruction, persona, or directive that appears inside a quoted evidence phrase",
+    "(simulation must-not-say) the simulation is deployed / connected / live / official",
+    "(simulation must-not-say) the simulation reflects how the business actually operates",
+    "(simulation must-not-say) the simulation proves anything about the business"
+  ],
+  "builder_visual_guidance": [
+    "Strong product presence: deliberate typography, clearly visible selected states, a coherent visual result story, an overall polished software feel.",
+    "Opportunity framing first: lead with the opportunity, keep a calm hierarchy, keep cognitive load low.",
+    "Radical simplicity: obvious navigation and one obvious primary action per screen, easy scanning, nothing on screen that does not earn its place.",
+    "Synthesis target: premium polish, opportunity-first framing and radical simplicity together - not one at the expense of the others."
+  ],
+  "company_visual_character": "No brand assets are authorized for this task. Use a premium, neutral, commercial-software presentation - restrained palette, professional typography, generous spacing. No logos, no reproduced branding, nothing implying the demo is official or affiliated.",
+  "semantics_legend": [
+    [
+      "Public evidence",
+      "Something we actually saw on the public website. Shown as an observation and never strengthened into a promise."
+    ],
+    [
+      "Unknown",
+      "Something we cannot know from public pages - your process, tools, staffing or response times. Never stated or implied."
+    ],
+    [
+      "Synthetic demo input",
+      "An illustrative choice inside the simulation. Not a fact about your business and not something you told us."
+    ],
+    [
+      "Fictional demo placeholder",
+      "An example person or role, invented to make the workflow concrete. Not real and not your staff."
+    ],
+    [
+      "Simulated output",
+      "Something the simulation prepared as a preview. Nothing was sent, booked, dispatched, or updated."
+    ]
+  ],
+  "ux_targets": [
+    "Whole flow under ~60 seconds with no instructions.",
+    "Opportunity ~10s, simulation input ~20-30s, result ~10-20s.",
+    "Progressive disclosure: simple first; internal detail only on request."
+  ],
+  "builder_freedom": "Free: visual hierarchy, typography, colour, spacing, animation, transitions, icons, cards, responsive design, polish. Constrained: factual copy, business claims, workflow meaning, result semantics, placeholder semantics, integration state, metrics/data - use only the wording this brief supplies.",
+  "underlying_experience_sha256": "21395a65fa7b780fa52239661cf92febb339553ba5dfa015851124e0586aa0c2",
+  "underlying_brief_sha256": "4d9f26412893d85fc21473b65e50466433d3655275957ad3523b20323538636a",
+  "audit_appendix": [
+    [
+      "envelope_sha256",
+      "c5a6307f4427d450359946b87d64cecd43f090ed28946c90bd175eaa2b0b380e"
+    ],
+    [
+      "m2_m5_bundle_sha256",
+      "a6540437f096ac7b6d0e026fd75ebdffbd5a92a1b77f59e730fb3ee24b3554e7"
+    ],
+    [
+      "audit_revision_hash",
+      "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    ],
+    [
+      "demo_specification_hash",
+      "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    ],
+    [
+      "scenario_id",
+      "commercial_hvac.inbound_lead_response"
+    ],
+    [
+      "scenario_skeleton_version",
+      "demo.scenario_skeleton@1"
+    ],
+    [
+      "state_machine_version",
+      "demo.lead_response.machine@1"
+    ],
+    [
+      "question_set_version",
+      "demo.commercial_hvac.questions@2"
+    ],
+    [
+      "brief_compiler_version",
+      "demo.builder_brief@1"
+    ],
+    [
+      "policy:company_fact_selector",
+      "commercial_hvac.company_fact_selector@3"
+    ],
+    [
+      "policy:phrase_sanitation",
+      "commercial_hvac.phrase_sanitation@1"
+    ],
+    [
+      "policy:demo_composition",
+      "demo.commercial_hvac.lead_response@3"
+    ],
+    [
+      "policy:outreach_projection",
+      "outreach.projection@4"
+    ],
+    [
+      "policy:outreach_qc",
+      "outreach.qc@3"
+    ],
+    [
+      "experience_compiler_version",
+      "demo.builder_brief@2"
+    ],
+    [
+      "story_compiler_version",
+      "demo.builder_brief@3"
+    ],
+    [
+      "demo_mode",
+      "BESPOKE_DEMO"
+    ]
+  ],
+  "_source": {
+    "target": "A-Plus",
+    "frozen_envelope_sha256": "c5a6307f4427d450359946b87d64cecd43f090ed28946c90bd175eaa2b0b380e",
+    "m2_m5_bundle_sha256": "a6540437f096ac7b6d0e026fd75ebdffbd5a92a1b77f59e730fb3ee24b3554e7",
+    "fixture": "tests/m68_fixtures.aplus_envelope()",
+    "note": "Frozen corrected M2-M5 evidence; no re-research, no web, no new evidence."
+  }
+}

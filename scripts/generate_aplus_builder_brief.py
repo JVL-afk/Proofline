@@ -32,6 +32,10 @@ from opintel_communication.builder_experience import (  # noqa: E402
     compile_builder_experience,
     render_builder_experience_markdown,
 )
+from opintel_communication.builder_story import (  # noqa: E402
+    compile_builder_story,
+    render_builder_story_markdown,
+)
 
 _OUT = ROOT / "docs" / "readiness" / "demo-builder-brief"
 
@@ -67,6 +71,15 @@ def main() -> int:
     v2_json.write_text(json.dumps(v2_payload, indent=2, default=str), encoding="utf-8")
     v2_md.write_text(render_builder_experience_markdown(exp), encoding="utf-8")
 
+    # --- V3: opportunity-story projection ---
+    story = compile_builder_story(envelope=env)
+    v3_payload = dataclasses.asdict(story)
+    v3_payload["_source"] = source
+    v3_json = _OUT / "m4-aplus-builder-brief-v3-2026-09-03.json"
+    v3_md = _OUT / "m4-aplus-builder-brief-v3-2026-09-03.md"
+    v3_json.write_text(json.dumps(v3_payload, indent=2, default=str), encoding="utf-8")
+    v3_md.write_text(render_builder_story_markdown(story), encoding="utf-8")
+
     print("== V1 (audit-grade brief) ==")
     print(f"  demo_mode {brief.demo_mode.value}  anchor {exp.primary_demo_anchor}")
     print("== V2 (three-screen experience) ==")
@@ -84,8 +97,25 @@ def main() -> int:
     print(f"  persistent disclosure  : {exp.persistent_disclosure}")
     print(f"  result disclosure      : {exp.result_disclosure}")
     print(f"  closing thought        : {exp.closing_thought}")
+    print("== V3 (opportunity story) ==")
+    print(f"  opportunity headline   : {story.opportunity_headline}")
+    print(f"  opportunity words      : {len(story.opportunity_summary.split())}")
+    print(f"  primary anchor         : {story.primary_demo_anchor}")
+    print(f"  synthetic input values : {list(story.synthetic_input_values)}")
+    print(
+        "  outcome groups         : "
+        f"{[(g.name, g.internal_action_ids) for g in story.customer_facing_outcomes]}"
+    )
+    print(f"  result story stages    : {[s.label for s in story.result_story]}")
+    print(
+        f"  human handoff          : {story.human_handoff_preview.name} / "
+        f"{story.human_handoff_preview.role}"
+    )
+    print(f"  closing bridge         : {story.closing_bridge}")
     print(f"\n  V2 machine-readable : {v2_json.relative_to(ROOT)}")
     print(f"  V2 paste-ready md   : {v2_md.relative_to(ROOT)}")
+    print(f"  V3 machine-readable : {v3_json.relative_to(ROOT)}")
+    print(f"  V3 paste-ready md   : {v3_md.relative_to(ROOT)}")
     return 0
 
 
