@@ -1,0 +1,133 @@
+{
+  "task": "M6.8-4 real-company internal shadow evaluation",
+  "generated_at_utc": "2026-09-04T111024Z",
+  "config": {
+    "provider": "anthropic",
+    "model": "claude-sonnet-5",
+    "prompt_template": "build_certification_prompt_bundle_v9 (@9)",
+    "validator_contract": "v3",
+    "thinking": "disabled",
+    "max_output_tokens": 8000,
+    "timeout_seconds": 30.0,
+    "automatic_retries": 0,
+    "n_per_company": 1
+  },
+  "preflight_checks": [
+    "config: anthropic/claude-sonnet-5/prompt@9, thinking disabled, 8000 out, 30s, 0 retries",
+    "A-Plus: envelope c5a6307f4427d450 frozen; projection allow-listed (identity = display name + hostname only); distinctive=True",
+    "Elite: envelope 2eca7a18a88c657e frozen; projection allow-listed (identity = display name + hostname only); distinctive=True",
+    "E+M: envelope 2c35afc05382f3f2 frozen; projection allow-listed (identity = display name + hostname only); distinctive=False"
+  ],
+  "total_provider_calls": 2,
+  "total_cost_usd": "0.059768",
+  "usd_ceiling": "1.00",
+  "m6_8_3_formal_status": "NOT_CERTIFIED (unchanged; provider behaviour accepted for shadow)",
+  "companies": [
+    {
+      "company": "A-Plus",
+      "envelope_sha256": "c5a6307f4427d450359946b87d64cecd43f090ed28946c90bd175eaa2b0b380e",
+      "m2_m5_bundle_sha256": "a6540437f096ac7b6d0e026fd75ebdffbd5a92a1b77f59e730fb3ee24b3554e7",
+      "primary_anchor": "response_commitment",
+      "distinctive": true,
+      "candidates": [
+        {
+          "subject": "A quick question about A-Plus AC's intake process",
+          "body": "While reviewing A-Plus Air Conditioning & Home Solutions' public pages, I noticed you publish guidance like \"When to Schedule AC Replacement\" alongside your commercial air conditioning repair services. This isn't a claim about how your team works today \u2014 we have no visibility into that. Based only on approved public information, a short deterministic simulation was prepared using synthetic example inputs, not real customer data; it routes every case to a human review step and is not connected to your systems in any way. It's a simulation, not something deployed, connected, or operated by your business. Would you be open to comparing it against your actual intake process to see if a structured acknowledgement step is worth evaluating?\n{{verified_sender_signature}}\n{{required_postal_disclosure}}\n{{approved_opt_out_instruction}}\n{{functional_role_or_team}}",
+          "body_sha256": "184cb2ca18d680d08e7708fdae967e851e2dff53dc0c1394acc7403133e3f419",
+          "compacted": false,
+          "validator": {
+            "passed": false,
+            "findings": [
+              "unresolved_substantive_claim",
+              "canonical_reconciliation_incomplete"
+            ],
+            "canonical_coverage": 0.0,
+            "unresolved_substantive_claims": 1,
+            "canonical_substantive": 1,
+            "canonical_licensed": 0,
+            "canonical_rejected": 0
+          },
+          "quality": {
+            "classification": "ACCEPTABLE",
+            "score": 0.86,
+            "uses_company_specific_evidence": true,
+            "uses_strongest_hook": true,
+            "boilerplate_hits": 0,
+            "generic_praise": false,
+            "fake_familiarity": false,
+            "body_word_count": 122,
+            "observations": []
+          },
+          "provider": {
+            "served_model": "claude-sonnet-5",
+            "stop_reason": "end_turn",
+            "input_tokens": 6835,
+            "output_tokens": 1703
+          },
+          "index": 0,
+          "call_cost_usd": "0.030700",
+          "latency_s": 13.8
+        }
+      ]
+    },
+    {
+      "company": "Elite",
+      "envelope_sha256": "2eca7a18a88c657ec52428f25c5e78224cbda553ef84fe92fed308f430e91d55",
+      "m2_m5_bundle_sha256": "a6540437f096ac7b6d0e026fd75ebdffbd5a92a1b77f59e730fb3ee24b3554e7",
+      "primary_anchor": "service_availability",
+      "distinctive": true,
+      "candidates": [
+        {
+          "subject": "A quick question about your service intake",
+          "body": "While reviewing Elite Air Conditioning & Plumbing's public pages, I noticed you publish both a \"Need to schedule a service call?\" request path and \"Commercial HVAC Services\" information, alongside references to round-the-clock service availability. This isn't a claim about how your team works today \u2014 we have no visibility into that. Using only approved public information, a short deterministic simulation was prepared with synthetic example inputs, not real customer data; it is a simulation, not a system deployed, connected, official, or operated by your business, and nothing in it touches your systems. Would you be open to comparing it against your actual intake process to see if it's worth a look?\n{{verified_sender_signature}}\n{{required_postal_disclosure}}\n{{approved_opt_out_instruction}}\n{{functional_role_or_team}}",
+          "body_sha256": "fc54ccb8f8c2cc7e777abd910c9e459ab2c1a1d24f07611e898d67fdf69b9a16",
+          "compacted": false,
+          "validator": {
+            "passed": true,
+            "findings": [
+              "provider_manifest_disagreement"
+            ],
+            "canonical_coverage": 1.0,
+            "unresolved_substantive_claims": 0,
+            "canonical_substantive": 1,
+            "canonical_licensed": 1,
+            "canonical_rejected": 0
+          },
+          "quality": {
+            "classification": "NOT_DISTINCTIVE",
+            "score": 0.3,
+            "uses_company_specific_evidence": false,
+            "uses_strongest_hook": false,
+            "boilerplate_hits": 0,
+            "generic_praise": false,
+            "fake_familiarity": false,
+            "body_word_count": 115,
+            "observations": [
+              "no substantive clause is specific to this company beyond category words",
+              "did not use the strongest available evidence hook"
+            ]
+          },
+          "provider": {
+            "served_model": "claude-sonnet-5",
+            "stop_reason": "end_turn",
+            "input_tokens": 6719,
+            "output_tokens": 1563
+          },
+          "index": 0,
+          "call_cost_usd": "0.029068",
+          "latency_s": 14.5
+        }
+      ]
+    },
+    {
+      "company": "E+M",
+      "envelope_sha256": "2c35afc05382f3f26e3cf279e0736fdb09caa9145656420f636510ea218eaf98",
+      "m2_m5_bundle_sha256": "a6540437f096ac7b6d0e026fd75ebdffbd5a92a1b77f59e730fb3ee24b3554e7",
+      "primary_anchor": "commercial_context",
+      "distinctive": false,
+      "disposition": "COMMUNICATION_NOT_DISTINCTIVE_ENOUGH",
+      "candidates": [],
+      "note": "deterministic distinctiveness gate failed; no generation (section 6/8)."
+    }
+  ]
+}
