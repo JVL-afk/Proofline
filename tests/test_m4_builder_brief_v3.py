@@ -611,3 +611,30 @@ def test_v32_authoritative_m4_semantics_unchanged() -> None:
     assert story.internal_mock_actions == _SK.mock_actions
     states = tuple(n.id for n in DeterministicDemoComposer._states())
     assert tuple(s.id for s in _SK.states) == states
+
+
+def test_em_frozen_compiler_produces_a_generic_capability_demo() -> None:
+    """M6.8-4 gap closure: E+M through the frozen compiler is a GENERIC_CAPABILITY
+    demo with no evidence-shaped context - the hidden-name personalization test
+    fails, as the weak/generic evidence requires."""
+
+    story = compile_builder_story(envelope=em_envelope())
+    mode = next(v for k, v in story.audit_appendix if k == "demo_mode")
+    assert mode == "GENERIC_CAPABILITY_DEMO"
+    # no "Why we built this" evidence bullets at all
+    assert story.evidence_detail == ()
+    body = render_builder_story_markdown(story).split("## Appendix")[0]
+    assert "<details><summary>Why we built this</summary>" not in body
+    # the headline and summary explicitly disclaim company specificity
+    assert "generic" in story.opportunity_headline.lower()
+    assert "not built around your business" in story.opportunity_summary.lower()
+    # UNKNOWNs still all carried in the underlying brief
+    brief = compile_builder_brief(envelope=em_envelope())
+    assert {u.component for u in brief.unknowns} == {
+        u.component for u in em_envelope().explicit_unknowns
+    }
+    # shared mechanics are shared (authorized), not a special E+M exception
+    assert story.internal_mock_actions == _SK.mock_actions
+    assert [f.field_id for f in story.simulation_input_schema] == [
+        f.field_id for f in compile_builder_story(envelope=aplus_envelope()).simulation_input_schema
+    ]

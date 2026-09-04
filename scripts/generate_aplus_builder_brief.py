@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "tests"))
 
-from m68_fixtures import aplus_envelope, elite_envelope  # noqa: E402
+from m68_fixtures import aplus_envelope, elite_envelope, em_envelope  # noqa: E402
 from opintel_communication.builder_brief import (  # noqa: E402
     compile_builder_brief,
     render_builder_brief_markdown,
@@ -97,6 +97,23 @@ def main() -> int:
     elite_json.write_text(json.dumps(elite_payload, indent=2, default=str), encoding="utf-8")
     elite_md.write_text(render_builder_story_markdown(elite_story), encoding="utf-8")
 
+    # --- E+M V3.2 (M6.8-4 gap closure: what the frozen compiler produces for E+M) ---
+    em_env = em_envelope()
+    em_source = {
+        "target": "E+M",
+        "frozen_envelope_sha256": em_env.envelope_sha256,
+        "m2_m5_bundle_sha256": em_env.source_lineage.m2_m5_bundle_sha256,
+        "fixture": "tests/m68_fixtures.em_envelope()",
+        "note": "Frozen E+M evidence; no re-research/web/new evidence. USD 0 (deterministic).",
+    }
+    em_story = compile_builder_story(envelope=em_env)
+    em_payload = dataclasses.asdict(em_story)
+    em_payload["_source"] = em_source
+    em_json = _OUT / "m4-em-builder-brief-v3.2-2026-09-04.json"
+    em_md = _OUT / "m4-em-builder-brief-v3.2-2026-09-04.md"
+    em_json.write_text(json.dumps(em_payload, indent=2, default=str), encoding="utf-8")
+    em_md.write_text(render_builder_story_markdown(em_story), encoding="utf-8")
+
     print("== V1 (audit-grade brief) ==")
     print(f"  demo_mode {brief.demo_mode.value}  anchor {exp.primary_demo_anchor}")
     print("== V2 (three-screen experience) ==")
@@ -129,6 +146,12 @@ def main() -> int:
         f"{story.human_handoff_preview.role}"
     )
     print(f"  closing bridge         : {story.closing_bridge}")
+    em_mode = [v for k, v in em_story.audit_appendix if k == "demo_mode"]
+    print("== E+M V3.2 (frozen compiler, E+M evidence; M6.8-4 gap closure) ==")
+    print(f"  demo_mode              : {em_mode}")
+    print(f"  primary anchor         : {em_story.primary_demo_anchor}")
+    print(f"  opportunity headline   : {em_story.opportunity_headline}")
+    print(f"  evidence detail        : {[i.text for i in em_story.evidence_detail]}")
     print("== Elite V3.1 (same compiler, Elite evidence) ==")
     print(f"  primary anchor         : {elite_story.primary_demo_anchor}")
     print(f"  opportunity headline   : {elite_story.opportunity_headline}")
