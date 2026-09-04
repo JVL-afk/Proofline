@@ -1,11 +1,10 @@
-"""``demo.builder_brief@3`` - the opportunity-story builder projection.
+"""``demo.builder_brief@3.1`` - the opportunity-story builder projection.
 
 Owner authorization 2026-09-03 "M4 BUILDER-BRIEF V3: OPPORTUNITY -> EXPERIENCE ->
-HANDOFF". V2 (``demo.builder_brief@2``) already collapsed the internal state
-machine into a three-screen human experience. V3 is a further *presentation*
-projection - it changes nothing about M4 authority, the V1 brief, or the V2
-experience semantics - and reframes the same three screens as a short opportunity
-story:
+HANDOFF" (V3) then 2026-09-04 "M4 BUILDER-BRIEF V3.1 CLEANUP + ELITE
+PERSONALIZATION PROOF" (V3.1). V2 (``demo.builder_brief@2``) collapsed the
+internal state machine into a three-screen human experience. V3 reframed the same
+three screens as a short opportunity story:
 
     1. We noticed this        (Screen 1 - opportunity is the hero)
     2. Here is how it could work   (Screen 2 - one calm intake page)
@@ -15,16 +14,22 @@ story:
 Externally V3 optimises for comprehension + relevance + desire while M4 keeps
 optimising internally for truth + safety + provenance.
 
-V3 is a pure deterministic function of the same frozen inputs. It builds on the
-V2 ``BuilderExperience`` (so it inherits V1's *and* V2's fail-closed checks) and
-adds a story-level authority check on top. Three things V3 does that V2 did not:
+V3.1 is presentation cleanup only (no M4 / V1 / V2 semantic change):
 
-* the customer never sees an internal demo-mode badge or taxonomy word;
-* public evidence justifies that a form *field* exists, but the selectable
-  *values* are explicitly synthetic demo inputs - an evidence phrase is never
-  offered as a pick (this retires the V2 "known tension");
-* the six internal mock actions are grouped into three understandable
-  customer-facing outcomes (all six are still preserved verbatim underneath).
+* the ontology legend is no longer part of the default customer view - it moves
+  to an audit / optional developer note;
+* Screen 2 field copy is a short customer hint; the evidence/safety rationale
+  stays in the machine artifact + audit layer;
+* a hard builder rule set forbids invented functionality (exports, downloads,
+  share/save, analytics, dashboards, state selectors, demo badges, ...) - the
+  only interactive actions are the enumerated Screen 1 + Screen 2 actions;
+* the opportunity headline is guaranteed to carry an anchor-specific keyword,
+  and a per-anchor ``scenario_framing`` string makes different evidence produce
+  a different opportunity story (the Elite personalization proof).
+
+V3(.1) is a pure deterministic function of the same frozen inputs. It builds on
+the V2 ``BuilderExperience`` (inheriting V1's *and* V2's fail-closed checks) and
+adds a story-level authority check on top.
 """
 
 from __future__ import annotations
@@ -64,7 +69,7 @@ from opintel_communication.builder_experience import (
 from opintel_communication.domain import SemanticEnvelope
 from opintel_communication.hashing import sha256_text
 
-BUILDER_STORY_VERSION = "demo.builder_brief@3"
+BUILDER_STORY_VERSION = "demo.builder_brief@3.1"
 
 # --------------------------------------------------------------------------
 # artifact semantics (section 15) - machine distinctions, never enum names in UI
@@ -161,6 +166,60 @@ _COMPANY_VISUAL_CHARACTER = (
 )
 
 # --------------------------------------------------------------------------
+# V3.1 hard builder rules (section 6, 4, 5) - functionality lock-down. The
+# builder invents visual treatment; it does not invent product functionality.
+# --------------------------------------------------------------------------
+
+_STORY_HARD_BUILDER_RULES: tuple[str, ...] = (
+    "Do NOT add any functional control, export, download, PDF or print generation, share or "
+    "save action, link-out, email capture, analytics, dashboard, KPI tile, integration, sign-in, "
+    "or any capability that is not explicitly listed as a primary or submit action in this "
+    "brief. You may invent visual treatment; you may not invent product functionality.",
+    "The only interactive actions are the enumerated Screen 1 primary action, the Screen 2 "
+    "submit action, and the standard form inputs. Nothing else is clickable.",
+    "Do NOT add a state selector, test-state switcher, scenario picker, 'preview a special "
+    "state' control, or any QA / debug affordance to the customer experience. The exception "
+    "screens render only when the simulation itself routes to them.",
+    "Do NOT add a product or demo badge, a mode tag, a 'DEMO' chip, a category label, or any "
+    "technical or semantic badge. The only persistent chrome is the disclosure line.",
+    "Do NOT surface the semantic legend, evidence/unknown labels, or any internal taxonomy in "
+    "the normal customer view. Explain meaning in plain language in context if needed.",
+)
+
+# internal M4 question id -> short customer-facing hint (section 7). The
+# evidence / safety rationale stays in ``exists_because`` (audit layer only).
+_CUSTOMER_HINTS: dict[str, str] = {
+    "service_need": "Which need applies",
+    "facility_type": "Facility type",
+    "service_location": "Example simulation location",
+    "urgency": "How urgent",
+    "equipment_context": "Equipment (optional)",
+    "contact_preference": "Preview follow-up as",
+}
+
+# per-anchor scenario framing (Part II, section 12/14). Different evidence ->
+# different opportunity story, without a different internal workflow. Never
+# pairs availability / response positioning with a speed or response claim.
+_SCENARIO_FRAMING: dict[str, str] = {
+    _RESPONSE_COMMITMENT: (
+        "a commercial request, organized and summarized so a person can pick it up"
+    ),
+    _SERVICE_AVAILABILITY: (
+        "a service request that could come in at any time, organized so a person can pick it up"
+    ),
+    _INTAKE_SURFACE: ("a scheduling or service-call request, organized so a person can pick it up"),
+}
+_SCENARIO_FRAMING_DEFAULT = "a commercial request, organized so a person can pick it up"
+
+# per-anchor keyword the headline MUST carry so it stays tied to the anchor
+# (section 2) and can never collapse into a generic "your public pages describe".
+_ANCHOR_HEADLINE_KEYWORD: dict[str, str] = {
+    _RESPONSE_COMMITMENT: "response",
+    _SERVICE_AVAILABILITY: "availab",
+    _INTAKE_SURFACE: "request path",
+}
+
+# --------------------------------------------------------------------------
 # detectors
 # --------------------------------------------------------------------------
 
@@ -250,11 +309,12 @@ class StoryEvidenceItem:
 class StoryInputField:
     field_id: str  # internal M4 question id (audit only)
     label: str
+    customer_hint: str  # V3.1: short customer-facing hint (few words)
     control: str  # select | choice
     values: tuple[str, ...]  # SYNTHETIC_DEMO_INPUT values
     value_semantics: str  # SYNTHETIC_DEMO_INPUT
     optional: bool
-    exists_because: str  # the EVIDENCE_CONTEXT that justifies the field existing
+    exists_because: str  # EVIDENCE_CONTEXT rationale - audit layer only, not customer copy
     m4_option_labels: tuple[str, ...]  # audit: labels M4 composition would derive
     internal_note: str  # audit only
 
@@ -283,6 +343,7 @@ class BuilderStory:
     permitted_hostname: str
     identity_rule: str
     primary_demo_anchor: str  # plain-language category label
+    scenario_framing: str  # V3.1: per-anchor story framing (different evidence -> different story)
     # --- Screen 1: opportunity is the hero ---
     opportunity_headline: str
     opportunity_summary: str  # 40-50 words, inherited from V2, already validated
@@ -298,6 +359,7 @@ class BuilderStory:
     simulation_run_action: str
     # --- Screen 3: the workflow story ---
     result_title: str
+    result_recap_line: str  # V3.1: concise recap; outcomes are the hero, not the recap
     result_story: tuple[ResultStoryStage, ...]
     human_handoff_preview: FictionalPlaceholder
     customer_facing_outcomes: tuple[CustomerOutcomeGroup, ...]
@@ -306,6 +368,8 @@ class BuilderStory:
     closing_bridge: str
     # --- exceptions + builder constraints ---
     exception_states: tuple[ExceptionScreen, ...]
+    allowed_primary_actions: tuple[str, ...]  # V3.1: the ONLY interactive actions
+    builder_hard_rules: tuple[str, ...]  # V3.1: functionality lock-down
     builder_forbidden_additions: tuple[str, ...]
     builder_visual_guidance: tuple[str, ...]
     company_visual_character: str
@@ -419,6 +483,7 @@ def _synthetic_input_schema(
             StoryInputField(
                 field_id=qid,
                 label=label,
+                customer_hint=_CUSTOMER_HINTS[qid],
                 control=control,
                 values=tuple(values),
                 value_semantics=SEM_SYNTHETIC_DEMO_INPUT,
@@ -438,18 +503,18 @@ def _customer_facing_outcomes() -> tuple[CustomerOutcomeGroup, ...]:
     )
 
 
-def _result_story(role: str) -> tuple[ResultStoryStage, ...]:
+def _result_story(role: str, framing: str) -> tuple[ResultStoryStage, ...]:
     return (
         ResultStoryStage(
             1,
             "Request",
-            "A commercial request comes in through the simulated intake form.",
+            "A request arrives through the simulated intake form.",
             SEM_SIMULATED_OUTPUT,
         ),
         ResultStoryStage(
             2,
             "Structured context",
-            "The simulation organizes it into clear, consistent fields.",
+            f"The simulation turns the form answers into {framing}.",
             SEM_SIMULATED_OUTPUT,
         ),
         ResultStoryStage(
@@ -491,6 +556,12 @@ def compile_builder_story(
     has_commercial = "commercial_context" in env_categories
     has_area = "service_area_context" in env_categories
 
+    scenario_framing = _SCENARIO_FRAMING.get(anchor_category or "", _SCENARIO_FRAMING_DEFAULT)
+    result_recap_line = (
+        "A one-line recap of the simulated request - need, facility, and urgency - then the "
+        "workflow story below."
+    )
+
     fields = _synthetic_input_schema(
         tuple(brief.service_need_options),
         tuple(brief.service_location_options),
@@ -509,6 +580,7 @@ def compile_builder_story(
         permitted_hostname=exp.permitted_hostname,
         identity_rule=exp.identity_rule,
         primary_demo_anchor=exp.primary_demo_anchor,
+        scenario_framing=scenario_framing,
         opportunity_headline=_opportunity_headline(anchor_category, brief.demo_mode),
         opportunity_summary=exp.opportunity_summary,
         opportunity_primary_action="See how it could work",
@@ -524,13 +596,16 @@ def compile_builder_story(
         synthetic_input_values=synthetic_values,
         simulation_run_action=exp.simulation_run_action,
         result_title="A commercial request is ready for human review",
-        result_story=_result_story(placeholder.role),
+        result_recap_line=result_recap_line,
+        result_story=_result_story(placeholder.role, scenario_framing),
         human_handoff_preview=placeholder,
         customer_facing_outcomes=_customer_facing_outcomes(),
         internal_mock_actions=tuple(sk.mock_actions),
         result_disclosure=exp.result_disclosure,
         closing_bridge=exp.closing_thought,
         exception_states=exp.exception_states,
+        allowed_primary_actions=("See how it could work", "Run simulation"),
+        builder_hard_rules=_STORY_HARD_BUILDER_RULES,
         builder_forbidden_additions=exp.builder_forbidden_additions,
         builder_visual_guidance=_VISUAL_GUIDANCE,
         company_visual_character=_COMPANY_VISUAL_CHARACTER,
@@ -572,13 +647,15 @@ def _story_customer_strings(story: BuilderStory) -> list[str]:
         story.simulation_intake_title,
         story.simulation_run_action,
         story.result_title,
+        story.result_recap_line,
         story.result_disclosure,
         story.closing_bridge,
         story.company_visual_character,
         story.primary_demo_anchor,
+        story.scenario_framing,
         *(i.text for i in story.evidence_detail),
         *(f.label for f in story.simulation_input_schema),
-        *(f.exists_because for f in story.simulation_input_schema),
+        *(f.customer_hint for f in story.simulation_input_schema),
         *(v for f in story.simulation_input_schema for v in f.values),
         *(s.label for s in story.result_story),
         *(s.line for s in story.result_story),
@@ -587,7 +664,6 @@ def _story_customer_strings(story: BuilderStory) -> list[str]:
         story.human_handoff_preview.name,
         story.human_handoff_preview.role,
         story.human_handoff_preview.disclosure,
-        *(t for pair in story.semantics_legend for t in pair),
         *(s.title for s in story.exception_states),
         *(s.body for s in story.exception_states),
         *story.builder_visual_guidance,
@@ -603,8 +679,11 @@ def _story_authored_strings(story: BuilderStory) -> list[str]:
         story.opportunity_primary_action,
         story.evidence_detail_label,
         story.result_title,
+        story.result_recap_line,
+        story.scenario_framing,
         story.company_visual_character,
         *(f.label for f in story.simulation_input_schema),
+        *(f.customer_hint for f in story.simulation_input_schema),
         *(f.exists_because for f in story.simulation_input_schema),
         *(v for f in story.simulation_input_schema for v in f.values),
         *(s.label for s in story.result_story),
@@ -643,6 +722,15 @@ def _assert_story_within_authority(
     for f in envelope.eligible_company_facts:
         if not f.quotable and f.sanitized_phrase.strip().lower() in h.lower():
             fail("opportunity headline quotes a non-quotable evidence phrase")
+
+    # 1b. V3.1: the headline must carry the anchor-specific keyword - it can never
+    #     collapse into a generic "your public pages describe" line.
+    anchor_cat = brief.primary_demo_anchor.category if brief.primary_demo_anchor else None
+    kw = _ANCHOR_HEADLINE_KEYWORD.get(anchor_cat or "")
+    if kw and kw not in h.lower():
+        fail(f"opportunity headline is not tied to the {anchor_cat!r} anchor (missing {kw!r})")
+    if re.search(r"\b(verified|proven|actual|measured|confirmed)\b", h.lower()):
+        fail(f"opportunity headline implies verified performance: {h!r}")
 
     # 2. no internal ontology / demo-mode / id / version / enum in customer copy.
     for s in strings:
@@ -851,6 +939,69 @@ def _assert_story_within_authority(
         if re.search(rf"\b{tok}\b", low) and tok not in licensed:
             fail(f"customer copy infers a location: {tok!r}")
 
+    # 16. V3.1: the semantic legend / ontology is preserved on the artifact (5
+    #     distinctions) but is no longer one of the default customer strings - it
+    #     is rendered only in the audit / developer note (asserted by the render
+    #     tests). Every legend label stays plain language.
+    if len(story.semantics_legend) != 5:
+        fail("semantic legend must keep all five distinctions on the artifact")
+
+    # 17. V3.1: the ONLY interactive actions are the two enumerated ones.
+    if story.allowed_primary_actions != (
+        story.opportunity_primary_action,
+        story.simulation_run_action,
+    ):
+        fail("allowed_primary_actions must be exactly the Screen 1 + Screen 2 actions")
+    if len(story.allowed_primary_actions) != 2:
+        fail("there must be exactly two allowed primary actions")
+
+    # 18. V3.1: the hard builder rules forbid invented functionality / debug / badges.
+    rules_blob = " ".join(story.builder_hard_rules).lower()
+    if not story.builder_hard_rules:
+        fail("V3.1 hard builder rules are missing")
+    for needle in ("download", "export", "state selector", "badge", "clickable"):
+        if needle not in rules_blob:
+            fail(f"hard builder rules do not cover {needle!r}")
+
+    # 19. V3.1: the result recap stays concise and never claims a real action.
+    if len(story.result_recap_line.split()) > 22:
+        fail("result recap line is not concise")
+    if _ACTION_VERB_BAD.search(story.result_recap_line.lower()) and not any(
+        g in story.result_recap_line.lower() for g in ("recap", "simulat", "nothing")
+    ):
+        fail("result recap line implies a real action")
+
+    # 20. V3.1: scenario framing - present, never a speed / response claim, never strengthened.
+    sf = story.scenario_framing.lower()
+    if not sf:
+        fail("scenario framing is empty")
+    if _STRENGTHEN.search(story.scenario_framing):
+        fail(f"scenario framing strengthens the claim: {story.scenario_framing!r}")
+    if _RESP.search(sf) and _SPEED.search(sf):
+        fail("scenario framing pairs a response verb with a speed word")
+    if "availab" in sf and any(
+        w in sf for w in ("respond", "response", "acknowledg", "callback", "reply")
+    ):
+        fail("scenario framing turns availability into response behaviour")
+
+    # 21. V3.1: Screen-2 customer hints are short and free of architecture wording.
+    for fld in story.simulation_input_schema:
+        if len(fld.customer_hint.split()) > 6:
+            fail(f"customer hint for {fld.field_id!r} is not concise: {fld.customer_hint!r}")
+        hl = fld.customer_hint.lower()
+        if any(
+            w in hl
+            for w in (
+                "evidence",
+                "public page",
+                "safety handoff",
+                "coverage promise",
+                "m4",
+                "unknown",
+            )
+        ):
+            fail(f"customer hint for {fld.field_id!r} leaks the authority rationale")
+
 
 # --------------------------------------------------------------------------
 # human-readable renderer: BuilderStory -> paste-into-builder prompt
@@ -885,6 +1036,17 @@ def render_builder_story_markdown(story: BuilderStory) -> str:
     )
     add("")
 
+    add("## Builder rules (hard limits — read first)")
+    add("")
+    for rule in s.builder_hard_rules:
+        add(f"- {rule}")
+    add(
+        "- **Allowed interactive actions:** "
+        + ", ".join(f"`{a}`" for a in s.allowed_primary_actions)
+        + " — plus the standard Screen 2 form inputs. Nothing else."
+    )
+    add("")
+
     add(f"## Screen 1 — {s.opportunity_headline}")
     add("")
     add(f"> {s.opportunity_summary}")
@@ -909,12 +1071,12 @@ def render_builder_story_markdown(story: BuilderStory) -> str:
         f"not a fact about {s.short_name} and not something they told us."
     )
     add("")
-    add("| field | control | illustrative values | required | why the field exists |")
+    add("| field | hint | control | illustrative values | required |")
     add("|---|---|---|---|---|")
     for f in s.simulation_input_schema:
         vals = " / ".join(f.values)
         req = "no" if f.optional else "yes"
-        add(f"| {f.label} | {f.control} | {vals} | {req} | {f.exists_because} |")
+        add(f"| {f.label} | {f.customer_hint} | {f.control} | {vals} | {req} |")
     add("")
     add(f"**Submit action:** `{s.simulation_run_action}`")
     add("")
@@ -926,7 +1088,9 @@ def render_builder_story_markdown(story: BuilderStory) -> str:
 
     add(f"## Screen 3 — {s.result_title}")
     add("")
-    add("Show this as movement through a workflow, not a data dump:")
+    add(f"_{s.result_recap_line}_")
+    add("")
+    add("Show this as movement through a workflow, not a data dump — the **outcome** is the hero:")
     add("")
     add("`" + "  →  ".join(stage.label for stage in s.result_story) + "`")
     add("")
@@ -954,7 +1118,12 @@ def render_builder_story_markdown(story: BuilderStory) -> str:
     add("_Make this the visual conclusion of the story - calm, prominent, not a call to action._")
     add("")
 
-    add("## If something needs a person (only when triggered)")
+    add("## Exception screens")
+    add("")
+    add(
+        "_Builder note: render one of these **only** when the simulation itself routes there. "
+        "Never a user-facing selector or a way to preview them._"
+    )
     add("")
     for ex in s.exception_states:
         add(f"### {ex.title}")
@@ -966,12 +1135,6 @@ def render_builder_story_markdown(story: BuilderStory) -> str:
     for vg in s.builder_visual_guidance:
         add(f"- {vg}")
     add(f"- **Company visual character:** {s.company_visual_character}")
-    add("")
-
-    add("## Reading the labels")
-    add("")
-    for k, v in s.semantics_legend:
-        add(f"- **{k}** — {v}")
     add("")
 
     add("## DO NOT ADD")
@@ -1004,10 +1167,20 @@ def render_builder_story_markdown(story: BuilderStory) -> str:
     for aid, label in s.internal_mock_actions:
         add(f'- `{aid}` — "{label}" — grouped under **{group_of.get(aid, "?")}**')
     add("")
-    add("**Simulation input fields — M4 evidence-derived option labels (audit only):**")
+    add("**Simulation input fields — customer hint, M4 rationale, M4 option labels (audit only):**")
     add("")
     for f in s.simulation_input_schema:
+        add(f'- `{f.field_id}` — hint "{f.customer_hint}" — {f.exists_because}')
         if f.m4_option_labels:
-            add(f"- `{f.field_id}`: {list(f.m4_option_labels)}")
+            add(f"  - M4 evidence-derived option labels: {list(f.m4_option_labels)}")
+    add("")
+    add(f"**Scenario framing (per-anchor story):** {s.scenario_framing}")
+    add("")
+    add(f"**Result recap line:** {s.result_recap_line}")
+    add("")
+    add("**Semantic legend (audit / optional developer note — not the customer view):**")
+    add("")
+    for k, v in s.semantics_legend:
+        add(f"- **{k}** — {v}")
     add("")
     return "\n".join(lines)

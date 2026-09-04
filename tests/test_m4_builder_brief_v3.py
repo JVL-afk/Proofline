@@ -52,7 +52,7 @@ def _customer_text(story) -> str:
 
 
 def test_version_and_deterministic() -> None:
-    assert BUILDER_STORY_VERSION == "demo.builder_brief@3"
+    assert BUILDER_STORY_VERSION == "demo.builder_brief@3.1"
     a = compile_builder_story(envelope=aplus_envelope())
     b = compile_builder_story(envelope=aplus_envelope())
     assert dataclasses.asdict(a) == dataclasses.asdict(b)
@@ -329,3 +329,166 @@ def test_16_evidence_detail_is_collapsed_licensed_context_only() -> None:
     assert tuple(i.text for i in story.evidence_detail) == tuple(exp.known_public_context)
     md = render_builder_story_markdown(story)
     assert "<details><summary>Why we built this</summary>" in md
+
+
+# --------------------------------------------------------------------------
+# V3.1 cleanup regressions (owner authorization 2026-09-04, section 11)
+# --------------------------------------------------------------------------
+
+
+def _body(story) -> str:
+    return render_builder_story_markdown(story).split("## Appendix")[0]
+
+
+def test_v31_ontology_legend_not_in_default_customer_view() -> None:
+    for fn in (aplus_envelope, elite_envelope, em_envelope):
+        story = compile_builder_story(envelope=fn())
+        body = _body(story).lower()
+        # the legend is no longer a section in the customer-facing body
+        assert "reading the labels" not in body
+        assert "## semantic legend" not in body
+        assert "- **public evidence** —" not in body
+        # but the five distinctions are still preserved on the artifact + appendix
+        assert len(story.semantics_legend) == 5
+        appendix = render_builder_story_markdown(story).split("## Appendix")[1].lower()
+        assert "semantic legend (audit" in appendix
+        assert "- **public evidence** —" in appendix
+
+
+def test_v31_no_debug_or_special_state_controls_in_normal_experience() -> None:
+    story = compile_builder_story(envelope=aplus_envelope())
+    # the screens themselves (Screen 1 onward) carry no state selector / debug control
+    screens = render_builder_story_markdown(story).split("## Screen 1")[1].split("## Appendix")[0]
+    screens_low = screens.lower()
+    for probe in (
+        "preview a special state",
+        "test-state",
+        "state selector",
+        "scenario picker",
+        "## debug",
+        "developer controls",
+    ):
+        assert probe not in screens_low
+    # exception screens are a builder note, never a user-facing selector
+    assert "never a user-facing selector" in screens_low
+    rules = " ".join(story.builder_hard_rules).lower()
+    assert "state selector" in rules and "qa / debug" in rules
+
+
+def test_v31_builder_cannot_invent_unlisted_functionality() -> None:
+    env = aplus_envelope()
+    exp, brief, _, sk = _ctx(env)
+    story = compile_builder_story(envelope=env)
+    assert story.allowed_primary_actions == ("See how it could work", "Run simulation")
+    rules = " ".join(story.builder_hard_rules).lower()
+    for probe in ("download", "export", "pdf", "share or save", "analytics", "dashboard"):
+        assert probe in rules
+    # the rendered brief enumerates the allowed actions
+    assert "Allowed interactive actions:" in render_builder_story_markdown(story)
+    bad = dataclasses.replace(story, allowed_primary_actions=("See how it could work",))
+    with pytest.raises(BuilderStoryAuthorityError):
+        _assert_story_within_authority(bad, exp, brief, env, sk)
+
+
+def test_v31_internal_evidence_and_semantic_metadata_preserved() -> None:
+    story = compile_builder_story(envelope=aplus_envelope())
+    # evidence rationale preserved in the audit layer even though it is not
+    # customer-facing copy any more
+    for f in story.simulation_input_schema:
+        assert f.exists_because
+        assert f.value_semantics == "SYNTHETIC_DEMO_INPUT"
+    assert story.internal_mock_actions == _SK.mock_actions
+    loc = next(f for f in story.simulation_input_schema if f.field_id == "service_location")
+    assert loc.m4_option_labels
+    assert any(k == "demo_mode" for k, _ in story.audit_appendix)
+    assert any(k == "story_compiler_version" for k, _ in story.audit_appendix)
+
+
+def test_v31_stronger_headline_cannot_exceed_evidence_strength() -> None:
+    env = aplus_envelope()
+    exp, brief, _, sk = _ctx(env)
+    story = compile_builder_story(envelope=env)
+    h = story.opportunity_headline.lower()
+    assert "response" in h  # tied to the A-Plus anchor
+    assert not re.search(r"\b(verified|proven|actual|measured|fast|quick|guarantee)\b", h)
+    # a headline that claims verified performance is rejected
+    bad = dataclasses.replace(
+        story,
+        opportunity_headline="One way structured intake reflects your verified response speed",
+    )
+    with pytest.raises(BuilderStoryAuthorityError):
+        _assert_story_within_authority(bad, exp, brief, env, sk)
+    # a headline that drops the anchor keyword is rejected
+    bad2 = dataclasses.replace(
+        story,
+        opportunity_headline="One way structured intake could support what your pages describe",
+    )
+    with pytest.raises(BuilderStoryAuthorityError):
+        _assert_story_within_authority(bad2, exp, brief, env, sk)
+
+
+def test_v31_screen2_customer_hints_are_concise() -> None:
+    story = compile_builder_story(envelope=aplus_envelope())
+    for f in story.simulation_input_schema:
+        assert 1 <= len(f.customer_hint.split()) <= 6
+        assert "evidence" not in f.customer_hint.lower()
+        assert "public page" not in f.customer_hint.lower()
+    # the long rationale is no longer rendered under every field
+    body = _body(story)
+    assert "without making any coverage promise" not in body
+    assert "so the simulation asks which need applies" not in body
+
+
+def test_v31_result_still_preserves_grouped_mock_action_meaning() -> None:
+    story = compile_builder_story(envelope=aplus_envelope())
+    covered = [aid for g in story.customer_facing_outcomes for aid in g.internal_action_ids]
+    assert set(covered) == {a for a, _ in _SK.mock_actions}
+    assert len(covered) == 6
+    assert story.result_recap_line
+    assert len(story.result_recap_line.split()) <= 22
+
+
+# --------------------------------------------------------------------------
+# PART II — Elite personalization proof (section 12-14)
+# --------------------------------------------------------------------------
+
+
+def test_elite_story_is_materially_different_from_aplus() -> None:
+    a = compile_builder_story(envelope=aplus_envelope())
+    e = compile_builder_story(envelope=elite_envelope())
+    # different primary anchor
+    assert a.primary_demo_anchor != e.primary_demo_anchor
+    assert a.primary_demo_anchor == "response commitment"
+    assert e.primary_demo_anchor == "service availability"
+    # different opportunity headline, summary, framing, evidence detail
+    assert a.opportunity_headline != e.opportunity_headline
+    assert "response" in a.opportunity_headline.lower()
+    assert "availab" in e.opportunity_headline.lower()
+    assert a.opportunity_summary != e.opportunity_summary
+    assert a.scenario_framing != e.scenario_framing
+    assert {i.text for i in a.evidence_detail} != {i.text for i in e.evidence_detail}
+    # shared mechanics are legitimately shared (section 14)
+    assert a.internal_mock_actions == e.internal_mock_actions
+    assert [f.field_id for f in a.simulation_input_schema] == [
+        f.field_id for f in e.simulation_input_schema
+    ]
+
+
+def test_elite_availability_never_becomes_response_behaviour() -> None:
+    e = compile_builder_story(envelope=elite_envelope())
+    blob = " ".join(
+        [e.opportunity_headline, e.opportunity_summary, e.scenario_framing]
+        + [i.text for i in e.evidence_detail]
+        + [s.line for s in e.result_story]
+    ).lower()
+    for sent in re.split(r"(?<=[.!?])\s+", blob):
+        if any(g in sent for g in ("don't know", "unknown", "not public")):
+            continue
+        if "availab" in sent:
+            assert not any(
+                w in sent
+                for w in ("respond", "response", "acknowledg", "callback", "24/7", "24-hour")
+            )
+    # 24-hour / 24/7 availability is never upgraded into a response claim
+    assert "24/7" not in blob
+    assert not re.search(r"responds?\b[^.]*24", blob)

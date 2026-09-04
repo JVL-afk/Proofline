@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "tests"))
 
-from m68_fixtures import aplus_envelope  # noqa: E402
+from m68_fixtures import aplus_envelope, elite_envelope  # noqa: E402
 from opintel_communication.builder_brief import (  # noqa: E402
     compile_builder_brief,
     render_builder_brief_markdown,
@@ -71,7 +71,7 @@ def main() -> int:
     v2_json.write_text(json.dumps(v2_payload, indent=2, default=str), encoding="utf-8")
     v2_md.write_text(render_builder_experience_markdown(exp), encoding="utf-8")
 
-    # --- V3: opportunity-story projection ---
+    # --- V3 / V3.1: opportunity-story projection ---
     story = compile_builder_story(envelope=env)
     v3_payload = dataclasses.asdict(story)
     v3_payload["_source"] = source
@@ -79,6 +79,23 @@ def main() -> int:
     v3_md = _OUT / "m4-aplus-builder-brief-v3-2026-09-03.md"
     v3_json.write_text(json.dumps(v3_payload, indent=2, default=str), encoding="utf-8")
     v3_md.write_text(render_builder_story_markdown(story), encoding="utf-8")
+
+    # --- Elite V3.1 (same generalized compiler, Elite's frozen evidence only) ---
+    elite_env = elite_envelope()
+    elite_source = {
+        "target": "Elite",
+        "frozen_envelope_sha256": elite_env.envelope_sha256,
+        "m2_m5_bundle_sha256": elite_env.source_lineage.m2_m5_bundle_sha256,
+        "fixture": "tests/m68_fixtures.elite_envelope()",
+        "note": "Frozen Elite evidence; no re-research, no web, no new evidence.",
+    }
+    elite_story = compile_builder_story(envelope=elite_env)
+    elite_payload = dataclasses.asdict(elite_story)
+    elite_payload["_source"] = elite_source
+    elite_json = _OUT / "m4-elite-builder-brief-v3.1-2026-09-04.json"
+    elite_md = _OUT / "m4-elite-builder-brief-v3.1-2026-09-04.md"
+    elite_json.write_text(json.dumps(elite_payload, indent=2, default=str), encoding="utf-8")
+    elite_md.write_text(render_builder_story_markdown(elite_story), encoding="utf-8")
 
     print("== V1 (audit-grade brief) ==")
     print(f"  demo_mode {brief.demo_mode.value}  anchor {exp.primary_demo_anchor}")
@@ -112,10 +129,16 @@ def main() -> int:
         f"{story.human_handoff_preview.role}"
     )
     print(f"  closing bridge         : {story.closing_bridge}")
+    print("== Elite V3.1 (same compiler, Elite evidence) ==")
+    print(f"  primary anchor         : {elite_story.primary_demo_anchor}")
+    print(f"  opportunity headline   : {elite_story.opportunity_headline}")
+    print(f"  scenario framing       : {elite_story.scenario_framing}")
+    print(f"  opportunity summary    : {elite_story.opportunity_summary}")
+    print(f"  evidence detail        : {[i.text for i in elite_story.evidence_detail]}")
     print(f"\n  V2 machine-readable : {v2_json.relative_to(ROOT)}")
     print(f"  V2 paste-ready md   : {v2_md.relative_to(ROOT)}")
-    print(f"  V3 machine-readable : {v3_json.relative_to(ROOT)}")
-    print(f"  V3 paste-ready md   : {v3_md.relative_to(ROOT)}")
+    print(f"  V3.1 A-Plus md      : {v3_md.relative_to(ROOT)}")
+    print(f"  V3.1 Elite md       : {elite_md.relative_to(ROOT)}")
     return 0
 
 

@@ -1,32 +1,36 @@
 {
   "story_version": "demo.builder_brief@3.1",
   "compiled_at": "2026-09-01 00:00:00+00:00",
-  "business_display_name": "A-Plus Air Conditioning & Home Solutions",
-  "short_name": "A-Plus",
-  "permitted_hostname": "www.aplusac.com",
-  "identity_rule": "Display name and hostname are the only identity assertions permitted. No inferred location, size, ownership, tenure, or affiliation.",
-  "primary_demo_anchor": "response commitment",
-  "scenario_framing": "a commercial request, organized and summarized so a person can pick it up",
-  "opportunity_headline": "One way structured intake could support the response experience your public pages already describe",
-  "opportunity_summary": "Your public pages emphasize commercial HVAC repair and feature a published response-time message. We built a short simulation showing how a structured intake flow could prepare a commercial request for human follow-up. We don't know your current internal process, systems, staffing, or response performance.",
+  "business_display_name": "Elite Air Conditioning & Plumbing",
+  "short_name": "Elite",
+  "permitted_hostname": "eliteaustinac.com",
+  "identity_rule": "Display name and hostname only.",
+  "primary_demo_anchor": "service availability",
+  "scenario_framing": "a service request that could come in at any time, organized so a person can pick it up",
+  "opportunity_headline": "One way structured intake could complement the service availability your public pages already describe",
+  "opportunity_summary": "Your public pages emphasize commercial HVAC repair and feature a published availability message. We built a short simulation showing how a structured intake flow could prepare a commercial request for human follow-up. We don't know your current internal process, systems, staffing, or response performance.",
   "opportunity_primary_action": "See how it could work",
   "evidence_detail_label": "Why we built this",
   "evidence_detail": [
     {
-      "text": "a published response-time message on the public site",
+      "text": "a published service-availability message on the public site",
       "semantics": "PUBLIC_EVIDENCE"
     },
     {
-      "text": "commercial air-conditioning repair work (\"Commercial Air Conditioning Repairs\")",
+      "text": "commercial air-conditioning repair work (\"Commercial HVAC Services\")",
       "semantics": "PUBLIC_EVIDENCE"
     },
     {
-      "text": "a public request path (\"When to Schedule AC Replacement\")",
+      "text": "a public request path (\"Need to schedule a service call?\")",
+      "semantics": "PUBLIC_EVIDENCE"
+    },
+    {
+      "text": "a service-area reference (\"Just a Sample of Our Service Areas\")",
       "semantics": "PUBLIC_EVIDENCE"
     }
   ],
   "unknown_summary": "We don't know how your team currently handles requests, what tools, CRM or scheduling systems you use, how you're staffed, or your actual response times - none of that is public, and this simulation does not assume any of it.",
-  "persistent_disclosure": "Simulation \u00b7 not connected to A-Plus",
+  "persistent_disclosure": "Simulation \u00b7 not connected to Elite",
   "simulation_intake_title": "Simulate a commercial request",
   "simulation_input_schema": [
     {
@@ -45,8 +49,8 @@
       "optional": false,
       "exists_because": "Your public pages describe commercial HVAC work, so the simulation asks which need applies.",
       "m4_option_labels": [
-        "When to Schedule AC Replacement",
-        "Commercial Air Conditioning Repairs",
+        "Need to schedule a service call?",
+        "Commercial HVAC Services",
         "other",
         "unknown"
       ],
@@ -85,7 +89,7 @@
       "optional": false,
       "exists_because": "Your public pages reference a service area, so the simulation asks about location - without making any coverage promise.",
       "m4_option_labels": [
-        "Service Area",
+        "Just a Sample of Our Service Areas",
         "other",
         "unknown"
       ],
@@ -175,7 +179,7 @@
     {
       "order": 2,
       "label": "Structured context",
-      "line": "The simulation turns the form answers into a commercial request, organized and summarized so a person can pick it up.",
+      "line": "The simulation turns the form answers into a service request that could come in at any time, organized so a person can pick it up.",
       "semantics": "SIMULATED_OUTPUT"
     },
     {
@@ -193,9 +197,9 @@
   ],
   "human_handoff_preview": {
     "kind": "FICTIONAL_DEMO_PLACEHOLDER",
-    "name": "Morgan",
+    "name": "Casey",
     "role": "Intake coordinator",
-    "disclosure": "Morgan is a fictional demo placeholder, not a real person. We don't know how A-Plus assigns or handles requests internally - the role is illustrative only."
+    "disclosure": "Casey is a fictional demo placeholder, not a real person. We don't know how Elite assigns or handles requests internally - the role is illustrative only."
   },
   "customer_facing_outcomes": [
     {
@@ -346,12 +350,12 @@
     "Progressive disclosure: simple first; internal detail only on request."
   ],
   "builder_freedom": "Free: visual hierarchy, typography, colour, spacing, animation, transitions, icons, cards, responsive design, polish. Constrained: factual copy, business claims, workflow meaning, result semantics, placeholder semantics, integration state, metrics/data - use only the wording this brief supplies.",
-  "underlying_experience_sha256": "21395a65fa7b780fa52239661cf92febb339553ba5dfa015851124e0586aa0c2",
-  "underlying_brief_sha256": "4d9f26412893d85fc21473b65e50466433d3655275957ad3523b20323538636a",
+  "underlying_experience_sha256": "51d74d160b610dd587b70fc27d0e6533d55392e1d6c94a9570d772c3d6d0c447",
+  "underlying_brief_sha256": "91808fc521479c49d72f9499b3cd10485a12d358a1de58498482e039bb5110c5",
   "audit_appendix": [
     [
       "envelope_sha256",
-      "c5a6307f4427d450359946b87d64cecd43f090ed28946c90bd175eaa2b0b380e"
+      "2eca7a18a88c657ec52428f25c5e78224cbda553ef84fe92fed308f430e91d55"
     ],
     [
       "m2_m5_bundle_sha256",
@@ -419,10 +423,10 @@
     ]
   ],
   "_source": {
-    "target": "A-Plus",
-    "frozen_envelope_sha256": "c5a6307f4427d450359946b87d64cecd43f090ed28946c90bd175eaa2b0b380e",
+    "target": "Elite",
+    "frozen_envelope_sha256": "2eca7a18a88c657ec52428f25c5e78224cbda553ef84fe92fed308f430e91d55",
     "m2_m5_bundle_sha256": "a6540437f096ac7b6d0e026fd75ebdffbd5a92a1b77f59e730fb3ee24b3554e7",
-    "fixture": "tests/m68_fixtures.aplus_envelope()",
-    "note": "Frozen corrected M2-M5 evidence; no re-research, no web, no new evidence."
+    "fixture": "tests/m68_fixtures.elite_envelope()",
+    "note": "Frozen Elite evidence; no re-research, no web, no new evidence."
   }
 }

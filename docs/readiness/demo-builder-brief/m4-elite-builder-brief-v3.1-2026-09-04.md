@@ -1,6 +1,6 @@
-# A-Plus Air Conditioning & Home Solutions — an intake opportunity
+# Elite Air Conditioning & Plumbing — an intake opportunity
 
-_Show on every screen:_ **Simulation · not connected to A-Plus**
+_Show on every screen:_ **Simulation · not connected to Elite**
 
 > Builder brief. You have full freedom over visual design and **zero** freedom over the wording of any claim, label, disclosure, workflow step or result - use only the copy in this brief for those. Free: visual hierarchy, typography, colour, spacing, animation, transitions, icons, cards, responsive design, polish. Constrained: factual copy, business claims, workflow meaning, result semantics, placeholder semantics, integration state, metrics/data - use only the wording this brief supplies.
 
@@ -13,17 +13,18 @@ _Show on every screen:_ **Simulation · not connected to A-Plus**
 - Do NOT surface the semantic legend, evidence/unknown labels, or any internal taxonomy in the normal customer view. Explain meaning in plain language in context if needed.
 - **Allowed interactive actions:** `See how it could work`, `Run simulation` — plus the standard Screen 2 form inputs. Nothing else.
 
-## Screen 1 — One way structured intake could support the response experience your public pages already describe
+## Screen 1 — One way structured intake could complement the service availability your public pages already describe
 
-> Your public pages emphasize commercial HVAC repair and feature a published response-time message. We built a short simulation showing how a structured intake flow could prepare a commercial request for human follow-up. We don't know your current internal process, systems, staffing, or response performance.
+> Your public pages emphasize commercial HVAC repair and feature a published availability message. We built a short simulation showing how a structured intake flow could prepare a commercial request for human follow-up. We don't know your current internal process, systems, staffing, or response performance.
 
 **Primary action:** `See how it could work`
 
 <details><summary>Why we built this</summary>
 
-- a published response-time message on the public site
-- commercial air-conditioning repair work ("Commercial Air Conditioning Repairs")
-- a public request path ("When to Schedule AC Replacement")
+- a published service-availability message on the public site
+- commercial air-conditioning repair work ("Commercial HVAC Services")
+- a public request path ("Need to schedule a service call?")
+- a service-area reference ("Just a Sample of Our Service Areas")
 
 </details>
 
@@ -31,7 +32,7 @@ _What we don't know:_ We don't know how your team currently handles requests, wh
 
 ## Screen 2 — Simulate a commercial request
 
-One calm page - no wizard. Every value below is an **illustrative simulation choice**, not a fact about A-Plus and not something they told us.
+One calm page - no wizard. Every value below is an **illustrative simulation choice**, not a fact about Elite and not something they told us.
 
 | field | hint | control | illustrative values | required |
 |---|---|---|---|---|
@@ -55,16 +56,16 @@ Show this as movement through a workflow, not a data dump — the **outcome** is
 `Request  →  Structured context  →  Example human review  →  Next workflow preparation`
 
 1. **Request** — A request arrives through the simulated intake form.
-2. **Structured context** — The simulation turns the form answers into a commercial request, organized and summarized so a person can pick it up.
+2. **Structured context** — The simulation turns the form answers into a service request that could come in at any time, organized so a person can pick it up.
 3. **Example human review** — An example intake coordinator reviews the structured request before anything happens.
 4. **Next workflow preparation** — The simulation prepares what the next step could hand to your team.
 
 **Example human handoff** (fictional, illustrative):
 
-> **Morgan**  
+> **Casey**  
 > Intake coordinator\*
 >
-> \* Morgan is a fictional demo placeholder, not a real person. We don't know how A-Plus assigns or handles requests internally - the role is illustrative only.
+> \* Casey is a fictional demo placeholder, not a real person. We don't know how Elite assigns or handles requests internally - the role is illustrative only.
 
 **What could be prepared next** (grouped; nothing runs):
 
@@ -144,7 +145,7 @@ The simulation couldn't finish this step. Nothing real happened - you can start 
 
 | key | value |
 |---|---|
-| envelope_sha256 | `c5a6307f4427d450359946b87d64cecd43f090ed28946c90bd175eaa2b0b380e` |
+| envelope_sha256 | `2eca7a18a88c657ec52428f25c5e78224cbda553ef84fe92fed308f430e91d55` |
 | m2_m5_bundle_sha256 | `a6540437f096ac7b6d0e026fd75ebdffbd5a92a1b77f59e730fb3ee24b3554e7` |
 | audit_revision_hash | `bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb` |
 | demo_specification_hash | `cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc` |
@@ -161,8 +162,8 @@ The simulation couldn't finish this step. Nothing real happened - you can start 
 | experience_compiler_version | `demo.builder_brief@2` |
 | story_compiler_version | `demo.builder_brief@3.1` |
 | demo_mode | `BESPOKE_DEMO` |
-| underlying_experience_sha256 | `21395a65fa7b780fa52239661cf92febb339553ba5dfa015851124e0586aa0c2` |
-| underlying_brief_sha256 | `4d9f26412893d85fc21473b65e50466433d3655275957ad3523b20323538636a` |
+| underlying_experience_sha256 | `51d74d160b610dd587b70fc27d0e6533d55392e1d6c94a9570d772c3d6d0c447` |
+| underlying_brief_sha256 | `91808fc521479c49d72f9499b3cd10485a12d358a1de58498482e039bb5110c5` |
 | compiled_at | 2026-09-01T00:00:00+00:00 |
 
 **Internal mock actions (all six preserved; audit only):**
@@ -177,15 +178,15 @@ The simulation couldn't finish this step. Nothing real happened - you can start 
 **Simulation input fields — customer hint, M4 rationale, M4 option labels (audit only):**
 
 - `service_need` — hint "Which need applies" — Your public pages describe commercial HVAC work, so the simulation asks which need applies.
-  - M4 evidence-derived option labels: ['When to Schedule AC Replacement', 'Commercial Air Conditioning Repairs', 'other', 'unknown']
+  - M4 evidence-derived option labels: ['Need to schedule a service call?', 'Commercial HVAC Services', 'other', 'unknown']
 - `facility_type` — hint "Facility type" — Bounded commercial facility context for the scenario.
 - `service_location` — hint "Example simulation location" — Your public pages reference a service area, so the simulation asks about location - without making any coverage promise.
-  - M4 evidence-derived option labels: ['Service Area', 'other', 'unknown']
+  - M4 evidence-derived option labels: ['Just a Sample of Our Service Areas', 'other', 'unknown']
 - `urgency` — hint "How urgent" — The simulation demonstrates a fixed safety handoff.
 - `equipment_context` — hint "Equipment (optional)" — Keeps equipment detail optional and never assumed.
 - `contact_preference` — hint "Preview follow-up as" — Chooses which preview channel the result shows; no real destination is collected.
 
-**Scenario framing (per-anchor story):** a commercial request, organized and summarized so a person can pick it up
+**Scenario framing (per-anchor story):** a service request that could come in at any time, organized so a person can pick it up
 
 **Result recap line:** A one-line recap of the simulated request - need, facility, and urgency - then the workflow story below.
 
