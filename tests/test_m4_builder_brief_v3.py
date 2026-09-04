@@ -52,7 +52,7 @@ def _customer_text(story) -> str:
 
 
 def test_version_and_deterministic() -> None:
-    assert BUILDER_STORY_VERSION == "demo.builder_brief@3.1"
+    assert BUILDER_STORY_VERSION == "demo.builder_brief@3.2"
     a = compile_builder_story(envelope=aplus_envelope())
     b = compile_builder_story(envelope=aplus_envelope())
     assert dataclasses.asdict(a) == dataclasses.asdict(b)
@@ -383,8 +383,10 @@ def test_v31_builder_cannot_invent_unlisted_functionality() -> None:
     rules = " ".join(story.builder_hard_rules).lower()
     for probe in ("download", "export", "pdf", "share or save", "analytics", "dashboard"):
         assert probe in rules
-    # the rendered brief enumerates the allowed actions
-    assert "Allowed interactive actions:" in render_builder_story_markdown(story)
+    # the rendered brief enumerates the allowed actions + the closed control list
+    md = render_builder_story_markdown(story)
+    assert "Primary click actions:" in md
+    assert "render exactly these, nothing else" in md.lower()
     bad = dataclasses.replace(story, allowed_primary_actions=("See how it could work",))
     with pytest.raises(BuilderStoryAuthorityError):
         _assert_story_within_authority(bad, exp, brief, env, sk)
@@ -492,3 +494,120 @@ def test_elite_availability_never_becomes_response_behaviour() -> None:
     # 24-hour / 24/7 availability is never upgraded into a response claim
     assert "24/7" not in blob
     assert not re.search(r"responds?\b[^.]*24", blob)
+
+
+# --------------------------------------------------------------------------
+# V3.2 freeze regressions (owner authorization 2026-09-04, Part A)
+# --------------------------------------------------------------------------
+
+
+def test_v32_frozen_version_and_marker() -> None:
+    from opintel_communication.builder_story import M4_PRESENTATION_FROZEN
+
+    assert BUILDER_STORY_VERSION == "demo.builder_brief@3.2"
+    assert M4_PRESENTATION_FROZEN is True
+    story = compile_builder_story(envelope=aplus_envelope())
+    assert any(k == "m4_presentation_frozen" and v == "true" for k, v in story.audit_appendix)
+
+
+def test_v32_example_scenarios_only_fill_existing_synthetic_options() -> None:
+    for fn in (aplus_envelope, elite_envelope, em_envelope):
+        story = compile_builder_story(envelope=fn())
+        assert len(story.example_scenarios) == 4
+        opts = {f.field_id: set(f.values) for f in story.simulation_input_schema}
+        fact_phrases = {
+            p.strip().lower()
+            for f in fn().eligible_company_facts
+            for p in (f.sanitized_phrase, f.verbatim_source_phrase)
+        }
+        for preset in story.example_scenarios:
+            assert len(preset.name.split()) <= 4
+            assert preset.name.lower() not in fact_phrases
+            for fid, val in preset.field_values:
+                assert val in opts[fid]  # exactly equivalent to selecting by hand
+                assert val.lower() not in fact_phrases
+        # "Warehouse safety concern" preset routes urgency to the safety branch
+        wh = next(p for p in story.example_scenarios if p.name == "Warehouse safety concern")
+        assert ("urgency", "Safety concern") in wh.field_values
+
+
+def test_v32_example_scenario_tampering_is_rejected() -> None:
+    env = aplus_envelope()
+    exp, brief, _, sk = _ctx(env)
+    story = compile_builder_story(envelope=env)
+    # a preset value that is not one of the field's synthetic options
+    bad = dataclasses.replace(
+        story,
+        example_scenarios=(
+            dataclasses.replace(
+                story.example_scenarios[0],
+                field_values=(("service_need", "24/7 Emergency Response"),),
+            ),
+        ),
+    )
+    with pytest.raises(BuilderStoryAuthorityError):
+        _assert_story_within_authority(bad, exp, brief, env, sk)
+
+
+def test_v32_start_over_is_a_local_reset_only() -> None:
+    story = compile_builder_story(envelope=aplus_envelope())
+    assert story.start_over_label == "Start over"
+    so = story.start_over_semantics.lower()
+    assert "clears" in so and "local" in so and "another simulation" in so
+    assert "saves nothing" in so and "sends nothing" in so
+    for denied in ("no history", "no analytics", "contacts no one", "persists no"):
+        assert denied in so
+    assert "does not imply any real action" in so
+    md = render_builder_story_markdown(story)
+    assert "## Start over" in md.split("## Appendix")[0]
+
+
+def test_v32_customer_facing_controls_are_the_closed_six() -> None:
+    env = aplus_envelope()
+    exp, brief, _, sk = _ctx(env)
+    story = compile_builder_story(envelope=env)
+    assert len(story.customer_facing_controls) == 6
+    blob = " ".join(story.customer_facing_controls).lower()
+    for needle in (
+        "opportunity screen",
+        "synthetic simulation inputs",
+        "example scenario",
+        "run the simulation",
+        "explanatory detail",
+        "start over",
+    ):
+        assert needle in blob
+    # primary click actions unchanged
+    assert story.allowed_primary_actions == ("See how it could work", "Run simulation")
+    bad = dataclasses.replace(story, customer_facing_controls=story.customer_facing_controls[:5])
+    with pytest.raises(BuilderStoryAuthorityError):
+        _assert_story_within_authority(bad, exp, brief, env, sk)
+
+
+def test_v32_builder_function_allowlist_still_forbids_invented_capability() -> None:
+    story = compile_builder_story(envelope=aplus_envelope())
+    rules = " ".join(story.builder_hard_rules).lower()
+    for probe in (
+        "pdf",
+        "download",
+        "export",
+        "share or save",
+        "email capture",
+        "analytics",
+        "dashboard",
+        "integration",
+        "sign-in",
+    ):
+        assert probe in rules
+    body = render_builder_story_markdown(story).split("## Appendix")[0]
+    assert "render exactly these, nothing else" in body.lower()
+
+
+def test_v32_authoritative_m4_semantics_unchanged() -> None:
+    # the freeze changes presentation only; the V1 brief + skeleton are untouched
+    story = compile_builder_story(envelope=aplus_envelope())
+    exp = compile_builder_experience(envelope=aplus_envelope())
+    assert story.underlying_brief_sha256 == exp.underlying_brief_sha256
+    assert story.internal_mock_actions == _SK.mock_actions
+    states = tuple(n.id for n in DeterministicDemoComposer._states())
+    assert tuple(s.id for s in _SK.states) == states

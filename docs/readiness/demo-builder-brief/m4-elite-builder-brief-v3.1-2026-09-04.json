@@ -1,5 +1,5 @@
 {
-  "story_version": "demo.builder_brief@3.1",
+  "story_version": "demo.builder_brief@3.2",
   "compiled_at": "2026-09-01 00:00:00+00:00",
   "business_display_name": "Elite Air Conditioning & Plumbing",
   "short_name": "Elite",
@@ -166,6 +166,124 @@
     "Phone",
     "Email"
   ],
+  "example_scenarios": [
+    {
+      "name": "Office repair",
+      "field_values": [
+        [
+          "service_need",
+          "Repair request"
+        ],
+        [
+          "facility_type",
+          "Office"
+        ],
+        [
+          "service_location",
+          "Example service location"
+        ],
+        [
+          "urgency",
+          "Routine"
+        ],
+        [
+          "equipment_context",
+          "Split system"
+        ],
+        [
+          "contact_preference",
+          "Phone"
+        ]
+      ]
+    },
+    {
+      "name": "Retail maintenance",
+      "field_values": [
+        [
+          "service_need",
+          "Maintenance visit"
+        ],
+        [
+          "facility_type",
+          "Retail"
+        ],
+        [
+          "service_location",
+          "Example service location"
+        ],
+        [
+          "urgency",
+          "Routine"
+        ],
+        [
+          "equipment_context",
+          "Rooftop unit"
+        ],
+        [
+          "contact_preference",
+          "Email"
+        ]
+      ]
+    },
+    {
+      "name": "Hospitality quote",
+      "field_values": [
+        [
+          "service_need",
+          "Replacement or quote"
+        ],
+        [
+          "facility_type",
+          "Hospitality"
+        ],
+        [
+          "service_location",
+          "Example service location"
+        ],
+        [
+          "urgency",
+          "Routine"
+        ],
+        [
+          "equipment_context",
+          "Chiller"
+        ],
+        [
+          "contact_preference",
+          "Phone"
+        ]
+      ]
+    },
+    {
+      "name": "Warehouse safety concern",
+      "field_values": [
+        [
+          "service_need",
+          "Repair request"
+        ],
+        [
+          "facility_type",
+          "Warehouse"
+        ],
+        [
+          "service_location",
+          "Example service location"
+        ],
+        [
+          "urgency",
+          "Safety concern"
+        ],
+        [
+          "equipment_context",
+          "Rooftop unit"
+        ],
+        [
+          "contact_preference",
+          "Phone"
+        ]
+      ]
+    }
+  ],
   "simulation_run_action": "Run simulation",
   "result_title": "A commercial request is ready for human review",
   "result_recap_line": "A one-line recap of the simulated request - need, facility, and urgency - then the workflow story below.",
@@ -255,6 +373,8 @@
   ],
   "result_disclosure": "Nothing was sent, booked, dispatched, or updated. This was a hypothetical simulation.",
   "closing_bridge": "Imagine this fitted to your actual intake process rather than this hypothetical one.",
+  "start_over_label": "Start over",
+  "start_over_semantics": "Clears the local synthetic form state and returns to the opportunity screen so another simulation can be run. It saves nothing, sends nothing, records no history, creates no analytics, contacts no one, persists no customer data, and does not imply any real action occurred - it is a local reset only.",
   "exception_states": [
     {
       "trigger": "safety_critical",
@@ -275,6 +395,14 @@
   "allowed_primary_actions": [
     "See how it could work",
     "Run simulation"
+  ],
+  "customer_facing_controls": [
+    "Progress from the opportunity screen to the simulation (Screen 1 primary action).",
+    "Select or edit the synthetic simulation inputs (Screen 2 form).",
+    "Optionally load one example scenario preset that fills those same synthetic inputs.",
+    "Run the simulation (Screen 2 submit action).",
+    "Expand the permitted explanatory detail ('Why we built this').",
+    "Start over after a result or exception screen (clears local synthetic state only)."
   ],
   "builder_hard_rules": [
     "Do NOT add any functional control, export, download, PDF or print generation, share or save action, link-out, email capture, analytics, dashboard, KPI tile, integration, sign-in, or any capability that is not explicitly listed as a primary or submit action in this brief. You may invent visual treatment; you may not invent product functionality.",
@@ -415,7 +543,11 @@
     ],
     [
       "story_compiler_version",
-      "demo.builder_brief@3.1"
+      "demo.builder_brief@3.2"
+    ],
+    [
+      "m4_presentation_frozen",
+      "true"
     ],
     [
       "demo_mode",

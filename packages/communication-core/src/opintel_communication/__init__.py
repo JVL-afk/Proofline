@@ -41,9 +41,11 @@ from opintel_communication.builder_experience import (
 )
 from opintel_communication.builder_story import (
     BUILDER_STORY_VERSION,
+    M4_PRESENTATION_FROZEN,
     BuilderStory,
     BuilderStoryAuthorityError,
     CustomerOutcomeGroup,
+    ExampleScenario,
     ResultStoryStage,
     StoryInputField,
     compile_builder_story,
@@ -195,6 +197,7 @@ __all__ = [
     "HAIKU_CERT_BOUNDS",
     "HAIKU_QUALIFICATION_BOUNDS",
     "HUMAN_REVIEW_SCHEMA_VERSION",
+    "M4_PRESENTATION_FROZEN",
     "OUTPUT_VALIDATOR_V2_VERSION",
     "OUTPUT_VALIDATOR_VERSION",
     "PROMPT_TEMPLATE_ID_CERT",
@@ -237,6 +240,7 @@ __all__ = [
     "CustomerOutcomeGroup",
     "DemoMode",
     "DriftClass",
+    "ExampleScenario",
     "FactStrength",
     "FictionalPlaceholder",
     "GeneratedArtifact",

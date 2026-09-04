@@ -1,4 +1,4 @@
-"""``demo.builder_brief@3.1`` - the opportunity-story builder projection.
+"""``demo.builder_brief@3.2`` - the opportunity-story builder projection (FROZEN).
 
 Owner authorization 2026-09-03 "M4 BUILDER-BRIEF V3: OPPORTUNITY -> EXPERIENCE ->
 HANDOFF" (V3) then 2026-09-04 "M4 BUILDER-BRIEF V3.1 CLEANUP + ELITE
@@ -27,7 +27,23 @@ V3.1 is presentation cleanup only (no M4 / V1 / V2 semantic change):
   and a per-anchor ``scenario_framing`` string makes different evidence produce
   a different opportunity story (the Elite personalization proof).
 
-V3(.1) is a pure deterministic function of the same frozen inputs. It builds on
+V3.2 (owner authorization 2026-09-04 "FREEZE M4 -> RUN M6.8-4 ...", Part A)
+formalizes two manual UX discoveries and **freezes** the M4 presentation layer:
+
+* ``example_scenarios`` - a small set of Screen-2 presets that fill the existing
+  synthetic form fields with ``SYNTHETIC_DEMO_INPUT`` values only. Selecting a
+  preset is exactly equivalent to selecting those fields by hand; no new
+  workflow authority, never a fact about the target company;
+* ``start_over`` - a customer-facing state-reset control after a result /
+  exception. It clears local synthetic state and returns to the opportunity
+  screen. It never saves, transmits, tracks, persists, or implies a real action.
+
+After V3.2 the presentation compiler is FROZEN: no further M4 aesthetic tuning.
+Authoritative M4 demo semantics are unchanged; A-Plus and Elite are generated
+through this same compiler; builder rendering stays manual; no external builder
+is part of the authority chain.
+
+V3(.x) is a pure deterministic function of the same frozen inputs. It builds on
 the V2 ``BuilderExperience`` (inheriting V1's *and* V2's fail-closed checks) and
 adds a story-level authority check on top.
 """
@@ -69,7 +85,10 @@ from opintel_communication.builder_experience import (
 from opintel_communication.domain import SemanticEnvelope
 from opintel_communication.hashing import sha256_text
 
-BUILDER_STORY_VERSION = "demo.builder_brief@3.1"
+BUILDER_STORY_VERSION = "demo.builder_brief@3.2"
+# The M4 presentation compiler is frozen at this version (owner authorization
+# 2026-09-04). No further aesthetic tuning; only bug/authority fixes.
+M4_PRESENTATION_FROZEN = True
 
 # --------------------------------------------------------------------------
 # artifact semantics (section 15) - machine distinctions, never enum names in UI
@@ -184,6 +203,76 @@ _STORY_HARD_BUILDER_RULES: tuple[str, ...] = (
     "technical or semantic badge. The only persistent chrome is the disclosure line.",
     "Do NOT surface the semantic legend, evidence/unknown labels, or any internal taxonomy in "
     "the normal customer view. Explain meaning in plain language in context if needed.",
+)
+
+# V3.2 (freeze): the complete, closed list of customer-facing controls. A builder
+# renders exactly these and nothing else.
+_CUSTOMER_FACING_CONTROLS: tuple[str, ...] = (
+    "Progress from the opportunity screen to the simulation (Screen 1 primary action).",
+    "Select or edit the synthetic simulation inputs (Screen 2 form).",
+    "Optionally load one example scenario preset that fills those same synthetic inputs.",
+    "Run the simulation (Screen 2 submit action).",
+    "Expand the permitted explanatory detail ('Why we built this').",
+    "Start over after a result or exception screen (clears local synthetic state only).",
+)
+
+# V3.2 example-scenario presets (Part A.1.A). Every value is a SYNTHETIC_DEMO_INPUT
+# value already present on the corresponding field. A preset is exactly equivalent
+# to selecting those fields by hand - no new workflow authority, never a fact
+# about the target company.
+_EXAMPLE_SCENARIOS: tuple[tuple[str, tuple[tuple[str, str], ...]], ...] = (
+    (
+        "Office repair",
+        (
+            ("service_need", "Repair request"),
+            ("facility_type", "Office"),
+            ("service_location", "Example service location"),
+            ("urgency", "Routine"),
+            ("equipment_context", "Split system"),
+            ("contact_preference", "Phone"),
+        ),
+    ),
+    (
+        "Retail maintenance",
+        (
+            ("service_need", "Maintenance visit"),
+            ("facility_type", "Retail"),
+            ("service_location", "Example service location"),
+            ("urgency", "Routine"),
+            ("equipment_context", "Rooftop unit"),
+            ("contact_preference", "Email"),
+        ),
+    ),
+    (
+        "Hospitality quote",
+        (
+            ("service_need", "Replacement or quote"),
+            ("facility_type", "Hospitality"),
+            ("service_location", "Example service location"),
+            ("urgency", "Routine"),
+            ("equipment_context", "Chiller"),
+            ("contact_preference", "Phone"),
+        ),
+    ),
+    (
+        "Warehouse safety concern",
+        (
+            ("service_need", "Repair request"),
+            ("facility_type", "Warehouse"),
+            ("service_location", "Example service location"),
+            ("urgency", "Safety concern"),
+            ("equipment_context", "Rooftop unit"),
+            ("contact_preference", "Phone"),
+        ),
+    ),
+)
+
+_START_OVER_LABEL = "Start over"
+_START_OVER_SEMANTICS = (
+    "Clears the local synthetic form state and returns to the opportunity screen so another "
+    "simulation can be run. It saves nothing, sends nothing, records no history, creates no "
+    "analytics, contacts no one, persists no customer data, and does not imply any real action "
+    "occurred - it is a local reset only."
 )
 
 # internal M4 question id -> short customer-facing hint (section 7). The
@@ -335,6 +424,15 @@ class CustomerOutcomeGroup:
 
 
 @dataclass(frozen=True, slots=True)
+class ExampleScenario:
+    """A Screen-2 preset that fills the synthetic form fields. Equivalent to
+    selecting those same fields by hand; no new workflow authority."""
+
+    name: str
+    field_values: tuple[tuple[str, str], ...]  # (field_id, SYNTHETIC_DEMO_INPUT value)
+
+
+@dataclass(frozen=True, slots=True)
 class BuilderStory:
     story_version: str
     compiled_at: datetime
@@ -356,6 +454,7 @@ class BuilderStory:
     simulation_intake_title: str
     simulation_input_schema: tuple[StoryInputField, ...]
     synthetic_input_values: tuple[str, ...]
+    example_scenarios: tuple[ExampleScenario, ...]  # V3.2: optional Screen-2 presets
     simulation_run_action: str
     # --- Screen 3: the workflow story ---
     result_title: str
@@ -366,9 +465,12 @@ class BuilderStory:
     internal_mock_actions: tuple[tuple[str, str], ...]  # audit: all six preserved
     result_disclosure: str
     closing_bridge: str
+    start_over_label: str  # V3.2: post-result / post-exception state-reset control
+    start_over_semantics: str  # V3.2: what "start over" may and may not do
     # --- exceptions + builder constraints ---
     exception_states: tuple[ExceptionScreen, ...]
-    allowed_primary_actions: tuple[str, ...]  # V3.1: the ONLY interactive actions
+    allowed_primary_actions: tuple[str, ...]  # V3.1: the ONLY primary click actions
+    customer_facing_controls: tuple[str, ...]  # V3.2: the closed list of all controls
     builder_hard_rules: tuple[str, ...]  # V3.1: functionality lock-down
     builder_forbidden_additions: tuple[str, ...]
     builder_visual_guidance: tuple[str, ...]
@@ -503,6 +605,19 @@ def _customer_facing_outcomes() -> tuple[CustomerOutcomeGroup, ...]:
     )
 
 
+def _example_scenarios(fields: tuple[StoryInputField, ...]) -> tuple[ExampleScenario, ...]:
+    """Screen-2 presets. Every value must already be a synthetic option on its
+    field, so selecting a preset is exactly equivalent to selecting by hand."""
+
+    by_field = {f.field_id: set(f.values) for f in fields}
+    out: list[ExampleScenario] = []
+    for name, pairs in _EXAMPLE_SCENARIOS:
+        kept = tuple((fid, val) for fid, val in pairs if val in by_field.get(fid, set()))
+        if len(kept) == len(pairs):  # only offer a preset that fully lands on real options
+            out.append(ExampleScenario(name=name, field_values=kept))
+    return tuple(out)
+
+
 def _result_story(role: str, framing: str) -> tuple[ResultStoryStage, ...]:
     return (
         ResultStoryStage(
@@ -594,6 +709,7 @@ def compile_builder_story(
         simulation_intake_title=exp.simulation_intake_title,
         simulation_input_schema=fields,
         synthetic_input_values=synthetic_values,
+        example_scenarios=_example_scenarios(fields),
         simulation_run_action=exp.simulation_run_action,
         result_title="A commercial request is ready for human review",
         result_recap_line=result_recap_line,
@@ -603,8 +719,11 @@ def compile_builder_story(
         internal_mock_actions=tuple(sk.mock_actions),
         result_disclosure=exp.result_disclosure,
         closing_bridge=exp.closing_thought,
+        start_over_label=_START_OVER_LABEL,
+        start_over_semantics=_START_OVER_SEMANTICS,
         exception_states=exp.exception_states,
         allowed_primary_actions=("See how it could work", "Run simulation"),
+        customer_facing_controls=_CUSTOMER_FACING_CONTROLS,
         builder_hard_rules=_STORY_HARD_BUILDER_RULES,
         builder_forbidden_additions=exp.builder_forbidden_additions,
         builder_visual_guidance=_VISUAL_GUIDANCE,
@@ -617,6 +736,7 @@ def compile_builder_story(
         audit_appendix=(
             *exp.audit_appendix,
             ("story_compiler_version", BUILDER_STORY_VERSION),
+            ("m4_presentation_frozen", str(M4_PRESENTATION_FROZEN).lower()),
             ("demo_mode", brief.demo_mode.value),
         ),
     )
@@ -664,6 +784,9 @@ def _story_customer_strings(story: BuilderStory) -> list[str]:
         story.human_handoff_preview.name,
         story.human_handoff_preview.role,
         story.human_handoff_preview.disclosure,
+        story.start_over_label,
+        story.start_over_semantics,
+        *(p.name for p in story.example_scenarios),
         *(s.title for s in story.exception_states),
         *(s.body for s in story.exception_states),
         *story.builder_visual_guidance,
@@ -690,6 +813,8 @@ def _story_authored_strings(story: BuilderStory) -> list[str]:
         *(s.line for s in story.result_story),
         *(g.name for g in story.customer_facing_outcomes),
         *(g.description for g in story.customer_facing_outcomes),
+        *(p.name for p in story.example_scenarios),
+        story.start_over_label,
         *(t for pair in story.semantics_legend for t in pair),
         *story.builder_visual_guidance,
     ]
@@ -1002,6 +1127,55 @@ def _assert_story_within_authority(
         ):
             fail(f"customer hint for {fld.field_id!r} leaks the authority rationale")
 
+    # 22. V3.2: example-scenario presets only fill existing synthetic options -
+    #     selecting a preset is exactly equivalent to selecting by hand.
+    field_opts = {f.field_id: set(f.values) for f in story.simulation_input_schema}
+    field_ids = set(field_opts)
+    for preset in story.example_scenarios:
+        pl = preset.name.lower()
+        if any(pl == p.strip().lower() or p.strip().lower() in pl for p in fact_phrases):
+            fail(f"example scenario name echoes an evidence phrase: {preset.name!r}")
+        if len(preset.name.split()) > 4:
+            fail(f"example scenario name is not a short label: {preset.name!r}")
+        for fid, val in preset.field_values:
+            if fid not in field_ids:
+                fail(f"example scenario {preset.name!r} sets an unknown field {fid!r}")
+            if val not in field_opts[fid]:
+                fail(
+                    f"example scenario {preset.name!r} sets {fid!r}={val!r}, not a synthetic option"
+                )
+            if val.strip().lower() in fact_phrases:
+                fail(f"example scenario {preset.name!r} uses an evidence phrase as a value")
+
+    # 23. V3.2: 'start over' is a local state reset - it never persists, transmits,
+    #     tracks, or implies a real action.
+    so = story.start_over_semantics.lower()
+    if story.start_over_label.lower() not in ("start over", "start again", "reset"):
+        fail(f"unexpected start-over label: {story.start_over_label!r}")
+    if not all(k in so for k in ("clears", "local", "another simulation")) or not all(
+        k in so for k in ("saves nothing", "sends nothing")
+    ):
+        fail("start-over semantics do not describe a pure local reset")
+    for forbidden in ("tracks", "analytics", "history", "persists", "contacts"):
+        # the sentence must DENY these, never permit them
+        if re.search(rf"\b{forbidden}\b", so) and "no" not in so and "not" not in so:
+            fail(f"start-over semantics do not deny {forbidden!r}")
+
+    # 24. V3.2 freeze: the customer-facing control list is the closed six-item set.
+    if len(story.customer_facing_controls) != 6:
+        fail("customer_facing_controls must be the closed six-item list")
+    controls_blob = " ".join(story.customer_facing_controls).lower()
+    for needle in (
+        "opportunity screen",
+        "synthetic simulation inputs",
+        "example scenario",
+        "run the simulation",
+        "explanatory detail",
+        "start over",
+    ):
+        if needle not in controls_blob:
+            fail(f"customer_facing_controls missing {needle!r}")
+
 
 # --------------------------------------------------------------------------
 # human-readable renderer: BuilderStory -> paste-into-builder prompt
@@ -1040,10 +1214,15 @@ def render_builder_story_markdown(story: BuilderStory) -> str:
     add("")
     for rule in s.builder_hard_rules:
         add(f"- {rule}")
+    add("")
+    add("**The complete set of customer-facing controls (render exactly these, nothing else):**")
+    add("")
+    for c in s.customer_facing_controls:
+        add(f"- {c}")
     add(
-        "- **Allowed interactive actions:** "
+        "- **Primary click actions:** "
         + ", ".join(f"`{a}`" for a in s.allowed_primary_actions)
-        + " — plus the standard Screen 2 form inputs. Nothing else."
+        + "."
     )
     add("")
 
@@ -1078,6 +1257,19 @@ def render_builder_story_markdown(story: BuilderStory) -> str:
         req = "no" if f.optional else "yes"
         add(f"| {f.label} | {f.customer_hint} | {f.control} | {vals} | {req} |")
     add("")
+    if s.example_scenarios:
+        add("### Example scenarios (optional presets)")
+        add("")
+        add(
+            "A small set of one-tap presets that fill the fields above with the same "
+            "illustrative values. Selecting a preset is exactly the same as choosing those "
+            "options by hand — it adds no new behaviour and describes nothing about the business."
+        )
+        add("")
+        for es in s.example_scenarios:
+            picks = ", ".join(f"{fid.replace('_', ' ')} = {val}" for fid, val in es.field_values)
+            add(f"- **{es.name}** — {picks}")
+        add("")
     add(f"**Submit action:** `{s.simulation_run_action}`")
     add("")
     add(
@@ -1129,6 +1321,14 @@ def render_builder_story_markdown(story: BuilderStory) -> str:
         add(f"### {ex.title}")
         add(ex.body)
         add("")
+
+    add(f"## {s.start_over_label}")
+    add("")
+    add(
+        f"After any result or exception screen, offer a **{s.start_over_label}** control. "
+        f"{s.start_over_semantics}"
+    )
+    add("")
 
     add("## Visual direction")
     add("")

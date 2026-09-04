@@ -11,7 +11,16 @@ _Show on every screen:_ **Simulation · not connected to Elite**
 - Do NOT add a state selector, test-state switcher, scenario picker, 'preview a special state' control, or any QA / debug affordance to the customer experience. The exception screens render only when the simulation itself routes to them.
 - Do NOT add a product or demo badge, a mode tag, a 'DEMO' chip, a category label, or any technical or semantic badge. The only persistent chrome is the disclosure line.
 - Do NOT surface the semantic legend, evidence/unknown labels, or any internal taxonomy in the normal customer view. Explain meaning in plain language in context if needed.
-- **Allowed interactive actions:** `See how it could work`, `Run simulation` — plus the standard Screen 2 form inputs. Nothing else.
+
+**The complete set of customer-facing controls (render exactly these, nothing else):**
+
+- Progress from the opportunity screen to the simulation (Screen 1 primary action).
+- Select or edit the synthetic simulation inputs (Screen 2 form).
+- Optionally load one example scenario preset that fills those same synthetic inputs.
+- Run the simulation (Screen 2 submit action).
+- Expand the permitted explanatory detail ('Why we built this').
+- Start over after a result or exception screen (clears local synthetic state only).
+- **Primary click actions:** `See how it could work`, `Run simulation`.
 
 ## Screen 1 — One way structured intake could complement the service availability your public pages already describe
 
@@ -42,6 +51,15 @@ One calm page - no wizard. Every value below is an **illustrative simulation cho
 | Urgency | How urgent | choice | Routine / Urgent / Safety concern | yes |
 | Equipment | Equipment (optional) | select | Rooftop unit / Split system / Chiller / Other / Not sure | no |
 | Preferred follow-up | Preview follow-up as | choice | Phone / Email | yes |
+
+### Example scenarios (optional presets)
+
+A small set of one-tap presets that fill the fields above with the same illustrative values. Selecting a preset is exactly the same as choosing those options by hand — it adds no new behaviour and describes nothing about the business.
+
+- **Office repair** — service need = Repair request, facility type = Office, service location = Example service location, urgency = Routine, equipment context = Split system, contact preference = Phone
+- **Retail maintenance** — service need = Maintenance visit, facility type = Retail, service location = Example service location, urgency = Routine, equipment context = Rooftop unit, contact preference = Email
+- **Hospitality quote** — service need = Replacement or quote, facility type = Hospitality, service location = Example service location, urgency = Routine, equipment context = Chiller, contact preference = Phone
+- **Warehouse safety concern** — service need = Repair request, facility type = Warehouse, service location = Example service location, urgency = Safety concern, equipment context = Rooftop unit, contact preference = Phone
 
 **Submit action:** `Run simulation`
 
@@ -91,6 +109,10 @@ This simulation doesn't cover that kind of request. In a real setup a person wou
 
 ### Simulation hiccup
 The simulation couldn't finish this step. Nothing real happened - you can start over.
+
+## Start over
+
+After any result or exception screen, offer a **Start over** control. Clears the local synthetic form state and returns to the opportunity screen so another simulation can be run. It saves nothing, sends nothing, records no history, creates no analytics, contacts no one, persists no customer data, and does not imply any real action occurred - it is a local reset only.
 
 ## Visual direction
 
@@ -160,7 +182,8 @@ The simulation couldn't finish this step. Nothing real happened - you can start 
 | policy:outreach_projection | `outreach.projection@4` |
 | policy:outreach_qc | `outreach.qc@3` |
 | experience_compiler_version | `demo.builder_brief@2` |
-| story_compiler_version | `demo.builder_brief@3.1` |
+| story_compiler_version | `demo.builder_brief@3.2` |
+| m4_presentation_frozen | `true` |
 | demo_mode | `BESPOKE_DEMO` |
 | underlying_experience_sha256 | `51d74d160b610dd587b70fc27d0e6533d55392e1d6c94a9570d772c3d6d0c447` |
 | underlying_brief_sha256 | `91808fc521479c49d72f9499b3cd10485a12d358a1de58498482e039bb5110c5` |
