@@ -41,6 +41,8 @@ members = [
   "packages/qualification-live",
   "packages/shadow-core",
   "packages/shadow-local",
+  "packages/suppression-core",
+  "packages/suppression-local",
   "services/api",
   "services/demo-runtime",
   "workers/core",
