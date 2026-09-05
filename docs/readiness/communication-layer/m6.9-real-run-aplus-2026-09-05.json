@@ -1,0 +1,57 @@
+{
+  "task": "M6.9 Stage B real bounded A-Plus engine run",
+  "generated_at_utc": "2026-09-05T065036Z",
+  "envelope_sha256": "fee70396444b23074511ca496f6ec2904affbe738c79a77f1fe1e5fc1000b31d",
+  "m2_m5_bundle_sha256": "a6540437f096ac7b6d0e026fd75ebdffbd5a92a1b77f59e730fb3ee24b3554e7",
+  "m4_builder_brief_version": "demo.builder_brief@3.2",
+  "m4_builder_brief_sha256": "533f586a788d78441186f021c5120488f1fa156167a9c239d537851da0b7979a",
+  "distinctive": true,
+  "real_pages_captured": {
+    "intake": {
+      "url": "https://www.aplusac.com/press-releases/when-to-schedule-ac-replacement/",
+      "content_sha256": "7a9934dcc38ffeae61a656a0533e1d24ec402f2661470610eb13964f048e6ad3",
+      "captured_at_utc": "2026-09-05T09:45:00+00:00"
+    },
+    "commercial": {
+      "url": "https://www.aplusac.com/commercial-hvac/",
+      "content_sha256": "38abd278346387e88c9e89e609c9f679d25c59d2eb48f90cdaf155b19604eef3",
+      "captured_at_utc": "2026-09-05T09:45:00+00:00"
+    },
+    "area": {
+      "url": "https://www.aplusac.com/service-area/",
+      "content_sha256": "d6ecb8709c821986b7da76f5893f6830a88ae71a3f765b01debb5abcfe85f8f3",
+      "captured_at_utc": "2026-09-05T09:45:00+00:00"
+    }
+  },
+  "provider": {
+    "served_model": "claude-sonnet-5",
+    "stop_reason": "end_turn",
+    "input_tokens": 6796,
+    "output_tokens": 1897,
+    "latency_s": 15.0
+  },
+  "cost_usd": "0.032562",
+  "subject": "A quick comparison idea for A-Plus AC's intake",
+  "subject_has_adv_prefix": false,
+  "body_frozen_sha256": "7e00ba671aea0a488693bf44587e689c1f73b26db23be45833bdd6646532aaec",
+  "body_frozen": "While reviewing A-Plus Air Conditioning & Home Solutions' public pages, I noticed you describe commercial HVAC work (\"The Austin Commercial AC Repair Company\") and publish guidance like \"When to Schedule AC Replacement.\" This isn't a claim about how your team works today - we have no visibility into that. Based only on public information, a short deterministic simulation was prepared using synthetic example inputs, not real customer data, and it routes every case to a human review step; it is a simulation, not a system deployed, connected, official, or operated by your business. A step that acknowledges and sorts new service requests could be evaluated. Would you be open to comparing this simulation with your actual intake process?\n{{verified_sender_signature}}\n{{required_postal_disclosure}}\n{{approved_opt_out_instruction}}\n{{functional_role_or_team}}",
+  "body_with_known_slots_resolved": "While reviewing A-Plus Air Conditioning & Home Solutions' public pages, I noticed you describe commercial HVAC work (\"The Austin Commercial AC Repair Company\") and publish guidance like \"When to Schedule AC Replacement.\" This isn't a claim about how your team works today - we have no visibility into that. Based only on public information, a short deterministic simulation was prepared using synthetic example inputs, not real customer data, and it routes every case to a human review step; it is a simulation, not a system deployed, connected, official, or operated by your business. A step that acknowledges and sorts new service requests could be evaluated. Would you be open to comparing this simulation with your actual intake process?\nAndrew\nProofline\nandrew@proofline.business\nProofline, Str. Lucian Blaga, nr. 8, Ciugud, Alba 517240, Romania\nTo stop receiving email from Proofline, reply to this message with the word UNSUBSCRIBE. We will remove your address within three days.\nthe Proofline team",
+  "unresolved_tokens_remaining": [],
+  "compacted": false,
+  "validator": {
+    "passed": false,
+    "findings": [
+      "unsupported_geography",
+      "no_company_specific_evidence"
+    ],
+    "canonical_coverage": 1.0,
+    "unresolved_substantive_claims": 0
+  },
+  "quality": {
+    "classification": "ACCEPTABLE",
+    "score": 0.86,
+    "uses_company_specific_evidence": true,
+    "uses_strongest_hook": true,
+    "body_word_count": 122
+  }
+}
