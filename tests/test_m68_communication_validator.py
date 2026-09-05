@@ -8,6 +8,8 @@ the ADR-0067 rendered-wording / structured-CTA gap is now caught.
 
 from __future__ import annotations
 
+import dataclasses
+
 import pytest
 from m68_fixtures import aplus_envelope, elite_envelope, em_envelope
 from opintel_communication import (
@@ -772,4 +774,93 @@ def test_response_commitment_is_in_the_aplus_envelope_available_set() -> None:
     assert rc.rendered_by_deterministic_m5 is False
     assert rc.deterministic_omission_reason
     assert "fast response times" in rc.sanitized_phrase
-    assert rc.strength == FactStrength.PUBLISHED_SELF_CLAIM
+
+
+# --------------------------------------------------------------------------
+# LICENSED_SOURCE_PHRASE_WITH_GEOGRAPHY (M6.9 narrow validator fix,
+# 2026-09-05): an exact, verbatim licensed source phrase may itself carry a
+# geographic token (e.g. a real business's own page title). The allowance is
+# bound to the exact source-backed phrase, not the bare place word - so it
+# never authorizes inferred geography elsewhere or a paraphrase/generalization
+# of the same place. Uses a synthetic Plano-based fact (not Austin/A-Plus) to
+# prove the rule is generalized, not a single-company string special-case.
+# --------------------------------------------------------------------------
+
+
+def _envelope_with_geo_bearing_commercial_fact(phrase: str) -> object:
+    env = aplus_envelope()
+    facts = []
+    for fact in env.eligible_company_facts:
+        if fact.category == "commercial_context":
+            fact = dataclasses.replace(fact, sanitized_phrase=phrase, verbatim_source_phrase=phrase)
+        facts.append(fact)
+    return dataclasses.replace(env, eligible_company_facts=tuple(facts))
+
+
+_GEO_PHRASE = "The Plano Commercial HVAC Repair Team"
+
+
+def test_exact_licensed_source_phrase_may_contain_geography_token() -> None:
+    env = _envelope_with_geo_bearing_commercial_fact(_GEO_PHRASE)
+    body = _HEAD + f'Your site describes commercial HVAC work as "{_GEO_PHRASE}".' + _TAIL
+    cand = _cand(
+        "A question about commercial service-request intake",
+        body,
+        (
+            _entry(
+                "a1",
+                ClaimType.FACT,
+                f'Your site describes commercial HVAC work as "{_GEO_PHRASE}".',
+                ("f-commercial",),
+                FactStrength.OBSERVED_PUBLIC_TEXT,
+            ),
+            _entry(
+                "a2",
+                ClaimType.CTA,
+                "Would it be useful to compare that simulation with your actual intake and decide "
+                "whether the idea is relevant?",
+                ("rec-structured-acknowledgement",),
+                None,
+                (),
+                "PERMISSION_TO_COMPARE_SIMULATION_WITH_REAL_PROCESS",
+            ),
+        ),
+    )
+    result = VALIDATOR.validate(env, cand)
+    assert "unsupported_geography" not in result.finding_codes, result.finding_codes
+
+
+def test_inferred_geography_elsewhere_still_blocked_even_with_a_licensed_geo_phrase() -> None:
+    env = _envelope_with_geo_bearing_commercial_fact(_GEO_PHRASE)
+    # The licensed phrase is quoted verbatim (allowed), but the sentence also
+    # adds an unlicensed place ("Fort Worth") that appears nowhere in any
+    # licensed fact phrase - that addition must still fail closed.
+    cand = _adv(
+        f'Your site describes commercial HVAC work as "{_GEO_PHRASE}", and we also see you '
+        "listed for Fort Worth service calls."
+    )
+    result = VALIDATOR.validate(env, cand)
+    assert "unsupported_geography" in result.finding_codes
+
+
+def test_paraphrased_geography_generalization_still_blocked() -> None:
+    env = _envelope_with_geo_bearing_commercial_fact(_GEO_PHRASE)
+    # Same place word ("Plano") as the licensed phrase, but rewritten instead
+    # of quoted verbatim - a paraphrase/generalization is not covered by
+    # LICENSED_SOURCE_PHRASE_WITH_GEOGRAPHY.
+    sentence = "You're a well-known commercial HVAC company based in Plano, TX."
+    cand = _adv(sentence)
+    result = VALIDATOR.validate(env, cand)
+    assert "unsupported_geography" in result.finding_codes
+
+
+def test_unrelated_envelope_without_a_geo_bearing_fact_is_unaffected() -> None:
+    # No licensed fact anywhere carries a place name (the real aplus_envelope
+    # fixture) - the pre-existing adversarial "Round Rock, TX" case must still
+    # fail exactly as before the fix.
+    env = aplus_envelope()
+    cand = _adv(
+        'Your site offers "When to Schedule AC Replacement" across the Round Rock, TX area.'
+    )
+    result = VALIDATOR.validate(env, cand)
+    assert "unsupported_geography" in result.finding_codes

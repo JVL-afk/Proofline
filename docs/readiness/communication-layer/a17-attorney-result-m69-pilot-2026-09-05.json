@@ -1,0 +1,49 @@
+{
+  "record_type": "A17_ATTORNEY_PROVIDED_RESULT",
+  "version": "2026-09-05.1",
+  "scope": "US-TX (and federal CAN-SPAM), one bounded A-Plus first-contact email pilot, Path B (ADR-0078/ADR-0079)",
+  "state": "APPROVE_WITH_CONTROLS",
+  "evidence_classification": "OWNER_TRANSCRIBED_COUNSEL_GUIDANCE",
+  "attestation": {
+    "source": "written Texas/federal legal guidance already supplied by PROJECT_OWNER for this exact pilot",
+    "recording_provenance": "PROJECT_OWNER_TRANSCRIPTION_OF_SUPPLIED_COUNSEL_GUIDANCE",
+    "codex_legal_opinion_substituted": false,
+    "new_legal_conclusions_added_by_this_task": false,
+    "reviewer_subject_ref": null,
+    "reviewer_credential_record_ref": null
+  },
+  "reviewer_identity_binding_state": "NOT_YET_BOUND_A17_SIGNATURE_REQUIRED",
+  "recorded_at": "2026-09-05T00:00:00Z",
+  "effective_at": null,
+  "review_trigger_instead_of_fixed_expiry": true,
+  "required_controls": [
+    {"control": "CAN_SPAM_COMPLIANCE", "detail": "Federal CAN-SPAM Act compliance for the message as a whole."},
+    {"control": "VALID_SENDER_IDENTITY", "detail": "A real, identified sender: Andrew, Proofline."},
+    {"control": "VALID_PHYSICAL_POSTAL_ADDRESS", "detail": "Proofline, Str. Lucian Blaga, nr. 8, Ciugud, Alba 517240, Romania, disclosed in the message."},
+    {"control": "CLEAR_REPLY_BASED_OPT_OUT", "detail": "Conspicuous reply-UNSUBSCRIBE instruction, no fee, no login, no extra personal information required."},
+    {"control": "MONITORED_MAILBOX", "detail": "andrew@proofline.business, ACTIVE_AND_MONITORED."},
+    {"control": "OPT_OUT_HONORED_WITHIN_3_DAYS_MAXIMUM", "detail": "Enforced by opintel_suppression (OPT_OUT_SUPPRESSION_MAX_SLA = 3 days)."},
+    {"control": "NO_TRACKING", "detail": "No tracking parameters, pixels, or redirects anywhere in the message or any linked URL."},
+    {"control": "NO_DECEPTIVE_SUBJECT_HEADER_OR_BODY", "detail": "Subject/header/body must not misrepresent sender or content; DO_NOT_PREPEND_ADV honored (no ADV: prefix added)."},
+    {"control": "NO_IMPLICATION_OF_AFFILIATION", "detail": "The message and any linked demo must not imply Proofline is affiliated with or operating on behalf of A-Plus."},
+    {"control": "PROFESSIONAL_BUSINESS_CONTACT_DATA_ONLY", "detail": "No personal/consumer contact data; B2B professional context only, per ADR-0043."},
+    {"control": "SOURCE_PROVENANCE_RETAINED", "detail": "Exact source URL + content sha256 retained for every quoted public fact."},
+    {"control": "SUPPRESSION_ENFORCEMENT_BEFORE_SEND", "detail": "opintel_suppression.enforce_pre_send_suppression_gate, no override path, re-checked at send time regardless of prior approval."},
+    {"control": "EXACT_MESSAGE_HEADER_RECIPIENT_LOGGING", "detail": "The exact sent message, headers, and recipient must be logged for the single authorized send."}
+  ],
+  "counsel_operational_instruction": {
+    "instruction": "DO_NOT_PREPEND_ADV",
+    "classification": "COUNSEL_DIRECTED_OPERATIONAL_INSTRUCTION_FOR_THIS_EXACT_PILOT",
+    "note": "Recorded as a counsel-directed operational instruction for this exact Texas pilot, not an internally derived legal conclusion. No general subject-line policy is asserted beyond this pilot's scope.",
+    "verified_in_code": "tests/test_m68_communication_validator.py::test_subject_does_not_receive_adv_prefix (opt-out suite) and Stage B's subject_has_adv_prefix=false result"
+  },
+  "mandatory_legal_re_review_triggers": [
+    "recipient outside Texas or outside the approved pilot scope",
+    "more than one recipient or more than one message",
+    "any tracking, attachment, or additional link beyond the ADR-0079 demo URL",
+    "any change to sender identity, postal address, or opt-out mechanism",
+    "automated follow-up or sequencing",
+    "expansion beyond this one bounded pilot"
+  ],
+  "configuration_hash": null
+}

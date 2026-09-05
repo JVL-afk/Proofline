@@ -45,6 +45,7 @@ from opintel_communication.policy import (
     CONDITIONAL_CUES,
     PROHIBITED_CONCEPTS,
     injection_markers,
+    place_like_matches,
     place_like_tokens,
 )
 
@@ -1148,6 +1149,47 @@ _UNKNOWN_SUPPRESSIBLE_CONCEPTS: frozenset[str] = frozenset(
 )
 
 
+def _licensed_source_phrases_with_geography(envelope: SemanticEnvelope) -> frozenset[str]:
+    """LICENSED_SOURCE_PHRASE_WITH_GEOGRAPHY: the set of exact, verbatim
+    company-fact phrases (any category, not only SERVICE_AREA_CONTEXT) that
+    themselves contain a geographic token, as captured from licensed public
+    evidence. A phrase belongs here only if it is exactly the fact's own
+    ``verbatim_source_phrase``/``sanitized_phrase`` - a paraphrase, expansion,
+    or added place name is never a member, however similar it reads."""
+    phrases: set[str] = set()
+    for fact in envelope.eligible_company_facts:
+        for phrase in (fact.verbatim_source_phrase, fact.sanitized_phrase):
+            if phrase and place_like_tokens(phrase):
+                phrases.add(phrase)
+    return frozenset(phrases)
+
+
+def _licensed_geography_spans(
+    full_external: str, licensed_phrases: frozenset[str]
+) -> list[tuple[int, int]]:
+    """Character spans in ``full_external`` that are an exact, case-insensitive
+    occurrence of one of ``licensed_phrases``. A geography token is only
+    excused by LICENSED_SOURCE_PHRASE_WITH_GEOGRAPHY when its own span falls
+    entirely inside one of these - never merely because the same word shows
+    up somewhere else in the message."""
+    spans: list[tuple[int, int]] = []
+    low_full = full_external.lower()
+    for phrase in licensed_phrases:
+        low_phrase = phrase.lower()
+        start = 0
+        while True:
+            idx = low_full.find(low_phrase, start)
+            if idx == -1:
+                break
+            spans.append((idx, idx + len(low_phrase)))
+            start = idx + 1
+    return spans
+
+
+def _span_licensed(pstart: int, pend: int, licensed_spans: list[tuple[int, int]]) -> bool:
+    return any(pstart >= ls and pend <= le for ls, le in licensed_spans)
+
+
 class OutputValidator:
     version = OUTPUT_VALIDATOR_VERSION
 
@@ -1409,7 +1451,17 @@ class OutputValidator:
                 allowed_places |= place_like_tokens(fact.verbatim_source_phrase)
                 allowed_places |= place_like_tokens(fact.sanitized_phrase)
         allowed_places |= {envelope.business_identity.exact_public_hostname.lower()}
-        for place in place_like_tokens(full_external):
+        licensed_phrases = _licensed_source_phrases_with_geography(envelope)
+        licensed_spans = _licensed_geography_spans(full_external, licensed_phrases)
+        all_matches = place_like_matches(full_external)
+        for place in {p for p, _, _ in all_matches}:
+            occurrences = [(s, e) for p, s, e in all_matches if p == place]
+            # LICENSED_SOURCE_PHRASE_WITH_GEOGRAPHY: excused only if every
+            # occurrence of this exact token is inside an exact, verbatim
+            # licensed source phrase - one unlicensed occurrence (an inferred
+            # or paraphrased use) still fails closed.
+            if occurrences and all(_span_licensed(s, e, licensed_spans) for s, e in occurrences):
+                continue
             if place not in allowed_places and place not in {"tx", "texas"}:
                 findings.append(
                     _f(

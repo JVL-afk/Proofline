@@ -306,6 +306,24 @@ def place_like_tokens(text: str) -> set[str]:
     return found
 
 
+def place_like_matches(text: str) -> list[tuple[str, int, int]]:
+    """Like ``place_like_tokens`` but returns every occurrence as
+    ``(token, start, end)`` character spans (duplicates included), so a
+    caller can decide - per occurrence - whether that specific span is
+    covered by a licensed source phrase rather than only knowing the token
+    appeared somewhere in the text."""
+    found: list[tuple[str, int, int]] = []
+    low = text.lower()
+    for hint in _TX_PLACE_HINTS:
+        for m in re.finditer(r"\b" + re.escape(hint) + r"\b", low):
+            found.append((hint, m.start(), m.end()))
+    for match in _PLACE_SHAPE.finditer(text):
+        token = (match.group(1) or match.group(2) or "").strip().lower()
+        if token:
+            found.append((token, match.start(), match.end()))
+    return found
+
+
 # Instruction-shaped substrings that must never appear in provider output and
 # must never be reproduced from a quoted evidence phrase.
 _INJECTION_MARKERS: tuple[re.Pattern[str], ...] = _p(
