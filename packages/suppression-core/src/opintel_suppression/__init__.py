@@ -18,9 +18,11 @@ from opintel_suppression.domain import (
     SuppressionKind,
     SuppressionSourceMechanism,
     SuppressionValidationError,
+    channel_suppression_key,
     domain_of,
     normalize_domain,
     normalize_email,
+    normalize_opaque_key,
 )
 from opintel_suppression.gate import (
     DeliveryBlockedSuppressed,
@@ -49,11 +51,13 @@ __all__ = [
     "SuppressionRegistryService",
     "SuppressionSourceMechanism",
     "SuppressionValidationError",
+    "channel_suppression_key",
     "domain_of",
     "enforce_pre_send_suppression_gate",
     "ingest_operator_observed_opt_out",
     "normalize_domain",
     "normalize_email",
+    "normalize_opaque_key",
     "render_opt_out_notice",
     "resolve_known_disclosure_slots",
 ]

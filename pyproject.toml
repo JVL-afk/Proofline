@@ -43,6 +43,8 @@ members = [
   "packages/shadow-local",
   "packages/suppression-core",
   "packages/suppression-local",
+  "packages/contact-resolution-core",
+  "packages/contact-resolution-local",
   "services/api",
   "services/demo-runtime",
   "workers/core",

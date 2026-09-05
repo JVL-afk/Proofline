@@ -13,6 +13,8 @@ members = [
     "opintel-communication-core",
     "opintel-contact-core",
     "opintel-contact-local",
+    "opintel-contact-resolution-core",
+    "opintel-contact-resolution-local",
     "opintel-demo-core",
     "opintel-demo-local",
     "opintel-demo-runtime",
@@ -507,6 +509,26 @@ dependencies = [
 requires-dist = [
     { name = "opintel-contact-core", editable = "packages/contact-core" },
     { name = "opintel-outreach-core", editable = "packages/outreach-core" },
+    { name = "sqlalchemy", specifier = ">=2.0.48,<2.1" },
+]
+
+[[package]]
+name = "opintel-contact-resolution-core"
+version = "0.1.0"
+source = { editable = "packages/contact-resolution-core" }
+
+[[package]]
+name = "opintel-contact-resolution-local"
+version = "0.1.0"
+source = { editable = "packages/contact-resolution-local" }
+dependencies = [
+    { name = "opintel-contact-resolution-core" },
+    { name = "sqlalchemy" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "opintel-contact-resolution-core", editable = "packages/contact-resolution-core" },
     { name = "sqlalchemy", specifier = ">=2.0.48,<2.1" },
 ]
 

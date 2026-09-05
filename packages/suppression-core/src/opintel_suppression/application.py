@@ -23,9 +23,11 @@ from opintel_suppression.domain import (
     SuppressionEntry,
     SuppressionKind,
     SuppressionSourceMechanism,
+    channel_suppression_key,
     domain_of,
     normalize_domain,
     normalize_email,
+    normalize_opaque_key,
     suppression_event_hash,
 )
 from opintel_suppression.ports import SuppressionRepository
@@ -199,3 +201,141 @@ class SuppressionRegistryService:
             created_at=self._clock.now(),
         )
         return self._repository.add_owner_unsuppression(record)
+
+    def _suppress_generic(
+        self,
+        *,
+        kind: SuppressionKind,
+        workspace_id: UUID,
+        normalized_key: str,
+        reason: str,
+        evidence_ref: str,
+        source_mechanism: SuppressionSourceMechanism,
+    ) -> SuppressionEntry:
+        existing = self._repository.get_active_entry(workspace_id, kind, normalized_key)
+        if existing is not None:
+            return existing
+        now = self._clock.now()
+        entry_hash = suppression_event_hash(
+            workspace_id=workspace_id,
+            kind=kind,
+            normalized_value=normalized_key,
+            reason=reason,
+            source_mechanism=source_mechanism,
+            opt_out_received_at=now,
+            suppression_effective_at=now,
+            evidence_ref=evidence_ref,
+        )
+        entry = SuppressionEntry(
+            id=self._identifiers.new(),
+            workspace_id=workspace_id,
+            kind=kind,
+            normalized_value=normalized_key,
+            normalized_domain="",
+            reason=reason,
+            source_mechanism=source_mechanism,
+            opt_out_received_at=now,
+            suppression_effective_at=now,
+            evidence_ref=evidence_ref,
+            audit_event_hash=entry_hash,
+            created_at=now,
+        )
+        return self._repository.add_entry(entry)
+
+    def suppress_person(
+        self,
+        *,
+        workspace_id: UUID,
+        person_key: str,
+        reason: str,
+        evidence_ref: str,
+        source_mechanism: SuppressionSourceMechanism = (
+            SuppressionSourceMechanism.MANUAL_OPERATOR_ENTRY
+        ),
+    ) -> SuppressionEntry:
+        """M6.10 PERSON_SUPPRESSED: suppresses one person across every channel."""
+        return self._suppress_generic(
+            kind=SuppressionKind.PERSON_SUPPRESSED,
+            workspace_id=workspace_id,
+            normalized_key=normalize_opaque_key(person_key, label="person key"),
+            reason=reason,
+            evidence_ref=evidence_ref,
+            source_mechanism=source_mechanism,
+        )
+
+    def suppress_channel(
+        self,
+        *,
+        workspace_id: UUID,
+        person_key: str,
+        channel: str,
+        reason: str,
+        evidence_ref: str,
+        source_mechanism: SuppressionSourceMechanism = (
+            SuppressionSourceMechanism.MANUAL_OPERATOR_ENTRY
+        ),
+    ) -> SuppressionEntry:
+        """M6.10 CHANNEL_SUPPRESSED: suppresses one (person, channel) pair
+        only - an email opt-out never silently suppresses phone/LinkedIn too
+        unless a separate PERSON_SUPPRESSED/COMPANY_SUPPRESSED entry exists."""
+        return self._suppress_generic(
+            kind=SuppressionKind.CHANNEL_SUPPRESSED,
+            workspace_id=workspace_id,
+            normalized_key=channel_suppression_key(person_key, channel),
+            reason=reason,
+            evidence_ref=evidence_ref,
+            source_mechanism=source_mechanism,
+        )
+
+    def suppress_company(
+        self,
+        *,
+        workspace_id: UUID,
+        company_key: str,
+        reason: str,
+        evidence_ref: str,
+        source_mechanism: SuppressionSourceMechanism = (
+            SuppressionSourceMechanism.MANUAL_OPERATOR_ENTRY
+        ),
+    ) -> SuppressionEntry:
+        """M6.10 COMPANY_SUPPRESSED: company-wide do-not-contact."""
+        return self._suppress_generic(
+            kind=SuppressionKind.COMPANY_SUPPRESSED,
+            workspace_id=workspace_id,
+            normalized_key=normalize_opaque_key(company_key, label="company key"),
+            reason=reason,
+            evidence_ref=evidence_ref,
+            source_mechanism=source_mechanism,
+        )
+
+    def check_channel_blocked(
+        self,
+        *,
+        workspace_id: UUID,
+        person_key: str,
+        company_key: str,
+        channel: str,
+    ) -> bool:
+        """True if PERSON_SUPPRESSED, CHANNEL_SUPPRESSED (for this exact
+        channel), or COMPANY_SUPPRESSED applies. Does not consult
+        ADDRESS_SUPPRESSED/DOMAIN_SUPPRESSED - callers already run
+        ``check_eligibility`` for the email-specific checks; this method is
+        the M6.10-generic layer (section 18)."""
+        person_norm = normalize_opaque_key(person_key, label="person key")
+        company_norm = normalize_opaque_key(company_key, label="company key")
+        if self._repository.get_active_entry(
+            workspace_id, SuppressionKind.PERSON_SUPPRESSED, person_norm
+        ):
+            return True
+        if self._repository.get_active_entry(
+            workspace_id, SuppressionKind.COMPANY_SUPPRESSED, company_norm
+        ):
+            return True
+        return (
+            self._repository.get_active_entry(
+                workspace_id,
+                SuppressionKind.CHANNEL_SUPPRESSED,
+                channel_suppression_key(person_key, channel),
+            )
+            is not None
+        )

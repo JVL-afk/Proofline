@@ -1,0 +1,83 @@
+{
+  "task": "M6.10 first real acceptance case",
+  "generated_at_utc": "2026-09-05T121902Z",
+  "company": "A-Plus Air Conditioning & Home Solutions",
+  "company_id": "dec4546b-3ab1-5898-b866-d6f4dad6ebeb",
+  "recipient": {
+    "name": "Greg Yamin",
+    "role": "President",
+    "role_tier": "owner_president",
+    "role_confidence": "high",
+    "role_evidence": "https://www.aplusac.com/about-us/our-team/: \"Greg Yamin - President\" (co-founder with Sharon Yamin, 1977)",
+    "first_party": true
+  },
+  "channels": {
+    "email": {
+      "endpoint": "UNRESOLVED - no email published on aplusac.com",
+      "endpoint_kind": "first_party_published_email",
+      "source_category": "first_party_explicit_contact",
+      "provider": "aplusac.com (first party) - no email found",
+      "verification_method": "none",
+      "verification_result": null,
+      "legal_source_authority": "authorized",
+      "channel_authority": "existing_m6_m69_controls",
+      "eligibility_disposition": "identity_verified_contact_unresolved",
+      "evidence_record_hash": "7685e091979e98cb00fc4875daf1bd047a39af7fd1c96a4972b9b74bd8e18c69"
+    },
+    "linkedin": {
+      "endpoint": "https://www.linkedin.com/in/greg-yamin-a226a113/",
+      "endpoint_kind": "linkedin_profile_probable",
+      "source_category": "approved_professional_profile",
+      "provider": "web search snippet (profile page itself not fetched - HTTP 999)",
+      "verification_method": "multi_source_corroboration",
+      "verification_result": "linkedin_profile_probable",
+      "legal_source_authority": "not_authorized",
+      "channel_authority": "manual_human_only",
+      "eligibility_disposition": "contact_source_not_authorized",
+      "evidence_record_hash": "ec01999f9333570a393c61cf8e936076ef4fc02fe44c1b776b923b9b550957b1"
+    },
+    "phone": {
+      "endpoint": "512-450-1980",
+      "endpoint_kind": "main_business_phone",
+      "source_category": "first_party_explicit_contact",
+      "provider": "aplusac.com (first party)",
+      "verification_method": "first_party_page_observation",
+      "verification_result": null,
+      "legal_source_authority": "authorized",
+      "channel_authority": "human_call_only",
+      "eligibility_disposition": "eligible_human_call_indirect",
+      "evidence_record_hash": "8711aee44284bfd369a2493b42ccb0ff028eebf776a39265f26030e80054dbdb"
+    }
+  },
+  "third_party_contact_source_authority": "NOT_AUTHORIZED",
+  "channel_ranking": {
+    "email": {
+      "eligible": false,
+      "disposition": "identity_verified_contact_unresolved",
+      "score": -1000000,
+      "reasons": [
+        "blocked: identity_verified_contact_unresolved"
+      ]
+    },
+    "linkedin": {
+      "eligible": false,
+      "disposition": "contact_source_not_authorized",
+      "score": -1000000,
+      "reasons": [
+        "blocked: contact_source_not_authorized"
+      ]
+    },
+    "phone": {
+      "eligible": true,
+      "disposition": "eligible_human_call_indirect",
+      "score": 50,
+      "reasons": [
+        "base directness score 40 for eligible_human_call_indirect",
+        "identity confidence high"
+      ]
+    }
+  },
+  "recommended_channel": "phone",
+  "recommendation_reason": "phone scored highest (50) among eligible channels: base directness score 40 for eligible_human_call_indirect; identity confidence high",
+  "final": "IDENTITY_VERIFIED_CONTACT_RESOLUTION_PARTIALLY_BLOCKED_BY_SOURCE_AUTHORITY"
+}

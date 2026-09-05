@@ -20,6 +20,15 @@ from uuid import UUID
 class SuppressionKind(StrEnum):
     ADDRESS_SUPPRESSED = "address_suppressed"
     DOMAIN_SUPPRESSED = "domain_suppressed"
+    PERSON_SUPPRESSED = "person_suppressed"
+    """M6.10: suppresses one person (by opaque person id) across every
+    channel, independent of which address/profile/number resolves to them."""
+    CHANNEL_SUPPRESSED = "channel_suppressed"
+    """M6.10: suppresses one (person, channel) pair - e.g. a person opted
+    out of email but not, absent separate policy, out of a human phone call."""
+    COMPANY_SUPPRESSED = "company_suppressed"
+    """M6.10: company-wide do-not-contact, independent of which person or
+    channel would otherwise be eligible."""
 
 
 class SuppressionSourceMechanism(StrEnum):
@@ -46,6 +55,23 @@ class SuppressionValidationError(SuppressionError):
 class SuppressionAuthorizationError(SuppressionError):
     code = "forbidden"
     safe_message = "unsuppression requires explicit PROJECT_OWNER authority"
+
+
+def normalize_opaque_key(raw: str, *, label: str = "key") -> str:
+    """For PERSON_SUPPRESSED/COMPANY_SUPPRESSED normalized_value: a person or
+    company id, not an email/domain, so no @ syntax is required."""
+    value = raw.strip().lower()
+    if not value:
+        raise SuppressionValidationError(f"not a valid {label}: {raw!r}")
+    return value
+
+
+def channel_suppression_key(person_key: str, channel: str) -> str:
+    """CHANNEL_SUPPRESSED normalized_value: binds a person to one channel so
+    an email opt-out never silently also suppresses phone/LinkedIn unless a
+    separate CHANNEL_SUPPRESSED (or PERSON_SUPPRESSED/COMPANY_SUPPRESSED)
+    entry says so - section 18's explicit non-assumption."""
+    return f"{normalize_opaque_key(person_key, label='person key')}::{channel.strip().lower()}"
 
 
 def normalize_email(raw: str) -> str:
