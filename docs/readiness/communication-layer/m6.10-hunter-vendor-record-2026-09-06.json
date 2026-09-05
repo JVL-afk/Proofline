@@ -1,0 +1,61 @@
+{
+  "record_type": "M6.10_VENDOR_ACTIVATION_RECORD",
+  "provider": "Hunter (hunter.io)",
+  "source_class": "APPROVED_CONTACT_ENRICHMENT",
+  "purpose": "professional/business work-email resolution + passive verification for one bounded A-Plus recipient (Greg Yamin, President), M6.9 Path B pilot",
+  "authority_domains_required": [
+    "CONTACT_ENRICHMENT_AUTHORITY (Email Finder)",
+    "EMAIL_VERIFICATION_AUTHORITY (Email Verifier)"
+  ],
+  "counsel_source_authorization": {
+    "contact_enrichment_use": "APPROVED_WITH_CONTROLS (2026-09-06, prior authorization)",
+    "hunter_registry_decision": "HUNTER_REGISTRY_APPROVED",
+    "scope": "specific to Hunter for the currently authorized M6.10 contact-enrichment use; does not authorize other providers; no broader legal conclusion inferred",
+    "provenance": "PROJECT_OWNER_TRANSCRIPTION_OF_COUNSEL_OPERATIONAL_DECISION",
+    "recorded_at": "2026-09-06T00:00:00Z"
+  },
+  "vendor_compliance_checklist": {
+    "lawful_sourcing_warranty": {
+      "satisfied": true,
+      "basis": "Hunter published privacy policy / GDPR-compliance docs: data crawled only from publicly-accessible business web pages; no private inboxes, personal social profiles, or non-public sources. Public product representation, not a negotiated warranty."
+    },
+    "per_record_provenance": {
+      "satisfied": true,
+      "basis": "Hunter Email Finder API returns a per-result `sources` array of URLs."
+    },
+    "no_sensitive_categories": {"satisfied": true, "basis": "business email addresses only; no special-category data in scope."},
+    "no_minors": {"satisfied": true, "basis": "B2B professional email finding; no minor data in scope."},
+    "no_scraped_credentials": {"satisfied": true, "basis": "finds published email addresses, not credentials."},
+    "deletion_on_request": {
+      "satisfied": true,
+      "basis": "public claim/removal process at hunter.io/claim; privacy@hunter.io for signed DPA; profiles auto-removed within ~3 months once off source pages."
+    },
+    "vendor_contractual_controls_or_indemnity": {
+      "satisfied": true,
+      "basis": "DPA included in Hunter Terms of Use at signup (GDPR Art. 28); signed version on request. Indemnity is NOT part of the standard clickthrough agreement - recorded explicitly; the field is satisfied on the contractual-controls (DPA) limb.",
+      "indemnity_present": false
+    },
+    "texas_data_broker_registry_screened": {
+      "satisfied": true,
+      "texas_data_broker_registry_check": "APPROVED_BY_COUNSEL",
+      "hunter_registry_decision": "HUNTER_REGISTRY_APPROVED",
+      "basis": "PROJECT_OWNER supplied Texas counsel's exact operational decision closing the previously-blocked screening gate. The counsel-supplied decision is accepted per the authorization's own instruction ('do not create a new blocker merely because the registry evidence is counsel-supplied rather than independently scraped').",
+      "not_invented": [
+        "registry_entry_number",
+        "legal_entity_name",
+        "registration_date",
+        "exemption_rationale",
+        "counsel_identity_metadata"
+      ],
+      "recorded_at": "2026-09-06T00:00:00Z"
+    }
+  },
+  "checklist_satisfied_count": "8 of 8",
+  "hunter_provider_activation": "AUTHORIZED_WITH_CONTROLS",
+  "activation_recorded_at": "2026-09-06T00:00:00Z",
+  "bounded_use": {
+    "max_email_finder_operations": 1,
+    "max_email_verifier_operations": 1,
+    "prohibited": ["bulk_search", "person_enumeration", "additional_providers", "lead_lists", "campaigns", "sequences"]
+  }
+}

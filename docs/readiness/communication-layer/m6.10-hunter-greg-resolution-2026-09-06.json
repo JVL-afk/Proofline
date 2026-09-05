@@ -1,0 +1,81 @@
+{
+  "task": "M6.10 Hunter activation + Greg Yamin email resolution",
+  "generated_at_utc": "2026-09-05T145104Z",
+  "hunter_provider_activation": "AUTHORIZED_WITH_CONTROLS",
+  "api_calls": {
+    "email_finder": 1,
+    "email_verifier": 1
+  },
+  "credits_or_cost_note": "Hunter counts 1 request per Finder call and 1 per Verifier call; cost depends on plan.",
+  "hunter_finder": {
+    "email_present": true,
+    "corporate_domain_returned": "aplusac.com",
+    "finder_confidence": 97,
+    "provenance_kind": "observed",
+    "source_count": 8,
+    "sources": [
+      "https://www.google.com/search?q=site:linkedin.com%20greg%20yamin%20aplusac",
+      "https://youscribe.com/catalogue/documents/ressources-professionnelles/energy-conservation-audit-and-disclosure-ecad-auditors-540421",
+      "https://homeairtoday.blogspot.com/2009/06/eco-home-air-energy-llc.html",
+      "https://homeairtoday.blogspot.com/search/label/hgtv%2520dream%2520home",
+      "https://homeairtoday.blogspot.com/search/label/ehs%2520website"
+    ],
+    "retrieved_at": "2026-09-05T17:51:06.512969+03:00",
+    "minimized_persisted_fields": {
+      "first_name": "Greg",
+      "last_name": "Yamin",
+      "email": "greg@aplusac.com",
+      "score": "97",
+      "domain": "aplusac.com",
+      "position": "President",
+      "company": "Plus"
+    }
+  },
+  "hunter_verifier": {
+    "status": "valid",
+    "is_catch_all": false,
+    "mx_records": true,
+    "smtp_check": true,
+    "verifier_score": 100,
+    "verified_at": "2026-09-05T17:51:07.260295+03:00",
+    "policy_outcome": "VALID"
+  },
+  "email_resolution_note": "Hunter Email Verifier status=valid, mx=true, not catch-all, verified 2026-09-05, fresh (<90d); provenance=OBSERVED",
+  "channels": {
+    "email": {
+      "endpoint": "[redacted work email - in PRIMARY_A packet only]",
+      "eligibility_disposition": "eligible_verified_recipient",
+      "verification_result": "source_verified"
+    },
+    "linkedin": {
+      "endpoint": "https://www.linkedin.com/in/greg-yamin-a226a113/",
+      "eligibility_disposition": "eligible_manual_channel",
+      "verification_result": "linkedin_profile_probable"
+    },
+    "phone": {
+      "endpoint": "512-450-1980",
+      "eligibility_disposition": "resolved_but_execution_not_authorized",
+      "verification_result": null
+    }
+  },
+  "channel_ranking": {
+    "email": {
+      "eligible": true,
+      "disposition": "eligible_verified_recipient",
+      "score": 125
+    },
+    "linkedin": {
+      "eligible": true,
+      "disposition": "eligible_manual_channel",
+      "score": 85
+    },
+    "phone": {
+      "eligible": false,
+      "disposition": "resolved_but_execution_not_authorized",
+      "score": -1000000
+    }
+  },
+  "recommended_channel": "email",
+  "email_eligible_verified_recipient": true,
+  "final": "READY_FOR_PRIMARY_A_EXACT_PACKAGE_REVIEW"
+}
