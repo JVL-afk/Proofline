@@ -1,0 +1,28 @@
+{
+  "task": "A-Plus pilot durable-suppression cross-process proof",
+  "generated_at_utc": "2026-09-05T18:42:28.818907+00:00",
+  "pilot_workspace_id": "a91b0000-0000-4000-8000-0000000006a9",
+  "database_url_kind": "on-disk sqlite (persistent)",
+  "child_process_pid_differs": true,
+  "cross_process_read": {
+    "address_suppressed_seen": true,
+    "domain_suppressed_seen": true,
+    "person_suppressed_seen": true,
+    "company_suppressed_seen": true,
+    "unrelated_recipient_still_eligible": true,
+    "raw": {
+      "address": "BLOCKED:address_suppressed",
+      "domain": true,
+      "person": true,
+      "company": true,
+      "unrelated_still_eligible": true
+    }
+  },
+  "send_gate_is_the_same_durable_authority": true,
+  "in_memory_url_refused_for_real_send": true,
+  "package_approval_not_cached": {
+    "eligible_at_approval": true,
+    "blocked_after_later_opt_out": true
+  },
+  "all_checks_pass": true
+}

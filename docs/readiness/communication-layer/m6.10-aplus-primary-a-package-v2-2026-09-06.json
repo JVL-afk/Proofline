@@ -1,0 +1,112 @@
+{
+  "task": "M6.10 -> M6.9 Path B recipient-bound A-Plus package v2 for PRIMARY_A review (from scratch; no inherited approval)",
+  "generated_at_utc": "2026-09-05T18:42:29.851708+00:00",
+  "supersedes": "m6.10-aplus-primary-a-package-2026-09-06.json (v1, not approved)",
+  "readability_revision": {
+    "status": "ADOPT_REVISED_BODY",
+    "body_source": "m6.10-aplus-readability-revision-2026-09-06.json (comm.prompt_template@10)",
+    "prompt_template": "comm.prompt_template.first_contact@10",
+    "provider_generations": 1,
+    "cost_usd": "0.033458",
+    "previous_body_word_count": 118,
+    "revised_body_word_count": 113,
+    "validator_passed": true,
+    "non_advisory_findings": []
+  },
+  "body_frozen_sha256": "952a2247d30d85b758059e34b56ea30ed4d1c09fe72609698dd6164065aac12e",
+  "functional_role_or_team_slot": "RETAINED (validator rule 2 requires the literal token in the body; ADR-0032 requires a non-impersonating functional address). Placement moved from a redundant trailing sign-off to the opening salutation; resolves to the neutral greeting 'Hello there,' (was the sender-side 'the Proofline team').",
+  "advisory_no_company_specific_evidence": "ADVISORY-ONLY under contract v3 (validation passed). The exact package DOES carry company-specific licensed evidence ('The Austin Commercial AC Repair Company', 'When to Schedule AC Replacement'); the advisory is an artifact of reconstructing the candidate with an empty claim manifest. Recorded as a deferred tooling/lineage issue in m6.10-deferred-manifest-lineage-tooling-2026-09-06.md - not a launch blocker.",
+  "telemetry_determination_ref": "m6.10-telemetry-policy-reconfirmation-2026-09-06.md -> HOST_TELEMETRY_NON_BLOCKING_UNDER_EXISTING_POLICY",
+  "recipient": {
+    "name": "Greg Yamin",
+    "role": "President",
+    "company": "A-Plus Air Conditioning & Home Solutions",
+    "work_email": "greg@aplusac.com",
+    "identity_provenance": "first-party: aplusac.com/about-us/our-team/ (\"Greg Yamin - President\"); BBB business profile (\"Mr. Gregory K. Yamin, President\")",
+    "email_provenance": "Hunter Email Finder, confidence 97, provenance OBSERVED (8 public sources); Hunter Email Verifier status=valid, mx=true, smtp_check=true, not catch-all, verifier_score=100, verified 2026-09-05, fresh (<90 days)",
+    "verification_result": "source_verified",
+    "verification_date": "2026-09-05"
+  },
+  "from": "Andrew <andrew@proofline.business>",
+  "reply_to": "andrew@proofline.business",
+  "subject": "Comparing intake steps for commercial AC requests",
+  "email_body_rendered": "Hello there,\n\nWhile reviewing A-Plus Air Conditioning & Home Solutions' public pages, I noticed you describe commercial HVAC work as \"The Austin Commercial AC Repair Company\" and publish a page on \"When to Schedule AC Replacement.\" This is not a claim about how your team works today - we have no visibility into that.\n\nBased only on public information, a short deterministic simulation was prepared using synthetic example inputs, not real customer data. It is a simulation - not a system deployed, connected, official, or operated by the business. It routes every case to a human review step before any action. Would you be open to comparing it with your actual intake process?\n\nThe simulation: https://ac-request-demo.preview.emergentagent.com/\n\nAndrew\nProofline\nandrew@proofline.business\nProofline, Str. Lucian Blaga, nr. 8, Ciugud, Alba 517240, Romania\nTo stop receiving email from Proofline, reply to this message with the word UNSUBSCRIBE. We will remove your address within three days.",
+  "demo_url": "https://ac-request-demo.preview.emergentagent.com/",
+  "minimized_persisted_contact_fields": {
+    "name": "Greg Yamin",
+    "employer": "A-Plus Air Conditioning & Home Solutions",
+    "role": "President",
+    "work_email": "greg@aplusac.com",
+    "source": "Hunter (hunter.io) Email Finder + Verifier; identity first-party + BBB",
+    "finder_confidence": 97,
+    "verification_method": "approved_third_party_verification_service (Hunter Email Verifier)",
+    "verification_result": "valid",
+    "verification_date": "2026-09-05"
+  },
+  "suppression_result": {
+    "authority": "durable persistent registry (opintel_suppression)",
+    "database_url_kind": "on-disk sqlite (persistent, survives restart)",
+    "pilot_workspace_id": "a91b0000-0000-4000-8000-0000000006a9",
+    "gate_rechecks_every_call": true,
+    "in_memory_fallback": "REFUSED (build_durable_suppression_service)",
+    "address_and_domain": "eligible",
+    "person_and_company": "clear",
+    "domain_of_recipient": "aplusac.com"
+  },
+  "final_deterministic_validation": {
+    "passed": true,
+    "findings": [
+      "no_company_specific_evidence"
+    ],
+    "canonical_coverage": 1.0,
+    "unresolved_substantive_claims": 0,
+    "note": "Validation runs on the frozen body with disclosure slots still {{...}} (the state the validator's contract expects). Slot resolution + the one demo URL are the final non-substantive rendering step, checked below."
+  },
+  "recipient_bound_rendering_checks": {
+    "no_unresolved_tokens": true,
+    "exactly_one_url": true,
+    "the_one_url_is_the_approved_demo_url": true,
+    "postal_disclosure_present": true,
+    "opt_out_present": true,
+    "reply_to_present": true,
+    "no_adv_prefix": true,
+    "demo_status_truth_present": true,
+    "salutation_is_opening_not_trailing": true,
+    "no_trailing_team_line": true
+  },
+  "compliance": {
+    "postal_disclosure": "Proofline, Str. Lucian Blaga, nr. 8, Ciugud, Alba 517240, Romania",
+    "opt_out": "To stop receiving email from Proofline, reply to this message with the word UNSUBSCRIBE. We will remove your address within three days.",
+    "path_b_exception": "ADR-0078 / ADR-0079 - one bounded A-Plus first contact, M6.8-3 NOT_CERTIFIED acknowledged not waived",
+    "m6_8_3_status": "NOT_CERTIFIED (acknowledged)",
+    "telemetry_state": "HOST_PLATFORM_TELEMETRY_CONFIRMED_PRESENT (Emergent hosting template's PostHog session-recording + Cloudflare bot-management; not Proofline-added). Policy re-checked 2026-09-06: HOST_TELEMETRY_NON_BLOCKING_UNDER_EXISTING_POLICY (m6.10-telemetry-policy-reconfirmation-2026-09-06.md). Not described as zero-tracking anywhere.",
+    "after_send": "NONE AUTOMATIC"
+  },
+  "channel_ranking": {
+    "email": {
+      "eligible": true,
+      "disposition": "eligible_verified_recipient",
+      "score": 125
+    },
+    "linkedin": {
+      "eligible": true,
+      "disposition": "eligible_manual_channel",
+      "score": 85
+    },
+    "phone": {
+      "eligible": false,
+      "disposition": "resolved_but_execution_not_authorized",
+      "score": -1000000
+    }
+  },
+  "recommended_channel": "email",
+  "alternative_channels": {
+    "linkedin": "eligible_manual_channel (unchanged, not used)",
+    "phone": "resolved_but_execution_not_authorized (unchanged, not used)"
+  },
+  "final_human_reviewer": "PRIMARY_A",
+  "final_human_review_status": "PENDING_EXACT_PACKAGE_REVIEW",
+  "prior_review_inherited": false,
+  "eligible_verified_recipient": true,
+  "final": "READY_FOR_PRIMARY_A_REVIEW_V2"
+}

@@ -582,3 +582,83 @@ def build_certification_prompt_bundle_v9(envelope: SemanticEnvelope) -> PromptBu
         bundle_text=bundle_text,
         bundle_sha256=sha256_text(bundle_text),
     )
+
+
+# --------------------------------------------------------------------------
+# comm.prompt_template.first_contact@10 (owner authorization 2026-09-06
+# "ADDRESS PRIMARY_A PRE-APPROVAL FINDINGS", section 2: exactly one bounded
+# readability revision). @10 is @9 with FOUR wording-only changes, no change to
+# the envelope, the projection, the validator, the reconciler, the fact-strength
+# lattice, or any threshold:
+#   1. shorter body target (70-95 words / hard max 110) and a "short plain
+#      sentences" instruction - PRIMARY_A found @9's output truthful but dense;
+#   2. the one CTA is a low-pressure "compare the simulation with your intake"
+#      invitation - never a quantitative discovery question;
+#   3. the '{{functional_role_or_team}}' placeholder is the opening salutation
+#      line, never a trailing sign-off (PRIMARY_A flagged the trailing line),
+#      and nothing may follow '{{approved_opt_out_instruction}}';
+#   4. the four disclosure meanings may be spread naturally across the email
+#      rather than crammed into one sentence, while the canonical
+#      'simulation / not ... deployed, connected, official, or operated' phrase
+#      must still appear.
+# --------------------------------------------------------------------------
+
+PROMPT_TEMPLATE_ID_CERT_V10 = "comm.prompt_template.first_contact@10"
+
+_CERT_TEMPLATE_V10_TEXT = (
+    _CERT_TEMPLATE_V9_TEXT.replace(
+        "  - body: target 90-110 words; hard maximum 130. If you are near the "
+        "limit, drop the least important sentence rather than exceed it.\n",
+        "  - body: target 70-95 words; hard maximum 110. Write short, plain "
+        "sentences - one idea per sentence. If you are near the limit, drop the "
+        "least important clause rather than exceed it.\n",
+    )
+    .replace(
+        "  - exactly ONE sentence ending in '?' (the call to action). No second '?'.\n",
+        "  - exactly ONE sentence ending in '?' (the call to action). No second "
+        "'?'. That CTA is a low-pressure invitation to COMPARE the simulation "
+        "with the reader's actual intake process. Do NOT ask how many inquiries "
+        "they receive, about staffing, or about after-hours handling - no "
+        "quantitative discovery question.\n",
+    )
+    .replace(
+        "  - PLACEHOLDERS: the body MUST end with every 'placeholder' value listed "
+        "under required_disclosures below, each on its own line, copied verbatim "
+        "(e.g. a line that is exactly '{{verified_sender_signature}}'). Do not "
+        "resolve, rename, translate, or drop any of them, and do not invent "
+        "others.\n",
+        "  - PLACEHOLDERS: put '{{functional_role_or_team}}' on the FIRST line as "
+        "the salutation - a line that is exactly 'Hello {{functional_role_or_team}},' "
+        "- never as a closing line. End the body with '{{verified_sender_signature}}', "
+        "then '{{required_postal_disclosure}}', then "
+        "'{{approved_opt_out_instruction}}', each on its own line, copied verbatim. "
+        "Do not resolve, rename, translate, duplicate, or drop any placeholder, and "
+        "do not invent others. Add NO sign-off or team line after "
+        "'{{approved_opt_out_instruction}}'.\n",
+    )
+    .replace(
+        "  - Include the required disclosure meaning (a simulation built only from "
+        "public info; not a deployed or connected system; synthetic inputs). Keep "
+        "it brief but do not omit it.\n",
+        "  - Communicate these four meanings naturally, spread across the email - "
+        "you need NOT pack them into one sentence: (a) this is based only on "
+        "public information; (b) the simulation is hypothetical and uses synthetic "
+        "example inputs, not real customer data; (c) it is not connected to, or "
+        "operated by, the business; (d) you are not claiming to know how their "
+        "intake works today. The canonical phrase 'It is a simulation - not a "
+        "system deployed, connected, official, or operated by the business.' (or a "
+        "close paraphrase that keeps 'simulation' and 'not ... deployed, "
+        "connected, official, or operated') MUST appear.\n",
+    )
+)
+
+
+def build_certification_prompt_bundle_v10(envelope: SemanticEnvelope) -> PromptBundle:
+    projection_json = canonical_json(provider_facing_projection(envelope))
+    bundle_text = _CERT_TEMPLATE_V10_TEXT.replace("@@PROJECTION_JSON@@", projection_json)
+    return PromptBundle(
+        template_id=PROMPT_TEMPLATE_ID_CERT_V10,
+        template_sha256=sha256_text(_CERT_TEMPLATE_V10_TEXT),
+        bundle_text=bundle_text,
+        bundle_sha256=sha256_text(bundle_text),
+    )

@@ -57,18 +57,26 @@ KNOWN_DISCLOSURE_SLOTS = (
 )
 
 
+FUNCTIONAL_ROLE_OR_TEAM_RESOLVED = "there"
+"""``{{functional_role_or_team}}`` is a SALUTATION slot (ADR-0032: address the
+reader by functional relevance, assert no employment, fabricate no name). Its
+canonical corpus position is the opening line ``Hello {{functional_role_or_team}},``.
+It resolves to the neutral greeting token ``there`` -> ``Hello there,`` - a
+recipient-side address that names no person and asserts nothing. (An earlier
+pilot build resolved it to the sender-side ``"the {company} team"``; placed on a
+trailing line that read as a redundant second sign-off, which PRIMARY_A flagged
+on 2026-09-06.)"""
+
+
 def resolve_known_disclosure_slots(body: str, sender: SenderIdentityConfig) -> str:
     """Fills exactly the four disclosure slots this pilot's supplied
     configuration can resolve without inventing anything. ``functional_role_or_team``
-    resolves to a generic team-level descriptor derived directly from the
-    already-supplied company name (no personal title was supplied, and none is
-    invented here). Any other placeholder (for example the demo-URL slot) is
-    left untouched."""
+    resolves to a neutral salutation token (``there``) - it names no person and
+    asserts nothing (ADR-0032). Any other placeholder (for example the demo-URL
+    slot) is left untouched."""
     resolved = body
     resolved = resolved.replace(_SENDER_SIGNATURE_SLOT, sender.signature_block)
     resolved = resolved.replace(_POSTAL_DISCLOSURE_SLOT, sender.postal_disclosure)
     resolved = resolved.replace(_OPT_OUT_INSTRUCTION_SLOT, render_opt_out_notice(sender))
-    resolved = resolved.replace(
-        _FUNCTIONAL_ROLE_OR_TEAM_SLOT, f"the {sender.company_display_name} team"
-    )
+    resolved = resolved.replace(_FUNCTIONAL_ROLE_OR_TEAM_SLOT, FUNCTIONAL_ROLE_OR_TEAM_RESOLVED)
     return resolved

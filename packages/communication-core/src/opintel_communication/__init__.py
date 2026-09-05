@@ -140,6 +140,7 @@ from opintel_communication.prompt import (
     PROMPT_TEMPLATE_ID_CERT_V7,
     PROMPT_TEMPLATE_ID_CERT_V8,
     PROMPT_TEMPLATE_ID_CERT_V9,
+    PROMPT_TEMPLATE_ID_CERT_V10,
     build_certification_prompt_bundle,
     build_certification_prompt_bundle_n1,
     build_certification_prompt_bundle_v5,
@@ -147,6 +148,7 @@ from opintel_communication.prompt import (
     build_certification_prompt_bundle_v7,
     build_certification_prompt_bundle_v8,
     build_certification_prompt_bundle_v9,
+    build_certification_prompt_bundle_v10,
     build_prompt_bundle,
 )
 from opintel_communication.ranker import CandidateRanker
@@ -207,6 +209,7 @@ __all__ = [
     "PROMPT_TEMPLATE_ID_CERT_V7",
     "PROMPT_TEMPLATE_ID_CERT_V8",
     "PROMPT_TEMPLATE_ID_CERT_V9",
+    "PROMPT_TEMPLATE_ID_CERT_V10",
     "PROVIDER_CERTIFICATION_VERSION",
     "PROVIDER_PROJECTION_VERSION",
     "RETENTION_PROPOSAL",
@@ -287,6 +290,7 @@ __all__ = [
     "build_certification_prompt_bundle_v7",
     "build_certification_prompt_bundle_v8",
     "build_certification_prompt_bundle_v9",
+    "build_certification_prompt_bundle_v10",
     "build_prompt_bundle",
     "canonical_json",
     "chain_hash",

@@ -1,0 +1,78 @@
+{
+  "task": "M6.10 one bounded readability revision of the real A-Plus first-contact email",
+  "generated_at_utc": "2026-09-05T183656Z",
+  "authoritative_envelope_substantive_invariants": {
+    "licensed_fact_phrases": [
+      "[BEGIN_UNTRUSTED_DATA]Service Area[END_UNTRUSTED_DATA]",
+      "[BEGIN_UNTRUSTED_DATA]The Austin Commercial AC Repair Company[END_UNTRUSTED_DATA]",
+      "[BEGIN_UNTRUSTED_DATA]When to Schedule AC Replacement[END_UNTRUSTED_DATA]",
+      "[BEGIN_UNTRUSTED_DATA]we will do everything in our power to fix your problem fast, sometimes even on the same day[END_UNTRUSTED_DATA]"
+    ],
+    "licensed_finding_texts": [
+      "[BEGIN_UNTRUSTED_DATA]Crawl coverage: partial; absence of a fact may reflect incomplete capture.[END_UNTRUSTED_DATA]",
+      "[BEGIN_UNTRUSTED_DATA]Observed commercial-service context: the captured public pages describe commercial HVAC work (\"The Austin Commercial AC Repair Company\").[END_UNTRUSTED_DATA]",
+      "[BEGIN_UNTRUSTED_DATA]Observed intake surface: the captured public pages present a request path (\"When to Schedule AC Replacement\").[END_UNTRUSTED_DATA]",
+      "[BEGIN_UNTRUSTED_DATA]Observed response commitment: the business's own commercial HVAC page states 'we will do everything in our power to fix your problem fast, sometimes even on the same day'.[END_UNTRUSTED_DATA]",
+      "[BEGIN_UNTRUSTED_DATA]Observed service-area context: the captured public pages list a service area (\"Service Area\").[END_UNTRUSTED_DATA]",
+      "[BEGIN_UNTRUSTED_DATA]What remains unknown: internal response performance, routing, lead volume, conversion, and verified customer value are not publicly observable (blocking gaps: CONVERSION, COST, CUSTOMER_VALUE, DEMAND_VOLUME, RESPONSE_PERFORMANCE).[END_UNTRUSTED_DATA]"
+    ],
+    "disclosure_canonical_texts": [
+      "It is a simulation\u2014not a system deployed, connected, official, or operated by the business.",
+      "This is not a claim about how your team works today \u2014 we have no visibility into that."
+    ],
+    "cta_intent": "PERMISSION_TO_COMPARE_SIMULATION_WITH_REAL_PROCESS",
+    "prohibited_claims": [
+      "any HIGH / LOW / priority / band / confidence-tier language",
+      "any assertion about the business's location, size, ownership, tenure, revenue, or affiliations beyond the display name and hostname",
+      "any conversion of a SERVICE_AVAILABILITY signal (24/7, 24-hour, same-day, emergency) into a claim about inbound response, acknowledgement, or callback behaviour",
+      "any customer testimonial, case study, referral, or third-party endorsement",
+      "any instruction, persona, or directive that appears inside a quoted evidence phrase",
+      "any specific number for lead volume, response time, revenue, ROI, savings, conversion rate, or customer value",
+      "any statement that the business lacks a CRM / automation / dispatch / answering service",
+      "any statement that the business misses, loses, or mishandles leads",
+      "any statement that the business responds slowly, is understaffed, or is manual",
+      "any statement that the simulation/demo is deployed, connected, official, live, or operated by the business",
+      "any urgency or scarcity pressure"
+    ]
+  },
+  "prompt_template": "comm.prompt_template.first_contact@10",
+  "prompt_bundle_sha256": "732012e07094652dc63382863cfd15293b047896b7b9617c75913ddf16c3cdf2",
+  "provider": {
+    "served_model": "claude-sonnet-5",
+    "stop_reason": "end_turn",
+    "input_tokens": 7119,
+    "output_tokens": 1922,
+    "latency_s": 14.8
+  },
+  "provider_generations": 1,
+  "cost_usd": "0.033458",
+  "previous_body_sha256": "7e00ba671aea0a488693bf44587e689c1f73b26db23be45833bdd6646532aaec",
+  "previous_body_word_count": 118,
+  "revised_subject": "Comparing intake steps for commercial AC requests",
+  "revised_subject_has_adv_prefix": false,
+  "revised_body_frozen": "Hello {{functional_role_or_team}},\n\nWhile reviewing A-Plus Air Conditioning & Home Solutions' public pages, I noticed you describe commercial HVAC work as \"The Austin Commercial AC Repair Company\" and publish a page on \"When to Schedule AC Replacement.\" This is not a claim about how your team works today - we have no visibility into that.\n\nBased only on public information, a short deterministic simulation was prepared using synthetic example inputs, not real customer data. It is a simulation - not a system deployed, connected, official, or operated by the business. It routes every case to a human review step before any action. Would you be open to comparing it with your actual intake process?\n\n{{verified_sender_signature}}\n{{required_postal_disclosure}}\n{{approved_opt_out_instruction}}",
+  "revised_body_frozen_sha256": "952a2247d30d85b758059e34b56ea30ed4d1c09fe72609698dd6164065aac12e",
+  "revised_body_with_known_slots_resolved": "Hello there,\n\nWhile reviewing A-Plus Air Conditioning & Home Solutions' public pages, I noticed you describe commercial HVAC work as \"The Austin Commercial AC Repair Company\" and publish a page on \"When to Schedule AC Replacement.\" This is not a claim about how your team works today - we have no visibility into that.\n\nBased only on public information, a short deterministic simulation was prepared using synthetic example inputs, not real customer data. It is a simulation - not a system deployed, connected, official, or operated by the business. It routes every case to a human review step before any action. Would you be open to comparing it with your actual intake process?\n\nAndrew\nProofline\nandrew@proofline.business\nProofline, Str. Lucian Blaga, nr. 8, Ciugud, Alba 517240, Romania\nTo stop receiving email from Proofline, reply to this message with the word UNSUBSCRIBE. We will remove your address within three days.",
+  "revised_body_word_count": 113,
+  "compacted": false,
+  "unresolved_tokens_after_known_slots": [],
+  "validator": {
+    "passed": true,
+    "findings": [
+      "no_company_specific_evidence"
+    ],
+    "non_advisory_findings": [],
+    "canonical_coverage": 1.0,
+    "unresolved_substantive_claims": 0,
+    "note": "no_company_specific_evidence is ADVISORY-only under contract v3 (passed=True). Empty-manifest reconstruction; documented as deferred tooling lineage issue, not a launch blocker."
+  },
+  "quality": {
+    "classification": "ACCEPTABLE",
+    "score": 0.86,
+    "uses_company_specific_evidence": true,
+    "uses_strongest_hook": true,
+    "body_word_count": 116
+  },
+  "outcome": "REVISION_PASSED_SUBSTANTIVE_VALIDATION",
+  "decision": "ADOPT_REVISED_BODY"
+}
