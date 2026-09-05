@@ -110,6 +110,13 @@ class AuthorityDomain(StrEnum):
     EMAIL_VERIFICATION_AUTHORITY = "email_verification_authority"
     LINKEDIN_PROFILE_DISCOVERY_AUTHORITY = "linkedin_profile_discovery_authority"
     PHONE_CONTACT_DATA_AUTHORITY = "phone_contact_data_authority"
+    PHONE_OUTBOUND_EXECUTION_AUTHORITY = "phone_outbound_execution_authority"
+    """Separate from PHONE_CONTACT_DATA_AUTHORITY on purpose (owner
+    authorization "M6.10 LEGAL SOURCE ACTIVATION...", section 11): counsel
+    can authorize *resolving* a phone number without authorizing *calling*
+    it - Texas telemarketing registration/exemption is a distinct, unmet
+    prerequisite. RESOLUTION != EXECUTION, exactly like AUTHORIZED_CHANNEL
+    != AUTHORIZED_SEND for every other channel."""
 
 
 @dataclass(frozen=True)
@@ -298,6 +305,16 @@ class EligibilityDisposition(StrEnum):
     authorization to send anything."""
     ELIGIBLE_HUMAN_CALL_INDIRECT = "eligible_human_call_indirect"
     ELIGIBLE_HUMAN_CALL_DIRECT = "eligible_human_call_direct"
+    RESOLVED_BUT_EXECUTION_NOT_AUTHORIZED = "resolved_but_execution_not_authorized"
+    """A verified endpoint exists and the RESOLUTION authority for its
+    source/channel is granted, but a separate EXECUTION authority (e.g.
+    ``PHONE_OUTBOUND_EXECUTION_AUTHORITY``, pending Texas telemarketing
+    review) is not. Distinct from every other blocking disposition: the
+    endpoint itself is not in question, only permission to act on it."""
+    VERIFICATION_EXPIRED = "verification_expired"
+    """Was ELIGIBLE_VERIFIED_RECIPIENT; its verification is older than the
+    channel's configured expiry (90 days for email - section 6) and must be
+    refreshed before reuse."""
 
 
 BLOCKING_DISPOSITIONS: frozenset[EligibilityDisposition] = frozenset(
@@ -313,6 +330,8 @@ BLOCKING_DISPOSITIONS: frozenset[EligibilityDisposition] = frozenset(
         EligibilityDisposition.DO_NOT_CONTACT,
         EligibilityDisposition.NO_ELIGIBLE_VERIFIED_RECIPIENT,
         EligibilityDisposition.IDENTITY_VERIFIED_CONTACT_UNRESOLVED,
+        EligibilityDisposition.RESOLVED_BUT_EXECUTION_NOT_AUTHORIZED,
+        EligibilityDisposition.VERIFICATION_EXPIRED,
     }
 )
 """Dispositions that mean 'do not use this endpoint for the delivery channel

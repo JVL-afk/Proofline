@@ -1,0 +1,93 @@
+{
+  "task": "M6.10 live A-Plus recipient resolution (post counsel source activation)",
+  "generated_at_utc": "2026-09-05T130213Z",
+  "company": "A-Plus Air Conditioning & Home Solutions",
+  "company_id": "dec4546b-3ab1-5898-b866-d6f4dad6ebeb",
+  "recipient": {
+    "name": "Greg Yamin",
+    "role": "President",
+    "role_tier": "owner_president",
+    "role_confidence": "high",
+    "role_evidence": "https://www.aplusac.com/about-us/our-team/: \"Greg Yamin - President\" (co-founder with Sharon Yamin, 1977); corroborated at https://www.bbb.org/us/tx/austin/profile/air-conditioning-contractor/a-plus-air-conditioning-home-solutions-0825-39557: \"Mr. Gregory K. Yamin (President)\"",
+    "first_party": true
+  },
+  "sources_attempted_this_run": [
+    "FIRST_PARTY (aplusac.com - re-confirmed, unchanged)",
+    "APPROVED_PROFESSIONAL_DIRECTORY (BBB business profile, https://www.bbb.org/us/tx/austin/profile/air-conditioning-contractor/a-plus-air-conditioning-home-solutions-0825-39557)"
+  ],
+  "sources_not_attempted": {
+    "APPROVED_CONTACT_ENRICHMENT": "no vendor credentials/contract exist in this project",
+    "APPROVED_EMAIL_VERIFICATION": "no verification-provider credentials exist",
+    "PATTERN_DERIVED": "no independent verification method available to check one"
+  },
+  "channels": {
+    "email": {
+      "endpoint": "UNRESOLVED - no email published on aplusac.com or its BBB profile",
+      "endpoint_kind": "first_party_published_email",
+      "source_category": "approved_professional_directory",
+      "provider": "BBB business profile (https://www.bbb.org/us/tx/austin/profile/air-conditioning-contractor/a-plus-air-conditioning-home-solutions-0825-39557) - no email found",
+      "verification_method": "none",
+      "verification_result": null,
+      "legal_source_authority": "authorized_with_controls",
+      "channel_authority": "existing_m6_m69_controls",
+      "eligibility_disposition": "identity_verified_contact_unresolved",
+      "evidence_record_hash": "ec38637de9c71ab84732bebfd4f7d6673ef3a63f091ba1b6d7359ac5f8a66f10"
+    },
+    "linkedin": {
+      "endpoint": "https://www.linkedin.com/in/greg-yamin-a226a113/",
+      "endpoint_kind": "linkedin_profile_probable",
+      "source_category": "approved_professional_profile",
+      "provider": "web search snippet (profile page itself not fetched - respects platform terms)",
+      "verification_method": "multi_source_corroboration",
+      "verification_result": "linkedin_profile_probable",
+      "legal_source_authority": "authorized_with_controls",
+      "channel_authority": "manual_human_only",
+      "eligibility_disposition": "eligible_manual_channel",
+      "evidence_record_hash": "8ed57ad5fed297ec8b258b67810773f87945937419cd7ce769ab11d29cbd3172"
+    },
+    "phone": {
+      "endpoint": "512-450-1980",
+      "endpoint_kind": "main_business_phone",
+      "source_category": "first_party_explicit_contact",
+      "provider": "aplusac.com + BBB business profile (first party / directory, corroborating)",
+      "verification_method": "first_party_page_observation",
+      "verification_result": null,
+      "legal_source_authority": "authorized",
+      "channel_authority": "human_call_only",
+      "eligibility_disposition": "resolved_but_execution_not_authorized",
+      "evidence_record_hash": "5609cc415f52332516dc091974fbcfd8d32b6e03758b75cc5a90af56c0af7b7e"
+    }
+  },
+  "channel_ranking": {
+    "email": {
+      "eligible": false,
+      "disposition": "identity_verified_contact_unresolved",
+      "score": -1000000,
+      "reasons": [
+        "blocked: identity_verified_contact_unresolved"
+      ]
+    },
+    "linkedin": {
+      "eligible": true,
+      "disposition": "eligible_manual_channel",
+      "score": 85,
+      "reasons": [
+        "base directness score 60 for eligible_manual_channel",
+        "identity confidence high",
+        "can present the approved demo (+15)"
+      ]
+    },
+    "phone": {
+      "eligible": false,
+      "disposition": "resolved_but_execution_not_authorized",
+      "score": -1000000,
+      "reasons": [
+        "blocked: resolved_but_execution_not_authorized"
+      ]
+    }
+  },
+  "recommended_channel": "linkedin",
+  "recommendation_reason": "linkedin scored highest (85) among eligible channels: base directness score 60 for eligible_manual_channel; identity confidence high; can present the approved demo (+15)",
+  "phone_outbound_execution_authority": "NOT_AUTHORIZED_PENDING_TELEMARKETING_REVIEW",
+  "final": "M6.10_LIVE_RESOLUTION_COMPLETE"
+}

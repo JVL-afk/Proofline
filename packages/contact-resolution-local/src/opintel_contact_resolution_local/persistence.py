@@ -8,7 +8,7 @@ row, never an edit of an existing one.
 from __future__ import annotations
 
 import json
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from uuid import UUID
 
@@ -132,6 +132,40 @@ class SqlAlchemyContactEndpointEvidenceRepository:
                 .order_by(ContactEndpointEvidenceRow.created_at)
             ).all()
             return tuple(_evidence(row) for row in rows)
+
+    def purge_expired(self, *, retention_days: int, now: datetime) -> int:
+        """Section 13: deletes ContactEndpointEvidence rows older than
+        ``retention_days``, unconditionally - including rows for a
+        suppressed person. This is safe because suppression enforcement
+        lives entirely in the separate, permanent ``opintel_suppression``
+        registry (an irreversible, hash-keyed, never-purged store) - purging
+        this evidence table never lifts a suppression. Returns the number of
+        rows deleted."""
+        cutoff = _aware(now) - timedelta(days=retention_days)
+        with self._sessions.begin() as session:
+            rows = session.scalars(
+                select(ContactEndpointEvidenceRow).where(
+                    ContactEndpointEvidenceRow.observed_at < cutoff
+                )
+            ).all()
+            count = len(rows)
+            for row in rows:
+                session.delete(row)
+            return count
+
+    def delete_for_person(self, person_id: UUID) -> int:
+        """Immediate deletion (section 14: DELETE_MY_INFORMATION requests),
+        independent of retention age. Returns the number of rows deleted."""
+        with self._sessions.begin() as session:
+            rows = session.scalars(
+                select(ContactEndpointEvidenceRow).where(
+                    ContactEndpointEvidenceRow.person_id == str(person_id)
+                )
+            ).all()
+            count = len(rows)
+            for row in rows:
+                session.delete(row)
+            return count
 
 
 def _aware(value: datetime) -> datetime:
