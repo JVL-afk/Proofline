@@ -13,6 +13,11 @@
     "reviewer_credential_record_ref": null
   },
   "reviewer_identity_binding_state": "NOT_YET_BOUND_A17_SIGNATURE_REQUIRED",
+  "live_activation_gate_determination": {
+    "blocking": false,
+    "as_of": "2026-09-05 (BIND PRIMARY_A ... authorization)",
+    "reasoning": "The formal opintel_activation.domain.GovernanceReviewRecord schema requires state/evidence_refs/accountable_role, not a named personal signature field. This project's own 2026-08-21 A-17 precedent record was treated as actionable APPROVE_WITH_CONTROLS evidence with reviewer_subject_ref left null, identity reconciliation explicitly deferred rather than blocking. With APPROVE_WITH_CONTROLS plus PROJECT_OWNER's now-supplied counsel_pilot_approval, A-17 is treated as satisfying the live-activation gate for this bounded pilot under the existing schema. reviewer_identity_binding_state remains open and disclosed, not silently resolved."
+  },
   "counsel_pilot_approval": {
     "a17_counsel_approval_status": "APPROVED",
     "evidence_classification": "OWNER_STATED_SCREENSHOT_OF_QUALIFIED_TEXAS_LAWYER_APPROVED_ANSWER",
