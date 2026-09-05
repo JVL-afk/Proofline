@@ -13,6 +13,29 @@
     "reviewer_credential_record_ref": null
   },
   "reviewer_identity_binding_state": "NOT_YET_BOUND_A17_SIGNATURE_REQUIRED",
+  "counsel_pilot_approval": {
+    "a17_counsel_approval_status": "APPROVED",
+    "evidence_classification": "OWNER_STATED_SCREENSHOT_OF_QUALIFIED_TEXAS_LAWYER_APPROVED_ANSWER",
+    "recording_provenance": "PROJECT_OWNER_TRANSCRIPTION_OF_SUPPLIED_SCREENSHOT_EVIDENCE",
+    "wording_recorded": "APPROVED",
+    "scope_of_approval": "the previously described bounded Proofline first-contact pilot, per PROJECT_OWNER's statement",
+    "recorded_at": "2026-09-05T00:00:00Z",
+    "lawyer_name": null,
+    "bar_number": null,
+    "firm": null,
+    "signature": null,
+    "approval_date_evidenced": null,
+    "missing_fields_not_invented": [
+      "lawyer_name",
+      "bar_number",
+      "firm",
+      "signature",
+      "approval_date_evidenced",
+      "reviewer_subject_ref",
+      "reviewer_credential_record_ref"
+    ],
+    "note": "This records only that PROJECT_OWNER represented a screenshot showing an APPROVED answer from a qualified Texas lawyer for this exact pilot. No image was independently viewed or verified by this task; no identity, credential, signature, or date beyond the owner's statement is asserted. This does not by itself satisfy reviewer_subject_ref/reviewer_credential_record_ref (see A17_SIGNATURE_REQUIRED, unchanged)."
+  },
   "recorded_at": "2026-09-05T00:00:00Z",
   "effective_at": null,
   "review_trigger_instead_of_fixed_expiry": true,
