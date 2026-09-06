@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="Proofline — Evidence before action">
+  <rect width="1200" height="630" fill="#faf8f4"/>
+  <rect x="0" y="0" width="1200" height="8" fill="#1f3d4d"/>
+  <text x="96" y="300" font-family="Iowan Old Style, Palatino Linotype, Palatino, Georgia, serif" font-size="112" font-weight="600" fill="#17171c">Proofline</text>
+  <rect x="100" y="338" width="96" height="6" fill="#1f3d4d"/>
+  <text x="96" y="410" font-family="system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="40" fill="#3c3b43">Evidence before action.</text>
+  <text x="96" y="474" font-family="system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif" font-size="27" fill="#63616c">Find the opportunity. Prove it. Show it.</text>
+</svg>
