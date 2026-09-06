@@ -1,0 +1,139 @@
+{
+  "task": "M6.10 -> Record PRIMARY_A exact-package APPROVAL; determine email-delivery capability; re-run pre-send checks; produce send-readiness disposition. NO SEND.",
+  "authorization": "PROJECT_OWNER UPDATE - PRIMARY_A EXACT PACKAGE APPROVAL RECEIVED (2026-09-06)",
+  "recorded_at_utc": "2026-09-06T00:00:00+00:00",
+
+  "approval_binding_verification": {
+    "reviewed_artifact": "docs/readiness/communication-layer/m6.10-aplus-primary-a-package-v2-2026-09-06.json",
+    "reviewed_artifact_committed_at": "e3115e5 (2026-09-05 21:46:34 +0300)",
+    "reviewed_artifact_file_sha256": "c711618bf31a8098d4376df027eea521e22a7c3618f86d58e8ed080c63c83e93",
+    "working_tree_clean_since_commit": true,
+    "substantive_mutation_after_review": "NONE",
+    "body_frozen_sha256": "952a2247d30d85b758059e34b56ea30ed4d1c09fe72609698dd6164065aac12e",
+    "body_frozen_sha256_recomputed_now": "952a2247d30d85b758059e34b56ea30ed4d1c09fe72609698dd6164065aac12e",
+    "body_hash_match": true,
+    "rendered_email_sha256": "6522fa9b94e85995e3c9411ab1ceb9ad20ea27025b44cdf67a3bebced94f160a",
+    "binding_valid": true
+  },
+
+  "final_human_review": {
+    "FINAL_HUMAN_REVIEWER": "PRIMARY_A",
+    "FINAL_HUMAN_REVIEW_STATUS": "APPROVED",
+    "decision": "APPROVED",
+    "scope": "the exact revised A-Plus / Greg Yamin recipient-bound package (v2) presented for independent review from scratch",
+    "prior_review_inherited": false,
+    "approval_evidence": "PROJECT_OWNER relay 2026-09-06: PRIMARY_A returned 'APPROVED' for the exact revised A-Plus / Greg Yamin package. Bound to body_frozen_sha256 952a2247... and rendered_email_sha256 6522fa9b... . Reviewed artifact unchanged since commit e3115e5.",
+    "approval_timestamp_utc": "2026-09-06T00:00:00+00:00",
+    "supersedes": "v1 package m6.10-aplus-primary-a-package-2026-09-06.json (reviewed, NOT approved)"
+  },
+
+  "email_transport_determination": {
+    "result": "EMAIL_TRANSPORT_NOT_CONNECTED",
+    "can_transmit_as_andrew_at_proofline_business": false,
+    "evidence": [
+      "packages/outreach-core/src/opintel_outreach/ports.py module docstring: 'M5 application ports; no delivery or recipient port exists.'",
+      "OutreachWordingPort docstring: 'Future wording-only port. No implementation or route is authorized in M5.'",
+      "No smtplib / aiosmtplib / SendGrid / Mailgun / Postmark / SES / Resend client anywhere in packages/ or scripts/ (only an anti-integration assertion in tests/test_m4_demo_engine.py: \"assert 'sendgrid' not in source.lower()\").",
+      "No MAIL/SMTP/ESP credential key in apikeys.txt convention; only ANTHROPIC: (transformer) and HUNTER: (contact resolution/verification).",
+      "Hunter is contact resolution + email verification ONLY - it has no message-sending capability and none is implemented (packages/contact-resolution-local/hunter_adapter.py).",
+      "The only outbound network egress runtime in the repo is the M67 research worker (web fetch for research), gated by a fail-closed AWS SSM kill-switch; it does not send email."
+    ],
+    "no_smtp_credentials_invented": true,
+    "no_provider_access_invented": true,
+    "send_attempted": false
+  },
+
+  "delivery_mode": {
+    "EMAIL_DELIVERY_MODE": "MANUAL_SEND_BY_ANDREW",
+    "reason": "No authorized delivery transport exists. The approved package is handed to Andrew to send by hand from the andrew@proofline.business mailbox, preserving exact subject/body/recipient/demo bytes.",
+    "LINKEDIN_DELIVERY_MODE": "MANUAL_HUMAN_ONLY",
+    "linkedin_note": "M6.10 LinkedIn automation covers recipient/profile resolution, evidence, eligibility, ranking, and bounded message preparation ONLY. It does not authorize or implement automatic LinkedIn messaging. No browser automation or platform integration added in this task.",
+    "PHONE_DELIVERY_MODE": "HUMAN_ONLY",
+    "PHONE_OUTBOUND_EXECUTION_AUTHORITY": "NOT_AUTHORIZED_PENDING_TELEMARKETING_REVIEW",
+    "phone_note": "No call."
+  },
+
+  "pre_send_checks_rerun_content_unchanged": {
+    "durable_suppression_check": {
+      "authority": "durable persistent registry (opintel_suppression), on-disk sqlite, fixed pilot workspace a91b0000-0000-4000-8000-0000000006a9",
+      "in_memory_fallback": "REFUSED (build_durable_suppression_service)",
+      "gate_rechecks_every_call": true,
+      "address_and_domain": "eligible",
+      "person_and_company": "clear",
+      "cross_process_proof": "scripts/prove_aplus_durable_suppression.py re-run 2026-09-06 -> all_checks_pass: true (address/domain/person/company survive a separate OS process; post-approval opt-out blocks the next gate call; in-memory URL refused)",
+      "result": "PASS"
+    },
+    "recipient_eligibility": {
+      "recipient": "Greg Yamin <greg@aplusac.com>, President, A-Plus Air Conditioning & Home Solutions",
+      "disposition": "ELIGIBLE_VERIFIED_RECIPIENT",
+      "result": "PASS"
+    },
+    "verification_freshness": {
+      "verified_at": "2026-09-05",
+      "age_days_as_of_2026_09_06": 1,
+      "threshold_days": 90,
+      "hunter_verifier_status": "valid (mx=true, smtp_check=true, not catch-all, score 100)",
+      "result": "PASS"
+    },
+    "package_hash_binding": {
+      "body_frozen_sha256": "952a2247d30d85b758059e34b56ea30ed4d1c09fe72609698dd6164065aac12e",
+      "rendered_email_sha256": "6522fa9b94e85995e3c9411ab1ceb9ad20ea27025b44cdf67a3bebced94f160a",
+      "recomputed_now_matches": true,
+      "result": "PASS"
+    },
+    "demo_url_binding": {
+      "url": "https://ac-request-demo.preview.emergentagent.com/",
+      "exact_match": true,
+      "url_count_in_body": 1,
+      "only_url_is_demo": true,
+      "tracking_params_or_redirect_or_token": "NONE",
+      "result": "PASS"
+    },
+    "kill_switch_readiness": {
+      "automated_send_path_exists": false,
+      "outreach_delivery_port_exists": false,
+      "suppression_gate_override_path": "NONE (enforce_pre_send_suppression_gate re-checks on every call, no cache of prior approval)",
+      "research_worker_egress_kill_switch": "AwsSsmStopSignal - fail-closed (any read error -> is_active() = True = STOPPED); does not gate email because no email runtime exists",
+      "after_send_automation": "NONE AUTOMATIC",
+      "result": "PASS (nothing can send automatically; manual send is the only path)"
+    },
+    "compliance_field_completeness": {
+      "from": "Andrew <andrew@proofline.business>",
+      "reply_to": "andrew@proofline.business",
+      "postal_disclosure": "Proofline, Str. Lucian Blaga, nr. 8, Ciugud, Alba 517240, Romania (present in body)",
+      "opt_out": "reply UNSUBSCRIBE, 3-day max suppression SLA (present in body)",
+      "subject_adv_prefix": "none (not required; not present)",
+      "salutation": "opening line 'Hello there,' (not a trailing sign-off)",
+      "trailing_team_line": "removed",
+      "m6_8_3_status": "NOT_CERTIFIED (acknowledged, not waived)",
+      "telemetry": "HOST_TELEMETRY_NON_BLOCKING_UNDER_EXISTING_POLICY (ADR-0079); host PostHog/Cloudflare telemetry disclosed, not described as zero-tracking",
+      "result": "PASS"
+    }
+  },
+
+  "deterministic_validation": {
+    "validator": "OutputValidator(contract=v3)",
+    "passed": true,
+    "findings": ["no_company_specific_evidence"],
+    "non_advisory_findings": [],
+    "canonical_coverage": 1.0,
+    "unresolved_substantive_claims": 0,
+    "advisory_disposition": "no_company_specific_evidence remains ADVISORY-only; validator NOT weakened, email NOT altered; documented as deferred manifest-lineage tooling (m6.10-deferred-manifest-lineage-tooling-2026-09-06.md)"
+  },
+
+  "exact_send_package": {
+    "to": "Greg Yamin <greg@aplusac.com>",
+    "from": "Andrew <andrew@proofline.business>",
+    "reply_to": "andrew@proofline.business",
+    "subject": "Comparing intake steps for commercial AC requests",
+    "body": "Hello there,\n\nWhile reviewing A-Plus Air Conditioning & Home Solutions' public pages, I noticed you describe commercial HVAC work as \"The Austin Commercial AC Repair Company\" and publish a page on \"When to Schedule AC Replacement.\" This is not a claim about how your team works today - we have no visibility into that.\n\nBased only on public information, a short deterministic simulation was prepared using synthetic example inputs, not real customer data. It is a simulation - not a system deployed, connected, official, or operated by the business. It routes every case to a human review step before any action. Would you be open to comparing it with your actual intake process?\n\nThe simulation: https://ac-request-demo.preview.emergentagent.com/\n\nAndrew\nProofline\nandrew@proofline.business\nProofline, Str. Lucian Blaga, nr. 8, Ciugud, Alba 517240, Romania\nTo stop receiving email from Proofline, reply to this message with the word UNSUBSCRIBE. We will remove your address within three days.",
+    "body_frozen_sha256": "952a2247d30d85b758059e34b56ea30ed4d1c09fe72609698dd6164065aac12e",
+    "rendered_email_sha256": "6522fa9b94e85995e3c9411ab1ceb9ad20ea27025b44cdf67a3bebced94f160a"
+  },
+
+  "disposition": "READY_FOR_PROJECT_OWNER_SEND_DECISION_MANUAL_EMAIL",
+  "disposition_reason": "PRIMARY_A APPROVED the exact package; approval binding verified (no substantive mutation since commit e3115e5); all seven pre-send checks PASS; deterministic validation passes with no non-advisory findings. No automated email transport exists (EMAIL_TRANSPORT_NOT_CONNECTED), so the only available path is a manual send by Andrew. The send itself is a PROJECT_OWNER decision - NOT taken here.",
+  "sent": false,
+  "scheduled": false,
+  "follow_up_created": false
+}
